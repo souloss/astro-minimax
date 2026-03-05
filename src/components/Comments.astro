@@ -1,0 +1,69 @@
+---
+import { SITE } from "@/config";
+
+// Only render if Waline is enabled in config
+const enabled = SITE.waline?.enabled;
+---
+
+{
+  enabled && (
+    <div class="mt-8">
+      <div id="waline" class="not-prose"></div>
+      
+      <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+      
+      <script type="module" define:vars={{ serverURL: SITE.waline.serverURL, emoji: SITE.waline.emoji, lang: SITE.waline.lang, reaction: SITE.waline.reaction, pageview: SITE.waline.pageview }}>
+        import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+        
+        function loadWaline() {
+          const container = document.getElementById('waline');
+          if (container && serverURL) {
+            try {
+              init({
+                el: '#waline',
+                serverURL: serverURL,
+                emoji: emoji,
+                lang: lang,
+                reaction: reaction,
+                pageview: pageview,
+                dark: 'html[data-theme="dark"]',
+                path: window.location.pathname.replace(/\/$/, ''), // Ensure path consistency
+                locale: {
+                    placeholder: '欢迎评论，支持 Markdown，匿名评论请务必遵守社区规范。',
+                },
+              });
+            } catch (e) {
+              console.error('Waline init failed:', e);
+            }
+          }
+        }
+
+        // Handle initial load
+        loadWaline();
+
+        // Handle View Transitions (if using ClientRouter)
+        document.addEventListener('astro:page-load', loadWaline);
+      </script>
+      
+      <style is:global>
+        /* Custom Waline Styles to match AstroPaper theme */
+        :root {
+          --waline-theme-color: rgba(var(--color-accent), 1) !important;
+          --waline-active-color: rgba(var(--color-accent), 0.8) !important;
+        }
+        
+        html[data-theme="dark"] {
+           /* Dark mode adjustments if needed */
+           --waline-bgcolor: #1e1e2e;
+           --waline-bgcolor-light: #27273a;
+           --waline-border-color: #333;
+        }
+
+        /* Fix padding/margin issues */
+        #waline {
+            padding-top: 1rem;
+        }
+      </style>
+    </div>
+  )
+}

@@ -16,6 +16,7 @@ import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 import FloatingTOC from "@/components/FloatingTOC.astro";
 import InlineTOC from "@/components/InlineTOC.astro";
+import Comments from "@/components/Comments.astro";
 
 type Props = {
   post: CollectionEntry<"blog">;
@@ -228,6 +229,8 @@ const nextPost =
         )
       }
     </div>
+
+    <Comments />
   </main>
   <Footer />
 </Layout>
