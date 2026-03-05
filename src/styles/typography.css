@@ -5,10 +5,13 @@
   .app-prose {
     @apply prose;
 
+    /* 所有标题使用 foreground 颜色 */
     h1,
     h2,
     h3,
     h4,
+    h5,
+    h6,
     th {
       @apply mb-3 text-foreground;
     }

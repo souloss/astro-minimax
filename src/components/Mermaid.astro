@@ -2,7 +2,8 @@
 import { randomUUID } from "node:crypto";
 
 /**
- * Mermaid diagram component - 尺寸优化版
+ * Mermaid diagram component - 优化版
+ * 支持亮色/暗色主题
  */
 interface Props {
   code: string;
@@ -58,18 +59,28 @@ const uniqueId = `mermaid-${randomUUID()}`;
     theme: "base",
     themeVariables: {
       ...baseConfig,
-      primaryColor: "#e0e7ff",
-      primaryTextColor: "#1e293b",
-      primaryBorderColor: "#4f46e5",
-      lineColor: "#475569",
-      background: "transparent",
-      actorBorder: "#4f46e5",
-      actorBkg: "#e0e7ff",
-      actorTextColor: "#1e293b",
-      actorLineColor: "#475569",
-      signalColor: "#475569",
-      signalTextColor: "#1e293b",
-      sequenceNumberColor: "#1e293b",
+      // 亮色模式 - 更明亮的配色
+      primaryColor: "#eff6ff",
+      primaryTextColor: "#1f2937",
+      primaryBorderColor: "#3b82f6",
+      lineColor: "#374151",
+      background: "#ffffff",
+      actorBorder: "#3b82f6",
+      actorBkg: "#f0f9ff",
+      actorTextColor: "#1f2937",
+      actorLineColor: "#374151",
+      signalColor: "#374151",
+      signalTextColor: "#1f2937",
+      sequenceNumberColor: "#1f2937",
+      // 流程图节点
+      nodeBkg: "#f0f9ff",
+      nodeBorder: "#3b82f6",
+      nodeTextColor: "#1f2937",
+      // 边缘标签
+      edgeLabelBackground: "#ffffff",
+      // 集群背景
+      clusterBkg: "#f0f9ff",
+      clusterBorder: "#3b82f6",
     },
   };
 
@@ -113,12 +124,14 @@ const uniqueId = `mermaid-${randomUUID()}`;
 </script>
 
 <style>
+  /* 亮色模式样式 */
   .mermaid-wrapper {
     display: flex;
     justify-content: center;
     padding: 1rem;
     border-radius: 0.5rem;
-    background: transparent;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     width: 100%;
   }
 
@@ -129,7 +142,7 @@ const uniqueId = `mermaid-${randomUUID()}`;
     justify-content: center;
   }
 
-  /* 关键：限制 SVG 最大宽度 */
+  /* 限制 SVG 最大宽度 */
   .mermaid-output :global(svg) {
     max-width: 100%;
     height: auto;
@@ -146,9 +159,15 @@ const uniqueId = `mermaid-${randomUUID()}`;
     padding: 1rem;
   }
 
+  /* 暗色模式样式 */
+  :global(html[data-theme="dark"]) .mermaid-wrapper,
+  :global(html.dark) .mermaid-wrapper {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(100, 116, 139, 0.3);
+  }
+
   :global(html[data-theme="dark"]) .mermaid-error,
   :global(html.dark) .mermaid-error {
     color: #f87171;
   }
 </style>
-  
