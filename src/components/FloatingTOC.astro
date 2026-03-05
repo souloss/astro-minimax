@@ -169,7 +169,13 @@ headings.forEach(h => {
       // 1. Update Active Links
       tocLinks.forEach(link => {
         const isActive = link.dataset.tocSlug === activeSlug;
-        link.classList.toggle('active', isActive);
+        if (isActive) {
+            link.setAttribute('data-active', 'true');
+            link.classList.add('active');
+        } else {
+            link.removeAttribute('data-active');
+            link.classList.remove('active');
+        }
       });
 
       // 2. Update Active Items (for sublist expansion)

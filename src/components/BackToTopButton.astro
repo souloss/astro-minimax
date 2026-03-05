@@ -1,88 +1,227 @@
 ---
-import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconArrowNarrowUp from "@/assets/icons/IconArrowNarrowUp.svg";
 ---
 
-<div
-  id="btt-btn-container"
-  class:list={[
-    "fixed end-4 bottom-8 z-50",
-    "md:sticky md:end-auto md:float-end md:me-1",
-    "translate-y-14 opacity-0 transition duration-500",
-  ]}
->
-  <button
-    data-button="back-to-top"
-    class:list={[
-      "group relative bg-background px-2 py-1",
-      "size-14 rounded-full shadow-xl",
-      "md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none",
-      "md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg",
-    ]}
+<!-- There can't be a filter on parent element, or it will break `fixed` -->
+<div class="back-to-top-wrapper hidden lg:block">
+  <div
+    id="back-to-top-btn"
+    class="back-to-top-btn hide flex items-center rounded-2xl overflow-hidden transition"
+    onclick="backToTop()"
   >
-    <span
-      id="progress-indicator"
-      class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"
-    ></span>
-    <IconChevronLeft class="inline-block rotate-90 md:hidden" />
-    <span class="sr-only text-sm group-hover:text-accent md:not-sr-only">
-      <IconArrowNarrowUp class="inline-block size-4" />
-      Back To Top
-    </span>
-  </button>
+    <button
+      aria-label="Back to Top"
+      class="h-[3rem] w-[3rem] rounded-full"
+    >
+      <IconArrowNarrowUp class="mx-auto" />
+    </button>
+  </div>
 </div>
 
-<script is:inline data-astro-rerun>
-  /** Scrolls the document to the top when
-   * the "Back to Top" button is clicked. */
+<style lang="stylus">
+.back-to-top-wrapper
+    width: 3rem
+    height: 3rem
+    position: absolute
+    right: 0
+    top: 0
+    pointer-events: none
+
+.back-to-top-btn
+    color: #394E6A
+    font-size: 1.75rem
+    font-weight: bold
+    position: fixed
+    bottom: 2rem
+    right: 2rem
+    opacity: 1
+    cursor: pointer
+    pointer-events: auto
+    z-index: 1000
+    transition: all 0.3s ease
+    border-radius: 50%
+    background-color: #ffffff
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)
+    border: none
+    width: 3rem
+    height: 3rem
+    svg
+        font-size: 1.25rem
+    &.hide
+        transform: scale(0.9)
+        opacity: 0
+        pointer-events: none
+    &:active
+      transform: scale(0.9)
+    &:hover
+        transform: scale(1.05)
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2)
+        background-color: #D2D7DE
+        border-color: none
+
+/* 暗色主题样式 */
+:global(.dark) .back-to-top-btn
+    background-color: #2B2D38
+    border: none
+    color: #ffffff
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)
+    
+    &:hover
+        background-color: #3a3d4a
+        border-color: none
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2)
+
+/* 响应式调整 */
+@media (max-width: 1024px)
+    .back-to-top-btn
+        right: 1rem
+        bottom: 10rem
+        border-radius: 50%
+
+@media (max-width: 768px)
+    .back-to-top-btn
+        right: 0.75rem
+        bottom: 6rem
+        width: 2.75rem
+        height: 2.75rem
+        font-size: 1.5rem
+        border-radius: 50%
+        svg
+            font-size: 1.25rem
+
+@media (max-width: 480px)
+    .back-to-top-btn
+        right: 0.5rem
+        bottom: 4rem
+        width: 2.5rem
+        height: 2.5rem
+        font-size: 1.25rem
+        border-radius: 50%
+        svg
+            font-size: 1rem
+
+/* 高缩放比例适配 */
+@media (min-resolution: 2dppx)
+    .back-to-top-btn
+        right: max(0.5rem, 2rem - 2vw)
+        bottom: max(9rem, 10rem - 5vh)
+
+/* 超小屏幕适配 */
+@media (max-width: 360px)
+    .back-to-top-btn
+        right: 0.25rem
+        bottom: 5rem
+        width: 2rem
+        height: 2rem
+        font-size: 1rem
+        border-radius: 50%
+        svg
+            font-size: 0.875rem
+
+/* 横屏模式适配 */
+@media (orientation: landscape) and (max-height: 500px)
+    .back-to-top-btn
+        bottom: 8rem
+        right: 0.5rem
+
+/* 确保按钮始终在可视区域内 */
+.back-to-top-btn
+    /* 防止按钮被裁剪 */
+    min-width: 1.25rem
+    min-height: 1.25rem
+    /* 确保按钮有足够的点击区域 */
+    padding: 0.25rem
+    /* 防止按钮超出屏幕 */
+    max-width: 3rem
+    max-height: 3rem
+    /* 确保圆角在所有尺寸下都正确 */
+    border-radius: 50% !important
+
+/* 高DPI屏幕优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
+    .back-to-top-btn
+        /* 确保在高DPI屏幕上清晰显示 */
+        image-rendering: -webkit-optimize-contrast
+        image-rendering: crisp-edges
+
+/* 极低分辨率适配 */
+@media (max-width: 320px)
+    .back-to-top-btn
+        right: 0.125rem
+        bottom: 4.5rem
+        width: 1.75rem
+        height: 1.75rem
+        font-size: 0.875rem
+        border-radius: 50%
+        svg
+            font-size: 0.75rem
+
+/* 确保按钮在容器内正确显示 */
+.back-to-top-wrapper
+    /* 确保容器不会裁剪内容 */
+    overflow: visible
+    /* 防止容器影响按钮定位 */
+    z-index: 999
+
+/* 按钮激活状态 */
+.back-to-top-btn:active
+    transform: scale(0.95)
+
+
+</style>
+
+<script is:raw is:inline>
   function backToTop() {
-    const rootElement = document.documentElement;
-    const btnContainer = document.querySelector("#btt-btn-container");
-    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
-    const progressIndicator = document.querySelector("#progress-indicator");
-
-    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
-      return;
-
-    // Attach click event handler for back-to-top button
-    backToTopBtn.addEventListener("click", () => {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    });
-
-    // Handle button visibility according to scroll position
-    let lastVisible = null;
-    function handleScroll() {
-      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
-      const scrollTop = rootElement.scrollTop;
-      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
-
-      progressIndicator.style.setProperty(
-        "background-image",
-        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
-      );
-
-      const isVisible = scrollTop / scrollTotal > 0.3;
-
-      if (isVisible !== lastVisible) {
-        btnContainer.classList.toggle("opacity-100", isVisible);
-        btnContainer.classList.toggle("translate-y-0", isVisible);
-        btnContainer.classList.toggle("opacity-0", !isVisible);
-        btnContainer.classList.toggle("translate-y-14", !isVisible);
-        lastVisible = isVisible;
-      }
-    }
-
-    let ticking = false;
-    document.addEventListener("scroll", () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    });
+    // 直接使用原生滚动，避免OverlayScrollbars冲突
+    window.scroll({ top: 0, behavior: "smooth" });
   }
-  backToTop();
+
+  // 响应式返回顶部按钮管理器
+  if (typeof window.BackToTopManager === "undefined") {
+    window.BackToTopManager = class BackToTopManager {
+      constructor() {
+        this.button = document.getElementById("back-to-top-btn");
+        this.wrapper = document.querySelector(".back-to-top-wrapper");
+        this.init();
+      }
+
+      init() {
+        if (!this.button || !this.wrapper) return;
+
+        this.setupScrollListener();
+      }
+
+      setupScrollListener() {
+        const updateVisibility = () => {
+          const scrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
+
+          // 当滚动超过200px时显示按钮
+          if (scrollTop > 200) {
+            this.button.classList.remove("hide");
+          } else {
+            this.button.classList.add("hide");
+          }
+        };
+
+        window.addEventListener("scroll", updateVisibility, { passive: true });
+      }
+
+      // 移除resize监听和位置更新逻辑，因为CSS媒体查询已经处理了响应式定位
+    };
+  }
+
+  // 页面加载完成后初始化
+  document.addEventListener("DOMContentLoaded", () => {
+    new BackToTopManager();
+  });
+
+  // 如果页面已经加载完成，立即初始化
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      new BackToTopManager();
+    });
+  } else {
+    new BackToTopManager();
+  }
 </script>
