@@ -14,6 +14,8 @@ import { slugifyStr } from "@/utils/slugify";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
+import FloatingTOC from "@/components/FloatingTOC.astro";
+import InlineTOC from "@/components/InlineTOC.astro";
 
 type Props = {
   post: CollectionEntry<"blog">;
@@ -35,7 +37,7 @@ const {
   hideEditPost,
 } = post.data;
 
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 let ogImageUrl: string | undefined;
 
@@ -84,6 +86,71 @@ const nextPost =
 
 <Layout {...layoutProps}>
   <Header />
+  
+  <!-- Sticky Header for Article Reading Progress -->
+  <div
+    id="sticky-header"
+    class="fixed top-0 start-0 z-50 w-full transform border-b border-border bg-background/80 opacity-0 transition-all duration-300 -translate-y-full backdrop-blur-md"
+  >
+    <div class="app-layout flex h-14 items-center justify-between">
+      <div class="flex items-center gap-4 overflow-hidden">
+        <span
+          class="cursor-pointer truncate text-sm font-medium text-foreground hover:text-accent"
+          onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        >
+          {title}
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          id="sticky-toc-toggle"
+          class="flex items-center gap-1 rounded-md p-2 text-muted-foreground hover:bg-muted/50 hover:text-accent sm:hidden"
+          aria-label="Toggle Table of Contents"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </button>
+        <button
+          class="rounded-md p-2 text-muted-foreground hover:bg-muted/50 hover:text-accent"
+          onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+          aria-label="Scroll to top"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 19V5"></path>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="absolute bottom-0 start-0 h-[2px] w-full bg-muted/30">
+      <div id="progress-bar" class="h-full w-0 bg-accent transition-all duration-150 ease-out"></div>
+    </div>
+  </div>
+
   <BackButton />
   <main
     id="main-content"
@@ -107,12 +174,14 @@ const nextPost =
       >
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
     </div>
+    <InlineTOC headings={headings} />
     <article
       id="article"
       class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     >
       <Content />
     </article>
+    <FloatingTOC headings={headings} />
 
     <hr class="my-8 border-dashed" />
 
@@ -164,46 +233,46 @@ const nextPost =
 </Layout>
 
 <script is:inline data-astro-rerun>
-  /** Create a progress indicator
-   *  at the top */
-  function createProgressBar() {
-    // Create the main container div
-    const progressContainer = document.createElement("div");
-    progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+  function initStickyHeader() {
+    const header = document.getElementById("sticky-header");
+    const progressBar = document.getElementById("progress-bar");
+    const tocToggle = document.getElementById("sticky-toc-toggle");
+    
+    if (!header || !progressBar) return;
 
-    // Create the progress bar div
-    const progressBar = document.createElement("div");
-    progressBar.className = "progress-bar h-1 w-0 bg-accent";
-    progressBar.id = "myBar";
-
-    // Append the progress bar to the progress container
-    progressContainer.appendChild(progressBar);
-
-    // Append the progress container to the document body or any other desired parent element
-    document.body.appendChild(progressContainer);
-  }
-  createProgressBar();
-
-  /** Update the progress bar
-   *  when user scrolls */
-  function updateScrollProgress() {
+    // Handle scroll
     document.addEventListener("scroll", () => {
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
-      if (document) {
-        const myBar = document.getElementById("myBar");
-        if (myBar) {
-          myBar.style.width = scrolled + "%";
-        }
+      
+      // Update progress bar
+      progressBar.style.width = scrolled + "%";
+      
+      // Show/hide header based on scroll position (e.g. past 300px)
+      if (winScroll > 300) {
+        header.classList.remove("-translate-y-full", "opacity-0");
+      } else {
+        header.classList.add("-translate-y-full", "opacity-0");
       }
     });
+
+    // Handle TOC toggle
+    if (tocToggle) {
+      tocToggle.addEventListener("click", () => {
+        // Scroll to InlineTOC and open it
+        const inlineToc = document.querySelector("[data-inline-toc]");
+        if (inlineToc) {
+           inlineToc.scrollIntoView({ behavior: "smooth", block: "center" });
+           const toggleBtn = inlineToc.querySelector("[data-toc-toggle]");
+           if (toggleBtn && toggleBtn.getAttribute("aria-expanded") === "false") {
+             toggleBtn.click();
+           }
+        }
+      });
+    }
   }
-  updateScrollProgress();
+  initStickyHeader();
 
   /** Attaches links to headings in the document,
    *  allowing sharing of sections easily */

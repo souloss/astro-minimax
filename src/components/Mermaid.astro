@@ -37,33 +37,33 @@ const uniqueId = `mermaid-${randomUUID()}`;
       // 通用设置
       fontSize: "14px",
       fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif',
-      
+
       // 流程图 - 节点样式（关键！）
       primaryColor: "#1e293b",
-      primaryTextColor: "#f8fafc",      // 节点文字
+      primaryTextColor: "#f8fafc", // 节点文字
       primaryBorderColor: "#6366f1",
       lineColor: "#94a3b8",
       background: "transparent",
-      
+
       // 流程图 - 额外变量
       nodeBkg: "#1e293b",
       nodeBorder: "#6366f1",
-      nodeTextColor: "#f8fafc",         // 节点文字（确保）
+      nodeTextColor: "#f8fafc", // 节点文字（确保）
       clusterBkg: "#1e293b",
       clusterBorder: "#6366f1",
       edgeLabelBackground: "#1e293b",
-      
+
       // 时序图 - 参与者样式
       actorBorder: "#6366f1",
       actorBkg: "#1e293b",
-      actorTextColor: "#f8fafc",        // 参与者文字
+      actorTextColor: "#f8fafc", // 参与者文字
       actorLineColor: "#94a3b8",
-      
+
       // 时序图 - 消息样式
       signalColor: "#94a3b8",
-      signalTextColor: "#f8fafc",       // 消息文字
-      sequenceNumberColor: "#f8fafc",    // 序号
-      
+      signalTextColor: "#f8fafc", // 消息文字
+      sequenceNumberColor: "#f8fafc", // 序号
+
       // 标签背景
       noteBkg: "#1e293b",
       noteBorder: "#6366f1",
@@ -76,33 +76,33 @@ const uniqueId = `mermaid-${randomUUID()}`;
     themeVariables: {
       fontSize: "14px",
       fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif',
-      
+
       // 流程图 - 节点样式
       primaryColor: "#eff6ff",
-      primaryTextColor: "#1f2937",       // 深色文字
+      primaryTextColor: "#1f2937", // 深色文字
       primaryBorderColor: "#3b82f6",
       lineColor: "#374151",
       background: "#ffffff",
-      
+
       // 流程图 - 额外变量
       nodeBkg: "#eff6ff",
       nodeBorder: "#3b82f6",
-      nodeTextColor: "#1f2937",          // 深色文字
+      nodeTextColor: "#1f2937", // 深色文字
       clusterBkg: "#eff6ff",
       clusterBorder: "#3b82f6",
       edgeLabelBackground: "#ffffff",
-      
+
       // 时序图 - 参与者样式
       actorBorder: "#3b82f6",
       actorBkg: "#f0f9ff",
-      actorTextColor: "#1f2937",          // 深色文字
+      actorTextColor: "#1f2937", // 深色文字
       actorLineColor: "#374151",
-      
+
       // 时序图 - 消息样式
       signalColor: "#374151",
-      signalTextColor: "#1f2937",        // 深色文字
+      signalTextColor: "#1f2937", // 深色文字
       sequenceNumberColor: "#1f2937",
-      
+
       // 标签
       noteBkg: "#f0f9ff",
       noteBorder: "#3b82f6",
@@ -113,7 +113,8 @@ const uniqueId = `mermaid-${randomUUID()}`;
   mermaid.initialize({
     startOnLoad: false,
     securityLevel: "loose",
-    ...(isDark ? darkConfig : lightConfig),
+    theme: "base" as const,
+    themeVariables: (isDark ? darkConfig : lightConfig).themeVariables,
   });
 
   async function renderAllDiagrams() {
@@ -133,7 +134,7 @@ const uniqueId = `mermaid-${randomUUID()}`;
             output.innerHTML = svg;
           } catch (error) {
             console.error("Mermaid render error:", error);
-            output.innerHTML = `<p class="mermaid-error">图表渲染错误: ${error.message}</p>`;
+            output.innerHTML = `<p class="mermaid-error">图表渲染错误: ${error instanceof Error ? error.message : '未知错误'}</p>`;
           }
         }
       }
@@ -146,9 +147,8 @@ const uniqueId = `mermaid-${randomUUID()}`;
     renderAllDiagrams();
   }
 
-  document.addEventListener("astro:page-load", renderAllDiagrams);
+  document.addEventListener('astro:page-load', renderAllDiagrams);
 </script>
-
 <style>
   .mermaid-wrapper {
     display: flex;
