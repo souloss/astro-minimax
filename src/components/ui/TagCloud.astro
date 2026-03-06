@@ -1,0 +1,64 @@
+---
+import IconHash from "@/assets/icons/IconHash.svg";
+
+type Props = {
+  tag: string;
+  tagName: string;
+  count: number;
+  maxCount: number;
+  minCount: number;
+};
+
+const { tag, tagName, count, maxCount, minCount } = Astro.props;
+
+// Calculate relative size based on count
+const getTagSize = (currentCount: number, max: number, min: number): string => {
+  if (max === min) return "text-base";
+  
+  // Normalize to 0-1 range
+  const normalized = (currentCount - min) / (max - min);
+  
+  // Map to size classes with more granular steps
+  if (normalized > 0.9) return "text-3xl font-bold";
+  if (normalized > 0.8) return "text-2xl font-semibold";
+  if (normalized > 0.7) return "text-xl font-semibold";
+  if (normalized > 0.6) return "text-lg font-medium";
+  if (normalized > 0.5) return "text-base font-medium";
+  if (normalized > 0.4) return "text-sm font-medium";
+  if (normalized > 0.3) return "text-sm";
+  if (normalized > 0.2) return "text-xs";
+  return "text-xs";
+};
+
+// Calculate opacity based on count
+const getTagOpacity = (currentCount: number, max: number, min: number): string => {
+  if (max === min) return "opacity-90";
+  
+  const normalized = (currentCount - min) / (max - min);
+  
+  if (normalized > 0.7) return "opacity-100";
+  if (normalized > 0.5) return "opacity-90";
+  if (normalized > 0.3) return "opacity-80";
+  return "opacity-70";
+};
+
+const sizeClass = getTagSize(count, maxCount, minCount);
+const opacityClass = getTagOpacity(count, maxCount, minCount);
+---
+
+<a
+  href={`/tags/${tag}/`}
+  transition:name={tag}
+  class:list={[
+    "inline-flex items-center gap-0.5 px-2 py-1 rounded-md transition-all duration-300",
+    "hover:bg-accent/10 hover:text-accent hover:scale-105",
+    "focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent",
+    sizeClass,
+    opacityClass,
+  ]}
+  title={`${count} post${count > 1 ? "s" : ""}`}
+>
+  <IconHash class="size-4 opacity-70" />
+  <span>{tagName}</span>
+  <span class="text-xs opacity-60">({count})</span>
+</a>
