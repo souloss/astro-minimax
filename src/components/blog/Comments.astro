@@ -12,7 +12,7 @@ const enabled = SITE.waline?.enabled;
       
       <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
       
-      <script type="module" define:vars={{ serverURL: SITE.waline.serverURL, emoji: SITE.waline.emoji, lang: SITE.waline.lang, reaction: SITE.waline.reaction, pageview: SITE.waline.pageview }}>
+      <script is:inline type="module" define:vars={{ serverURL: SITE.waline.serverURL, emoji: SITE.waline.emoji, lang: SITE.waline.lang, reaction: SITE.waline.reaction, pageview: SITE.waline.pageview }}>
         import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
         
         function loadWaline() {

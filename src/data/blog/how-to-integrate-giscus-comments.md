@@ -108,7 +108,7 @@ npm i @giscus/react && npx astro add react
 
 Then we create a new `Comments.tsx` React component in `src/components`:
 
-```tsx file=src/components/Comments.tsx
+```tsx file=src/components/blog/Comments.astro
 import Giscus, { type Theme } from "@giscus/react";
 import { GISCUS } from "@/constants";
 import { useEffect, useState } from "react";
@@ -191,7 +191,7 @@ To complete the process, add the new Comments component to `PostDetails.astro` (
 
 ```jsx file=src/layouts/PostDetails.astro
 // [!code ++:1]
-import Comments from "@/components/Comments";
+import Comments from "@/components/blog/Comments.astro";
 
 <ShareLinks />
 

@@ -49,13 +49,13 @@ export const transformerFileName = ({
       tagName: "span",
       properties: {
         class: [
-          "absolute py-1 text-foreground text-xs font-medium leading-4",
+          "absolute py-1 text-foreground/80 text-xs font-mono font-medium leading-4 select-none",
           hideDot
-            ? "px-2"
-            : "pl-4 pr-2 before:inline-block before:size-1 before:bg-green-500 before:rounded-full before:absolute before:top-[45%] before:left-2",
+            ? "px-2.5"
+            : "pl-5 pr-2.5 before:inline-block before:size-1.5 before:bg-green-500 before:rounded-full before:absolute before:top-[42%] before:left-2 before:shadow-[0_0_4px_rgba(34,197,94,0.5)]",
           style === "v1"
             ? "left-0 -top-6 rounded-t-md border border-b-0 bg-muted/50"
-            : "left-2 top-(--file-name-offset) border rounded-md bg-background",
+            : "left-2 top-(--file-name-offset) border border-border/60 rounded-md bg-background/90 backdrop-blur-sm shadow-sm",
         ],
       },
       children: [

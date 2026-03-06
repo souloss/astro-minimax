@@ -15,6 +15,7 @@ const uniqueId = `mermaid-${randomUUID()}`;
 <div class="mermaid-wrapper my-6" data-mermaid-id={uniqueId}>
   <div class="mermaid-output overflow-x-auto" id={`${uniqueId}-output`}></div>
   <script
+    is:inline
     type="application/json"
     class="mermaid-code"
     set:html={JSON.stringify(code)}

@@ -16,6 +16,7 @@
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
     "@resvg/resvg-js": "^2.6.2",
     "@shikijs/rehype": "^4.0.1",
     "@tailwindcss/vite": "^4.2.1",

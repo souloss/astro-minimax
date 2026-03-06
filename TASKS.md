@@ -3,7 +3,7 @@
 ## 开发启动任务清单
 
 ### 阶段 1：基础设施与架构优化
-- [ ] **组件结构优化：** 重构 src/components 目录，按功能分类组织组件（如 ui/, blog/, common/ 等）
+- [x] **组件结构优化：** 重构 src/components 目录，按功能分类组织组件（如 ui/, blog/, common/ 等）
 - [ ] **代码质量检查：** 运行 `pnpm run astro check` 和 `pnpm run build` 确保当前状态
 - [ ] **依赖审查：** 检查 package.json 中的依赖是否最新且无冲突
 

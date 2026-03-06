@@ -179,7 +179,7 @@ To stop the IDE complaining in the blog engine files I have also done the follow
    }
    ```
 
-2. added `| null` to line 5 in `src/components/Datetime.tsx` so that it looks like
+2. added `| null` to line 5 in `src/components/ui/Datetime.astro` so that it looks like
 
    ```typescript
    interface DatetimesProps {

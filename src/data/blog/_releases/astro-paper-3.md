@@ -134,7 +134,7 @@ Besides, there is no longer `BlogFrontmatter` type exported from `/src/content/c
 
 Therefore, all the `BlogFrontmatter` type inside files need to be updated with `CollectionEntry<"blog">["data"]`.
 
-For example: `src/components/Card.tsx`
+For example: `src/components/ui/Card.astro`
 
 ```ts
 // AstroPaper v2

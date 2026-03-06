@@ -104,7 +104,7 @@ You might want to use this option if you want to use an SVG logo.
 - First add an SVG inside `src/assets` directory. (eg: `src/assets/dummy-logo.svg`)
 - Then import that SVG inside `Header.astro`
 
-  ```astro file=src/components/Header.astro
+  ```astro file=src/components/nav/Header.astro
   ---
   // ...
   import DummyLogo from "@/assets/dummy-logo.svg";
@@ -132,7 +132,7 @@ If your logo is an image but not SVG, you can use Astro's Image component.
 - Add your logo inside `src/assets` directory. (eg: `src/assets/dummy-logo.png`)
 - Import `Image` and your logo in `Header.astro`
 
-  ```astro file=src/components/Header.astro
+  ```astro file=src/components/nav/Header.astro
   ---
   // ...
   import { Image } from "astro:assets";
