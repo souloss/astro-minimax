@@ -2,10 +2,20 @@
 import IconArrowNarrowUp from "@/assets/icons/IconArrowNarrowUp.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
-import { SITE } from "@/config";
 ---
 
 <div class="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3" id="floating-actions">
+  <button
+    id="reading-mode-btn"
+    class="fab-btn size-11 rounded-full border border-border bg-background/90 shadow-md backdrop-blur-sm transition-all hover:scale-105 hover:shadow-lg active:scale-95 hidden sm:flex"
+    aria-label="沉浸式阅读"
+    title="沉浸式阅读"
+  >
+    <svg class="mx-auto size-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  </button>
   {SITE.lightAndDarkMode && (
     <button
       id="theme-btn"
@@ -32,6 +42,16 @@ import { SITE } from "@/config";
 <script>
   function initFloatingActions() {
     const backToTopBtn = document.getElementById("back-to-top-btn");
+    const readingModeBtn = document.getElementById("reading-mode-btn");
+
+    if (readingModeBtn) {
+      readingModeBtn.addEventListener("click", () => {
+        document.body.classList.toggle("reading-mode");
+        readingModeBtn.setAttribute("aria-pressed", document.body.classList.contains("reading-mode"));
+      });
+      if (!document.querySelector("main#main-content")) readingModeBtn.classList.add("hidden");
+    }
+
     if (!backToTopBtn) return;
 
     const updateVisibility = () => {

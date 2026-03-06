@@ -71,19 +71,23 @@ const layoutProps = {
   scrollSmooth: true,
 };
 
-/* ========== Prev/Next Posts ========== */
+/* ========== Prev/Next Posts (Series-aware) ========== */
 
-const allPosts = posts.map(({ data: { title }, id, filePath }) => ({
+const seriesPosts = series
+  ? posts
+      .filter(p => p.data.series?.name === series.name)
+      .sort((a, b) => (a.data.series?.order ?? 0) - (b.data.series?.order ?? 0))
+  : null;
+
+const navList = (seriesPosts ?? posts).map(({ data: { title }, id, filePath }) => ({
   id,
   title,
   filePath,
 }));
 
-const currentPostIndex = allPosts.findIndex(a => a.id === post.id);
-
-const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null;
-const nextPost =
-  currentPostIndex !== allPosts.length ? allPosts[currentPostIndex + 1] : null;
+const currentPostIndex = navList.findIndex(a => a.id === post.id);
+const prevPost = currentPostIndex > 0 ? navList[currentPostIndex - 1] : null;
+const nextPost = currentPostIndex >= 0 && currentPostIndex < navList.length - 1 ? navList[currentPostIndex + 1] : null;
 ---
 
 <Layout {...layoutProps}>
@@ -205,6 +209,25 @@ const nextPost =
     <ShareLinks />
 
     <hr class="my-6 border-dashed" />
+
+    {series && seriesPosts && seriesPosts.length > 0 && (
+      <div class="mb-6 rounded-lg border border-border bg-muted/20 px-4 py-3" data-pagefind-ignore>
+        <div class="text-sm font-medium text-muted-foreground">系列：{series.name}</div>
+        <ol class="mt-2 list-inside list-decimal space-y-1 text-sm">
+          {seriesPosts.map((p) => (
+            <li>
+              {p.id === post.id ? (
+                <span class="font-medium text-accent">{p.data.title}</span>
+              ) : (
+                <a href={getPath(p.id, p.filePath)} class="text-foreground/80 hover:text-accent hover:underline">
+                  {p.data.title}
+                </a>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    )}
 
     <!-- Previous/Next Post Buttons -->
     <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">

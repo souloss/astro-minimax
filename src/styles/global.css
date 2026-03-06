@@ -313,6 +313,20 @@ html[data-theme="dark"] .app-prose kbd {
   box-shadow: 0 1px 0 rgba(110, 118, 129, 0.5) !important;
 }
 
+/* ===== 沉浸式阅读模式 ===== */
+body.reading-mode header,
+body.reading-mode footer,
+body.reading-mode [id="back-button"],
+body.reading-mode .floating-toc-container,
+body.reading-mode #sticky-header {
+  display: none !important;
+}
+
+body.reading-mode main {
+  max-width: 65ch;
+  margin-inline: auto;
+}
+
 /* ===== 代码块复制按钮 ===== */
 pre {
   position: relative;
