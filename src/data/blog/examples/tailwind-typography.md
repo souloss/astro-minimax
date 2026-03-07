@@ -4,6 +4,7 @@ author: Sat Naing
 pubDatetime: 2022-07-05T02:05:51Z
 featured: false
 draft: false
+category: 示例
 tags:
   - TypeScript
   - Astro

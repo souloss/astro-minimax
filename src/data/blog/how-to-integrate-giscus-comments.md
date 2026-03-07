@@ -6,6 +6,7 @@ title: How to integrate Giscus comments into AstroPaper
 slug: how-to-integrate-giscus-comments
 featured: false
 draft: false
+category: 教程
 tags:
   - astro
   - blog
