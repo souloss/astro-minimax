@@ -40,19 +40,19 @@
 ### 阶段 6：社区功能
 - [x] **评论系统优化：** 优化现有 Waline 评论系统配置和UI（已增强UI和配置选项）
 - [x] **点赞和收藏：** 实现文章点赞和收藏功能（已实现基于localStorage的点赞和收藏功能）
-- [ ] **多渠道分发：** 实现文章一键分发到多个平台的功能（RSS 和 sitemap 已实现）
-- [ ] **社交媒体优化：** 优化现有分享功能的预览效果（已实现分享按钮，需优化预览效果）
+- [x] **多渠道分发：** 实现文章一键分发到多个平台的功能（RSS 和 sitemap 已实现，已启用 X/Facebook/Telegram/LinkedIn/Email 分享链接）
+- [x] **社交媒体优化：** 优化现有分享功能的预览效果（已增强OG/Twitter Card标签，添加og:type/og:site_name/og:locale/image:alt等）
 
 ### 阶段 7：运营与工程化
-- [ ] **Umami 集成：** 集成 Umami 统计，需可配置启用
-- [ ] **国际化 (i18n)：** 实现完整的国际化支持，包括内容和UI的多语言
-- [ ] **内容版本控制：** 利用 Git 实现文章版本历史追踪
-- [ ] **自动化部署：** 配置 CI/CD 流程
+- [x] **Umami 集成：** 集成 Umami 统计，通过 config.ts 中 umami.enabled/websiteId/src 配置启用
+- [x] **国际化 (i18n)：** 实现完整的国际化支持（i18n 工具函数、中英双语翻译表、内容多语言目录结构）
+- [x] **内容版本控制：** 利用 Git 实现文章版本历史追踪（EditPost 组件增加 History 链接指向 GitHub 提交记录）
+- [x] **自动化部署：** 配置 CI/CD 流程（GitHub Actions 工作流：类型检查 → Lint → 构建 → 部署）
 
 ### 阶段 8：性能与标准
-- [ ] **SEO 优化增强：** 优化 meta 标签、结构化数据等
-- [ ] **无障碍访问 (a11y)：** 确保符合 WCAG 2.1 AA 标准
-- [ ] **性能监控：** 实施 Core Web Vitals 监控
+- [x] **SEO 优化增强：** 优化 meta 标签、结构化数据（增强 BlogPosting JSON-LD、添加 WebSite SearchAction schema、完善 OG/Twitter 标签）
+- [x] **无障碍访问 (a11y)：** 确保符合 WCAG 2.1 AA 标准（skip-to-content、aria 标签、焦点状态、键盘导航、reduced-motion、语义化 HTML）
+- [x] **性能监控：** 实施 Core Web Vitals 监控（LCP/FCP/CLS 实时监测，开发模式控制台输出）
 
 ### 阶段 9：AI 增强功能（优先级较低）
 - [ ] **AI 问答助手：** 在导航栏用户头像上叠加 AI 图标，点击弹出聊天框，支持清除对话和关闭对话；基于边缘函数 API 实现流式对话；若未启用真实 AI，则实现 mock 效果

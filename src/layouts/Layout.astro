@@ -31,21 +31,44 @@ const {
 
 const socialImageURL = new URL(ogImage, Astro.url);
 
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  headline: `${title}`,
-  image: `${socialImageURL}`,
-  datePublished: `${pubDatetime?.toISOString()}`,
-  ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: `${author}`,
-      ...(profile && { url: profile }),
-    },
-  ],
-};
+const structuredData = pubDatetime
+  ? {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: `${title}`,
+      description: `${description}`,
+      image: `${socialImageURL}`,
+      datePublished: pubDatetime.toISOString(),
+      ...(modDatetime && { dateModified: modDatetime.toISOString() }),
+      author: [
+        {
+          "@type": "Person",
+          name: `${author}`,
+          ...(profile && { url: profile }),
+        },
+      ],
+      publisher: {
+        "@type": "Organization",
+        name: SITE.title,
+        url: SITE.website,
+      },
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": `${canonicalURL}`,
+      },
+    }
+  : {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: SITE.title,
+      description: `${description}`,
+      url: SITE.website,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE.website}search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    };
 ---
 
 <!doctype html>
@@ -78,10 +101,14 @@ const structuredData = {
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
 
     <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content={SITE.title} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content={SITE.lang === "zh" ? "zh_CN" : "en_US"} />
 
     <!-- Article Published/Modified time -->
     {
@@ -102,11 +129,12 @@ const structuredData = {
     }
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={socialImageURL} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
+    <meta name="twitter:image:alt" content={title} />
 
     <!-- Google JSON-LD Structured data -->
     <script
@@ -139,6 +167,16 @@ const structuredData = {
     }
 
     <ClientRouter />
+
+    {/* Umami Analytics */}
+    {SITE.umami?.enabled && SITE.umami.websiteId && (
+      <script
+        is:inline
+        defer
+        src={SITE.umami.src}
+        data-website-id={SITE.umami.websiteId}
+      />
+    )}
 
     <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
     <script is:inline>
@@ -176,5 +214,6 @@ const structuredData = {
 
     <script src="../scripts/theme.ts"></script>
     <script src="../scripts/copy-code.ts"></script>
+    <script src="../scripts/web-vitals.ts"></script>
   </body>
 </html>

@@ -11,24 +11,41 @@ type Props = {
 
 const { hideEditPost, post, class: className = "" } = Astro.props;
 
-const href = `${SITE.editPost.url}${post.filePath}`;
+const editHref = `${SITE.editPost.url}${post.filePath}`;
+const historyHref = SITE.editPost.url
+  ? `${SITE.editPost.url.replace("/edit/", "/commits/").replace(/\/$/, "")}/${post.filePath}`
+  : "";
 const showEditPost =
-  SITE.editPost.enabled && !hideEditPost && href.trim() !== "";
+  SITE.editPost.enabled && !hideEditPost && editHref.trim() !== "";
 ---
 
 {
   showEditPost && (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      class:list={[
-        "flex justify-baseline gap-1.5 opacity-80 hover:text-accent",
-        className,
-      ]}
-    >
-      <IconEdit class="inline-block" />
-      <span>{SITE.editPost.text}</span>
-    </a>
+    <span class:list={["flex justify-baseline gap-3", className]}>
+      <a
+        href={editHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-1.5 opacity-80 hover:text-accent"
+      >
+        <IconEdit class="inline-block" />
+        <span>{SITE.editPost.text}</span>
+      </a>
+      {historyHref && (
+        <a
+          href={historyHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-1.5 opacity-80 hover:text-accent"
+          title="Version history"
+        >
+          <svg class="inline-block size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span>History</span>
+        </a>
+      )}
+    </span>
   )
 }

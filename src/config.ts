@@ -19,8 +19,13 @@ export const SITE = {
   },
   dynamicOgImage: true,
   dir: "ltr", // "rtl" | "auto"
-  lang: "en", // html lang code. Set this empty and default will be "en"
+  lang: "en" as string, // html lang code. Set this empty and default will be "en"
   timezone: "Asia/Bangkok", // Default global timezone (IANA format) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  umami: {
+    enabled: false,
+    websiteId: "",
+    src: "https://analytics.example.com/script.js",
+  },
   waline: {
     enabled: true,
     serverURL: "https://walinejs.souloss.cn/", // Enter your Waline server URL here (e.g. https://your-waline-server.vercel.app)
