@@ -6,7 +6,7 @@ title: Predefined color schemes
 slug: predefined-color-schemes
 featured: false
 draft: false
-category: 配置
+category: 教程/配置
 tags:
   - color-schemes
 description:

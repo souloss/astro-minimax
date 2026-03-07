@@ -6,7 +6,7 @@ title: Adding new posts in AstroPaper theme
 slug: adding-new-posts-in-astropaper-theme
 featured: true
 draft: false
-category: 教程
+category: 教程/博客
 tags:
   - docs
 description:

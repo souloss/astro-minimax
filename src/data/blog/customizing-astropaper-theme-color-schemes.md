@@ -5,7 +5,7 @@ modDatetime: 2026-01-09T15:00:15.170Z
 title: Customizing AstroPaper theme color schemes
 featured: false
 draft: false
-category: 配置
+category: 教程/配置
 tags:
   - color-schemes
   - docs

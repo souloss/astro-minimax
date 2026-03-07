@@ -6,7 +6,7 @@ title: Dynamic OG image generation in AstroPaper blog posts
 slug: dynamic-og-image-generation-in-astropaper-blog-posts
 featured: false
 draft: false
-category: 教程
+category: 教程/博客
 tags:
   - docs
   - release

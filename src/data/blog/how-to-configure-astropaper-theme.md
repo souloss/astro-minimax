@@ -6,7 +6,7 @@ title: How to configure AstroPaper theme
 slug: how-to-configure-astropaper-theme
 featured: true
 draft: false
-category: 配置
+category: 教程/配置
 tags:
   - configuration
   - docs

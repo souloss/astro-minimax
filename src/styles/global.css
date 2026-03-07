@@ -326,6 +326,18 @@ body.reading-mode #sticky-header {
 body.reading-mode main {
   max-width: 65ch;
   margin-inline: auto;
+  padding-top: 2rem;
+}
+
+body.reading-mode .app-prose {
+  font-size: 1.125rem;
+  line-height: 1.85;
+}
+
+body.reading-mode .post-actions,
+body.reading-mode .share-links,
+body.reading-mode [data-pagefind-ignore] {
+  display: none !important;
 }
 
 /* ===== Code Block Copy Button ===== */

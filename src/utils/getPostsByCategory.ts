@@ -7,7 +7,10 @@ const getPostsByCategory = (
 ) =>
   getSortedPosts(
     posts.filter(
-      post => post.data.category && post.data.category === category
+      post =>
+        post.data.category &&
+        (post.data.category === category ||
+          post.data.category.startsWith(category + "/"))
     )
   );
 

@@ -68,7 +68,15 @@ const navItems: NavItem[] = [
             </a>
           </li>
         ))}
-        <li class="ml-1 border-l border-border pl-2">
+        <li class="ml-1 border-l border-border pl-2 flex items-center gap-1">
+          <button
+            id="lang-switch-btn"
+            class="rounded-md px-2 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+            title="Switch language"
+            aria-label="Switch language"
+          >
+            <span id="lang-label">EN</span>
+          </button>
           <a
             href="/search"
             class:list={[
@@ -132,6 +140,20 @@ const navItems: NavItem[] = [
           <span>Search</span>
         </a>
       </li>
+      <li>
+        <button
+          id="lang-switch-btn-mobile"
+          class="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+          aria-label="Switch language"
+        >
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M2 12h20" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+          <span id="lang-label-mobile">English</span>
+        </button>
+      </li>
     </ul>
   </div>
 </header>
@@ -159,4 +181,33 @@ const navItems: NavItem[] = [
 
   toggleNav();
   document.addEventListener("astro:after-swap", toggleNav);
+
+  function initLangSwitcher() {
+    const btns = [
+      document.getElementById("lang-switch-btn"),
+      document.getElementById("lang-switch-btn-mobile"),
+    ];
+    const label = document.getElementById("lang-label");
+    const labelMobile = document.getElementById("lang-label-mobile");
+
+    const path = window.location.pathname;
+    const isZh = path.startsWith("/zh/") || path === "/zh";
+
+    if (label) label.textContent = isZh ? "中" : "EN";
+    if (labelMobile) labelMobile.textContent = isZh ? "中文" : "English";
+
+    btns.forEach(btn => {
+      btn?.addEventListener("click", () => {
+        if (isZh) {
+          const newPath = path.replace(/^\/zh\/?/, "/") || "/";
+          window.location.href = newPath;
+        } else {
+          window.location.href = "/zh" + (path === "/" ? "/" : path);
+        }
+      });
+    });
+  }
+
+  initLangSwitcher();
+  document.addEventListener("astro:after-swap", initLangSwitcher);
 </script>
