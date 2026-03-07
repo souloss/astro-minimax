@@ -17,6 +17,7 @@ type Props = {
   modDatetime?: Date | null;
   scrollSmooth?: boolean;
   lang?: string;
+  tags?: string[];
 };
 
 const {
@@ -30,9 +31,17 @@ const {
   pubDatetime,
   modDatetime,
   scrollSmooth = false,
+  tags = [],
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.url);
+
+const pathname = Astro.url.pathname;
+const altLang = lang === "zh" ? "en" : "zh";
+const altPath = pathname.startsWith(`/${lang}/`)
+  ? pathname.replace(`/${lang}/`, `/${altLang}/`)
+  : null;
+const altURL = altPath ? new URL(altPath, Astro.url) : null;
 
 const structuredData = pubDatetime
   ? {
@@ -82,8 +91,9 @@ const structuredData = pubDatetime
 >
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="manifest" href="/manifest.json" />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
@@ -102,6 +112,15 @@ const structuredData = pubDatetime
     <meta name="author" content={author} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+
+    <!-- hreflang for multilingual SEO -->
+    {altURL && (
+      <>
+        <link rel="alternate" hreflang={lang === "zh" ? "zh-Hans" : "en"} href={canonicalURL} />
+        <link rel="alternate" hreflang={altLang === "zh" ? "zh-Hans" : "en"} href={altURL} />
+        <link rel="alternate" hreflang="x-default" href={new URL(`/zh${pathname.replace(/^\/(zh|en)/, "")}`, Astro.url)} />
+      </>
+    )}
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
@@ -131,6 +150,11 @@ const structuredData = pubDatetime
       )
     }
 
+    <!-- Article Tags -->
+    {tags.length > 0 && tags.map(tag => (
+      <meta property="article:tag" content={tag} />
+    ))}
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={canonicalURL} />
@@ -146,14 +170,21 @@ const structuredData = pubDatetime
       set:html={JSON.stringify(structuredData)}
     />
 
-    <!-- Enable RSS feed auto-discovery  -->
-    <!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery -->
+    <!-- Enable RSS feed auto-discovery -->
     <link
       rel="alternate"
       type="application/rss+xml"
       title={SITE.title}
       href={new URL("rss.xml", Astro.site)}
     />
+    {lang && (
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={`${SITE.title} (${lang === "zh" ? "中文" : "English"})`}
+        href={new URL(`${lang}/rss.xml`, Astro.site)}
+      />
+    )}
 
     <meta name="theme-color" content="" />
 
@@ -218,6 +249,13 @@ const structuredData = pubDatetime
 
     <script src="../scripts/theme.ts"></script>
     <script src="../scripts/copy-code.ts"></script>
+    <script src="../scripts/lightbox.ts"></script>
+    <script src="../scripts/reading-position.ts"></script>
     <script src="../scripts/web-vitals.ts"></script>
+    <script is:inline>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(function () {});
+      }
+    </script>
   </body>
 </html>

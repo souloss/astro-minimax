@@ -59,7 +59,12 @@ type TranslationKey =
   | "main.noCategories"
   | "main.searchDesc"
   | "friends.title"
-  | "friends.desc";
+  | "friends.desc"
+  | "post.updated"
+  | "post.readingTime"
+  | "post.wordCount"
+  | "common.notFoundDesc"
+  | "common.goHome";
 
 const translations: Record<string, Record<TranslationKey, string>> = {
   en: {
@@ -122,6 +127,11 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "main.searchDesc": "Search any article with advanced filters ...",
     "friends.title": "Friends",
     "friends.desc": "Friendship links, welcome to exchange.",
+    "post.updated": "Updated:",
+    "post.readingTime": "{min} min read",
+    "post.wordCount": "{count} words",
+    "common.notFoundDesc": "The page you are looking for doesn't exist.",
+    "common.goHome": "Go back home",
   },
   zh: {
     "nav.home": "首页",
@@ -183,6 +193,11 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "main.searchDesc": "使用高级筛选搜索文章...",
     "friends.title": "友链",
     "friends.desc": "友情链接，欢迎交换",
+    "post.updated": "更新于：",
+    "post.readingTime": "{min} 分钟阅读",
+    "post.wordCount": "{count} 字",
+    "common.notFoundDesc": "你访问的页面不存在。",
+    "common.goHome": "返回首页",
   },
 };
 

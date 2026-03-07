@@ -1,0 +1,19 @@
+{
+  "name": "Souloss - AI Tech Blog",
+  "short_name": "Souloss",
+  "description": "A minimal, responsive and SEO-friendly Astro blog theme.",
+  "start_url": "/zh/",
+  "display": "standalone",
+  "background_color": "#fdfdfd",
+  "theme_color": "#006cac",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["blog", "technology"],
+  "lang": "zh-Hans",
+  "dir": "ltr"
+}

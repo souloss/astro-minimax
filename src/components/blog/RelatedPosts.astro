@@ -33,7 +33,7 @@ const { posts, lang = "zh", title = lang === "zh" ? "相关推荐" : "Related Po
             {post.data.description}
           </p>
           <div class="mt-auto pt-2">
-            <Datetime pubDatetime={post.data.pubDatetime} modDatetime={post.data.modDatetime} />
+            <Datetime pubDatetime={post.data.pubDatetime} modDatetime={post.data.modDatetime} lang={lang} />
           </div>
         </a>
       ))}

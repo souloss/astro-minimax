@@ -4,6 +4,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import IconCalendar from "@/assets/icons/IconCalendar.svg";
 import { SITE } from "@/config";
+import { t } from "@/utils/i18n";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -14,6 +15,7 @@ type Props = {
   pubDatetime: string | Date;
   timezone?: string;
   modDatetime?: string | Date | null;
+  lang?: string;
 };
 
 const {
@@ -22,16 +24,20 @@ const {
   size = "sm",
   class: className = "",
   timezone: postTimezone,
+  lang,
 } = Astro.props;
 
-/* ========== Formatted Datetime ========== */
+const currentLang = lang ?? SITE.lang;
 const isModified = modDatetime && modDatetime > pubDatetime;
 
 const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
   postTimezone || SITE.timezone
 );
 
-const date = datetime.format("D MMM, YYYY"); // e.g., '22 Mar, 2025'
+const date =
+  currentLang === "zh"
+    ? datetime.format("YYYY 年 M 月 D 日")
+    : datetime.format("D MMM, YYYY");
 ---
 
 <div class:list={["flex items-center gap-x-2 opacity-80", className]}>
@@ -44,7 +50,7 @@ const date = datetime.format("D MMM, YYYY"); // e.g., '22 Mar, 2025'
   {
     isModified && (
       <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
-        Updated:
+        {t("post.updated", currentLang)}
       </span>
     )
   }
