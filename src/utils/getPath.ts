@@ -45,6 +45,7 @@ export function getPostSlug(id: string): string {
 export function getLocalizedPostPath(
   lang: string,
   id: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _filePath?: string
 ): string {
   return `/${lang}/posts/${getPostSlug(id)}`;

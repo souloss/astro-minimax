@@ -123,9 +123,9 @@ const sandboxAttributes = [
         if (iframe.requestFullscreen) {
           iframe.requestFullscreen();
         } else if ('webkitRequestFullscreen' in iframe) {
-          (iframe as any).webkitRequestFullscreen();
+          (iframe as HTMLElement & { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
         } else if ('msRequestFullscreen' in iframe) {
-          (iframe as any).msRequestFullscreen();
+          (iframe as HTMLElement & { msRequestFullscreen: () => void }).msRequestFullscreen();
         }
       });
     });

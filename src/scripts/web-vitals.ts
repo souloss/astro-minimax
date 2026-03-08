@@ -28,6 +28,7 @@ function reportMetric(metric: WebVitalMetric) {
         : metric.rating === "needs-improvement"
           ? "#ffa400"
           : "#ff4e42";
+    // eslint-disable-next-line no-console
     console.log(
       `%c[Web Vitals] ${metric.name}: ${metric.value.toFixed(1)}ms (${metric.rating})`,
       `color: ${color}; font-weight: bold;`
