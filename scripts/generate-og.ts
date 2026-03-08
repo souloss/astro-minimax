@@ -234,7 +234,7 @@ async function main() {
 
     const cx = outputWidth  / 2;  // 1200
     const cy = outputHeight / 2;  // 630
-    const composites: sharp.CompositeSharpInput[] = [];
+    const composites: sharp.OverlayOptions[] = [];
 
     for (let col = 0; col < cols; col++) {
       // ── Step 1：确定列中心 X（正交坐标系，旋转前）────────────────────────
