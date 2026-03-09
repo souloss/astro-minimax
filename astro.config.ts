@@ -13,16 +13,17 @@ import {
   transformerNotationHighlight,
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
-import { transformerFileName } from "./src/utils/transformers/fileName";
+// 临时注释掉，看是否是这里的问题
+// import { transformerFileName } from "./src/utils/transformers/fileName";
 import { SITE } from "./src/config";
 
-// https://astro.build/config
 export default defineConfig({
   site: SITE.website,
   output: "static",
   integrations: [
     sitemap({
       filter: page => SITE.showArchives || !page.endsWith("/archives"),
+      xhtml: false,
     }),
     mdx({
       shikiConfig: {
@@ -30,7 +31,8 @@ export default defineConfig({
         defaultColor: false,
         wrap: false,
         transformers: [
-          transformerFileName({ style: "v2", hideDot: false }),
+          // 临时移除自定义 transformer
+          // transformerFileName({ style: "v2", hideDot: false }),
           transformerNotationHighlight(),
           transformerNotationWordHighlight(),
           transformerNotationDiff({ matchAlgorithm: "v3" }),
@@ -48,12 +50,11 @@ export default defineConfig({
     ],
     rehypePlugins: [rehypeKatex],
     shikiConfig: {
-      // For more themes, visit https://shiki.style/themes
       themes: { light: "github-light", dark: "night-owl" },
       defaultColor: false,
       wrap: false,
       transformers: [
-        transformerFileName({ style: "v2", hideDot: false }),
+        // transformerFileName({ style: "v2", hideDot: false }),
         transformerNotationHighlight(),
         transformerNotationWordHighlight(),
         transformerNotationDiff({ matchAlgorithm: "v3" }),
@@ -61,28 +62,23 @@ export default defineConfig({
     },
   },
   vite: {
-    // eslint-disable-next-line
-    // @ts-ignore
-    // This will be fixed in Astro 6 with Vite 7 support
-    // See: https://github.com/withastro/astro/issues/14030
     plugins: [tailwindcss()],
     optimizeDeps: {
-      exclude: ["@resvg/resvg-js"],
+      exclude: ["@resvg/resvg-js", "sharp"],
     },
     ssr: {
-      // Externalize native modules that can't run in Cloudflare Workers
-      // These are only used during prerendering (build time), not at runtime
       external: ["@resvg/resvg-js", "sharp"],
     },
     build: {
       rollupOptions: {
-        external: [/@resvg\/resvg-js/, /@resvg\/resvg-js-linux-.*/, /\.node$/],
+        external: ["@resvg/resvg-js", "sharp"],
       },
     },
   },
   image: {
-    responsiveStyles: true,
-    layout: "constrained",
+    service: {
+      entrypoint: 'astro/assets/services/noop',
+    },
   },
   env: {
     schema: {
