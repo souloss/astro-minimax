@@ -34,6 +34,10 @@ const asTransformer = (t: any) => t;
 export default defineConfig({
   site: SITE.website,
   output: "static",
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover',
+  },
   integrations: [
     sitemap({
       filter: page => SITE.showArchives || !page.endsWith("/archives"),
@@ -106,7 +110,17 @@ export default defineConfig({
     build: {
       rollupOptions: {
         external: [/@resvg\/resvg-js/, /@resvg\/resvg-js-linux-.*/, /\.node$/],
+        output: {
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: 'assets/[name]-[hash].[ext]',
+        },
       },
+      // Performance optimizations
+      cssMinify: true,
+      minify: 'esbuild',
+      sourcemap: false,
+      reportCompressedSize: true,
     },
   },
   image: {

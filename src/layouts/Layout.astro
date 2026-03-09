@@ -93,7 +93,26 @@ const structuredData = pubDatetime
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <link rel="manifest" href="/manifest.json" />
+    <!-- PWA manifest loaded asynchronously to avoid render blocking -->
+    <script is:inline>
+      // Defer manifest registration using requestIdleCallback
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          const link = document.createElement('link');
+          link.rel = 'manifest';
+          link.href = '/manifest.json';
+          document.head.appendChild(link);
+        });
+      } else {
+        // Fallback for browsers without requestIdleCallback
+        setTimeout(() => {
+          const link = document.createElement('link');
+          link.rel = 'manifest';
+          link.href = '/manifest.json';
+          document.head.appendChild(link);
+        }, 100);
+      }
+    </script>
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
@@ -283,10 +302,10 @@ const structuredData = pubDatetime
     <FloatingActions />
     <AIChatWidget lang={lang} />
 
-    <script src="../scripts/theme.ts"></script>
-    <script src="../scripts/lightbox.ts"></script>
-    <script src="../scripts/reading-position.ts"></script>
-    <script src="../scripts/web-vitals.ts"></script>
+    <script src="../scripts/theme.ts" defer></script>
+    <script src="../scripts/lightbox.ts" defer></script>
+    <script src="../scripts/reading-position.ts" defer></script>
+    <script src="../scripts/web-vitals.ts" async></script>
     <script is:inline>
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("/sw.js").catch(function () {});

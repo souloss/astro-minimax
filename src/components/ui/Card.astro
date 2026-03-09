@@ -11,6 +11,7 @@ type Props = {
   variant?: "h2" | "h3";
   compact?: boolean;
   lang?: string;
+  priority?: boolean;
 } & CollectionEntry<"blog">;
 
 const {
@@ -21,6 +22,7 @@ const {
   body,
   filePath,
   lang = "zh",
+  priority = false,
 } = Astro.props;
 
 const { title, description, category, ogImage, tags, pubDatetime, modDatetime, timezone } = data;
@@ -90,8 +92,11 @@ const dateStr = lang === "zh"
             src={coverSrc}
             alt=""
             class="h-full w-full object-cover object-center"
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
             decoding="async"
+            fetchpriority={priority ? "high" : undefined}
+            width="800"
+            height="450"
           />
           <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
         </div>
