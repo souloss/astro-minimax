@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 interface HastNode {
   type: string;
   tagName?: string;

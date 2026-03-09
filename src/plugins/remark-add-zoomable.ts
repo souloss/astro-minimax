@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 interface MdastNode {
   type: string;
   children?: MdastNode[];
