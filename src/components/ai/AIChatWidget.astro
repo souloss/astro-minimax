@@ -260,7 +260,8 @@ const aiConfig = {
           });
 
           if (!response.ok) {
-            const errText = await response.text();
+
+
             textEl.textContent = (lang === "zh" ? "API 错误: " : "API Error: ") + response.status;
             chatHistory.push({ role: "assistant", content: textEl.textContent });
             return;
