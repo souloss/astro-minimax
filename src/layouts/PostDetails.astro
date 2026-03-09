@@ -5,7 +5,6 @@ import Header from "@/components/nav/Header.astro";
 import Footer from "@/components/nav/Footer.astro";
 import Tag from "@/components/ui/Tag.astro";
 import Datetime from "@/components/ui/Datetime.astro";
-import ShareLinks from "@/components/blog/ShareLinks.astro";
 import BackButton from "@/components/nav/BackButton.astro";
 import { getLocalizedPostPath, getPostSlug } from "@/utils/getPath";
 import { t } from "@/utils/i18n";
@@ -275,8 +274,6 @@ const nextPost =
     </ul>
 
     <Copyright title={title} pubDatetime={pubDatetime} lang={lang} />
-
-    <ShareLinks />
 
     <PostActions />
 
