@@ -6,6 +6,7 @@ import IconTag from "@/assets/icons/IconTag.svg";
 import IconUser from "@/assets/icons/IconUser.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
+import IconSeries from "@/assets/icons/IconSeries.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import { SITE } from "@/config";
 import { t } from "@/utils/i18n";
@@ -29,6 +30,11 @@ const navItems = [
     href: `${base}/categories`,
     label: t("nav.categories", lang),
     icon: IconTag,
+  },
+  {
+    href: `${base}/series`,
+    label: t("nav.series", lang),
+    icon: IconSeries,
   },
   { href: `${base}/about`, label: t("nav.about", lang), icon: IconUser },
   { href: `${base}/friends`, label: t("nav.friends", lang), icon: IconUser },

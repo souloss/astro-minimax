@@ -66,6 +66,7 @@ Frontmatter 是存储博客文章（文章）重要信息的主要位置。Front
 | **_slug_**         | 文章的 slug。此字段可选。                                                             | default = slugified file name                 |
 | **_featured_**     | 是否在首页特色区域显示此文章                                                          | default = false                               |
 | **_draft_**        | 将此文章标记为"未发布"。                                                              | default = false                               |
+| **_category_**     | 文章分类，支持层级格式如 `教程/配置`。用于内容组织和导航。                            | optional                                      |
 | **_tags_**         | 此文章的相关关键词。以 yaml 数组格式编写。                                            | default = others                              |
 | **_ogImage_**      | 文章的 OG 图片。用于社交媒体分享和 SEO。可以是远程 URL 或相对于当前文件夹的图片路径。 | default = `SITE.ogImage` 或生成的 OG image    |
 | **_canonicalURL_** | 规范 URL（绝对路径），如果文章已存在于其他来源。                                      | default = `Astro.site` + `Astro.url.pathname` |
@@ -106,6 +107,7 @@ pubDatetime: 2022-09-21T05:17:19Z
 slug: the-title-of-the-post
 featured: true
 draft: false
+category: 教程/博客
 tags:
   - some
   - example

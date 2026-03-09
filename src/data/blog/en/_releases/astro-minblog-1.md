@@ -52,11 +52,22 @@ astro-minblog adds the following features on top of AstroPaper:
 - 📖 **Related Posts** - Smart recommendation algorithm
 - 🔗 **Friends Page** - Friend links management
 
+#### Social & Sponsorship
+
+- ☕ **Sponsor Component** - Support WeChat Pay, Alipay, and other donation methods
+- ©️ **Copyright Notice** - Automatic CC license display
+- 🔗 **Share Links** - One-click sharing to social platforms
+
 #### User Experience
 
 - ⏰ **Scheduled Posts** - Time-based publication control
 - 🌍 **Timezone Support** - Global and per-post timezone settings
 - 📍 **Reading Position** - Persistent scroll position memory
+
+#### Developer Tools
+
+- 🛠️ **AI Toolchain** - Build-time tools for summary generation, tag suggestion, cover image generation, content vectorization
+- 🧮 **Vector Search** - Semantic search based on TF-IDF / OpenAI Embeddings
 
 ### 🔧 Tech Stack
 
@@ -76,7 +87,7 @@ astro-minblog adds the following features on top of AstroPaper:
 **Deployment & Analytics**
 
 - [Vercel](https://vercel.com/) / [Cloudflare Pages](https://pages.cloudflare.com/) - Deployment platforms
-- [Google Analytics](https://analytics.google.com/) - Traffic analysis
+- [Umami](https://umami.is/) - Privacy-friendly traffic analytics
 
 ## Version Evolution Summary
 
@@ -102,17 +113,26 @@ astro-minblog adds the following features on top of AstroPaper:
 ├── src/
 │   ├── components/
 │   │   ├── ai/          # AI chat widget
-│   │   ├── blog/        # Post components, TOC, comments
-│   │   ├── media/       # Mermaid, Bilibili, music player
-│   │   ├── nav/         # Header, footer, pagination
-│   │   └── ui/          # Cards, tags, alerts
+│   │   ├── blog/        # Post components, TOC, comments, copyright
+│   │   ├── media/       # Mermaid, Bilibili, music player, code runner
+│   │   ├── nav/         # Header, footer, pagination, floating actions
+│   │   ├── social/      # Sponsorship, social links
+│   │   └── ui/          # Cards, tags, alerts, timeline, collapse
 │   ├── data/
 │   │   ├── blog/        # Blog posts (en/, zh/)
+│   │   ├── vectors/     # Vector index (for AI search)
 │   │   └── friends.ts   # Friend links data
 │   ├── pages/
 │   │   └── [lang]/      # Multi-language routes
 │   ├── config.ts        # Site configuration
 │   └── constants.ts     # Constants definition
+├── tools/               # AI toolchain
+│   ├── lib/             # Shared utilities
+│   ├── summarize.ts     # Summary generation
+│   ├── generate-tags.ts # Tag suggestion
+│   ├── generate-cover.ts# Cover image generation
+│   ├── generate-related.ts # Related posts
+│   └── vectorize.ts     # Content vectorization
 └── public/
     └── pagefind/        # Search index
 ```

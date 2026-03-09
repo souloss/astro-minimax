@@ -43,11 +43,22 @@ astro-minblog 在 AstroPaper 基础上新增以下功能：
 - 📖 **相关文章** - 智能推荐算法
 - 🔗 **友链页面** - 友情链接管理
 
+#### 社交与赞助
+
+- ☕ **赞助组件** - 支持微信支付、支付宝等多种打赏方式
+- ©️ **版权声明** - CC 协议自动展示
+- 🔗 **分享链接** - 一键分享到社交平台
+
 #### 用户体验
 
 - ⏰ **定时发布** - 基于时间的发布控制
 - 🌍 **时区支持** - 全局与单篇文章时区设置
 - 📍 **阅读位置** - 持久化滚动位置记忆
+
+#### 开发者工具
+
+- 🛠️ **AI 辅助工具链** - 摘要生成、标签推荐、封面图生成、内容向量化等构建时工具
+- 🧮 **向量检索** - 基于 TF-IDF / OpenAI Embeddings 的语义搜索
 
 ### 🔧 技术栈
 
@@ -67,7 +78,7 @@ astro-minblog 在 AstroPaper 基础上新增以下功能：
 **部署与监控**
 
 - [Vercel](https://vercel.com/) / [Cloudflare Pages](https://pages.cloudflare.com/) - 部署平台
-- [Google Analytics](https://analytics.google.com/) - 流量分析
+- [Umami](https://umami.is/) - 隐私友好的流量分析
 
 ## 版本演进总结
 
@@ -93,17 +104,26 @@ astro-minblog 在 AstroPaper 基础上新增以下功能：
 ├── src/
 │   ├── components/
 │   │   ├── ai/          # AI 聊天组件
-│   │   ├── blog/        # 文章组件、目录、评论
-│   │   ├── media/       # Mermaid、Bilibili、音乐播放器
-│   │   ├── nav/         # 页头、页脚、分页
-│   │   └── ui/          # 卡片、标签、提示框
+│   │   ├── blog/        # 文章组件、目录、评论、版权
+│   │   ├── media/       # Mermaid、Bilibili、音乐播放器、代码运行器
+│   │   ├── nav/         # 页头、页脚、分页、浮动操作
+│   │   ├── social/      # 赞助、社交链接
+│   │   └── ui/          # 卡片、标签、提示框、时间线、折叠
 │   ├── data/
 │   │   ├── blog/        # 博客文章 (en/, zh/)
+│   │   ├── vectors/     # 向量索引（AI 检索用）
 │   │   └── friends.ts   # 友链数据
 │   ├── pages/
 │   │   └── [lang]/      # 多语言路由
 │   ├── config.ts        # 站点配置
 │   └── constants.ts     # 常量定义
+├── tools/               # AI 辅助工具链
+│   ├── lib/             # 共享工具库
+│   ├── summarize.ts     # 摘要生成
+│   ├── generate-tags.ts # 标签推荐
+│   ├── generate-cover.ts# 封面图生成
+│   ├── generate-related.ts # 关联文章推荐
+│   └── vectorize.ts     # 内容向量化
 └── public/
     └── pagefind/        # 搜索索引
 ```

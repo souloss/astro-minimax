@@ -197,6 +197,103 @@ You can configure share links in `SHARE_LINKS` object inside `src/constants.ts`.
 
 ![An arrow pointing at share link icons](https://github.com/user-attachments/assets/4f930b68-b625-45df-8c41-e076dd2b838e)
 
+## Configuring Waline Comments
+
+astro-minblog comes with a built-in [Waline](https://waline.js.org/) comment system. Configure it in `SITE.waline` inside `src/config.ts`:
+
+```js file=src/config.ts
+waline: {
+  enabled: true,
+  serverURL: "https://your-waline-server.vercel.app/",
+  emoji: [
+    "//unpkg.com/@waline/emojis@1.2.0/weibo",
+    "//unpkg.com/@waline/emojis@1.2.0/bilibili",
+  ],
+  lang: "zh-CN",
+  pageview: true,
+  reaction: true,
+  login: "enable",
+  wordLimit: [0, 1000],
+  imageUploader: false,
+  requiredMeta: ["nick", "mail"],
+},
+```
+
+| Option | Description |
+|--------|-------------|
+| `enabled` | Enable or disable the comment system |
+| `serverURL` | Waline server URL |
+| `emoji` | Emoji pack configuration |
+| `lang` | Comment widget language |
+| `pageview` | Show page view counter |
+| `reaction` | Enable emoji reactions |
+| `login` | Login mode: `enable` / `disable` / `force` |
+
+## Configuring AI Chat
+
+astro-minblog includes a built-in AI chat assistant. Configure it in `SITE.ai`:
+
+```js file=src/config.ts
+ai: {
+  enabled: true,
+  apiEndpoint: "",
+  apiKey: "",
+  model: "gpt-4o-mini",
+  maxTokens: 1024,
+  systemPrompt: "You are an AI assistant for a tech blog...",
+  mockMode: true,
+  vectorSearch: true,
+},
+```
+
+| Option | Description |
+|--------|-------------|
+| `enabled` | Enable or disable AI chat |
+| `mockMode` | In mock mode, returns preset responses without calling a real API |
+| `vectorSearch` | Use vector index to search related content for answering questions |
+| `apiEndpoint` | Custom API endpoint (OpenAI-compatible) |
+| `model` | Model name to use |
+
+## Configuring Sponsorship
+
+Configure donation/tip features in `SITE.sponsor`:
+
+```js file=src/config.ts
+sponsor: {
+  enabled: true,
+  methods: [
+    { name: "WeChat Pay", icon: "wechat", image: "/images/wechat-pay.svg" },
+    { name: "Alipay", icon: "alipay", image: "/images/alipay.svg" },
+  ],
+  sponsors: [],
+},
+```
+
+Place your payment QR code images in the `public/images/` directory.
+
+## Configuring Copyright
+
+Configure the copyright license in `SITE.copyright`:
+
+```js file=src/config.ts
+copyright: {
+  license: "CC BY-NC-SA 4.0",
+  licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+},
+```
+
+## Configuring Umami Analytics
+
+Configure [Umami](https://umami.is/) privacy-friendly analytics in `SITE.umami`:
+
+```js file=src/config.ts
+umami: {
+  enabled: false,
+  websiteId: "your-website-id",
+  src: "https://your-umami-instance.com/",
+},
+```
+
 ## Configuring fonts
 
 astro-minblog uses Astro's [experimental fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/) with [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code) as the default font. This provides consistent typography across all platforms with automatic font optimizations including preloading and caching.

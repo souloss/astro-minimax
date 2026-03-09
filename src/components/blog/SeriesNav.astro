@@ -1,0 +1,104 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import { getPostsByLang } from "@/utils/getPostsByLang";
+import { getSeriesByName } from "@/utils/getSeriesData";
+import { getLocalizedPostPath } from "@/utils/getPath";
+import { t } from "@/utils/i18n";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  lang?: string;
+}
+
+const { post, lang = "zh" } = Astro.props;
+const series = post.data.series;
+
+if (!series) return;
+
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const langPosts = getPostsByLang(allPosts, lang);
+const seriesInfo = getSeriesByName(langPosts, series.name);
+
+if (!seriesInfo || seriesInfo.totalPosts < 2) return;
+
+const currentOrder = series.order;
+const seriesSlug = seriesInfo.slug;
+---
+
+<nav
+  class="my-6 rounded-xl border border-border/60 bg-card/50 p-4 sm:p-5"
+  aria-label={`${t("series.title", lang)}: ${series.name}`}
+>
+  <div class="mb-3 flex items-center justify-between">
+    <a
+      href={`/${lang}/series/${encodeURIComponent(seriesSlug)}/`}
+      class="flex items-center gap-2 text-sm font-bold text-foreground transition-colors hover:text-accent"
+    >
+      <svg
+        class="size-4 text-accent"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"
+        ></path>
+        <path
+          d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"
+        ></path>
+        <path d="M5 8h4"></path>
+        <path d="M9 16h4"></path>
+      </svg>
+      {series.name}
+    </a>
+    <span class="text-xs text-foreground-soft">
+      {t("series.progress", lang)
+        .replace("{current}", String(currentOrder))
+        .replace("{total}", String(seriesInfo.totalPosts))}
+    </span>
+  </div>
+
+  <div class="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+    <div
+      class="h-full rounded-full bg-accent transition-all duration-500"
+      style={`width: ${(currentOrder / seriesInfo.totalPosts) * 100}%`}
+    >
+    </div>
+  </div>
+
+  <ol class="space-y-1">
+    {
+      seriesInfo.posts.map((p, idx) => {
+        const isCurrent = p.id === post.id;
+        const href = getLocalizedPostPath(lang, p.id, p.filePath);
+
+        return (
+          <li>
+            {isCurrent ? (
+              <span class="flex items-center gap-2 rounded-md bg-accent/10 px-3 py-1.5 text-sm font-medium text-accent">
+                <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-white">
+                  {idx + 1}
+                </span>
+                <span class="truncate">{p.data.title}</span>
+              </span>
+            ) : (
+              <a
+                href={href}
+                class="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-foreground-soft transition-colors hover:bg-muted/60 hover:text-foreground"
+              >
+                <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground-soft">
+                  {idx + 1}
+                </span>
+                <span class="truncate">{p.data.title}</span>
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>

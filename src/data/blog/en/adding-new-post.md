@@ -69,6 +69,7 @@ Here is the list of frontmatter property for each post.
 | **_slug_**         | Slug for the post. This field is optional.                                                                                            | default = slugified file name                  |
 | **_featured_**     | Whether or not display this post in featured section of home page                                                                     | default = false                                |
 | **_draft_**        | Mark this post 'unpublished'.                                                                                                         | default = false                                |
+| **_category_**     | Post category, supports hierarchical format like `Tutorial/Config`. Used for content organization and navigation.                     | optional                                       |
 | **_tags_**         | Related keywords for this post. Written in array yaml format.                                                                         | default = others                               |
 | **_ogImage_**      | OG image of the post. Useful for social media sharing and SEO. This can be a remote URL or an image path relative to current folder.  | default = `SITE.ogImage` or generated OG image |
 | **_canonicalURL_** | Canonical URL (absolute), in case the article already exists on other source.                                                         | default = `Astro.site` + `Astro.url.pathname`  |
@@ -109,6 +110,7 @@ pubDatetime: 2022-09-21T05:17:19Z
 slug: the-title-of-the-post
 featured: true
 draft: false
+category: Tutorial/Blog
 tags:
   - some
   - example

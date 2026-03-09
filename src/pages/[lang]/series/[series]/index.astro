@@ -1,0 +1,141 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/nav/Header.astro";
+import Footer from "@/components/nav/Footer.astro";
+import { getPostsByLang } from "@/utils/getPostsByLang";
+import { getSeriesFromPosts } from "@/utils/getSeriesData";
+import { getLocalizedPostPath } from "@/utils/getPath";
+import { getReadingTime } from "@/utils/getReadingTime";
+import { SITE } from "@/config";
+import { t } from "@/utils/i18n";
+
+import dayjs from "dayjs";
+import utcPlugin from "dayjs/plugin/utc";
+import timezonePlugin from "dayjs/plugin/timezone";
+
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+
+  return (["zh", "en"] as const).flatMap(lang => {
+    const langPosts = getPostsByLang(posts, lang);
+    const seriesList = getSeriesFromPosts(langPosts);
+
+    return seriesList.map(series => ({
+      params: { lang, series: series.slug },
+      props: { seriesInfo: series },
+    }));
+  });
+}) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as {
+  lang: "zh" | "en";
+  series: string;
+};
+const { seriesInfo } = Astro.props;
+---
+
+<Layout
+  lang={lang}
+  title={`${seriesInfo.name} | ${t("series.title", lang)} | ${SITE.title}`}
+>
+  <Header lang={lang} />
+  <Main
+    pageTitle={seriesInfo.name}
+    pageDesc={t("series.seriesDesc", lang).replace("{name}", seriesInfo.name)}
+  >
+    <div class="mb-6 flex items-center gap-3 rounded-lg border border-border/60 bg-muted/30 px-4 py-3">
+      <svg
+        class="size-5 shrink-0 text-accent"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"
+        ></path>
+        <path
+          d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"
+        ></path>
+        <path d="M5 8h4"></path>
+        <path d="M9 16h4"></path>
+      </svg>
+      <div class="text-sm">
+        <span class="font-medium text-foreground">{seriesInfo.name}</span>
+        <span class="text-foreground-soft">
+          ·
+          {t("series.articles", lang).replace(
+            "{count}",
+            String(seriesInfo.totalPosts)
+          )}
+        </span>
+      </div>
+    </div>
+
+    <ol class="relative space-y-4 border-l-2 border-border/60 pl-6">
+      {
+        seriesInfo.posts.map((post, idx) => {
+          const postHref = getLocalizedPostPath(lang, post.id, post.filePath);
+          const { minutes } = getReadingTime(post.body ?? "");
+          const datetime = dayjs(
+            post.data.modDatetime ?? post.data.pubDatetime
+          ).tz(post.data.timezone || SITE.timezone);
+          const dateStr =
+            lang === "zh"
+              ? datetime.format("YYYY 年 M 月 D 日")
+              : datetime.format("MMM D, YYYY");
+
+          return (
+            <li class="group relative">
+              <div class="absolute -left-[calc(1.5rem+1px)] top-1.5 flex size-6 items-center justify-center rounded-full border-2 border-border bg-background text-xs font-bold text-accent transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-white">
+                {idx + 1}
+              </div>
+              <a
+                href={postHref}
+                class="block rounded-lg border border-border/60 bg-card/50 p-4 transition-all duration-200 hover:border-accent/40 hover:shadow-md"
+              >
+                <h3 class="text-base font-semibold text-foreground transition-colors group-hover:text-accent">
+                  {post.data.title}
+                </h3>
+                <p class="mt-1 line-clamp-2 text-sm text-foreground-soft">
+                  {post.data.description}
+                </p>
+                <div class="mt-3 flex flex-wrap items-center gap-3 text-xs text-foreground-soft">
+                  <time datetime={datetime.toISOString()}>{dateStr}</time>
+                  <span>·</span>
+                  <span>
+                    {t("post.readingTime", lang).replace(
+                      "{min}",
+                      String(minutes)
+                    )}
+                  </span>
+                  {post.data.tags.length > 0 && (
+                    <>
+                      <span>·</span>
+                      <div class="flex flex-wrap gap-1">
+                        {post.data.tags.slice(0, 3).map(tag => (
+                          <span class="rounded bg-muted px-1.5 py-0.5 text-foreground-soft">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ol>
+  </Main>
+  <Footer lang={lang} />
+</Layout>

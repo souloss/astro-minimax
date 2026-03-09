@@ -18,8 +18,10 @@ import Comments from "@/components/blog/Comments.astro";
 import PostActions from "@/components/blog/PostActions.astro";
 import RelatedPosts from "@/components/blog/RelatedPosts.astro";
 import Copyright from "@/components/blog/Copyright.astro";
+import SeriesNav from "@/components/blog/SeriesNav.astro";
 import { getRelatedPosts } from "@/utils/getRelatedPosts";
 import { getReadingTime } from "@/utils/getReadingTime";
+import { getCategoryUrl } from "@/utils/getCategoryPath";
 
 type Props = {
   post: CollectionEntry<"blog">;
@@ -101,7 +103,7 @@ const breadcrumbList = {
             "@type": "ListItem",
             position: 3,
             name: category,
-            item: `${SITE.website}${lang}/categories/${encodeURIComponent(category)}/`,
+            item: `${SITE.website.replace(/\/$/, "")}${getCategoryUrl(lang, category)}`,
           },
           {
             "@type": "ListItem",
@@ -255,7 +257,7 @@ const nextPost =
       <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-border/60 bg-card/40 px-4 py-3">
         {category && (
           <a
-            href={`/${lang}/categories/${encodeURIComponent(category)}/`}
+            href={getCategoryUrl(lang, category)}
             class="text-sm font-medium text-accent underline decoration-accent/30 underline-offset-2 hover:decoration-accent"
           >
             {category}
@@ -319,34 +321,9 @@ const nextPost =
 
     <hr class="my-6 border-dashed" />
 
-    {
-      series && seriesPosts && seriesPosts.length > 0 && (
-        <div
-          class="mb-6 rounded-lg border border-border bg-muted/20 px-4 py-3"
-          data-pagefind-ignore
-        >
-          <div class="text-muted-foreground text-sm font-medium">
-            {t("post.series", lang)}：{series.name}
-          </div>
-          <ol class="mt-2 list-inside list-decimal space-y-1 text-sm">
-            {seriesPosts.map(p => (
-              <li>
-                {p.id === post.id ? (
-                  <span class="font-medium text-accent">{p.data.title}</span>
-                ) : (
-                  <a
-                    href={getLocalizedPostPath(lang, p.id)}
-                    class="text-foreground/80 hover:text-accent hover:underline"
-                  >
-                    {p.data.title}
-                  </a>
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
-      )
-    }
+    <div data-pagefind-ignore>
+      <SeriesNav post={post} lang={lang} />
+    </div>
 
     <!-- Previous/Next Post Buttons -->
     <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">

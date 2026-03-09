@@ -196,6 +196,103 @@ export const SOCIALS = [
 
 ![An arrow pointing at share link icons](https://github.com/user-attachments/assets/4f930b68-b625-45df-8c41-e076dd2b838e)
 
+## 配置 Waline 评论
+
+astro-minblog 内置 [Waline](https://waline.js.org/) 评论系统。在 `src/config.ts` 的 `SITE.waline` 中配置：
+
+```js file=src/config.ts
+waline: {
+  enabled: true,
+  serverURL: "https://your-waline-server.vercel.app/",
+  emoji: [
+    "//unpkg.com/@waline/emojis@1.2.0/weibo",
+    "//unpkg.com/@waline/emojis@1.2.0/bilibili",
+  ],
+  lang: "zh-CN",
+  pageview: true,
+  reaction: true,
+  login: "enable",
+  wordLimit: [0, 1000],
+  imageUploader: false,
+  requiredMeta: ["nick", "mail"],
+},
+```
+
+| 选项 | 说明 |
+|------|------|
+| `enabled` | 是否启用评论系统 |
+| `serverURL` | Waline 服务端地址 |
+| `emoji` | 表情包配置 |
+| `lang` | 评论组件语言 |
+| `pageview` | 是否显示页面浏览量 |
+| `reaction` | 是否启用表情互动 |
+| `login` | 登录模式：`enable` / `disable` / `force` |
+
+## 配置 AI 聊天
+
+astro-minblog 内置 AI 聊天助手。在 `SITE.ai` 中配置：
+
+```js file=src/config.ts
+ai: {
+  enabled: true,
+  apiEndpoint: "",
+  apiKey: "",
+  model: "gpt-4o-mini",
+  maxTokens: 1024,
+  systemPrompt: "你是一个技术博客的 AI 助手...",
+  mockMode: true,
+  vectorSearch: true,
+},
+```
+
+| 选项 | 说明 |
+|------|------|
+| `enabled` | 是否启用 AI 聊天 |
+| `mockMode` | Mock 模式下不调用真实 API，返回预设回复 |
+| `vectorSearch` | 是否基于向量索引检索相关内容回答问题 |
+| `apiEndpoint` | 自定义 API 端点（兼容 OpenAI 接口） |
+| `model` | 使用的模型名称 |
+
+## 配置赞助
+
+在 `SITE.sponsor` 中配置打赏功能：
+
+```js file=src/config.ts
+sponsor: {
+  enabled: true,
+  methods: [
+    { name: "微信支付", icon: "wechat", image: "/images/wechat-pay.svg" },
+    { name: "支付宝", icon: "alipay", image: "/images/alipay.svg" },
+  ],
+  sponsors: [],
+},
+```
+
+将你的收款码图片放到 `public/images/` 目录下即可。
+
+## 配置版权声明
+
+在 `SITE.copyright` 中配置版权协议：
+
+```js file=src/config.ts
+copyright: {
+  license: "CC BY-NC-SA 4.0",
+  licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+},
+```
+
+## 配置 Umami 统计
+
+在 `SITE.umami` 中配置 [Umami](https://umami.is/) 访问统计：
+
+```js file=src/config.ts
+umami: {
+  enabled: false,
+  websiteId: "your-website-id",
+  src: "https://your-umami-instance.com/",
+},
+```
+
 ## 配置字体
 
 astro-minblog 使用 Astro 的[实验性字体 API](https://docs.astro.build/en/reference/experimental-flags/fonts/)，默认字体为 [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)。这提供了跨所有平台的一致排版，并自动进行字体优化，包括预加载和缓存。

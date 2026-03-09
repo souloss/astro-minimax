@@ -1,0 +1,131 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/nav/Header.astro";
+import Footer from "@/components/nav/Footer.astro";
+import { getPostsByLang } from "@/utils/getPostsByLang";
+import { getSeriesFromPosts } from "@/utils/getSeriesData";
+import { SITE } from "@/config";
+import { t } from "@/utils/i18n";
+
+export const getStaticPaths = (() => [
+  { params: { lang: "zh" } },
+  { params: { lang: "en" } },
+]) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: "zh" | "en" };
+
+const posts = await getCollection("blog");
+const langPosts = getPostsByLang(posts, lang);
+const seriesList = getSeriesFromPosts(langPosts);
+
+import dayjs from "dayjs";
+import utcPlugin from "dayjs/plugin/utc";
+import timezonePlugin from "dayjs/plugin/timezone";
+
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
+---
+
+<Layout lang={lang} title={`${t("series.title", lang)} | ${SITE.title}`}>
+  <Header lang={lang} />
+  <Main pageTitle={t("series.title", lang)} pageDesc={t("series.desc", lang)}>
+    {
+      seriesList.length > 0 ? (
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {seriesList.map(series => {
+            const dateStr =
+              lang === "zh"
+                ? dayjs(series.latestDate)
+                    .tz(SITE.timezone)
+                    .format("YYYY 年 M 月 D 日")
+                : dayjs(series.latestDate)
+                    .tz(SITE.timezone)
+                    .format("MMM D, YYYY");
+
+            return (
+              <a
+                href={`/${lang}/series/${encodeURIComponent(series.slug)}/`}
+                class="group relative overflow-hidden rounded-xl border border-border/60 bg-card/50 p-5 transition-all duration-300 hover:border-accent/40 hover:shadow-lg hover:shadow-shadow-elevated/10"
+              >
+                <div class="mb-3 flex items-center gap-2.5">
+                  <div class="flex size-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                    <svg
+                      class="size-5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
+                      <path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
+                      <path d="M5 8h4" />
+                      <path d="M9 16h4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 class="text-base font-bold text-foreground transition-colors group-hover:text-accent">
+                      {series.name}
+                    </h2>
+                    <span class="text-xs text-foreground-soft">
+                      {t("series.articles", lang).replace(
+                        "{count}",
+                        String(series.totalPosts)
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                <ul class="space-y-1.5">
+                  {series.posts.slice(0, 3).map((post, idx) => (
+                    <li class="flex items-center gap-2 text-sm text-foreground-soft">
+                      <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground-soft">
+                        {idx + 1}
+                      </span>
+                      <span class="truncate">{post.data.title}</span>
+                    </li>
+                  ))}
+                  {series.totalPosts > 3 && (
+                    <li class="pl-7 text-xs text-foreground-soft/60">
+                      +{series.totalPosts - 3}{" "}
+                      {lang === "zh" ? "篇更多" : "more"}...
+                    </li>
+                  )}
+                </ul>
+
+                <div class="mt-4 flex items-center justify-between border-t border-border/40 pt-3">
+                  <span class="text-xs text-foreground-soft">
+                    {t("series.latestUpdate", lang)}: {dateStr}
+                  </span>
+                  <svg
+                    class="size-4 text-foreground-soft transition-transform duration-200 group-hover:translate-x-1"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="M12 5l7 7-7 7" />
+                  </svg>
+                </div>
+
+                <div class="absolute -right-4 -bottom-4 size-24 rounded-full bg-accent/5 transition-transform duration-300 group-hover:scale-150" />
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="text-muted-foreground italic">
+          {t("series.noSeries", lang)}
+        </p>
+      )
+    }
+  </Main>
+  <Footer lang={lang} />
+</Layout>
