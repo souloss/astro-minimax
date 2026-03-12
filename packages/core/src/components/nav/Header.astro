@@ -1,0 +1,256 @@
+---
+import IconX from "../../assets/icons/IconX.svg";
+import IconHome from "../../assets/icons/IconHome.svg";
+import IconArticle from "../../assets/icons/IconArticle.svg";
+import IconTag from "../../assets/icons/IconTag.svg";
+import IconUser from "../../assets/icons/IconUser.svg";
+import IconSearch from "../../assets/icons/IconSearch.svg";
+import IconArchive from "../../assets/icons/IconArchive.svg";
+import IconSeries from "../../assets/icons/IconSeries.svg";
+import IconProject from "../../assets/icons/IconProject.svg";
+import IconMenuDeep from "../../assets/icons/IconMenuDeep.svg";
+import { SITE } from "@/config";
+import { t } from "../../utils/i18n";
+import { isPathActive } from "../../utils/pathUtils";
+
+const { pathname } = Astro.url;
+const isActive = (path: string) => isPathActive(path, pathname);
+
+interface Props {
+  lang?: string;
+}
+
+const { lang = "zh" } = Astro.props;
+
+const base = `/${lang}`;
+
+const iconMap: Record<string, any> = {
+  home: IconHome,
+  posts: IconArticle,
+  tags: IconTag,
+  categories: IconTag,
+  series: IconSeries,
+  projects: IconProject,
+  about: IconUser,
+  friends: IconUser,
+  archives: IconArchive,
+};
+
+const hrefMap: Record<string, string> = {
+  home: `${base}/`,
+  posts: `${base}/posts`,
+  tags: `${base}/tags`,
+  categories: `${base}/categories`,
+  series: `${base}/series`,
+  projects: `${base}/projects`,
+  about: `${base}/about`,
+  friends: `${base}/friends`,
+  archives: `${base}/archives`,
+};
+
+const navItems = SITE.nav.items
+  .filter(i => i.enabled)
+  .map(i => ({
+    href: hrefMap[i.key] ?? `${base}/${i.key}`,
+    label: t(`nav.${i.key}` as any, lang),
+    icon: iconMap[i.key] ?? IconArticle,
+  }));
+---
+
+<a
+  id="skip-to-content"
+  href="#main-content"
+  class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"
+>
+  Skip to content
+</a>
+
+<header
+  class="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md"
+>
+  <div
+    class="flex h-14 w-full items-center justify-between px-4 sm:px-6 lg:px-8"
+  >
+    <a
+      href={`/${lang}/`}
+      class="text-lg font-semibold tracking-tight text-foreground transition-colors hover:text-accent sm:text-xl"
+    >
+      {SITE.title}
+    </a>
+
+    <nav id="nav-menu" class="flex items-center">
+      {/* Desktop Navigation */}
+      <ul class="hidden items-center gap-1 sm:flex">
+        {
+          navItems.map(({ href, label, icon: Icon }) => (
+            <li>
+              <a
+                href={href}
+                class:list={[
+                  "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                  "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                  { "bg-muted/80 text-foreground": isActive(href) },
+                ]}
+              >
+                <Icon class="size-4" />
+                <span>{label}</span>
+              </a>
+            </li>
+          ))
+        }
+        <li class="ml-1 flex items-center gap-1 border-l border-border pl-2">
+          <button
+            id="lang-switch-btn"
+            class="text-muted-foreground rounded-md px-2 py-1.5 text-xs font-semibold transition-colors hover:bg-muted/60 hover:text-foreground"
+            title="Switch language"
+            aria-label="Switch language"
+          >
+            <span id="lang-label">EN</span>
+          </button>
+          <a
+            href={`/${lang}/search`}
+            class:list={[
+              "flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+              "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+              { "bg-muted/80 text-foreground": isActive(`/${lang}/search`) },
+            ]}
+            title={t("nav.search", lang)}
+            aria-label={t("nav.search", lang)}
+          >
+            <IconSearch class="size-4" />
+          </a>
+        </li>
+      </ul>
+
+      {/* Mobile Menu Button */}
+      <button
+        id="menu-btn"
+        class="focus-outline rounded-md p-2 sm:hidden"
+        aria-label="Open Menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <IconX id="close-icon" class="hidden size-5" />
+        <IconMenuDeep id="menu-icon" class="size-5" />
+      </button>
+    </nav>
+  </div>
+
+  {/* Mobile Navigation Panel */}
+  <div
+    id="mobile-menu"
+    class="hidden border-t border-border bg-background sm:hidden"
+  >
+    <ul class="flex flex-col gap-1 px-4 py-3">
+      {
+        navItems.map(({ href, label, icon: Icon }) => (
+          <li>
+            <a
+              href={href}
+              class:list={[
+                "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+                "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                { "bg-muted/80 text-foreground": isActive(href) },
+              ]}
+            >
+              <Icon class="size-5" />
+              <span>{label}</span>
+            </a>
+          </li>
+        ))
+      }
+      <li class="mt-1 border-t border-border pt-2">
+        <a
+          href={`/${lang}/search`}
+          class:list={[
+            "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+            "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+            { "bg-muted/80 text-foreground": isActive(`/${lang}/search`) },
+          ]}
+        >
+          <IconSearch class="size-5" />
+          <span>{t("nav.search", lang)}</span>
+        </a>
+      </li>
+      <li>
+        <button
+          id="lang-switch-btn-mobile"
+          class="text-muted-foreground flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-muted/60 hover:text-foreground"
+          aria-label="Switch language"
+        >
+          <svg
+            class="size-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M2 12h20"></path>
+            <path
+              d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+            ></path>
+          </svg>
+          <span id="lang-label-mobile">English</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  function toggleNav() {
+    const menuBtn = document.querySelector("#menu-btn");
+    const mobileMenu = document.querySelector("#mobile-menu");
+    const menuIcon = document.querySelector("#menu-icon");
+    const closeIcon = document.querySelector("#close-icon");
+
+    if (!menuBtn || !mobileMenu || !menuIcon || !closeIcon) return;
+
+    menuBtn.addEventListener("click", () => {
+      const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
+
+      menuBtn.setAttribute("aria-expanded", openMenu ? "false" : "true");
+      menuBtn.setAttribute("aria-label", openMenu ? "Open Menu" : "Close Menu");
+
+      mobileMenu.classList.toggle("hidden");
+      menuIcon.classList.toggle("hidden");
+      closeIcon.classList.toggle("hidden");
+    });
+  }
+
+  toggleNav();
+  document.addEventListener("astro:after-swap", toggleNav);
+
+  function initLangSwitcher() {
+    const btns = [
+      document.getElementById("lang-switch-btn"),
+      document.getElementById("lang-switch-btn-mobile"),
+    ];
+    const label = document.getElementById("lang-label");
+    const labelMobile = document.getElementById("lang-label-mobile");
+
+    const path = window.location.pathname;
+    const isZh = path.startsWith("/zh/") || path === "/zh";
+
+    if (label) label.textContent = isZh ? "EN" : "中";
+    if (labelMobile) labelMobile.textContent = isZh ? "English" : "中文";
+
+    btns.forEach(btn => {
+      btn?.addEventListener("click", () => {
+        if (isZh) {
+          const newPath = path.replace(/^\/zh\/?/, "/en/") || "/en/";
+          window.location.href = newPath;
+        } else {
+          const newPath = path.replace(/^\/en\/?/, "/zh/") || "/zh/";
+          window.location.href = newPath;
+        }
+      });
+    });
+  }
+
+  initLangSwitcher();
+  document.addEventListener("astro:after-swap", initLangSwitcher);
+</script>

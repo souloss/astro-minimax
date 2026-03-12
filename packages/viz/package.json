@@ -1,0 +1,28 @@
+{
+  "name": "@astro-minimax/viz",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Visualization plugin package for astro-minimax — Mermaid, Markmap, Rough.js, Excalidraw, Asciinema and more.",
+  "exports": {
+    "./components/*.astro": "./src/components/*.astro",
+    "./plugins/remark-mermaid-codeblock": "./src/plugins/remark-mermaid-codeblock.ts",
+    "./plugins/remark-markmap-codeblock": "./src/plugins/remark-markmap-codeblock.ts",
+    "./plugins": "./src/plugins/index.ts",
+    "./scripts/*": "./src/scripts/*.ts"
+  },
+  "files": [
+    "src/"
+  ],
+  "peerDependencies": {
+    "astro": "^5.0.0"
+  },
+  "dependencies": {
+    "unist-util-visit": "^5.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/souloss/astro-minimax",
+    "directory": "packages/viz"
+  }
+}

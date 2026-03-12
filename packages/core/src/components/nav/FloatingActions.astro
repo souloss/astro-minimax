@@ -1,0 +1,206 @@
+---
+import IconArrowNarrowUp from "../../assets/icons/IconArrowNarrowUp.svg";
+import IconMoon from "../../assets/icons/IconMoon.svg";
+import IconSunHigh from "../../assets/icons/IconSunHigh.svg";
+import { SITE } from "@/config";
+
+const aiEnabled = SITE.ai?.enabled ?? false;
+---
+
+<div
+  class="fixed right-6 bottom-6 z-50 flex flex-col items-center gap-3"
+  id="floating-actions"
+  role="group"
+  aria-label="Page actions"
+>
+  <!-- AI Assistant -->
+  {
+    aiEnabled && (
+      <button
+        id="ai-chat-toggle-fab"
+        class="fab-btn flex size-11 items-center justify-center rounded-full border border-accent bg-accent text-background shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
+        aria-label="AI Assistant"
+        title="AI Assistant"
+      >
+        <svg
+          class="size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 8V4H8" />
+          <rect width="16" height="12" x="4" y="8" rx="2" />
+          <path d="M2 14h2" />
+          <path d="M20 14h2" />
+          <path d="M15 13v2" />
+          <path d="M9 13v2" />
+        </svg>
+      </button>
+    )
+  }
+
+  <!-- Reading Mode (only on article pages) -->
+  <button
+    id="reading-mode-btn"
+    class="fab-btn hidden size-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-md backdrop-blur-sm transition-all duration-200 hover:shadow-lg active:scale-95"
+    aria-label="Toggle reading mode"
+    aria-pressed="false"
+    title="Toggle reading mode"
+  >
+    <svg
+      id="reading-icon-off"
+      class="text-muted-foreground size-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+    </svg>
+    <svg
+      id="reading-icon-on"
+      class="hidden size-5 text-accent"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M18 6 6 18"></path>
+      <path d="m6 6 12 12"></path>
+    </svg>
+  </button>
+
+  <!-- Font Size Controls (visible in reading mode) -->
+  <div id="font-controls" class="hidden flex-col items-center gap-1.5">
+    <button
+      id="font-increase-btn"
+      class="text-muted-foreground size-9 rounded-full border border-border bg-background/90 text-xs font-bold shadow-sm backdrop-blur-sm transition-all hover:border-accent hover:text-accent active:scale-95"
+      aria-label="Increase font size"
+      title="Increase font size">A+</button
+    >
+    <button
+      id="font-decrease-btn"
+      class="text-muted-foreground size-9 rounded-full border border-border bg-background/90 text-xs font-bold shadow-sm backdrop-blur-sm transition-all hover:border-accent hover:text-accent active:scale-95"
+      aria-label="Decrease font size"
+      title="Decrease font size">A-</button
+    >
+  </div>
+
+  <!-- Theme Toggle -->
+  {
+    SITE.lightAndDarkMode && (
+      <button
+        id="theme-btn"
+        class="fab-btn group relative size-11 rounded-full border border-border bg-background/90 shadow-md backdrop-blur-sm hover:shadow-lg"
+        title="Toggle theme"
+        aria-label="auto"
+        aria-live="polite"
+      >
+        <IconMoon class="icon-moon text-muted-foreground absolute top-1/2 left-1/2 size-5 -translate-x-1/2 -translate-y-1/2 group-hover:text-foreground" />
+        <IconSunHigh class="icon-sun text-muted-foreground absolute top-1/2 left-1/2 size-5 -translate-x-1/2 -translate-y-1/2 group-hover:text-foreground" />
+      </button>
+    )
+  }
+
+  <!-- Back to Top -->
+  <button
+    id="back-to-top-btn"
+    class="fab-btn pointer-events-none size-11 rounded-full border border-border bg-background/90 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 hover:shadow-lg active:scale-95"
+    aria-label="Back to Top"
+    title="Back to Top"
+  >
+    <IconArrowNarrowUp class="text-muted-foreground mx-auto size-5" />
+  </button>
+</div>
+
+<script>
+  function initFloatingActions() {
+    const backToTopBtn = document.getElementById("back-to-top-btn");
+    const readingModeBtn = document.getElementById("reading-mode-btn");
+    const fontControls = document.getElementById("font-controls");
+    const fontIncBtn = document.getElementById("font-increase-btn");
+    const fontDecBtn = document.getElementById("font-decrease-btn");
+    const iconOff = document.getElementById("reading-icon-off");
+    const iconOn = document.getElementById("reading-icon-on");
+    const article = document.querySelector("#article") as HTMLElement | null;
+
+    const isArticlePage = !!document.querySelector("article#article");
+
+    if (readingModeBtn) {
+      if (isArticlePage) {
+        readingModeBtn.classList.remove("hidden");
+        readingModeBtn.classList.add("flex");
+      } else {
+        readingModeBtn.classList.add("hidden");
+        readingModeBtn.classList.remove("flex");
+      }
+
+      readingModeBtn.addEventListener("click", () => {
+        const active = document.body.classList.toggle("reading-mode");
+        readingModeBtn.setAttribute("aria-pressed", String(active));
+
+        if (active) {
+          readingModeBtn.classList.add("border-accent", "bg-accent/10");
+          readingModeBtn.classList.remove("bg-background/90");
+          iconOff?.classList.add("hidden");
+          iconOn?.classList.remove("hidden");
+          fontControls?.classList.remove("hidden");
+          fontControls?.classList.add("flex");
+        } else {
+          readingModeBtn.classList.remove("border-accent", "bg-accent/10");
+          readingModeBtn.classList.add("bg-background/90");
+          iconOff?.classList.remove("hidden");
+          iconOn?.classList.add("hidden");
+          fontControls?.classList.add("hidden");
+          fontControls?.classList.remove("flex");
+          if (article) article.style.fontSize = "";
+        }
+      });
+    }
+
+    let fontSize = 1;
+    fontIncBtn?.addEventListener("click", () => {
+      if (!article || fontSize >= 1.5) return;
+      fontSize = Math.min(fontSize + 0.1, 1.5);
+      article.style.fontSize = `${fontSize}em`;
+    });
+    fontDecBtn?.addEventListener("click", () => {
+      if (!article || fontSize <= 0.8) return;
+      fontSize = Math.max(fontSize - 0.1, 0.8);
+      article.style.fontSize = `${fontSize}em`;
+    });
+
+    if (!backToTopBtn) return;
+
+    const updateVisibility = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      if (scrollTop > 300) {
+        backToTopBtn.classList.remove("opacity-0", "pointer-events-none");
+        backToTopBtn.classList.add("opacity-100");
+      } else {
+        backToTopBtn.classList.add("opacity-0", "pointer-events-none");
+        backToTopBtn.classList.remove("opacity-100");
+      }
+    };
+
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateVisibility();
+  }
+
+  initFloatingActions();
+  document.addEventListener("astro:after-swap", initFloatingActions);
+</script>

@@ -1,0 +1,176 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import { getPostsByLang } from "../../utils/getPostsByLang";
+import { getSeriesByName } from "../../utils/getSeriesData";
+import { getLocalizedPostPath } from "../../utils/getPath";
+import { t } from "../../utils/i18n";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  lang?: string;
+}
+
+const { post, lang = "zh" } = Astro.props;
+const series = post.data.series;
+
+if (!series) return;
+
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const langPosts = getPostsByLang(allPosts, lang);
+const seriesInfo = getSeriesByName(langPosts, series.name);
+
+if (!seriesInfo || seriesInfo.totalPosts < 2) return;
+
+const currentOrder = series.order;
+const seriesSlug = seriesInfo.slug;
+const progressPct = (currentOrder / seriesInfo.totalPosts) * 100;
+const orderStr = String(currentOrder).padStart(2, "0");
+const totalStr = String(seriesInfo.totalPosts).padStart(2, "0");
+---
+
+<nav
+  class="series-nav my-6 rounded-xl border p-4 sm:p-5"
+  aria-label={`${t("series.title", lang)}: ${series.name}`}
+>
+  {/* Header */}
+  <div class="mb-3 flex items-center justify-between gap-2">
+    <a
+      href={`/${lang}/series/${encodeURIComponent(seriesSlug)}/`}
+      class="series-link flex items-center gap-2 text-sm font-bold"
+    >
+      <svg class="series-icon size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16M4 12h16M4 18h10" />
+        <circle cx="20" cy="18" r="2" fill="currentColor" stroke="none" />
+      </svg>
+      <span>{series.name}</span>
+    </a>
+    <span class="series-progress font-mono text-xs tracking-wider">
+      {orderStr}<span class="mx-0.5 opacity-40">/</span>{totalStr}
+    </span>
+  </div>
+
+  {/* Progress bar */}
+  <div class="series-track relative mb-4 h-[3px] w-full overflow-visible rounded-full">
+    <div class="series-fill absolute inset-y-0 left-0 rounded-full" style={`width: ${progressPct}%`}>
+      <span class="series-pulse-dot"></span>
+    </div>
+  </div>
+
+  {/* Post list */}
+  <ol class="space-y-0.5">
+    {
+      seriesInfo.posts.map((p, idx) => {
+        const isCurrent = p.id === post.id;
+        const href = getLocalizedPostPath(lang, p.id, p.filePath);
+        const num = String(idx + 1).padStart(2, "0");
+
+        return (
+          <li>
+            {isCurrent ? (
+              <span class="series-item series-item--active flex items-center gap-2.5 rounded-md px-3 py-1.5 text-sm font-medium">
+                <span class="font-mono text-xs opacity-70">{num}</span>
+                <span class="truncate">{p.data.title}</span>
+              </span>
+            ) : (
+              <a
+                href={href}
+                class="series-item flex items-center gap-2.5 rounded-md px-3 py-1.5 text-sm"
+              >
+                <span class="font-mono text-xs opacity-40">{num}</span>
+                <span class="truncate">{p.data.title}</span>
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .series-nav {
+    background: linear-gradient(135deg, var(--series-bg-from), var(--series-bg-to));
+    border-color: var(--series-border);
+    box-shadow: 0 0 15px var(--series-glow);
+    transition:
+      background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .series-link {
+    color: var(--foreground);
+    transition: color 0.2s;
+  }
+  .series-link:hover {
+    color: var(--accent);
+  }
+
+  .series-icon {
+    color: var(--accent);
+  }
+
+  .series-progress {
+    color: var(--foreground-soft);
+  }
+
+  /* Track */
+  .series-track {
+    background-color: var(--muted);
+  }
+  .series-fill {
+    background-color: var(--accent);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Pulse dot */
+  .series-pulse-dot {
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--series-pulse);
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 4px 1px var(--series-glow);
+      opacity: 1;
+    }
+    50% {
+      box-shadow: 0 0 10px 4px var(--series-glow);
+      opacity: 0.7;
+    }
+  }
+
+  /* List items */
+  .series-item {
+    color: var(--foreground-soft);
+    transition:
+      color 0.2s,
+      background-color 0.2s;
+  }
+  a.series-item:hover {
+    color: var(--accent);
+    background-color: var(--muted);
+  }
+
+  .series-item--active {
+    color: var(--accent);
+    background-color: color-mix(in srgb, var(--accent) 8%, transparent);
+    border-left: 2px solid var(--accent);
+    padding-left: calc(0.75rem - 2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .series-pulse-dot {
+      animation: none;
+    }
+  }
+</style>

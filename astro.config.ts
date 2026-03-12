@@ -8,13 +8,13 @@ import remarkMath from "remark-math";
 import remarkGithubAlerts from "remark-github-alerts";
 import remarkEmoji from "remark-emoji";
 import rehypeKatex from "rehype-katex";
-import { remarkReadingTime } from "./src/plugins/remark-reading-time";
-import { remarkAddZoomable } from "./src/plugins/remark-add-zoomable";
-import { rehypeExternalLinks } from "./src/plugins/rehype-external-links";
-import { rehypeTableScroll } from "./src/plugins/rehype-table-scroll";
-import { rehypeAutolinkHeadings } from "./src/plugins/rehype-autolink-headings";
-import { remarkMermaidCodeblock } from "./src/plugins/remark-mermaid-codeblock";
-import { remarkMarkmapCodeblock } from "./src/plugins/remark-markmap-codeblock";
+import { remarkReadingTime } from "@astro-minimax/core/plugins/remark-reading-time";
+import { remarkAddZoomable } from "@astro-minimax/core/plugins/remark-add-zoomable";
+import { rehypeExternalLinks } from "@astro-minimax/core/plugins/rehype-external-links";
+import { rehypeTableScroll } from "@astro-minimax/core/plugins/rehype-table-scroll";
+import { rehypeAutolinkHeadings } from "@astro-minimax/core/plugins/rehype-autolink-headings";
+import { remarkMermaidCodeblock } from "@astro-minimax/viz/plugins/remark-mermaid-codeblock";
+import { remarkMarkmapCodeblock } from "@astro-minimax/viz/plugins/remark-markmap-codeblock";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
@@ -26,8 +26,9 @@ import {
   addLanguage,
   addCopyButton,
   addCollapse,
-} from "./src/plugins/shiki-transformers";
+} from "@astro-minimax/core/plugins/shiki-transformers";
 import { SITE } from "./src/config";
+import path from "path";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const asTransformer = (t: any) => t;
@@ -103,6 +104,23 @@ export default defineConfig({
     // This will be fixed in Astro 6 with Vite 7 support
     // See: https://github.com/withastro/astro/issues/14030
     plugins: [tailwindcss()],
+    resolve: {
+      alias: [
+        // Map @/ aliases to packages/core for components that moved there
+        // More specific aliases must come before the general @/ fallback
+        // Media components live in @astro-minimax/viz, not core
+        { find: "@/components/media", replacement: path.resolve("./packages/viz/src/components") },
+        { find: "@/components", replacement: path.resolve("./packages/core/src/components") },
+        { find: "@/layouts", replacement: path.resolve("./packages/core/src/layouts") },
+        { find: "@/utils", replacement: path.resolve("./packages/core/src/utils") },
+        { find: "@/styles", replacement: path.resolve("./packages/core/src/styles") },
+        { find: "@/plugins", replacement: path.resolve("./packages/core/src/plugins") },
+        { find: "@/scripts", replacement: path.resolve("./packages/core/src/scripts") },
+        { find: "@/assets/icons", replacement: path.resolve("./packages/core/src/assets/icons") },
+        // @/ fallback: resolves @/config, @/constants, @/assets/images, etc.
+        { find: "@/", replacement: path.resolve("./src/") + "/" },
+      ],
+    },
     optimizeDeps: {
       exclude: ["@resvg/resvg-js"],
     },

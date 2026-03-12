@@ -1,0 +1,445 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import Layout from "./Layout.astro";
+import Header from "../components/nav/Header.astro";
+import Footer from "../components/nav/Footer.astro";
+import Tag from "../components/ui/Tag.astro";
+import Datetime from "../components/ui/Datetime.astro";
+import BackButton from "../components/nav/BackButton.astro";
+import { getLocalizedPostPath, getPostSlug } from "../utils/getPath";
+import { t } from "../utils/i18n";
+import { slugifyStr } from "../utils/slugify";
+import IconChevronLeft from "../assets/icons/IconChevronLeft.svg";
+import IconChevronRight from "../assets/icons/IconChevronRight.svg";
+import { SITE } from "@/config";
+import FloatingTOC from "../components/blog/FloatingTOC.astro";
+import InlineTOC from "../components/blog/InlineTOC.astro";
+import Comments from "../components/blog/Comments.astro";
+import PostActions from "../components/blog/PostActions.astro";
+import RelatedPosts from "../components/blog/RelatedPosts.astro";
+import Copyright from "../components/blog/Copyright.astro";
+import SeriesNav from "../components/blog/SeriesNav.astro";
+import { getRelatedPosts } from "../utils/getRelatedPosts";
+import { getReadingTime } from "../utils/getReadingTime";
+import { getCategoryUrl } from "../utils/getCategoryPath";
+
+type Props = {
+  post: CollectionEntry<"blog">;
+  posts: CollectionEntry<"blog">[];
+  lang?: string;
+};
+
+const { post, posts, lang = "zh" } = Astro.props;
+
+const {
+  title,
+  author,
+  description,
+  ogImage: initOgImage,
+  canonicalURL,
+  pubDatetime,
+  modDatetime,
+  timezone,
+  tags,
+  category,
+  series,
+} = post.data;
+
+const { Content, headings } = await render(post);
+const { minutes: readingMinutes, words: wordCount } = getReadingTime(
+  post.body ?? ""
+);
+
+// Banner image: only real local assets or valid remote URLs (not dynamic OG stubs)
+let bannerImageUrl: string | undefined;
+if (initOgImage && typeof initOgImage === "object" && "src" in initOgImage) {
+  bannerImageUrl = initOgImage.src;
+} else if (typeof initOgImage === "string" && initOgImage.startsWith("http")) {
+  bannerImageUrl = initOgImage;
+}
+
+// OG meta image: includes dynamic fallback for social sharing
+let ogImageUrl: string | undefined = bannerImageUrl;
+if (!ogImageUrl && SITE.dynamicOgImage) {
+  ogImageUrl = `/${lang}/posts/${getPostSlug(post.id)}/index.png`;
+}
+
+const ogImage = ogImageUrl
+  ? new URL(ogImageUrl, Astro.url.origin).href
+  : undefined;
+
+const layoutProps = {
+  title: `${title} | ${SITE.title}`,
+  author,
+  description,
+  pubDatetime,
+  modDatetime,
+  canonicalURL,
+  ogImage,
+  scrollSmooth: true,
+  lang,
+  tags,
+};
+
+const breadcrumbList = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: lang === "zh" ? "首页" : "Home",
+      item: `${SITE.website}${lang}/`,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: lang === "zh" ? "文章" : "Posts",
+      item: `${SITE.website}${lang}/posts/`,
+    },
+    ...(category
+      ? [
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: category,
+            item: `${SITE.website.replace(/\/$/, "")}${getCategoryUrl(lang, category)}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 4,
+            name: title,
+          },
+        ]
+      : [
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: title,
+          },
+        ]),
+  ],
+};
+
+/* ========== Prev/Next Posts (Series-aware) ========== */
+
+const seriesPosts = series
+  ? posts
+      .filter(p => p.data.series?.name === series.name)
+      .sort((a, b) => (a.data.series?.order ?? 0) - (b.data.series?.order ?? 0))
+  : null;
+
+const navList = (seriesPosts ?? posts).map(
+  ({ data: { title }, id, filePath }) => ({
+    id,
+    title,
+    filePath,
+  })
+);
+
+const currentPostIndex = navList.findIndex(a => a.id === post.id);
+const prevPost = currentPostIndex > 0 ? navList[currentPostIndex - 1] : null;
+const nextPost =
+  currentPostIndex >= 0 && currentPostIndex < navList.length - 1
+    ? navList[currentPostIndex + 1]
+    : null;
+---
+
+<Layout {...layoutProps}>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(breadcrumbList)}
+  />
+  <Header lang={lang} />
+
+  <!-- Sticky Header for Article Reading Progress -->
+  <div
+    id="sticky-header"
+    class="fixed start-0 top-0 z-50 w-full -translate-y-full transform border-b border-border bg-background/80 opacity-0 backdrop-blur-md transition-all duration-300"
+  >
+    <div class="app-layout flex h-14 items-center justify-between">
+      <div class="flex items-center gap-4 overflow-hidden">
+        <span
+          class="cursor-pointer truncate text-sm font-medium text-foreground hover:text-accent"
+          onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        >
+          {title}
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          id="sticky-toc-toggle"
+          class="text-muted-foreground flex items-center gap-1 rounded-md p-2 hover:bg-muted/50 hover:text-accent sm:hidden"
+          aria-label="Toggle Table of Contents"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </button>
+        <button
+          class="text-muted-foreground rounded-md p-2 hover:bg-muted/50 hover:text-accent"
+          onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+          aria-label="Scroll to top"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 19V5"></path>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="absolute start-0 bottom-0 h-[2px] w-full bg-muted/30">
+      <div
+        id="progress-bar"
+        class="h-full w-0 bg-accent transition-all duration-150 ease-out"
+      >
+      </div>
+    </div>
+  </div>
+
+  <BackButton />
+  <main
+    id="main-content"
+    class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
+    data-pagefind-body
+  >
+    {/* Article Hero Section */}
+    <div class="mb-6">
+      {bannerImageUrl && (
+        <div class="relative -mx-4 mb-6 h-48 overflow-hidden rounded-xl sm:h-56 md:h-64">
+          <img
+            src={bannerImageUrl}
+            alt={title}
+            class="h-full w-full object-cover object-center"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            width="1200"
+            height="400"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+        </div>
+      )}
+
+      <h1
+        transition:name={slugifyStr(title.replaceAll(".", "-"))}
+        class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+      >
+        {title}
+      </h1>
+
+      {description && (
+        <p class="mt-2 text-base text-foreground-soft leading-relaxed">{description}</p>
+      )}
+
+      {/* Metadata bar */}
+      <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-border/60 bg-card/40 px-4 py-3">
+        {category && (
+          <a
+            href={getCategoryUrl(lang, category)}
+            class="text-sm font-medium text-accent underline decoration-accent/30 underline-offset-2 hover:decoration-accent"
+          >
+            {category}
+          </a>
+        )}
+        {category && <span class="text-border">|</span>}
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" lang={lang} />
+        <span class="text-border">|</span>
+        <span
+          class="flex items-center gap-1 text-sm opacity-80 sm:text-base"
+          title={t("post.wordCount", lang).replace("{count}", String(wordCount))}
+        >
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+          </svg>
+          {t("post.readingTime", lang).replace("{min}", String(readingMinutes))}
+        </span>
+        <span class="text-border">|</span>
+        <span class="text-sm opacity-80">
+          {wordCount.toLocaleString()} {lang === "zh" ? "字" : "words"}
+        </span>
+      </div>
+
+      {/* Tags preview */}
+      {tags.length > 0 && (
+        <div class="mt-3 flex flex-wrap gap-2" data-pagefind-ignore>
+          {tags.map(tag => (
+            <a
+              href={`/${lang}/tags/${slugifyStr(tag)}/`}
+              class="rounded-md bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground-soft transition-colors hover:bg-accent/10 hover:text-accent"
+            >
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <InlineTOC headings={headings} />
+    <article
+      id="article"
+      class="app-prose mt-8 w-full max-w-app"
+    >
+      <Content />
+    </article>
+    <slot name="post-scripts" />
+    <FloatingTOC headings={headings} />
+
+    <hr class="my-8 border-dashed" />
+
+    <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+      {
+        tags.map(tag => (
+          <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" lang={lang} />
+        ))
+      }
+    </ul>
+
+    <Copyright title={title} pubDatetime={pubDatetime} lang={lang} />
+
+    <PostActions />
+
+    <hr class="my-6 border-dashed" />
+
+    <div data-pagefind-ignore>
+      <SeriesNav post={post} lang={lang} />
+    </div>
+
+    <!-- Previous/Next Post Buttons -->
+    <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {
+        prevPost && (
+          <a
+            href={getLocalizedPostPath(lang, prevPost.id)}
+            class="flex w-full gap-1 hover:opacity-75"
+          >
+            <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
+            <div>
+              <span>{t("post.prev", lang)}</span>
+              <div class="text-sm text-accent/85">{prevPost.title}</div>
+            </div>
+          </a>
+        )
+      }
+      {
+        nextPost && (
+          <a
+            href={getLocalizedPostPath(lang, nextPost.id)}
+            class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
+          >
+            <div>
+              <span>{t("post.next", lang)}</span>
+              <div class="text-sm text-accent/85">{nextPost.title}</div>
+            </div>
+            <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
+          </a>
+        )
+      }
+    </div>
+
+    <RelatedPosts posts={getRelatedPosts(post, posts)} lang={lang} />
+
+    <Comments />
+  </main>
+  <Footer lang={lang} />
+</Layout>
+
+<script is:inline data-astro-rerun>
+  function initStickyHeader() {
+    const header = document.getElementById("sticky-header");
+    const progressBar = document.getElementById("progress-bar");
+    const tocToggle = document.getElementById("sticky-toc-toggle");
+
+    if (!header || !progressBar) return;
+
+    // Handle scroll
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+
+      // Update progress bar
+      progressBar.style.width = scrolled + "%";
+
+      // Show/hide header based on scroll position (e.g. past 300px)
+      if (winScroll > 300) {
+        header.classList.remove("-translate-y-full", "opacity-0");
+      } else {
+        header.classList.add("-translate-y-full", "opacity-0");
+      }
+    });
+
+    // Handle TOC toggle
+    if (tocToggle) {
+      tocToggle.addEventListener("click", () => {
+        // Scroll to InlineTOC and open it
+        const inlineToc = document.querySelector("[data-inline-toc]");
+        if (inlineToc) {
+          inlineToc.scrollIntoView({ behavior: "smooth", block: "center" });
+          const toggleBtn = inlineToc.querySelector("[data-toc-toggle]");
+          if (
+            toggleBtn &&
+            toggleBtn.getAttribute("aria-expanded") === "false"
+          ) {
+            toggleBtn.click();
+          }
+        }
+      });
+    }
+  }
+  initStickyHeader();
+
+  /** Attaches links to headings in the document,
+   *  allowing sharing of sections easily */
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  /* Go to page start after page swap */
+  document.addEventListener("astro:after-swap", () =>
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
+</script>

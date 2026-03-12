@@ -1,0 +1,107 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { SITE } from "@/config";
+import { t } from "../../utils/i18n";
+
+const currentYear = new Date().getFullYear();
+
+// Calculate running days
+const startDate = new Date(SITE.startDate);
+const today = new Date();
+const runningDays = Math.floor(
+  (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+);
+
+type Props = {
+  noMarginTop?: boolean;
+  lang?: string;
+} & HTMLAttributes<"footer">;
+
+const {
+  noMarginTop = false,
+  lang = "zh",
+  class: className,
+  ...attrs
+} = Astro.props;
+
+const copyrightText = t("footer.copyright", lang)
+  .replace("{year}", String(currentYear))
+  .replace("{author}", SITE.author);
+---
+
+<footer
+  class:list={["app-layout max-w-5xl", { "mt-auto": !noMarginTop }, className]}
+  {...attrs}
+>
+  <div
+    class:list={[
+      "py-6 sm:py-4",
+      "border-t border-border",
+      "flex flex-col items-center justify-center",
+    ]}
+  >
+    <div
+      class="flex flex-col items-center justify-center text-sm whitespace-nowrap text-neutral-600 sm:flex-row dark:text-neutral-400"
+    >
+      <!-- Column 1: Avatar + Hi, {author} -->
+      <div class="px-4">
+        <a
+          href={`/${lang}/`}
+          class="flex items-center gap-2 transition-colors hover:text-accent"
+        >
+          <img
+            src="/favicon.ico"
+            alt={`${SITE.author}'s avatar`}
+            class="h-5 w-5 rounded-full"
+          />
+          <span>{t("footer.hi", lang)}, {SITE.author}</span>
+        </a>
+      </div>
+
+      <span class="hidden px-2 text-neutral-500 sm:inline dark:text-neutral-500"
+        >|</span
+      >
+
+      <!-- Column 2: Running days -->
+      <div class="px-4">
+        <span
+          >{t("footer.running", lang)}
+          {runningDays}
+          {t("footer.days", lang)}</span
+        >
+      </div>
+
+      <span class="hidden px-2 text-neutral-500 sm:inline dark:text-neutral-500"
+        >|</span
+      >
+
+      <!-- Column 3: Copyright -->
+      <div class="px-4">
+        <span>{copyrightText}</span>
+      </div>
+
+      <span class="hidden px-2 text-neutral-500 sm:inline dark:text-neutral-500"
+        >|</span
+      >
+
+      <!-- Column 4: Sitemap -->
+      <div class="px-4">
+        <a
+          href="/sitemap-index.xml"
+          class="transition-colors hover:text-accent"
+        >
+          {t("footer.sitemap", lang)}
+        </a>
+      </div>
+
+      <span class="hidden px-2 text-neutral-500 sm:inline dark:text-neutral-500"
+        >|</span
+      >
+
+      <!-- Column 5: RSS -->
+      <div class="px-4">
+        <a href="/rss.xml" class="transition-colors hover:text-accent"> RSS </a>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,11 @@
+---
+/**
+ * Script-only component that ensures the Markmap rendering script is loaded.
+ * Include in PostDetails when the post body contains ```markmap code blocks.
+ * The script handles pre.markmap elements created by remark-markmap-codeblock.
+ */
+---
+
+<script>
+  import "../scripts/markmap-renderer.ts";
+</script>

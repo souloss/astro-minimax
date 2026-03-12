@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@astro-minimax/core':
+        specifier: workspace:*
+        version: link:packages/core
+      '@astro-minimax/viz':
+        specifier: workspace:*
+        version: link:packages/viz
       '@astrojs/mdx':
         specifier: ^4.3.13
         version: 4.3.13(astro@5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
@@ -132,6 +138,76 @@ importers:
       wrangler:
         specifier: ^4.71.0
         version: 4.71.0(@cloudflare/workers-types@4.20260307.1)
+
+  demo:
+    dependencies:
+      '@astro-minimax/core':
+        specifier: workspace:*
+        version: link:../packages/core
+      '@astro-minimax/viz':
+        specifier: workspace:*
+        version: link:../packages/viz
+      '@astrojs/mdx':
+        specifier: ^4.3.13
+        version: 4.3.13(astro@5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
+      '@astrojs/sitemap':
+        specifier: ^3.7.0
+        version: 3.7.0
+      '@tailwindcss/vite':
+        specifier: ^4.2.1
+        version: 4.2.1(vite@6.4.1(jiti@2.6.1)(lightningcss@1.31.1)(stylus@0.64.0)(tsx@4.21.0)(yaml@2.8.2))
+      astro:
+        specifier: ^5.18.0
+        version: 5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      rehype-katex:
+        specifier: ^7.0.1
+        version: 7.0.1
+      remark-emoji:
+        specifier: ^5.0.2
+        version: 5.0.2
+      remark-github-alerts:
+        specifier: ^0.1.1
+        version: 0.1.1(@types/mdast@4.0.4)(unified@11.0.5)
+      remark-math:
+        specifier: ^6.0.0
+        version: 6.0.0
+      remark-toc:
+        specifier: ^9.0.0
+        version: 9.0.0
+      tailwindcss:
+        specifier: ^4.2.1
+        version: 4.2.1
+    devDependencies:
+      '@astrojs/check':
+        specifier: ^0.9.6
+        version: 0.9.6(prettier-plugin-astro@0.14.1)(prettier@3.8.1)(typescript@5.9.3)
+      '@shikijs/rehype':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@shikijs/transformers':
+        specifier: ^3.23.0
+        version: 3.23.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/core:
+    dependencies:
+      astro:
+        specifier: ^5.0.0
+        version: 5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tailwindcss:
+        specifier: ^4.0.0
+        version: 4.2.1
+
+  packages/viz:
+    dependencies:
+      astro:
+        specifier: ^5.0.0
+        version: 5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.1.0
 
 packages:
 
