@@ -1,10 +1,10 @@
 export const SITE = {
-  website: "https://demo-astromin.souloss.cn/",
+  website: "https://demo-as​​tro-minimax.souloss.cn/",
   author: "Souloss",
   profile: "https://souloss.cn/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "Souloss",
-  ogImage: "astro-minblog-og.jpg",
+  ogImage: "astro-minimax-og.jpg",
   postPerIndex: 4,
   postPerPage: 4,
   scheduledPostMargin: 15 * 60 * 1000,
@@ -13,7 +13,7 @@ export const SITE = {
   editPost: {
     enabled: true,
     text: "Edit page",
-    url: "https://github.com/souloss/astro-minblog/edit/main/",
+    url: "https://github.com/souloss/astro-minimax/edit/main/",
   },
   dynamicOgImage: true,
   dir: "ltr" as const,
@@ -49,12 +49,12 @@ export const SITE = {
   },
 
   projects: [
-    { repo: "souloss/astro-minblog", featured: true },
+    { repo: "souloss/astro-minimax", featured: true },
     { repo: "withastro/astro" },
   ] as { repo: string; featured?: boolean; description?: string }[],
 
   umami: {
-    enabled: false,
+    enabled: true,
     websiteId: "",
     src: "https://umami.souloss.cn/",
   },

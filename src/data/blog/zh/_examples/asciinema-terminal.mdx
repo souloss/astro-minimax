@@ -1,0 +1,76 @@
+---
+title: "Asciinema 终端回放"
+pubDatetime: 2026-03-12T00:00:00.000Z
+author: Souloss
+description: "使用 AsciinemaPlayer 组件在博客中嵌入终端会话回放，展示命令行操作。"
+tags:
+  - tutorial
+  - examples
+  - visualization
+category: Examples
+draft: false
+---
+
+import AsciinemaPlayer from '@/components/media/AsciinemaPlayer.astro';
+
+[asciinema](https://asciinema.org/) 是一个终端会话录制和回放工具。通过 `AsciinemaPlayer` 组件，你可以在博客文章中嵌入录制好的终端回放。
+
+---
+
+## 基础示例
+
+下面是一段简单的终端操作演示：
+
+<AsciinemaPlayer src="/casts/demo.cast" rows={18} />
+
+## 使用方式
+
+在 MDX 文件中导入并使用组件：
+
+```mdx
+import AsciinemaPlayer from '@/components/media/AsciinemaPlayer.astro';
+
+<AsciinemaPlayer src="/casts/demo.cast" />
+```
+
+## 录制 .cast 文件
+
+使用 `asciinema` CLI 录制终端会话：
+
+```bash
+# 安装
+brew install asciinema    # macOS
+sudo apt install asciinema # Ubuntu
+
+# 录制
+asciinema rec demo.cast
+
+# 录制指定命令
+asciinema rec -c "pnpm run build" build-demo.cast
+
+# 设置空闲压缩
+asciinema rec -i 2 demo.cast
+```
+
+按 `Ctrl+D` 或输入 `exit` 结束录制。将生成的 `.cast` 文件放到 `public/casts/` 目录即可引用。
+
+## 自动播放
+
+设置 `autoPlay` 可自动开始播放：
+
+<AsciinemaPlayer src="/casts/demo.cast" autoPlay={true} speed={2} rows={18} />
+
+## 组件属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `src` | `string` | 必填 | `.cast` 文件路径 |
+| `cols` | `number` | `80` | 终端列数 |
+| `rows` | `number` | `24` | 终端行数 |
+| `speed` | `number` | `1` | 播放速度倍率 |
+| `idleTimeLimit` | `number` | `2` | 空闲时间压缩阈值（秒） |
+| `fit` | `string` | `"width"` | 自适应模式 |
+| `autoPlay` | `boolean` | `false` | 是否自动播放 |
+| `loop` | `boolean` | `false` | 是否循环播放 |
+
+播放器会自动跟随博客的亮色/暗色主题切换。

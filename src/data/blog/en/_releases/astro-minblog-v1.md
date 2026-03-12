@@ -1,25 +1,25 @@
 ---
 author: Souloss
 pubDatetime: 2025-03-08T00:00:00.000Z
-title: astro-minblog 1.0
-slug: astro-minblog-v1
+title: astro-minimax 1.0
+slug: astro-minimax-v1
 featured: true
 category: Release Notes
-ogImage: ../../../../assets/images/astro-minblog-v1.png
+ogImage: ../../../../assets/images/astro-minimax-v1.png
 tags:
   - release
-description: "astro-minblog 1.0: The first release of an independent blog theme based on AstroPaper, featuring AI chat, Mermaid diagrams, Waline comments, and more."
+description: "astro-minimax 1.0: The first release of an independent blog theme based on AstroPaper, featuring AI chat, Mermaid diagrams, Waline comments, and more."
 ---
 
-astro-minblog is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This project is built on top of [AstroPaper](https://github.com/satnaing/astro-paper) and has evolved through multiple versions into a fully-featured independent theme.
+astro-minimax is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This project is built on top of [AstroPaper](https://github.com/satnaing/astro-paper) and has evolved through multiple versions into a fully-featured independent theme.
 
-![astro-minblog](@/assets/images/astro-minblog-v1.png)
+![astro-minimax](@/assets/images/astro-minimax-v1.png)
 
 ## Table of contents
 
 ## Project Origins
 
-astro-minblog originated from deep customization and feature expansion of the AstroPaper theme. While preserving the minimal, high-performance, and accessible nature of the original, we've added numerous practical features making it more suitable for Chinese users and modern blogging needs.
+astro-minimax originated from deep customization and feature expansion of the AstroPaper theme. While preserving the minimal, high-performance, and accessible nature of the original, we've added numerous practical features making it more suitable for Chinese users and modern blogging needs.
 
 ## Core Features
 
@@ -32,7 +32,7 @@ astro-minblog originated from deep customization and feature expansion of the As
 
 ### 🎨 Unique Features
 
-astro-minblog adds the following features on top of AstroPaper:
+astro-minimax adds the following features on top of AstroPaper:
 
 #### AI & Interaction
 
@@ -49,9 +49,6 @@ astro-minblog adds the following features on top of AstroPaper:
 #### Visualization Components
 
 - ✏️ **Rough.js Drawings** - Hand-drawn style SVG graphics with theme-aware colors
-- 🎞️ **Two.js Animations** - Smooth 2D SVG animations with configurable shapes and autoplay
-- 🎨 **p5.js Sketches** - Creative coding canvas with mouse interaction and generative art
-- 📽️ **Reveal.js Slides** - Embeddable slide presentations with auto theme switching
 - 🖌️ **Excalidraw Embeds** - Whiteboard-style collaborative diagrams
 - 📦 **VizContainer** - Unified wrapper with zoom controls and fullscreen support for all visual components
 
@@ -97,9 +94,6 @@ astro-minblog adds the following features on top of AstroPaper:
 - [Waline](https://waline.js.org/) - Comment system
 - [Mermaid](https://mermaid.js.org/) - Diagram rendering
 - [Rough.js](https://roughjs.com/) - Hand-drawn style graphics
-- [Two.js](https://two.js.org/) - 2D animation engine
-- [p5.js](https://p5js.org/) - Creative coding library
-- [Reveal.js](https://revealjs.com/) - Presentation framework
 - [Shiki](https://shiki.style/) - Code highlighting
 
 **Deployment & Analytics**
@@ -132,7 +126,7 @@ astro-minblog adds the following features on top of AstroPaper:
 │   ├── components/
 │   │   ├── ai/          # AI chat widget
 │   │   ├── blog/        # Post components, TOC, comments, copyright
-│   │   ├── media/       # Mermaid, Rough.js, Two.js, p5.js, Reveal.js, Excalidraw
+│   │   ├── media/       # Mermaid, Markmap, Rough.js, Excalidraw
 │   │   ├── nav/         # Header, footer, pagination, floating actions
 │   │   ├── social/      # Sponsorship, social links
 │   │   └── ui/          # Cards, tags, alerts, timeline, collapse
@@ -159,7 +153,7 @@ astro-minblog adds the following features on top of AstroPaper:
 
 ```bash
 # Create project from template
-pnpm create astro@latest --template souloss/astro-minblog
+pnpm create astro@latest --template souloss/astro-minimax
 
 # Install dependencies
 pnpm install
@@ -170,7 +164,7 @@ pnpm run dev
 
 ## Acknowledgements
 
-astro-minblog wouldn't exist without the support of these projects and individuals:
+astro-minimax wouldn't exist without the support of these projects and individuals:
 
 - [AstroPaper](https://github.com/satnaing/astro-paper) - Original theme by [Sat Naing](https://github.com/satnaing)
 - [Astro](https://astro.build/) - Excellent static site framework
@@ -178,7 +172,7 @@ astro-minblog wouldn't exist without the support of these projects and individua
 
 ## Roadmap
 
-astro-minblog will continue to evolve. Future plans include:
+astro-minimax will continue to evolve. Future plans include:
 
 - 🤖 More AI feature integrations
 - 📱 PWA support
@@ -187,6 +181,6 @@ astro-minblog will continue to evolve. Future plans include:
 
 ---
 
-Thank you for choosing astro-minblog! If you like it, please consider giving a [GitHub Star](https://github.com/souloss/astro-minblog) ⭐
+Thank you for choosing astro-minimax! If you like it, please consider giving a [GitHub Star](https://github.com/souloss/astro-minimax) ⭐
 
-[Souloss](https://souloss.cn) - Creator of astro-minblog
+[Souloss](https://souloss.cn) - Creator of astro-minimax

@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://demo-astromin.souloss.cn/sitemap-index.xml
+Sitemap: https://demo-as​​tro-minimax.souloss.cn/sitemap-index.xml

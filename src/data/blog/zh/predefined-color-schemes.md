@@ -8,12 +8,12 @@ draft: false
 category: 教程/配置
 tags:
   - color-schemes
-description: 为 astro-minblog 博客主题精心设计的一些预定义配色方案。
+description: 为 astro-minimax 博客主题精心设计的一些预定义配色方案。
 ---
 
-我为 astro-minblog 博客主题设计了一些预定义配色方案。你可以用这些配色方案替换原有的配色。
+我为 astro-minimax 博客主题设计了一些预定义配色方案。你可以用这些配色方案替换原有的配色。
 
-如果你不知道如何配置配色方案，请查看[这篇博客文章](https://demo-astromin.souloss.cn/zh/posts/customizing-astro-minblog-theme-color-schemes/)。
+如果你不知道如何配置配色方案，请查看[这篇博客文章](https://demo-as​​tro-minimax.souloss.cn/zh/posts/customizing-astro-minimax-theme-color-schemes/)。
 
 ## Table of contents
 
@@ -70,9 +70,9 @@ html[data-theme="light"] {
 
 深色配色方案必须定义为 `html[data-theme="dark"]`。
 
-### astro-minblog 1 原始深色主题
+### astro-minimax 1 原始深色主题
 
-![astro-minblog 1 default dark theme](https://user-images.githubusercontent.com/53733092/215769153-13b0ad8d-5ba2-44b1-af06-e5ae61293f62.png)
+![astro-minimax 1 default dark theme](https://user-images.githubusercontent.com/53733092/215769153-13b0ad8d-5ba2-44b1-af06-e5ae61293f62.png)
 
 ```css
 html[data-theme="dark"] {
@@ -126,7 +126,7 @@ html[data-theme="dark"] {
 }
 ```
 
-### Astro dark (astro-minblog 2 新默认深色主题)
+### Astro dark (astro-minimax 2 新默认深色主题)
 
 ![new dark color scheme - low contrast](https://user-images.githubusercontent.com/53733092/215772856-d5b7ae35-ddaa-4ed6-b0bf-3fa5dbcf834c.png)
 
@@ -140,9 +140,9 @@ html[data-theme="dark"] {
 }
 ```
 
-### Astro Deep Purple (astro-minblog 3 新深色主题)
+### Astro Deep Purple (astro-minimax 3 新深色主题)
 
-![astro-minblog v3 new theme](https://github.com/souloss/astro-minblog/assets/53733092/c8b5d7e1-a3bc-4852-a5ad-4abf7b3cec79)
+![astro-minimax v3 new theme](https://github.com/souloss/astro-minimax/assets/53733092/c8b5d7e1-a3bc-4852-a5ad-4abf7b3cec79)
 
 ```css
 html[data-theme="dark"] {
@@ -154,9 +154,9 @@ html[data-theme="dark"] {
 }
 ```
 
-### astro-minblog v4 特别版 (astro-minblog 4 新深色主题)
+### astro-minimax v4 特别版 (astro-minimax 4 新深色主题)
 
-![astro-minblog v4 new theme](https://github.com/souloss/astro-minblog/assets/53733092/66eb74dc-7a0e-4f2e-982d-25f5c443b25a)
+![astro-minimax v4 new theme](https://github.com/souloss/astro-minimax/assets/53733092/66eb74dc-7a0e-4f2e-982d-25f5c443b25a)
 
 ```css
 html[data-theme="dark"] {

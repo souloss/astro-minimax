@@ -1,29 +1,29 @@
 ---
 author: Souloss
 pubDatetime: 2025-03-08T00:00:00.000Z
-title: astro-minblog 1.0
+title: astro-minimax 1.0
 featured: true
 category: 发布说明
-ogImage: ../../../../assets/images/astro-minblog-v1.png
+ogImage: ../../../../assets/images/astro-minimax-v1.png
 tags:
   - release
-description: "astro-minblog 1.0: 基于 AstroPaper 二次开发的独立博客主题首次发布，集成 AI 聊天、Mermaid 图表、Waline 评论等独特功能。"
+description: "astro-minimax 1.0: 基于 AstroPaper 二次开发的独立博客主题首次发布，集成 AI 聊天、Mermaid 图表、Waline 评论等独特功能。"
 ---
 
-astro-minblog 是一个极简、响应式、无障碍且对 SEO 友好的 Astro 博客主题。本项目基于 [AstroPaper](https://github.com/satnaing/astro-paper) 二次开发，经过多个版本的迭代，现已成为一个功能完善的独立主题。
+astro-minimax 是一个极简、响应式、无障碍且对 SEO 友好的 Astro 博客主题。本项目基于 [AstroPaper](https://github.com/satnaing/astro-paper) 二次开发，经过多个版本的迭代，现已成为一个功能完善的独立主题。
 
-![astro-minblog](@/assets/images/astro-minblog-v1.png)
+![astro-minimax](@/assets/images/astro-minimax-v1.png)
 
 ## Table of contents
 
 ## 项目起源
 
-astro-minblog 源自对 AstroPaper 主题的深度定制和功能扩展。在保留原主题极简、高性能、无障碍等优点的基础上，新增了大量实用功能，使其更适合中文用户和现代博客需求。
+astro-minimax 源自对 AstroPaper 主题的深度定制和功能扩展。在保留原主题极简、高性能、无障碍等优点的基础上，新增了大量实用功能，使其更适合中文用户和现代博客需求。
 
 ## 特性
 ### 🎨 独特功能
 
-astro-minblog 在 AstroPaper 基础上新增以下功能：
+astro-minimax 在 AstroPaper 基础上新增以下功能：
 
 #### AI 与交互
 
@@ -40,9 +40,6 @@ astro-minblog 在 AstroPaper 基础上新增以下功能：
 #### 可视化组件
 
 - ✏️ **Rough.js 手绘图形** - 手绘风格 SVG 图形，自动适配主题配色
-- 🎞️ **Two.js 动画** - 流畅的 2D SVG 动画，支持配置化图形与自动播放
-- 🎨 **p5.js 创意编程** - 创意编程画布，支持鼠标交互和生成艺术
-- 📽️ **Reveal.js 幻灯片** - 可嵌入的幻灯片演示，自动跟随主题切换
 - 🖌️ **Excalidraw 嵌入** - 白板风格的协作式图表
 - 📦 **VizContainer 容器** - 统一的可视化组件包装器，支持缩放控制和全屏模式
 
@@ -88,9 +85,6 @@ astro-minblog 在 AstroPaper 基础上新增以下功能：
 - [Waline](https://waline.js.org/) - 评论系统
 - [Mermaid](https://mermaid.js.org/) - 图表渲染
 - [Rough.js](https://roughjs.com/) - 手绘风格图形
-- [Two.js](https://two.js.org/) - 2D 动画引擎
-- [p5.js](https://p5js.org/) - 创意编程库
-- [Reveal.js](https://revealjs.com/) - 演示文稿框架
 - [Shiki](https://shiki.style/) - 代码高亮
 
 **部署与监控**
@@ -123,7 +117,7 @@ astro-minblog 在 AstroPaper 基础上新增以下功能：
 │   ├── components/
 │   │   ├── ai/          # AI 聊天组件
 │   │   ├── blog/        # 文章组件、目录、评论、版权
-│   │   ├── media/       # Mermaid、Rough.js、Two.js、p5.js、Reveal.js、Excalidraw
+│   │   ├── media/       # Mermaid、Markmap、Rough.js、Excalidraw
 │   │   ├── nav/         # 页头、页脚、分页、浮动操作
 │   │   ├── social/      # 赞助、社交链接
 │   │   └── ui/          # 卡片、标签、提示框、时间线、折叠
@@ -150,7 +144,7 @@ astro-minblog 在 AstroPaper 基础上新增以下功能：
 
 ```bash
 # 使用模板创建项目
-pnpm create astro@latest --template souloss/astro-minblog
+pnpm create astro@latest --template souloss/astro-minimax
 
 # 安装依赖
 pnpm install
@@ -161,7 +155,7 @@ pnpm run dev
 
 ## 致谢
 
-astro-minblog 的诞生离不开以下项目和个人的支持：
+astro-minimax 的诞生离不开以下项目和个人的支持：
 
 - [AstroPaper](https://github.com/satnaing/astro-paper) - 原主题作者 [Sat Naing](https://github.com/satnaing)
 - [Astro](https://astro.build/) - 出色的静态站点框架
@@ -169,7 +163,7 @@ astro-minblog 的诞生离不开以下项目和个人的支持：
 
 ## 展望
 
-astro-minblog 将持续迭代，未来计划：
+astro-minimax 将持续迭代，未来计划：
 
 - 🤖 更多 AI 功能集成
 - 📱 PWA 支持
@@ -178,6 +172,6 @@ astro-minblog 将持续迭代，未来计划：
 
 ---
 
-感谢你选择 astro-minblog！如果觉得不错，欢迎 [GitHub Star](https://github.com/souloss/astro-minblog) ⭐
+感谢你选择 astro-minimax！如果觉得不错，欢迎 [GitHub Star](https://github.com/souloss/astro-minimax) ⭐
 
-[Souloss](https://souloss.cn) - astro-minblog 作者
+[Souloss](https://souloss.cn) - astro-minimax 作者

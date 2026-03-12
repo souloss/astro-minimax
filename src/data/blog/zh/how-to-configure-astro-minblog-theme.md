@@ -2,17 +2,17 @@
 author: Souloss
 pubDatetime: 2022-09-23T04:58:53Z
 modDatetime: 2026-01-10T13:04:53.851Z
-title: 如何配置 astro-minblog 主题
+title: 如何配置 astro-minimax 主题
 featured: true
 draft: false
 category: 教程/配置
 tags:
   - configuration
   - docs
-description: 如何让 astro-minblog 主题完全符合你的需求。
+description: 如何让 astro-minimax 主题完全符合你的需求。
 ---
 
-astro-minblog 是一个高度可定制的 Astro 博客主题。使用 astro-minblog，你可以根据个人喜好定制一切。本文将解释如何通过配置文件轻松进行一些自定义设置。
+astro-minimax 是一个高度可定制的 Astro 博客主题。使用 astro-minimax，你可以根据个人喜好定制一切。本文将解释如何通过配置文件轻松进行一些自定义设置。
 
 ## Table of contents
 
@@ -24,12 +24,12 @@ astro-minblog 是一个高度可定制的 Astro 博客主题。使用 astro-minb
 
 ```js file=src/config.ts
 export const SITE = {
-  website: "https://demo-astromin.souloss.cn/", // replace this with your deployed domain
+  website: "https://demo-as​​tro-minimax.souloss.cn/", // replace this with your deployed domain
   author: "Sat Naing",
   profile: "https://souloss.cn/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
-  title: "astro-minblog",
-  ogImage: "astro-minblog-og.jpg",
+  title: "astro-minimax",
+  ogImage: "astro-minimax-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 4,
@@ -39,7 +39,7 @@ export const SITE = {
   editPost: {
     enabled: true,
     text: "Suggest Changes",
-    url: "https://github.com/souloss/astro-minblog/edit/main/",
+    url: "https://github.com/souloss/astro-minimax/edit/main/",
   },
   dynamicOgImage: true, // enable automatic dynamic og-image generation
   dir: "ltr", // "rtl" | "auto"
@@ -65,7 +65,7 @@ export const SITE = {
 | `showArchives`        | 决定是否显示 `归档` 菜单（位于 `关于` 和 `搜索` 菜单之间）及其对应页面。此选项默认为 `true`。                                                                                                                                                                                   |
 | `showBackButton`      | 决定是否在每篇博客文章中显示 `返回` 按钮。                                                                                                                                                                                                                                      |
 | `editPost`            | 此选项允许用户通过在博客文章标题下提供编辑链接来建议更改博客文章。可以通过将 `SITE.editPost.enabled` 设为 `false` 来禁用此功能。                                                                                                                                                |
-| `dynamicOgImage`      | 此选项控制当博客文章 frontmatter 中未指定 `ogImage` 时是否[生成动态 og-image](https://demo-astromin.souloss.cn/en/posts/dynamic-og-images/)。如果你有很多博客文章，可能想要禁用此功能。详见[权衡说明](https://demo-astromin.souloss.cn/en/posts/dynamic-og-images/#trade-off)。 |
+| `dynamicOgImage`      | 此选项控制当博客文章 frontmatter 中未指定 `ogImage` 时是否[生成动态 og-image](https://demo-as​​tro-minimax.souloss.cn/en/posts/dynamic-og-images/)。如果你有很多博客文章，可能想要禁用此功能。详见[权衡说明](https://demo-as​​tro-minimax.souloss.cn/en/posts/dynamic-og-images/#trade-off)。 |
 | `dir`                 | 指定整个博客的文本方向。用作 `<html dir="ltr">` 中的 [HTML dir 属性](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/dir)。支持的值：`ltr` \| `rtl` \| `auto`                                                                                     |
 | `lang`                | 用作 `<html lang"en">` 中的 HTML ISO 语言代码。默认为 `en`。                                                                                                                                                                                                                    |
 | `timezone`            | 此选项允许你使用 [IANA 格式](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)指定时区。设置此选项可确保本地主机和部署站点的时间戳一致，消除时间差异。                                                                                                              |
@@ -87,9 +87,9 @@ export const SITE = {
 
 ## 配置 Logo 或标题
 
-在 astro-minblog v5 之前，你可以在 `src/config.ts` 文件的 `LOGO_IMAGE` 对象中更新网站名称/logo。但在 astro-minblog v5 中，此选项已被移除，改用 Astro 内置的 SVG 和 Image 组件。
+在 astro-minimax v5 之前，你可以在 `src/config.ts` 文件的 `LOGO_IMAGE` 对象中更新网站名称/logo。但在 astro-minimax v5 中，此选项已被移除，改用 Astro 内置的 SVG 和 Image 组件。
 
-![An arrow pointing at the website logo](https://res.cloudinary.com/noezectz/v1663911318/astro-minblog/astro-minblog-logo-config_goff5l.png)
+![An arrow pointing at the website logo](https://res.cloudinary.com/noezectz/v1663911318/astro-minimax/astro-minimax-logo-config_goff5l.png)
 
 你有 3 种选择：
 
@@ -165,7 +165,7 @@ export const SITE = {
 export const SOCIALS = [
   {
     name: "GitHub",
-    href: "https://github.com/souloss/astro-minblog",
+    href: "https://github.com/souloss/astro-minimax",
     linkTitle: ` ${SITE.title} on GitHub`,
     icon: IconGitHub,
   },
@@ -198,7 +198,7 @@ export const SOCIALS = [
 
 ## 配置 Waline 评论
 
-astro-minblog 内置 [Waline](https://waline.js.org/) 评论系统。在 `src/config.ts` 的 `SITE.waline` 中配置：
+astro-minimax 内置 [Waline](https://waline.js.org/) 评论系统。在 `src/config.ts` 的 `SITE.waline` 中配置：
 
 ```js file=src/config.ts
 waline: {
@@ -230,7 +230,7 @@ waline: {
 
 ## 配置 AI 聊天
 
-astro-minblog 内置 AI 聊天助手。在 `SITE.ai` 中配置：
+astro-minimax 内置 AI 聊天助手。在 `SITE.ai` 中配置：
 
 ```js file=src/config.ts
 ai: {
@@ -295,7 +295,7 @@ umami: {
 
 ## 配置字体
 
-astro-minblog 使用 Astro 的[实验性字体 API](https://docs.astro.build/en/reference/experimental-flags/fonts/)，默认字体为 [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)。这提供了跨所有平台的一致排版，并自动进行字体优化，包括预加载和缓存。
+astro-minimax 使用 Astro 的[实验性字体 API](https://docs.astro.build/en/reference/experimental-flags/fonts/)，默认字体为 [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)。这提供了跨所有平台的一致排版，并自动进行字体优化，包括预加载和缓存。
 
 ### 使用默认字体
 
@@ -365,4 +365,4 @@ import { Font } from "astro:assets";
 
 ## 结语
 
-这是关于如何自定义此主题的简要说明。如果你懂一些代码，可以进行更多自定义。关于自定义样式，请阅读[这篇文章](https://demo-astromin.souloss.cn/en/posts/customizing-astro-minblog-theme-color-schemes/)。感谢阅读。✌🏻
+这是关于如何自定义此主题的简要说明。如果你懂一些代码，可以进行更多自定义。关于自定义样式，请阅读[这篇文章](https://demo-as​​tro-minimax.souloss.cn/en/posts/customizing-astro-minimax-theme-color-schemes/)。感谢阅读。✌🏻

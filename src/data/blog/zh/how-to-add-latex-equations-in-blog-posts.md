@@ -9,7 +9,7 @@ tags:
 description: 学习如何在 Astro 博客文章中使用 Markdown、KaTeX 和 remark/rehype 插件添加 LaTeX 公式。
 ---
 
-本文档演示如何在 astro-minblog 的 Markdown 文件中使用 LaTeX 公式。LaTeX 是一种强大的排版系统，常用于数学和科学文档。
+本文档演示如何在 astro-minimax 的 Markdown 文件中使用 LaTeX 公式。LaTeX 是一种强大的排版系统，常用于数学和科学文档。
 
 <figure>
   <img
@@ -25,7 +25,7 @@ description: 学习如何在 Astro 博客文章中使用 Markdown、KaTeX 和 re
 
 ## 说明
 
-在本节中，你将找到如何在 astro-minblog 的 Markdown 文件中添加 LaTeX 支持的说明。
+在本节中，你将找到如何在 astro-minimax 的 Markdown 文件中添加 LaTeX 支持的说明。
 
 1. 运行以下命令安装必要的 remark 和 rehype 插件：
 

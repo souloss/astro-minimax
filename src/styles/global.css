@@ -94,26 +94,17 @@ html[data-theme="dark"] {
   body {
     @apply flex min-h-svh flex-col bg-background font-app text-foreground selection:bg-accent/75 selection:text-background;
     transition:
-      background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: background-color, color;
+      background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   header,
   footer,
-  nav,
-  article,
-  main,
-  aside,
-  section,
-  .theme-transition,
-  [data-theme-transition] {
+  main {
     transition:
-      background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: background-color, color, border-color;
+      background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   a,
@@ -214,11 +205,11 @@ html.dark-transition::view-transition-new(root) {
 }
 
 html.theme-transition::view-transition-new(root) {
-  animation: circle-expand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: circle-expand 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html.theme-transition.dark-transition::view-transition-old(root) {
-  animation: circle-expand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: circle-expand 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html.theme-transition.dark-transition::view-transition-new(root) {
@@ -226,22 +217,17 @@ html.theme-transition.dark-transition::view-transition-new(root) {
 }
 
 html.no-view-transitions {
-  --transition-duration: 0.4s;
+  --transition-duration: 0.25s;
 }
 
 html.no-view-transitions body,
 html.no-view-transitions header,
 html.no-view-transitions footer,
-html.no-view-transitions nav,
-html.no-view-transitions article,
-html.no-view-transitions main,
-html.no-view-transitions aside,
-html.no-view-transitions section {
+html.no-view-transitions main {
   transition:
     background-color var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
     color var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
-    border-color var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
+    border-color var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ===== Theme Toggle Button ===== */

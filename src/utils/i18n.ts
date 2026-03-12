@@ -121,7 +121,7 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "common.notFound": "Page Not Found",
     "hero.greeting": "Mingalaba",
     "hero.desc":
-      "astro-minblog is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This theme follows best practices and provides accessibility out of the box. Light and dark mode are supported by default. Moreover, additional color schemes can also be configured.",
+      "astro-minimax is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This theme follows best practices and provides accessibility out of the box. Light and dark mode are supported by default. Moreover, additional color schemes can also be configured.",
     "hero.readMore": "Read the blog posts or check",
     "hero.socialLinks": "Social Links:",
     "footer.hi": "Hi",
@@ -200,7 +200,7 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "common.notFound": "页面未找到",
     "hero.greeting": "你好",
     "hero.desc":
-      "astro-minblog 是一个极简、响应式、无障碍且 SEO 友好的 Astro 博客主题。本主题遵循最佳实践，开箱即用提供无障碍支持。默认支持亮色和暗色模式，还可配置更多配色方案。",
+      "astro-minimax 是一个极简、响应式、无障碍且 SEO 友好的 Astro 博客主题。本主题遵循最佳实践，开箱即用提供无障碍支持。默认支持亮色和暗色模式，还可配置更多配色方案。",
     "hero.readMore": "阅读博客文章或查看",
     "hero.socialLinks": "社交链接：",
     "footer.hi": "你好",

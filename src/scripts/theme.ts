@@ -44,11 +44,14 @@ function reflectPreference(): void {
       ?.setAttribute("content", bgColor);
   }
 
-  window.dispatchEvent(
-    new CustomEvent("themechange", {
-      detail: { isDark: themeValue === DARK, theme: themeValue },
-    })
-  );
+  // Defer viz re-renders to avoid blocking the theme transition animation
+  requestAnimationFrame(() => {
+    window.dispatchEvent(
+      new CustomEvent("themechange", {
+        detail: { isDark: themeValue === DARK, theme: themeValue },
+      })
+    );
+  });
 }
 
 // Check if View Transitions API is supported

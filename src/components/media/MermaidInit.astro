@@ -1,32 +1,10 @@
 ---
-import { randomUUID } from "node:crypto";
-import VizContainer from "./VizContainer.astro";
-
-interface Props {
-  code: string;
-}
-
-const { code } = Astro.props;
-const uniqueId = `mermaid-${randomUUID()}`;
+/**
+ * Script-only component that ensures the Mermaid rendering script is loaded.
+ * Include in PostDetails when the post body contains ```mermaid code blocks.
+ * The script handles pre.mermaid elements created by remark-mermaid-codeblock.
+ */
 ---
-
-<VizContainer minHeight="120px">
-  <div class="mermaid-wrapper" data-mermaid-id={uniqueId} data-viz-type="mermaid">
-    <div class="mermaid-output" id={`${uniqueId}-output`}>
-      <div class="mermaid-placeholder">
-        <svg class="size-8 animate-pulse text-foreground-soft/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M3 3h18v18H3z" stroke-dasharray="4 2" /><path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke-dasharray="2 2" opacity="0.5" />
-        </svg>
-      </div>
-    </div>
-    <script
-      is:inline
-      type="application/json"
-      class="mermaid-code"
-      set:html={JSON.stringify(code)}
-    />
-  </div>
-</VizContainer>
 
 <script>
   import mermaid from "mermaid";
@@ -204,11 +182,7 @@ const uniqueId = `mermaid-${randomUUID()}`;
   }
 
   window.addEventListener("themechange", () => {
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(() => reRenderAll(), { timeout: 300 });
-    } else {
-      setTimeout(() => reRenderAll(), 100);
-    }
+    reRenderAll();
   });
 
   function init() {
@@ -224,7 +198,7 @@ const uniqueId = `mermaid-${randomUUID()}`;
   document.addEventListener("astro:page-load", init);
 </script>
 
-<style>
+<style is:global>
   .mermaid-wrapper {
     display: flex;
     justify-content: center;
@@ -239,7 +213,7 @@ const uniqueId = `mermaid-${randomUUID()}`;
     justify-content: center;
   }
 
-  .mermaid-output :global(svg) {
+  .mermaid-output svg {
     max-width: 100%;
     height: auto;
   }
@@ -258,7 +232,7 @@ const uniqueId = `mermaid-${randomUUID()}`;
     padding: 1rem;
   }
 
-  :global(html[data-theme="dark"]) .mermaid-error {
+  html[data-theme="dark"] .mermaid-error {
     color: #f87171;
   }
 </style>

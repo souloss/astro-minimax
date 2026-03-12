@@ -180,7 +180,11 @@ const uniqueId = `rough-${randomUUID()}`;
   }
 
   window.addEventListener("themechange", () => {
-    reRenderAllRough();
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(() => reRenderAllRough(), { timeout: 300 });
+    } else {
+      setTimeout(() => reRenderAllRough(), 100);
+    }
   });
 
   function init() {

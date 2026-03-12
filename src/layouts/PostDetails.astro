@@ -19,6 +19,8 @@ import PostActions from "@/components/blog/PostActions.astro";
 import RelatedPosts from "@/components/blog/RelatedPosts.astro";
 import Copyright from "@/components/blog/Copyright.astro";
 import SeriesNav from "@/components/blog/SeriesNav.astro";
+import MarkmapInit from "@/components/media/MarkmapInit.astro";
+import MermaidInit from "@/components/media/MermaidInit.astro";
 import { getRelatedPosts } from "@/utils/getRelatedPosts";
 import { getReadingTime } from "@/utils/getReadingTime";
 import { getCategoryUrl } from "@/utils/getCategoryPath";
@@ -49,6 +51,10 @@ const { Content, headings } = await render(post);
 const { minutes: readingMinutes, words: wordCount } = getReadingTime(
   post.body ?? ""
 );
+
+const postBody = post.body ?? "";
+const hasMarkmap = postBody.includes("```markmap");
+const hasMermaid = postBody.includes("```mermaid");
 
 // Banner image: only real local assets or valid remote URLs (not dynamic OG stubs)
 let bannerImageUrl: string | undefined;
@@ -306,6 +312,8 @@ const nextPost =
     >
       <Content />
     </article>
+    {hasMarkmap && <MarkmapInit />}
+    {hasMermaid && <MermaidInit />}
     <FloatingTOC headings={headings} />
 
     <hr class="my-8 border-dashed" />

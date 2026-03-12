@@ -2,14 +2,14 @@
 author: Souloss
 pubDatetime: 2022-09-25T15:20:35Z
 modDatetime: 2026-01-09T15:00:15.170Z
-title: 自定义 astro-minblog 主题配色方案
+title: 自定义 astro-minimax 主题配色方案
 featured: false
 draft: false
 category: 教程/配置
 tags:
   - color-schemes
   - docs
-description: 如何启用/禁用明暗模式，以及自定义 astro-minblog 主题的配色方案。
+description: 如何启用/禁用明暗模式，以及自定义 astro-minimax 主题的配色方案。
 ---
 
 本文将解释如何为网站启用/禁用明暗模式。此外，你将学习如何自定义整个网站的配色方案。
@@ -18,16 +18,16 @@ description: 如何启用/禁用明暗模式，以及自定义 astro-minblog 主
 
 ## 启用/禁用明暗模式
 
-astro-minblog 主题默认包含明暗模式。换句话说，将有两种配色方案，一种用于亮色模式，另一种用于暗色模式。可以在 `SITE` 配置对象中禁用此默认行为。
+astro-minimax 主题默认包含明暗模式。换句话说，将有两种配色方案，一种用于亮色模式，另一种用于暗色模式。可以在 `SITE` 配置对象中禁用此默认行为。
 
 ```js file="src/config.ts"
 export const SITE = {
-  website: "https://demo-astromin.souloss.cn/", // replace this with your deployed domain
+  website: "https://demo-as​​tro-minimax.souloss.cn/", // replace this with your deployed domain
   author: "Sat Naing",
   profile: "https://souloss.cn/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
-  title: "astro-minblog",
-  ogImage: "astro-minblog-og.jpg",
+  title: "astro-minimax",
+  ogImage: "astro-minimax-og.jpg",
   lightAndDarkMode: true, // [!code highlight]
   postPerIndex: 4,
   postPerPage: 4,
@@ -37,7 +37,7 @@ export const SITE = {
   editPost: {
     enabled: true,
     text: "Suggest Changes",
-    url: "https://github.com/souloss/astro-minblog/edit/main/",
+    url: "https://github.com/souloss/astro-minimax/edit/main/",
   },
   dynamicOgImage: true,
   lang: "en", // html lang code. Set this empty and default will be "en"
@@ -88,7 +88,7 @@ function getPreferTheme(): string {
 
 ## 自定义配色方案
 
-astro-minblog 主题的明暗配色方案都可以在 `global.css` 文件中自定义。
+astro-minimax 主题的明暗配色方案都可以在 `global.css` 文件中自定义。
 
 ```css file="src/styles/global.css"
 @import "tailwindcss";
@@ -115,7 +115,7 @@ html[data-theme="dark"] {
 /* ... */
 ```
 
-在 astro-minblog 主题中，`:root` 和 `html[data-theme="light"]` 选择器定义亮色配色方案，而 `html[data-theme="dark"]` 定义暗色配色方案。
+在 astro-minimax 主题中，`:root` 和 `html[data-theme="light"]` 选择器定义亮色配色方案，而 `html[data-theme="dark"]` 定义暗色配色方案。
 
 要自定义你自己的配色方案，请在 `:root, html[data-theme="light"]` 中指定你的亮色颜色，在 `html[data-theme="dark"]` 中指定你的暗色颜色。
 
@@ -144,4 +144,4 @@ html[data-theme="light"] {
 /* ... */
 ```
 
-> 查看 astro-minblog 为你准备的一些[预定义配色方案](https://demo-astromin.souloss.cn/posts/predefined-color-schemes/)。
+> 查看 astro-minimax 为你准备的一些[预定义配色方案](https://demo-as​​tro-minimax.souloss.cn/posts/predefined-color-schemes/)。

@@ -10,13 +10,13 @@ category: 教程/配置
 tags:
   - color-schemes
 description:
-  Some of the well-crafted, predefined color schemes for astro-minblog blog
+  Some of the well-crafted, predefined color schemes for astro-minimax blog
   theme.
 ---
 
-I've crafted some predefined color schemes for this astro-minblog blog theme. You can replace these color schemes with the original ones.
+I've crafted some predefined color schemes for this astro-minimax blog theme. You can replace these color schemes with the original ones.
 
-If you don't know how you can configure color schemes, check [this blog post](https://demo-astromin.souloss.cn/en/posts/customizing-astro-minblog-theme-color-schemes/).
+If you don't know how you can configure color schemes, check [this blog post](https://demo-as​​tro-minimax.souloss.cn/en/posts/customizing-astro-minimax-theme-color-schemes/).
 
 ## Table of contents
 
@@ -73,9 +73,9 @@ html[data-theme="light"] {
 
 Dark color scheme has to be defined as `html[data-theme="dark"]`.
 
-### astro-minblog 1 original Dark Theme
+### astro-minimax 1 original Dark Theme
 
-![astro-minblog 1 default dark theme](https://user-images.githubusercontent.com/53733092/215769153-13b0ad8d-5ba2-44b1-af06-e5ae61293f62.png)
+![astro-minimax 1 default dark theme](https://user-images.githubusercontent.com/53733092/215769153-13b0ad8d-5ba2-44b1-af06-e5ae61293f62.png)
 
 ```css
 html[data-theme="dark"] {
@@ -129,7 +129,7 @@ html[data-theme="dark"] {
 }
 ```
 
-### Astro dark (New default dark theme in astro-minblog 2)
+### Astro dark (New default dark theme in astro-minimax 2)
 
 ![new dark color scheme - low contrast](https://user-images.githubusercontent.com/53733092/215772856-d5b7ae35-ddaa-4ed6-b0bf-3fa5dbcf834c.png)
 
@@ -143,9 +143,9 @@ html[data-theme="dark"] {
 }
 ```
 
-### Astro Deep Purple (New dark theme in astro-minblog 3)
+### Astro Deep Purple (New dark theme in astro-minimax 3)
 
-![astro-minblog v3 new theme](https://github.com/souloss/astro-minblog/assets/53733092/c8b5d7e1-a3bc-4852-a5ad-4abf7b3cec79)
+![astro-minimax v3 new theme](https://github.com/souloss/astro-minimax/assets/53733092/c8b5d7e1-a3bc-4852-a5ad-4abf7b3cec79)
 
 ```css
 html[data-theme="dark"] {
@@ -157,9 +157,9 @@ html[data-theme="dark"] {
 }
 ```
 
-### astro-minblog v4 Special (New dark theme in astro-minblog 4)
+### astro-minimax v4 Special (New dark theme in astro-minimax 4)
 
-![astro-minblog v4 new theme](https://github.com/souloss/astro-minblog/assets/53733092/66eb74dc-7a0e-4f2e-982d-25f5c443b25a)
+![astro-minimax v4 new theme](https://github.com/souloss/astro-minimax/assets/53733092/66eb74dc-7a0e-4f2e-982d-25f5c443b25a)
 
 ```css
 html[data-theme="dark"] {
