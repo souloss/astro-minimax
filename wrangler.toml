@@ -1,0 +1,6 @@
+name = "astro-minimax"
+compatibility_date = "2026-03-12"
+[build]
+command = "pnpm run build"
+[assets]
+directory = "./dist"
