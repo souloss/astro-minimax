@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@astro-minimax/core':
-        specifier: workspace:*
-        version: link:packages/core
+        specifier: ^0.1.0
+        version: 0.1.0(astro@5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(tailwindcss@4.2.1)
       '@astro-minimax/viz':
-        specifier: workspace:*
-        version: link:packages/viz
+        specifier: ^0.1.0
+        version: 0.1.0(astro@5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(markmap-common@0.18.9)
       '@astrojs/mdx':
         specifier: ^4.3.13
         version: 4.3.13(astro@5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
@@ -231,6 +231,17 @@ packages:
 
   '@antfu/install-pkg@1.1.0':
     resolution: {integrity: sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==}
+
+  '@astro-minimax/core@0.1.0':
+    resolution: {integrity: sha512-vvwpXfj0R09xeMYI/kT4euqg8m7HRT2TRofnXPz0Mm2lwo/PCFL0eL/dldEuxADl2UGlW7YqwXsIHOpPTWSE8A==}
+    peerDependencies:
+      astro: ^5.0.0
+      tailwindcss: ^4.0.0
+
+  '@astro-minimax/viz@0.1.0':
+    resolution: {integrity: sha512-EdSWzk5/0uSQnLtaRCPT2FzXwTXB7UzFpgbvHHerr8aOtpuuwhaKOWIWP4NJ/tOOegSql4jKfvu433VEL+5s4g==, tarball: https://registry.npmjs.org/@astro-minimax/viz/-/viz-0.1.0.tgz}
+    peerDependencies:
+      astro: ^5.0.0
 
   '@astrojs/check@0.9.6':
     resolution: {integrity: sha512-jlaEu5SxvSgmfGIFfNgcn5/f+29H61NJzEMfAZ82Xopr4XBchXB1GVlcJsE+elUlsYSbXlptZLX+JMG3b/wZEA==}
@@ -4407,6 +4418,21 @@ snapshots:
     dependencies:
       package-manager-detector: 1.6.0
       tinyexec: 1.0.2
+
+  '@astro-minimax/core@0.1.0(astro@5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(tailwindcss@4.2.1)':
+    dependencies:
+      astro: 5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tailwindcss: 4.2.1
+
+  '@astro-minimax/viz@0.1.0(astro@5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(markmap-common@0.18.9)':
+    dependencies:
+      astro: 5.18.0(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      markmap-lib: 0.18.12(markmap-common@0.18.9)
+      markmap-view: 0.18.12(markmap-common@0.18.9)
+      remark-markmap: 1.1.5
+      unist-util-visit: 5.1.0
+    transitivePeerDependencies:
+      - markmap-common
 
   '@astrojs/check@0.9.6(prettier-plugin-astro@0.14.1)(prettier@3.8.1)(typescript@5.9.3)':
     dependencies:
