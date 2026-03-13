@@ -142,18 +142,17 @@ const uid = `asciinema-${Math.random().toString(36).slice(2, 11)}`;
     });
   }
 
+  let initCalled = false;
+
   function init() {
+    if (initCalled) return;
+    initCalled = true;
     initAsciinemaPlayers();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+  // Use astro:page-load as the single entry point for both initial load and navigation
+  // It fires on initial page load AND after View Transitions navigation
   document.addEventListener("astro:page-load", init);
-</script>
-
 <style is:global>
   .asciinema-wrapper {
     width: 100%;
