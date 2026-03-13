@@ -1,5 +1,5 @@
 ---
-author: Sat Naing
+author: Souloss
 pubDatetime: 2022-09-26T12:13:24Z
 modDatetime: 2024-01-04T09:09:06Z
 title: Predefined color schemes
@@ -16,7 +16,7 @@ description:
 
 I've crafted some predefined color schemes for this astro-minimax blog theme. You can replace these color schemes with the original ones.
 
-If you don't know how you can configure color schemes, check [this blog post](https://demo-as​​tro-minimax.souloss.cn/en/posts/customizing-astro-minimax-theme-color-schemes/).
+If you don't know how you can configure color schemes, check [this blog post](/en/posts/customizing-astro-minimax-theme-color-schemes/).
 
 ## Table of contents
 

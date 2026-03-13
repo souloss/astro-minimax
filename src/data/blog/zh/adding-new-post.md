@@ -246,4 +246,4 @@ export default defineConfig({
 
 如果文章未指定 OG 图片，将使用默认 OG 图片。虽然不是必须的，但应在 frontmatter 中指定与文章相关的 OG 图片。OG 图片的推荐尺寸为 **_1200 X 640_** px。
 
-> 从 astro-minimax v1.4.0 开始，如果未指定，OG 图片将自动生成。查看[公告](https://demo-as​​tro-minimax.souloss.cn/en/posts/dynamic-og-images/)。
+> 从 astro-minimax v1.4.0 开始，如果未指定，OG 图片将自动生成。查看[公告](/en/posts/dynamic-og-images/)。

@@ -1,5 +1,5 @@
 ---
-author: Sat Naing
+author: Souloss
 pubDatetime: 2022-09-23T15:22:00Z
 modDatetime: 2025-06-13T16:52:45.934Z
 title: Adding new posts in astro-minimax theme
@@ -249,4 +249,4 @@ My recommendation for image compression sites.
 
 The default OG image will be placed if a post does not specify the OG image. Though not required, OG image related to the post should be specify in the frontmatter. The recommended size for OG image is **_1200 X 640_** px.
 
-> Since astro-minimax v1.4.0, OG images will be generated automatically if not specified. Check out [the announcement](https://demo-as​​tro-minimax.souloss.cn/en/posts/dynamic-og-images/).
+> Since astro-minimax v1.4.0, OG images will be generated automatically if not specified. Check out [the announcement](/en/posts/dynamic-og-images/).

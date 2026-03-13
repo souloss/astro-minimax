@@ -24,8 +24,8 @@ astro-minimax 是一个高度可定制的 Astro 博客主题。使用 astro-mini
 
 ```js file=src/config.ts
 export const SITE = {
-  website: "https://demo-as​​tro-minimax.souloss.cn/", // replace this with your deployed domain
-  author: "Sat Naing",
+  website: "https://demo-astro-minimax.souloss.cn/", // replace this with your deployed domain
+  author: "Souloss",
   profile: "https://souloss.cn/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "astro-minimax",
@@ -65,7 +65,7 @@ export const SITE = {
 | `showArchives`        | 决定是否显示 `归档` 菜单（位于 `关于` 和 `搜索` 菜单之间）及其对应页面。此选项默认为 `true`。                                                                                                                                                                                   |
 | `showBackButton`      | 决定是否在每篇博客文章中显示 `返回` 按钮。                                                                                                                                                                                                                                      |
 | `editPost`            | 此选项允许用户通过在博客文章标题下提供编辑链接来建议更改博客文章。可以通过将 `SITE.editPost.enabled` 设为 `false` 来禁用此功能。                                                                                                                                                |
-| `dynamicOgImage`      | 此选项控制当博客文章 frontmatter 中未指定 `ogImage` 时是否[生成动态 og-image](https://demo-as​​tro-minimax.souloss.cn/en/posts/dynamic-og-images/)。如果你有很多博客文章，可能想要禁用此功能。详见[权衡说明](https://demo-as​​tro-minimax.souloss.cn/en/posts/dynamic-og-images/#trade-off)。 |
+| `dynamicOgImage`      | 此选项控制当博客文章 frontmatter 中未指定 `ogImage` 时是否[生成动态 og-image](/en/posts/dynamic-og-images/)。如果你有很多博客文章，可能想要禁用此功能。详见[权衡说明](/en/posts/dynamic-og-images/#trade-off)。 |
 | `dir`                 | 指定整个博客的文本方向。用作 `<html dir="ltr">` 中的 [HTML dir 属性](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/dir)。支持的值：`ltr` \| `rtl` \| `auto`                                                                                     |
 | `lang`                | 用作 `<html lang"en">` 中的 HTML ISO 语言代码。默认为 `en`。                                                                                                                                                                                                                    |
 | `timezone`            | 此选项允许你使用 [IANA 格式](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)指定时区。设置此选项可确保本地主机和部署站点的时间戳一致，消除时间差异。                                                                                                              |
@@ -365,4 +365,4 @@ import { Font } from "astro:assets";
 
 ## 结语
 
-这是关于如何自定义此主题的简要说明。如果你懂一些代码，可以进行更多自定义。关于自定义样式，请阅读[这篇文章](https://demo-as​​tro-minimax.souloss.cn/en/posts/customizing-astro-minimax-theme-color-schemes/)。感谢阅读。✌🏻
+这是关于如何自定义此主题的简要说明。如果你懂一些代码，可以进行更多自定义。关于自定义样式，请阅读[这篇文章](/en/posts/customizing-astro-minimax-theme-color-schemes/)。感谢阅读。✌🏻

@@ -22,8 +22,8 @@ astro-minimax 主题默认包含明暗模式。换句话说，将有两种配色
 
 ```js file="src/config.ts"
 export const SITE = {
-  website: "https://demo-as​​tro-minimax.souloss.cn/", // replace this with your deployed domain
-  author: "Sat Naing",
+  website: "https://demo-astro-minimax.souloss.cn/", // replace this with your deployed domain
+  author: "Souloss",
   profile: "https://souloss.cn/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "astro-minimax",
@@ -144,4 +144,4 @@ html[data-theme="light"] {
 /* ... */
 ```
 
-> 查看 astro-minimax 为你准备的一些[预定义配色方案](https://demo-as​​tro-minimax.souloss.cn/posts/predefined-color-schemes/)。
+> 查看 astro-minimax 为你准备的一些[预定义配色方案](/posts/predefined-color-schemes/)。

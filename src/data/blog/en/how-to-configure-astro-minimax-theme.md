@@ -1,5 +1,5 @@
 ---
-author: Sat Naing
+author: Souloss
 pubDatetime: 2022-09-23T04:58:53Z
 modDatetime: 2026-01-10T13:04:53.851Z
 title: How to configure astro-minimax theme
@@ -25,8 +25,8 @@ During development, it's okay to leave `SITE.website` empty. But in production m
 
 ```js file=src/config.ts
 export const SITE = {
-  website: "https://demo-as​​tro-minimax.souloss.cn/", // replace this with your deployed domain
-  author: "Sat Naing",
+  website: "https://demo-astro-minimax.souloss.cn/", // replace this with your deployed domain
+  author: "Souloss",
   profile: "https://souloss.cn/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "astro-minimax",
@@ -66,7 +66,7 @@ Here are SITE configuration options
 | `showArchives`        | Determines whether to display the `Archives` menu (positioned between the `About` and `Search` menus) and its corresponding page on the site. This option is set to `true` by default.                                                                                                                                                                                                                                            |
 | `showBackButton`      | Determines whether to display the `Go back` button in each blog post.                                                                                                                                                                                                                                                                                                                                                             |
 | `editPost`            | This option allows users to suggest changes to a blog post by providing an edit link under blog post titles. This feature can be disabled by setting `SITE.editPost.enabled` to `false`.                                                                                                                                                                                                                                          |
-| `dynamicOgImage`      | This option controls whether to [generate dynamic og-image](https://demo-as​​tro-minimax.souloss.cn/en/posts/dynamic-og-images/) if no `ogImage` is specified in the blog post frontmatter. If you have many blog posts, you might want to disable this feature. See the [trade-off](https://demo-as​​tro-minimax.souloss.cn/en/posts/dynamic-og-images/#trade-off) for more details. |
+| `dynamicOgImage`      | This option controls whether to [generate dynamic og-image](/en/posts/dynamic-og-images/) if no `ogImage` is specified in the blog post frontmatter. If you have many blog posts, you might want to disable this feature. See the [trade-off](/en/posts/dynamic-og-images/#trade-off) for more details. |
 | `dir`                 | Specifies the text direction of the entire blog. Used as [HTML dir attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/dir) in `<html dir="ltr">`. Supported values: `ltr` \| `rtl` \| `auto`                                                                                                                                                                                                |
 | `lang`                | Used as HTML ISO Language code in `<html lang"en">`. Default is `en`.                                                                                                                                                                                                                                                                                                                                                             |
 | `timezone`            | This option allows you to specify your timezone using the [IANA format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Setting this ensures consistent timestamps across your localhost and deployed site, eliminating time differences.                                                                                                                                                                          |
@@ -366,4 +366,4 @@ The `--font-app` variable is used throughout the theme via the `font-app` Tailwi
 
 ## Conclusion
 
-This is the brief specification of how you can customize this theme. You can customize more if you know some coding. For customizing styles, please read [this article](https://demo-as​​tro-minimax.souloss.cn/en/posts/customizing-astro-minimax-theme-color-schemes/). Thanks for reading.✌🏻
+This is the brief specification of how you can customize this theme. You can customize more if you know some coding. For customizing styles, please read [this article](/en/posts/customizing-astro-minimax-theme-color-schemes/). Thanks for reading.✌🏻

@@ -1,5 +1,5 @@
 ---
-author: Sat Naing
+author: Souloss
 pubDatetime: 2022-09-25T15:20:35Z
 modDatetime: 2026-01-09T15:00:15.170Z
 title: Customizing astro-minimax theme color schemes
@@ -24,8 +24,8 @@ astro-minimax theme will include light and dark mode by default. In other words,
 
 ```js file="src/config.ts"
 export const SITE = {
-  website: "https://demo-as​​tro-minimax.souloss.cn/", // replace this with your deployed domain
-  author: "Sat Naing",
+  website: "https://demo-astro-minimax.souloss.cn/", // replace this with your deployed domain
+  author: "Souloss",
   profile: "https://souloss.cn/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "astro-minimax",
@@ -146,4 +146,4 @@ html[data-theme="light"] {
 /* ... */
 ```
 
-> Check out some [predefined color schemes](https://demo-as​​tro-minimax.souloss.cn/posts/predefined-color-schemes/) astro-minimax has already crafted for you.
+> Check out some [predefined color schemes](/posts/predefined-color-schemes/) astro-minimax has already crafted for you.
