@@ -57,6 +57,7 @@ export interface CopyrightConfig {
 }
 
 export interface UmamiConfig {
+  enabled?: boolean;
   websiteId: string;
   src: string;
 }

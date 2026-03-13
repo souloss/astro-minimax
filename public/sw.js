@@ -47,12 +47,14 @@ self.addEventListener("fetch", event => {
 
   if (event.request.headers.get("accept")?.includes("text/html")) {
     event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const clone = response.clone();
-          caches
-            .open(CACHE_NAME)
-            .then(cache => cache.put(event.request, clone));
+            fetch(event.request).then(response => {
+          // Don't cache error responses (4xx, 5xx)
+          if (response.ok) {
+            const clone = response.clone();
+            caches
+              .open(CACHE_NAME)
+              .then(cache => cache.put(event.request, clone));
+          }
           return response;
         })
         .catch(() =>
