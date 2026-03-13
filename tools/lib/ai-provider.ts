@@ -1,3 +1,5 @@
+import { fetch, ProxyAgent, type Dispatcher } from "undici";
+
 /**
  * 通用 AI Provider 抽象层
  *
@@ -68,6 +70,18 @@ export function hasAPIKey(): boolean {
   return cfg.apiKey.length > 0;
 }
 
+/**
+ * 获取代理 dispatcher（如果配置了代理）
+ */
+function getProxyDispatcher(): Dispatcher | undefined {
+  const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy ||
+                   process.env.HTTP_PROXY || process.env.http_proxy;
+  if (proxyUrl) {
+    return new ProxyAgent(proxyUrl);
+  }
+  return undefined;
+}
+
 export async function chatCompletion(
   messages: ChatMessage[],
   options?: ChatOptions
@@ -82,7 +96,9 @@ export async function chatCompletion(
   const model = options?.model || cfg.model;
   const maxTokens = options?.maxTokens || 1024;
 
-  const url = `${cfg.baseUrl}/v1/chat/completions`;
+  // 处理 baseUrl 可能已经包含 /v1 的情况
+  const baseUrl = cfg.baseUrl.replace(/\/v1\/?$/, '');
+  const url = `${baseUrl}/v1/chat/completions`;
   const body: Record<string, unknown> = {
     model,
     messages,
@@ -93,18 +109,30 @@ export async function chatCompletion(
     body.response_format = { type: "json_object" };
   }
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${cfg.apiKey}`,
-    },
-    body: JSON.stringify(body),
-  });
+  let response: Response;
+  try {
+    const dispatcher = getProxyDispatcher();
+    response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cfg.apiKey}`,
+      },
+      body: JSON.stringify(body),
+      ...(dispatcher && { dispatcher }),
+    });
+  } catch (fetchErr) {
+    const err = fetchErr as Error;
+    throw new Error(
+      `网络请求失败: ${err.message}\n` +
+        `  请检查: API URL 是否正确 (${cfg.baseUrl})\n` +
+        `         网络是否可访问该端点`
+    );
+  }
 
   if (!response.ok) {
     const errText = await response.text();
-    throw new Error(`AI API 错误 (${response.status}): ${errText}`);
+    throw new Error(`API 错误 (${response.status}): ${errText.slice(0, 200)}`);
   }
 
   const data = (await response.json()) as {
@@ -130,13 +158,16 @@ export async function generateEmbeddings(
   for (let i = 0; i < texts.length; i += batchSize) {
     const batch = texts.slice(i, i + batchSize).map(t => t.slice(0, 8000));
 
-    const response = await fetch(`${cfg.baseUrl}/v1/embeddings`, {
+    const dispatcher = getProxyDispatcher();
+    const baseUrl = cfg.baseUrl.replace(/\/v1\/?$/, '');
+    const response = await fetch(`${baseUrl}/v1/embeddings`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${cfg.apiKey}`,
       },
       body: JSON.stringify({ model, input: batch }),
+      ...(dispatcher && { dispatcher }),
     });
 
     if (!response.ok) {
@@ -171,7 +202,9 @@ export async function generateImage(
   const size = options?.size || "1792x1024";
   const quality = options?.quality || "standard";
 
-  const response = await fetch(`${cfg.baseUrl}/v1/images/generations`, {
+  const dispatcher = getProxyDispatcher();
+  const baseUrl = cfg.baseUrl.replace(/\/v1\/?$/, '');
+  const response = await fetch(`${baseUrl}/v1/images/generations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -185,6 +218,7 @@ export async function generateImage(
       quality,
       response_format: "b64_json",
     }),
+    ...(dispatcher && { dispatcher }),
   });
 
   if (!response.ok) {

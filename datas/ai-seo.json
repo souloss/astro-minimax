@@ -1,0 +1,290 @@
+{
+  "meta": {
+    "lastUpdated": "2026-03-13T18:55:44.589Z",
+    "model": "moonshot-v1-8k",
+    "totalProcessed": 18
+  },
+  "articles": {
+    "zh/how-to-add-latex-equations-in-blog-posts": {
+      "data": {
+        "metaDescription": "本文介绍了在Astro博客中添加LaTeX公式的方法，包括安装必要的插件、配置Astro、导入KaTeX CSS和设置文本颜色，以实现数学公式的完美渲染。",
+        "keywords": [
+          "Astro",
+          "LaTeX",
+          "Markdown",
+          "数学公式",
+          "KaTeX",
+          "rehype-katex",
+          "remark-math"
+        ],
+        "ogDescription": "掌握在Astro博客文章中嵌入LaTeX公式的技巧，提升科学文档的专业度。"
+      },
+      "contentHash": "d7a18de4",
+      "processedAt": "2026-03-13T18:55:01.843Z"
+    },
+    "en/getting-started": {
+      "data": {
+        "metaDescription": "Learn two integration methods for astro-minimax: GitHub Template for beginners with full customization and NPM Packages for continuous updates. Discover how to set up, configure, and deploy your blog with detailed steps.",
+        "keywords": [
+          "astro-minimax integration",
+          "GitHub Template setup",
+          "NPM Packages integration",
+          "blog deployment",
+          "content-system separation"
+        ],
+        "ogDescription": "Master astro-minimax integration with two methods: GitHub Template for customization and NPM Packages for updates. Get your blog up and running with our step-by-step guide."
+      },
+      "contentHash": "c43e4eb8",
+      "processedAt": "2026-03-13T18:55:01.843Z"
+    },
+    "zh/setting-dates-via-git-hooks": {
+      "data": {
+        "metaDescription": "本文介绍了如何利用Git钩子自动填充博客主题frontmatter中的创建日期和修改日期，通过pre-commit钩子实现自动化更新，提高内容管理效率。",
+        "keywords": [
+          "Git钩子",
+          "自动化任务",
+          "frontmatter日期",
+          "pre-commit钩子",
+          "Husky",
+          "astro-minimax"
+        ],
+        "ogDescription": "掌握如何使用Git钩子自动更新博客文章的创建和修改日期，提高内容管理效率，让自动化流程更简单。"
+      },
+      "contentHash": "30a0264b",
+      "processedAt": "2026-03-13T18:55:02.050Z"
+    },
+    "zh/predefined-color-schemes": {
+      "data": {
+        "metaDescription": "本文介绍了为astro-minimax博客主题设计的预定义配色方案，包括浅色和深色配色方案，通过CSS选择器实现，适用于不同主题和背景，提升网站视觉效果。",
+        "keywords": [
+          "预定义配色方案",
+          "astro-minimax",
+          "CSS配色",
+          "博客主题配色",
+          "深色主题",
+          "浅色主题"
+        ],
+        "ogDescription": "探索astro-minimax博客主题的预定义配色方案，轻松替换原有配色，提升网站视觉效果，适用于不同主题和背景。"
+      },
+      "contentHash": "84533039",
+      "processedAt": "2026-03-13T18:55:04.270Z"
+    },
+    "en/customizing-astro-minimax-theme-color-schemes": {
+      "data": {
+        "metaDescription": "Learn how to enable/disable light and dark mode and customize color schemes for your website using astro-minimax theme. Understand configuration settings and CSS customization techniques.",
+        "keywords": [
+          "astro-minimax theme",
+          "color schemes customization",
+          "light and dark mode",
+          "website color schemes",
+          "CSS color properties"
+        ],
+        "ogDescription": "Discover how to toggle between light and dark modes and personalize your website's color schemes with astro-minimax theme. Get step-by-step guidance on configuration and CSS."
+      },
+      "contentHash": "b9eb6603",
+      "processedAt": "2026-03-13T18:55:04.324Z"
+    },
+    "en/predefined-color-schemes": {
+      "data": {
+        "metaDescription": "Explore customizable predefined color schemes for the astro-minimax blog theme, including light and dark variations such as Lobster, Leaf Blue, and Astro Deep Purple, with detailed CSS configurations.",
+        "keywords": [
+          "color schemes",
+          "astro-minimax theme",
+          "CSS configurations",
+          "light color schemes",
+          "dark color schemes"
+        ],
+        "ogDescription": "Discover a variety of predefined color schemes for astro-minimax blog theme, perfect for customizing your blog's appearance with easy-to-implement CSS."
+      },
+      "contentHash": "2c1cc2a1",
+      "processedAt": "2026-03-13T18:55:04.346Z"
+    },
+    "zh/customizing-astro-minimax-theme-color-schemes": {
+      "data": {
+        "metaDescription": "本文介绍了如何为astro-minimax主题启用或禁用明暗模式，并详细说明了如何自定义网站的配色方案，包括亮色和暗色模式的颜色属性设置。",
+        "keywords": [
+          "astro-minimax",
+          "明暗模式",
+          "自定义配色方案",
+          "color-schemes",
+          "网站配色"
+        ],
+        "ogDescription": "掌握astro-minimax主题的明暗模式切换和配色方案自定义技巧，让你的网站色彩更加个性化。"
+      },
+      "contentHash": "11a2d2af",
+      "processedAt": "2026-03-13T18:55:07.967Z"
+    },
+    "en/adding-new-post": {
+      "data": {
+        "metaDescription": "Learn how to create new blog posts in the astro-minimax theme, including organizing posts in subdirectories, managing frontmatter properties, and optimizing for SEO with unique slugs and tags.",
+        "keywords": [
+          "astro-minimax theme",
+          "blog post creation",
+          "frontmatter properties",
+          "SEO optimization",
+          "content management"
+        ],
+        "ogDescription": "Discover the step-by-step guide to adding new posts in astro-minimax theme, from organizing content to optimizing for search engines."
+      },
+      "contentHash": "00b1c842",
+      "processedAt": "2026-03-13T18:55:08.181Z"
+    },
+    "zh/adding-new-post": {
+      "data": {
+        "metaDescription": "本文介绍了在astro-minimax主题中创建新博客文章的步骤和技巧，包括文章结构、frontmatter配置、目录添加和图片存储方法，帮助用户高效管理博客内容。",
+        "keywords": [
+          "astro-minimax",
+          "博客文章创建",
+          "frontmatter",
+          "博客内容管理",
+          "SEO优化"
+        ],
+        "ogDescription": "掌握在astro-minimax主题中添加新文章的详细步骤，提升博客内容管理效率，增强SEO表现。"
+      },
+      "contentHash": "b1df2a70",
+      "processedAt": "2026-03-13T18:55:08.452Z"
+    },
+    "en/how-to-add-latex-equations-in-blog-posts": {
+      "data": {
+        "metaDescription": "Learn how to integrate LaTeX equations into Astro blog posts for enhanced mathematical and scientific documentation. Follow the step-by-step guide to install plugins, update configurations, and render equations correctly.",
+        "keywords": [
+          "LaTeX Equations",
+          "Astro Blog",
+          "Markdown LaTeX",
+          "LaTeX in Astro",
+          "Mathematical Documentation",
+          "Scientific Blogging",
+          "LaTeX Integration"
+        ],
+        "ogDescription": "Discover a comprehensive guide to adding LaTeX equations to your Astro blog posts, perfect for scientific and mathematical content. Enhance your posts with clear, rendered equations."
+      },
+      "contentHash": "02572a7d",
+      "processedAt": "2026-03-13T18:55:10.305Z"
+    },
+    "en/how-to-configure-astro-minimax-theme": {
+      "data": {
+        "metaDescription": "Learn how to customize the astro-minimax Astro blog theme with detailed configuration options in the config file, including website settings, SEO optimizations, and user interface features.",
+        "keywords": [
+          "astro-minimax theme",
+          "Astro blog theme",
+          "theme configuration",
+          "SEO-friendly blog",
+          "customizable blog theme",
+          "light and dark mode",
+          "post pagination"
+        ],
+        "ogDescription": "Discover the step-by-step guide to configuring astro-minimax, a highly customizable Astro blog theme, with options for SEO, UI, and more."
+      },
+      "contentHash": "67ac0a6a",
+      "processedAt": "2026-03-13T18:55:10.597Z"
+    },
+    "zh/dynamic-og-images": {
+      "data": {
+        "metaDescription": "astro-minimax v1.4.0 新增动态OG图片生成功能，为博客文章自动创建个性化社交图片，提升社交媒体互动效果。",
+        "keywords": [
+          "astro-minimax",
+          "动态OG图片",
+          "社交图片",
+          "Satori",
+          "社交媒体互动"
+        ],
+        "ogDescription": "astro-minimax v1.4.0 版本更新，现在可以为每篇博客文章自动生成个性化的OG图片，提升社交媒体分享效果。"
+      },
+      "contentHash": "ac3bfe32",
+      "processedAt": "2026-03-13T18:55:10.941Z"
+    },
+    "zh/how-to-configure-astro-minimax-theme": {
+      "data": {
+        "metaDescription": "本文介绍了如何配置astro-minimax主题，包括设置网站信息、布局宽度和自定义logo或标题，以实现个性化的Astro博客。",
+        "keywords": [
+          "astro-minimax 配置",
+          "Astro 博客主题",
+          "网站配置",
+          "SEO 优化",
+          "个性化博客"
+        ],
+        "ogDescription": "掌握astro-minimax主题配置，打造个性化Astro博客，提升SEO效果。"
+      },
+      "contentHash": "52a50294",
+      "processedAt": "2026-03-13T18:55:14.550Z"
+    },
+    "en/how-to-update-dependencies": {
+      "data": {
+        "metaDescription": "Learn how to efficiently update dependencies in your JavaScript or Node.js projects, with a focus on astro-minimax. Discover methods for updating package dependencies, including using npm-check-updates, and tips for updating the astro-minimax template without breaking your project.",
+        "keywords": [
+          "astro-minimax",
+          "dependency updates",
+          "npm-check-updates",
+          "JavaScript project management",
+          "Node.js dependencies"
+        ],
+        "ogDescription": "Efficiently manage project dependencies with this guide on updating astro-minimax and other JS/Node projects. Get step-by-step methods for updating packages and templates."
+      },
+      "contentHash": "96098050",
+      "processedAt": "2026-03-13T18:55:20.249Z"
+    },
+    "zh/how-to-update-dependencies": {
+      "data": {
+        "metaDescription": "本文介绍了如何更新astro-minimax项目的依赖，包括手动更新和使用npm-check-updates工具，以及如何更新astro-minimax模板而不破坏自定义内容。",
+        "keywords": [
+          "astro-minimax",
+          "项目依赖更新",
+          "npm-check-updates",
+          "依赖管理",
+          "模板更新"
+        ],
+        "ogDescription": "掌握如何高效更新astro-minimax项目的依赖和模板，确保你的项目保持最新，避免潜在的兼容性问题。"
+      },
+      "contentHash": "20cb5ee3",
+      "processedAt": "2026-03-13T18:55:20.874Z"
+    },
+    "en/setting-dates-via-git-hooks": {
+      "data": {
+        "metaDescription": "Learn how to automate the input of created and modified dates in the astro-minimax blog theme frontmatter using pre-commit Git hooks, enhancing workflow efficiency and consistency.",
+        "keywords": [
+          "Git Hooks",
+          "Astro-minimax",
+          "Frontmatter",
+          "Created Date",
+          "Modified Date",
+          "Automate Dates",
+          "Husky Git Hooks"
+        ],
+        "ogDescription": "Discover how to use Git hooks to automate date entries in your blog posts, making your workflow more efficient and your content management more consistent."
+      },
+      "contentHash": "0c15728f",
+      "processedAt": "2026-03-13T18:55:21.848Z"
+    },
+    "en/dynamic-og-images": {
+      "data": {
+        "metaDescription": "Learn how astro-minimax v1.4.0 introduces dynamic OG image generation for blog posts, enhancing social media engagement without manual image specification for each post.",
+        "keywords": [
+          "astro-minimax",
+          "OG image generation",
+          "dynamic social images",
+          "blog post SEO",
+          "social media engagement"
+        ],
+        "ogDescription": "Discover the new feature in astro-minimax v1.4.0 that automates OG image creation for blog posts, saving time and improving social media presence."
+      },
+      "contentHash": "0b4eefee",
+      "processedAt": "2026-03-13T18:55:40.059Z"
+    },
+    "zh/getting-started": {
+      "data": {
+        "metaDescription": "本文介绍了astro-minimax的两种使用方式：GitHub Template和NPM包集成，分别适合不同场景和需求，提供详细的步骤和配置方法，帮助用户快速搭建和维护个人博客。",
+        "keywords": [
+          "astro-minimax",
+          "GitHub Template",
+          "NPM包集成",
+          "个人博客搭建",
+          "博客内容管理",
+          "博客主题配置"
+        ],
+        "ogDescription": "快速掌握astro-minimax的两种使用方式，轻松搭建和维护你的个人博客，无论是新手还是希望内容与系统分离的高级用户，都能在这里找到适合的解决方案。"
+      },
+      "contentHash": "3a5a6b2b",
+      "processedAt": "2026-03-13T18:55:44.589Z"
+    }
+  }
+}
