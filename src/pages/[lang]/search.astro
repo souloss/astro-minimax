@@ -188,7 +188,6 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
       window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1));
 
     onIdle(async () => {
-      // @ts-expect-error — Missing types for @pagefind/default-ui package.
       const { PagefindUI } = await import("@pagefind/default-ui");
 
       // Display warning in dev mode
