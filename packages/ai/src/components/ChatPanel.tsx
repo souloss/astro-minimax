@@ -32,6 +32,7 @@ async function consumeAIStream(
   if (!reader) { onError('No response body'); return; }
   const decoder = new TextDecoder();
   let buffer = '';
+
   try {
     while (true) {
       const { done, value } = await reader.read();
@@ -39,23 +40,45 @@ async function consumeAIStream(
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split('\n');
       buffer = lines.pop() ?? '';
+
       for (const line of lines) {
         const trimmed = line.trim();
-        if (!trimmed) continue;
-        if (!trimmed.startsWith('data:')) continue;
+        if (!trimmed || !trimmed.startsWith('data:')) continue;
+
         const jsonStr = trimmed.slice(5).trim();
         if (!jsonStr || jsonStr === '[DONE]') continue;
+
+        let event: Record<string, unknown>;
+        try {
+          event = JSON.parse(jsonStr);
+        } catch (parseError) {
+          console.warn('[AI Stream] JSON parse error:', parseError, 'in:', jsonStr.slice(0, 100));
+          continue;
+        }
+
+        const type = event.type as string;
+
+        if (type === 'text-delta') {
+          const delta = event.delta;
+          if (typeof delta === 'string' && delta) {
+            onDelta(delta);
+          }
+        } else if (type === 'error') {
+          const errorText = String(event.errorText || event.error || 'Stream error');
+          onError(errorText);
+        }
+      }
+    }
+
+    if (buffer.trim().startsWith('data:')) {
+      const jsonStr = buffer.trim().slice(5).trim();
+      if (jsonStr && jsonStr !== '[DONE]') {
         try {
           const event = JSON.parse(jsonStr) as Record<string, unknown>;
-          const type = event.type as string;
-          if (type === 'text-delta') {
-            const delta = event.delta as string;
-            if (delta) onDelta(delta);
-          } else if (type === 'error') {
-            const errorText = (event.errorText as string) || (event.error as string) || 'Stream error';
-            onError(errorText);
+          if (event.type === 'text-delta' && typeof event.delta === 'string') {
+            onDelta(event.delta);
           }
-        } catch { /* skip parse errors */ }
+        } catch { /* ignore */ }
       }
     }
   } catch (err) {
@@ -226,6 +249,8 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
       parts: [{ type: 'text', text: m.text }],
     }));
 
+    let accumulated = '';
+
     try {
       const response = await fetch(config.apiEndpoint ?? '/api/chat', {
         method: 'POST',
@@ -244,8 +269,14 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
 
       await consumeAIStream(
         response,
-        (delta) => setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, text: m.text + delta } : m)),
-        () => { setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, streaming: false } : m)); setIsStreaming(false); },
+        (delta) => {
+          accumulated += delta;
+          setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, text: accumulated } : m));
+        },
+        () => {
+          setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, streaming: false } : m));
+          setIsStreaming(false);
+        },
         (errMsg) => { setError(errMsg); setIsStreaming(false); },
       );
     } catch (err) {
@@ -282,10 +313,6 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
   }, []);
 
   if (!open) return null;
-
-  const showTypingIndicator = isStreaming && messages.length > 0
-    && messages[messages.length - 1]?.role === 'assistant'
-    && !messages[messages.length - 1]?.text;
 
   return (
     <div
@@ -363,13 +390,6 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
               </div>
             </div>
           ))}
-
-          {showTypingIndicator && (
-            <div class="flex items-start gap-2.5">
-              <BotAvatar />
-              <div class="pt-2"><TypingDots /></div>
-            </div>
-          )}
 
           {error && (
             <div class="flex items-start gap-2.5">
