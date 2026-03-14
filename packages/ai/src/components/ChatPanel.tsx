@@ -241,7 +241,7 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
 
       if (!response.ok) {
         let errMsg = `HTTP ${response.status}`;
-        try { const b = await response.json() as { error?: string }; errMsg = b.error ?? errMsg; } catch { /* use status */ }
+        try { const b = await response.json() as { error?: string }; errMsg = b.error ?? errMsg; } catch { /* use status */ } 
         setError(errMsg);
         setMessages(prev => prev.filter(m => m.id !== assistantId));
         setIsStreaming(false);
@@ -463,7 +463,8 @@ function TypingDots() {
 }
 
 function parseError(error: string): string {
+  if (error.includes('AI 服务未配置')) return 'AI 服务暂未开放，敬请期待';
   if (error.includes('请求太频繁') || error.includes('429') || error.includes('rate')) return '请求太频繁，请稍后再试';
-  if (error.includes('503') || error.includes('不可用')) return 'AI 服务暂时不可用';
+  if (error.includes('503') || error.includes('不可用')) return 'AI 对话暂时不可用';
   return '出了点问题，请稍后再试';
 }

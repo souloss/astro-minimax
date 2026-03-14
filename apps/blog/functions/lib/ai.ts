@@ -1,54 +1,40 @@
-/**
- * AI initialization and configuration for Cloudflare Pages Functions.
- *
- * This module initializes the full RAG pipeline on first call and provides
- * a unified interface for the chat API endpoint.
- */
-/// <reference types="@cloudflare/workers-types" />
-
+/* eslint-disable no-console */
 import {
-  createChatProvider,
-  hasOpenAIConfig,
+  ProviderManager,
+  hasAnyProviderConfigured,
   preloadMetadata,
   getAuthorContext,
   initArticleIndex,
   initProjectIndex,
   getAllSummaries,
-  type ProviderEnv,
+  type ProviderManagerEnv,
+  type ProviderStatus,
 } from '@astro-minimax/ai';
-import type { AuthorPost } from '@astro-minimax/ai';
-import type { SearchDocument } from '@astro-minimax/ai';
+import type { AuthorPost, SearchDocument } from '@astro-minimax/ai';
 
-// JSON data imports — bundled at build time by Wrangler
 import aiSummaries from '../../datas/ai-summaries.json';
-import authorContext from '../../datas/author-context.json';
+import authorContextJson from '../../datas/author-context.json';
 import voiceProfile from '../../datas/voice-profile.json';
 
-export interface FunctionEnv extends ProviderEnv {
+export interface FunctionEnv extends ProviderManagerEnv {
   [key: string]: unknown;
 }
 
-let initialized = false;
+let metadataInitialized = false;
 
-/**
- * Initializes the RAG pipeline once per Worker isolate.
- * Subsequent calls are no-ops.
- */
-function ensureInitialized(env: FunctionEnv): void {
-  if (initialized) return;
-  initialized = true;
+function ensureMetadataInitialized(env: FunctionEnv): void {
+  if (metadataInitialized) return;
+  metadataInitialized = true;
 
-  // Preload all metadata into memory
   preloadMetadata({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     summaries: aiSummaries as any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    authorContext: authorContext as any,
+    authorContext: authorContextJson as any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     voiceProfile: voiceProfile as any,
   });
 
-  // Build article search index from AI summaries + author context
   const authorCtx = getAuthorContext();
   const allSummaries = getAllSummaries();
   const summaryMap = new Map(allSummaries.map(s => [s.slug, s]));
@@ -73,27 +59,49 @@ function ensureInitialized(env: FunctionEnv): void {
   });
 
   initArticleIndex(articleDocs);
-  initProjectIndex([]); // Projects not in metadata yet — can be extended
+  initProjectIndex([]);
 }
 
-/**
- * Returns a configured chat provider, initializing the pipeline if needed.
- */
-export function getChatProvider(env: FunctionEnv) {
-  ensureInitialized(env);
-  return createChatProvider(env);
+export function createProviderManager(env: FunctionEnv): ProviderManager {
+  ensureMetadataInitialized(env);
+
+  return new ProviderManager(env, {
+    enableMockFallback: true,
+    unhealthyThreshold: 3,
+    healthRecoveryTTL: 60000,
+    onProviderSwitch: (from, to, reason) => {
+      console.log(`[ProviderManager] Switch: ${from ?? 'none'} -> ${to} (${reason})`);
+    },
+    onStreamError: (providerId, error) => {
+      console.error(`[ProviderManager] Stream error from ${providerId}:`, error.message);
+    },
+    onHealthChange: (providerId, healthy) => {
+      console.log(`[ProviderManager] Health change: ${providerId} -> ${healthy ? 'healthy' : 'unhealthy'}`);
+    },
+  });
 }
 
-/**
- * Returns configuration info for the /api/ai-info endpoint.
- */
-export function getAIConfigInfo(env: FunctionEnv) {
-  const bindingName = (env.AI_BINDING_NAME as string) || 'AI';
+export function getAIConfigInfo(env: FunctionEnv): {
+  bindingName: string;
+  hasBinding: boolean;
+  hasProvider: boolean;
+  model: string;
+  providerStatus?: ProviderStatus[];
+} {
+  ensureMetadataInitialized(env);
+  
+  const bindingName = (env.AI_BINDING_NAME as string) || 'souloss';
+  const hasBinding = !!(env as Record<string, unknown>)[bindingName];
+  
+  const manager = createProviderManager(env);
+  const providerStatus = manager.getProviderStatus();
+  
   return {
     bindingName,
-    hasBinding: !!(env as Record<string, unknown>)[bindingName],
-    hasOpenAIConfig: hasOpenAIConfig(env),
+    hasBinding,
+    hasProvider: hasAnyProviderConfigured(env),
     model: (env.AI_MODEL as string) || '@cf/zai-org/glm-4.7-flash',
+    providerStatus,
   };
 }
 

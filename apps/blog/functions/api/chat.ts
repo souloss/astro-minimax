@@ -1,19 +1,4 @@
 /// <reference types="@cloudflare/workers-types" />
-/**
- * POST /api/chat
- *
- * Full RAG pipeline chat endpoint (AI SDK v6):
- * 1. IP rate limiting (burst / sustained / daily)
- * 2. Message validation
- * 3. Intent detection — reuse cached search context for follow-ups
- * 4. Keyword extraction (optional LLM) → optimized search query
- * 5. SearchAPI — find related articles & projects
- * 6. Evidence analysis (optional LLM) — pre-analyze retrieved content
- * 7. Citation guard preflight — answer factual queries directly
- * 8. Three-layer system prompt construction
- * 9. streamText → toUIMessageStreamResponse (AI SDK v6 UI Message Stream)
- */
-import { streamText, convertToModelMessages } from 'ai';
 import type { UIMessage } from 'ai';
 import {
   getClientIP,
@@ -40,7 +25,7 @@ import {
   getVoiceProfile,
   mergeResults,
 } from '@astro-minimax/ai';
-import { getChatProvider } from '../lib/ai';
+import { createProviderManager } from '../lib/ai';
 import type { FunctionEnv } from '../lib/ai';
 
 const MAX_HISTORY_MESSAGES = 20;
@@ -56,7 +41,6 @@ function getMessageText(message: UIMessage): string {
   return '';
 }
 
-/** Streams a plain text preflight response in AI SDK UI Message Stream format */
 function streamPreflightResponse(text: string): Response {
   const encoder = new TextEncoder();
   const lines = [
@@ -82,7 +66,6 @@ function streamPreflightResponse(text: string): Response {
 export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
   const req = context.request;
 
-  // CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
@@ -97,14 +80,12 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
 
-  // ── 1. Rate limiting ──────────────────────────────────────────────────────
   const ip = getClientIP(req);
   const rateCheck = checkRateLimit(ip, context.env as Record<string, string | undefined>);
   if (!rateCheck.allowed) {
     return rateLimitResponse(rateCheck);
   }
 
-  // ── 2. Parse and validate ─────────────────────────────────────────────────
   let body: { messages?: UIMessage[] };
   try {
     body = await req.json();
@@ -127,16 +108,10 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     return new Response(JSON.stringify({ error: `消息过长，最多 ${MAX_INPUT_LENGTH} 字` }), { status: 400 });
   }
 
-  // ── 3. Initialize provider ────────────────────────────────────────────────
-  let providerResult: ReturnType<typeof getChatProvider>;
-  try {
-    providerResult = getChatProvider(context.env);
-  } catch {
-    return new Response(JSON.stringify({ error: 'AI 服务未配置，请联系站长' }), { status: 503 });
-  }
-  const { provider, model, keywordModel, evidenceModel } = providerResult;
+  const manager = createProviderManager(context.env);
+  const hasRealProvider = manager.hasProviders();
+  const adapter = hasRealProvider ? await manager.getAvailableAdapter() : null;
 
-  // ── 4. Session cache & intent detection ───────────────────────────────────
   const cacheKey = getSessionCacheKey(req);
   const now = Date.now();
   cleanupCache(now);
@@ -153,42 +128,43 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     searchQuery = cachedContext.query;
     setCachedContext(cacheKey, { ...cachedContext, updatedAt: now });
   } else {
-    // ── 5. Keyword extraction (optional LLM) ──────────────────────────────
-    const runKeywordExtraction = shouldRunKeywordExtraction({
-      messageCount: messages.length,
-      localQuery: searchQuery,
-      latestText,
-    });
+    if (hasRealProvider && adapter) {
+      const runKeywordExtraction = shouldRunKeywordExtraction({
+        messageCount: messages.length,
+        localQuery: searchQuery,
+        latestText,
+      });
 
-    if (runKeywordExtraction) {
-      const abortCtrl = new AbortController();
-      const timeoutId = setTimeout(() => abortCtrl.abort(), KEYWORD_EXTRACTION_TIMEOUT_MS);
-      try {
-        const kwResult = await extractSearchKeywords({
-          messages: messages as Array<{ role: string; parts?: Array<{ type: string; text?: string }> }>,
-          provider,
-          model: keywordModel,
-          abortSignal: abortCtrl.signal,
-        });
-        if (kwResult.query && !kwResult.usedFallback) {
-          searchQuery = kwResult.query;
-          if (kwResult.primaryQuery && kwResult.primaryQuery !== searchQuery) {
-            const primary = searchArticles(kwResult.primaryQuery, { enableDeepContent: false });
-            relatedArticles = mergeResults(
-              searchArticles(searchQuery, { enableDeepContent: true }),
-              primary,
-            );
-            relatedProjects = searchProjects(searchQuery);
+      if (runKeywordExtraction) {
+        const abortCtrl = new AbortController();
+        const timeoutId = setTimeout(() => abortCtrl.abort(), KEYWORD_EXTRACTION_TIMEOUT_MS);
+        try {
+          const provider = adapter.getProvider();
+          const kwResult = await extractSearchKeywords({
+            messages: messages as Array<{ role: string; parts?: Array<{ type: string; text?: string }> }>,
+            provider,
+            model: adapter.keywordModel,
+            abortSignal: abortCtrl.signal,
+          });
+          if (kwResult.query && !kwResult.usedFallback) {
+            searchQuery = kwResult.query;
+            if (kwResult.primaryQuery && kwResult.primaryQuery !== searchQuery) {
+              const primary = searchArticles(kwResult.primaryQuery, { enableDeepContent: false });
+              relatedArticles = mergeResults(
+                searchArticles(searchQuery, { enableDeepContent: true }),
+                primary,
+              );
+              relatedProjects = searchProjects(searchQuery);
+            }
           }
+        } catch {
+          // keyword extraction is optional
+        } finally {
+          clearTimeout(timeoutId);
         }
-      } catch {
-        // keyword extraction is optional
-      } finally {
-        clearTimeout(timeoutId);
       }
     }
 
-    // ── 6. SearchAPI ───────────────────────────────────────────────────────
     if (!relatedArticles.length) {
       relatedArticles = searchArticles(searchQuery, { enableDeepContent: true });
       relatedProjects = searchProjects(searchQuery);
@@ -204,33 +180,35 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     }
   }
 
-  // ── 7. Evidence analysis (optional LLM) ──────────────────────────────────
   let evidenceSection = '';
-  const skipEvidence = shouldSkipAnalysis(latestText, relatedArticles.length, 'moderate');
 
-  if (!skipEvidence) {
-    const abortCtrl = new AbortController();
-    const timeoutId = setTimeout(() => abortCtrl.abort(), EVIDENCE_ANALYSIS_TIMEOUT_MS);
-    try {
-      const evidenceResult = await analyzeRetrievedEvidence({
-        userQuery: latestText,
-        articles: relatedArticles,
-        projects: relatedProjects,
-        provider,
-        model: evidenceModel,
-        abortSignal: abortCtrl.signal,
-      });
-      if (evidenceResult.analysis) {
-        evidenceSection = buildEvidenceSection(evidenceResult.analysis);
+  if (hasRealProvider && adapter) {
+    const skipEvidence = shouldSkipAnalysis(latestText, relatedArticles.length, 'moderate');
+
+    if (!skipEvidence) {
+      const abortCtrl = new AbortController();
+      const timeoutId = setTimeout(() => abortCtrl.abort(), EVIDENCE_ANALYSIS_TIMEOUT_MS);
+      try {
+        const provider = adapter.getProvider();
+        const evidenceResult = await analyzeRetrievedEvidence({
+          userQuery: latestText,
+          articles: relatedArticles,
+          projects: relatedProjects,
+          provider,
+          model: adapter.evidenceModel,
+          abortSignal: abortCtrl.signal,
+        });
+        if (evidenceResult.analysis) {
+          evidenceSection = buildEvidenceSection(evidenceResult.analysis);
+        }
+      } catch {
+        // evidence analysis is optional
+      } finally {
+        clearTimeout(timeoutId);
       }
-    } catch {
-      // evidence analysis is optional
-    } finally {
-      clearTimeout(timeoutId);
     }
   }
 
-  // ── 8. Citation guard preflight ───────────────────────────────────────────
   const preflight = getCitationGuardPreflight({
     userQuery: latestText,
     articles: relatedArticles,
@@ -241,7 +219,6 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     return streamPreflightResponse(preflight.text);
   }
 
-  // ── 9. System prompt ──────────────────────────────────────────────────────
   const systemPrompt = buildSystemPrompt({
     static: {
       authorName: (context.env.SITE_AUTHOR as string) || '博主',
@@ -259,14 +236,13 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     },
   });
 
-  // ── 10. Stream response ───────────────────────────────────────────────────
-  const result = streamText({
-    model: provider.chatModel(model),
+  const result = await manager.streamText({
     system: systemPrompt,
-    messages: await convertToModelMessages(messages),
+    messages,
     temperature: 0.3,
     maxOutputTokens: 2500,
-    onError: ({ error }) => {
+    userQuestion: latestText,
+    onError: (error: Error) => {
       console.error('[chat] streamText error:', error);
     },
   });

@@ -10,6 +10,9 @@
 // Provider abstractions
 export * from './providers/index.js';
 
+// Provider Manager (unified multi-provider management)
+export * from './provider-manager/index.js';
+
 // Middleware (rate limiting)
 export * from './middleware/index.js';
 
