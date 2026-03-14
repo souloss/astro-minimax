@@ -20,11 +20,8 @@ import type { AuthorPost } from '@astro-minimax/ai';
 import type { SearchDocument } from '@astro-minimax/ai';
 
 // JSON data imports — bundled at build time by Wrangler
-// @ts-expect-error JSON imports work in Cloudflare Workers runtime
 import aiSummaries from '../../datas/ai-summaries.json';
-// @ts-expect-error JSON imports work in Cloudflare Workers runtime
 import authorContext from '../../datas/author-context.json';
-// @ts-expect-error JSON imports work in Cloudflare Workers runtime
 import voiceProfile from '../../datas/voice-profile.json';
 
 export interface FunctionEnv extends ProviderEnv {
