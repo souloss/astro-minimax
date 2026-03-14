@@ -42,26 +42,20 @@ async function consumeAIStream(
       for (const line of lines) {
         const trimmed = line.trim();
         if (!trimmed) continue;
-        if (trimmed.startsWith('0:')) {
-          try {
-            const content = JSON.parse(trimmed.slice(2));
-            if (typeof content === 'string') onDelta(content);
-          } catch { /* skip */ }
-        } else if (trimmed.startsWith('e:')) {
-          try {
-            const err = JSON.parse(trimmed.slice(2));
-            onError(err?.message ?? 'Stream error');
-          } catch { onError('Stream error'); }
-        }
-      }
-    }
-    if (buffer.trim()) {
-      const trimmed = buffer.trim();
-      if (trimmed.startsWith('0:')) {
+        if (!trimmed.startsWith('data:')) continue;
+        const jsonStr = trimmed.slice(5).trim();
+        if (!jsonStr || jsonStr === '[DONE]') continue;
         try {
-          const content = JSON.parse(trimmed.slice(2));
-          if (typeof content === 'string') onDelta(content);
-        } catch { /* skip */ }
+          const event = JSON.parse(jsonStr) as Record<string, unknown>;
+          const type = event.type as string;
+          if (type === 'text-delta') {
+            const delta = event.delta as string;
+            if (delta) onDelta(delta);
+          } else if (type === 'error') {
+            const errorText = (event.errorText as string) || (event.error as string) || 'Stream error';
+            onError(errorText);
+          }
+        } catch { /* skip parse errors */ }
       }
     }
   } catch (err) {
