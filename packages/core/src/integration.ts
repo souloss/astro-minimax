@@ -23,17 +23,14 @@ export default function minimax(
     hooks: {
       "astro:config:setup": ({ injectRoute, updateConfig, config }) => {
         const projectRoot = fileURLToPath(config.root);
-        const require = createRequire(
-          resolve(projectRoot, "__placeholder.js")
-        );
-
+        
+        // Check if packages are installed by looking in the project's node_modules
+        // NOT using require.resolve which can find monorepo sibling packages
         const installedPkgs = new Set<string>();
         for (const pkg of ["@astro-minimax/viz", "@astro-minimax/ai"]) {
-          try {
-            require.resolve(`${pkg}/package.json`);
+          const pkgPath = resolve(projectRoot, "node_modules", pkg, "package.json");
+          if (existsSync(pkgPath)) {
             installedPkgs.add(pkg);
-          } catch {
-            // package not installed — skip
           }
         }
 
@@ -93,7 +90,8 @@ export default function minimax(
                     if (installedPkgs.has("@astro-minimax/ai")) {
                       return `export { default } from "@astro-minimax/ai/components/AIChatWidget.astro";`;
                     }
-                    return `export default function() { return null; }`;
+                    // Return an empty Astro component that renders nothing
+                    return `export default function AIChatWidget() { return null; }\nAIChatWidget.isAstroComponentFactory = true;`;
                   }
                   if (id === "\0virtual:astro-minimax/ai-summaries") {
                     const summariesPath = resolve(projectRoot, "datas", "ai-summaries.json");
