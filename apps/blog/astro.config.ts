@@ -100,8 +100,30 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [tailwindcss() as never],
+    plugins: [
+      tailwindcss() as never,
+      {
+        name: "astro-minimax-preact-singleton",
+        enforce: "pre" as const,
+        async resolveId(source, importer, options) {
+          if (source.startsWith("@/components/media")) {
+            const vizDir = new URL("../../packages/viz/src/components", import.meta.url).pathname;
+            return this.resolve(source.replace("@/components/media", vizDir), importer, { ...options, skipSelf: true });
+          }
+        },
+      },
+    ],
     server: {
+      fs: {
+        strict: true,
+        allow: [
+          // Allow serving files from workspace packages
+          new URL("../../packages", import.meta.url).pathname,
+          new URL("../../node_modules", import.meta.url).pathname,
+          "./src",
+          "./.astro",
+        ],
+      },
       proxy: {
         "/api": {
           target: `http://localhost:${process.env.AI_DEV_PORT || "8787"}`,
@@ -110,30 +132,64 @@ export default defineConfig({
       },
     },
     resolve: {
-      alias: [
-        { find: "@/components/media", replacement: new URL("../../packages/viz/src/components", import.meta.url).pathname },
-        { find: "@/", replacement: new URL("./src/", import.meta.url).pathname },
-      ],
+      alias: {
+        "@/components/media": new URL("../../packages/viz/src/components", import.meta.url).pathname,
+        "@/" : new URL("./src/", import.meta.url).pathname,
+        "react": "preact/compat",
+        "react-dom": "preact/compat",
+        "react/jsx-runtime": "preact/jsx-runtime",
+      },
+      // Ensure single Preact instance to fix __H undefined hydration error with @ai-sdk/react
+      dedupe: ["preact", "preact/hooks", "preact/compat", "preact/debug", "preact/devtools", "react", "react-dom"],
     },
     optimizeDeps: {
       exclude: ["@resvg/resvg-js"],
+      include: [
+        "preact",
+        "preact/hooks",
+        "preact/compat",
+        "preact/debug",
+        "preact/devtools",
+        "preact/jsx-runtime",
+        "preact/jsx-dev-runtime",
+        "@ai-sdk/react",
+        "ai",
+        "@astro-minimax/ai",
+        "@astro-minimax/core",
+        "@astro-minimax/viz",
+      ],
     },
     ssr: {
       external: ["@resvg/resvg-js", "sharp"],
+      noExternal: [
+        "@astro-minimax/ai",
+        "@astro-minimax/core",
+        "@astro-minimax/viz",
+        "@ai-sdk/react",
+        "ai",
+      ],
     },
     build: {
       rollupOptions: {
         external: [/@resvg\/resvg-js/, /@resvg\/resvg-js-linux-.*/, /\.node$/],
-        output: {
-          chunkFileNames: "assets/[name]-[hash].js",
-          entryFileNames: "assets/[name]-[hash].js",
-          assetFileNames: "assets/[name]-[hash].[ext]",
-        },
       },
       cssMinify: true,
       minify: "esbuild",
       sourcemap: false,
       reportCompressedSize: true,
+    },
+    environments: {
+      client: {
+        build: {
+          rollupOptions: {
+            output: {
+              chunkFileNames: "assets/[name]-[hash].js",
+              entryFileNames: "assets/[name]-[hash].js",
+              assetFileNames: "assets/[name]-[hash].[ext]",
+            },
+          },
+        },
+      },
     },
   },
   image: {
@@ -148,8 +204,5 @@ export default defineConfig({
         optional: true,
       }),
     },
-  },
-  experimental: {
-    preserveScriptOrder: true,
   },
 });

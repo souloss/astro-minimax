@@ -1,3 +1,4 @@
+/// <reference types="astro/content" />
 interface ThemeChangeDetail {
   isDark: boolean;
   theme: string;
@@ -15,17 +16,4 @@ interface Window {
 
 interface WindowEventMap {
   themechange: CustomEvent<ThemeChangeDetail>;
-}
-
-interface ViewTransition {
-  finished: Promise<void>;
-  ready: Promise<void>;
-  updateCallbackDone: Promise<void>;
-  skipTransition: () => void;
-}
-
-interface Document {
-  startViewTransition?: (
-    callback: () => void | Promise<void>
-  ) => ViewTransition;
 }

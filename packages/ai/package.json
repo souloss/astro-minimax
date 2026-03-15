@@ -62,6 +62,7 @@
   "dependencies": {
     "@ai-sdk/openai-compatible": "^2.0.35",
     "ai": "^6.0.116",
+    "undici": "^6.0.0",
     "workers-ai-provider": "^3.1.2"
   },
   "peerDependencies": {
@@ -75,9 +76,10 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
+    "@types/node": "^22.0.0",
     "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.12.0"
   }
 }

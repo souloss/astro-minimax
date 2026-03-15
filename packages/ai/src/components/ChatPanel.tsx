@@ -25,6 +25,70 @@ interface ChatPanelProps {
 
 const MIN_SEND_INTERVAL_MS = 500;
 
+// ── Typewriter Effect Hook ─────────────────────────────────────
+
+const TYPEWRITER_SPEED_MS = 25;
+const TYPEWRITER_BATCH_SIZE = 1;
+
+function useTypewriter(fullText: string, isStreaming: boolean): string {
+  const [displayedLength, setDisplayedLength] = useState(0);
+  const prevFullTextRef = useRef(fullText);
+  const prevStreamingRef = useRef(isStreaming);
+  const animationRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (fullText !== prevFullTextRef.current && !fullText.startsWith(prevFullTextRef.current)) {
+      setDisplayedLength(0);
+    }
+    prevFullTextRef.current = fullText;
+  }, [fullText]);
+
+  useEffect(() => {
+    if (!isStreaming && prevStreamingRef.current) {
+      setDisplayedLength(fullText.length);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+    }
+    prevStreamingRef.current = isStreaming;
+  }, [isStreaming, fullText.length]);
+
+  useEffect(() => {
+    if (!isStreaming) return;
+
+    let lastTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - lastTime;
+
+      if (elapsed >= TYPEWRITER_SPEED_MS) {
+        setDisplayedLength(prev => {
+          const targetLength = fullText.length;
+          if (prev >= targetLength) return prev;
+          const behind = targetLength - prev;
+          const speed = behind > 20 ? Math.min(behind, 5) : TYPEWRITER_BATCH_SIZE;
+          return Math.min(prev + speed, targetLength);
+        });
+        lastTime = currentTime;
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+    };
+  }, [isStreaming, fullText]);
+
+  return fullText.slice(0, displayedLength) || (isStreaming ? '' : fullText);
+}
+
 function generateSessionId(articleContext?: ArticleChatContext): string {
   if (articleContext?.slug) return `article:${articleContext.slug}`;
   if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
@@ -298,16 +362,18 @@ function RichText({ text }: { text: string }) {
 
 // ── Message Rendering (parts-based) ──────────────────────────
 
-function AssistantMessage({ message }: { message: UIMessage }) {
-  const text = getTextFromMessage(message);
-  if (!text) return null;
+function AssistantMessage({ message, isStreaming }: { message: UIMessage; isStreaming?: boolean }) {
+  const fullText = getTextFromMessage(message);
+  const displayedText = useTypewriter(fullText, isStreaming ?? false);
+
+  if (!fullText) return null;
 
   const sources = message.parts.filter(p => p.type === 'source');
 
   return (
     <div class="space-y-1.5">
-      <RichText text={text} />
-      {sources.length > 0 && (
+      <RichText text={displayedText} />
+      {!isStreaming && sources.length > 0 && (
         <div class="mt-2 flex flex-wrap gap-1.5">
           {sources.map((s, i) => (
             <a key={i} href={(s as { url?: string }).url ?? '#'}
@@ -584,6 +650,8 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
 
   const renderLiveMessages = () => {
     const showQuickPrompts = liveMessages.length <= 1;
+    const lastAssistantMsgId = [...liveMessages].reverse().find(m => m.role === 'assistant')?.id;
+
     return (
       <>
         {liveMessages.map(msg => {
@@ -609,6 +677,7 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
 
           const text = getTextFromMessage(msg);
           const isAssistant = msg.role === 'assistant';
+          const isLastAssistantStreaming = isStreaming && msg.id === lastAssistantMsgId;
 
           return (
             <div key={msg.id} class={msg.role === 'user' ? 'flex justify-end' : 'flex items-start gap-2.5'}>
@@ -617,7 +686,7 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
                 ? 'max-w-[82%] rounded-2xl rounded-br-md bg-accent px-3 py-2 text-[13px] leading-relaxed text-background'
                 : 'min-w-0 flex-1 pt-0.5 text-[13px] leading-relaxed text-foreground'}>
                 {text
-                  ? isAssistant ? <AssistantMessage message={msg} /> : text
+                  ? isAssistant ? <AssistantMessage message={msg} isStreaming={isLastAssistantStreaming} /> : text
                   : isStreaming ? <TypingDots statusMessage={statusMessage} /> : null}
               </div>
             </div>

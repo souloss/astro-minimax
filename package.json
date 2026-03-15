@@ -9,6 +9,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
+  "pnpm": {
+    "overrides": {
+      "@astrojs/rss": "^4.0.17"
+    }
+  },
   "devDependencies": {
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
