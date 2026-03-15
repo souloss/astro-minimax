@@ -1,12 +1,68 @@
 {
   "$schema": "author-context-v1",
-  "generatedAt": "2026-03-13T19:29:49.689Z",
+  "generatedAt": "2026-03-15T20:38:29.446Z",
   "profile": {
-    "name": "博主",
-    "siteUrl": "https://example.com",
+    "name": "Souloss",
+    "siteUrl": "https://demo-astro-minimax.souloss.cn/",
     "description": ""
   },
   "posts": [
+    {
+      "id": "en/deployment-guide",
+      "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
+      "date": "2026-03-14T00:00:00.000Z",
+      "lang": "en",
+      "category": "Blog/Deployment",
+      "tags": [
+        "docs",
+        "deployment"
+      ],
+      "summary": "This guide covers how to deploy your astro-minimax blog to various platforms. astro-minimax generates static sites, so it can be deployed to almost a…",
+      "keyPoints": [],
+      "url": "/en/deployment-guide"
+    },
+    {
+      "id": "en/feature-overview",
+      "title": "\"astro-minimax Feature Overview\"",
+      "date": "2026-03-14T00:00:00.000Z",
+      "lang": "en",
+      "category": "Blog/Tutorial",
+      "tags": [
+        "docs",
+        "features"
+      ],
+      "summary": "astro-minimax is a feature-rich Astro blog theme built with a modular architecture. This article provides a comprehensive overview of all features an…",
+      "keyPoints": [],
+      "url": "/en/feature-overview"
+    },
+    {
+      "id": "zh/deployment-guide",
+      "title": "\"部署指南：多平台部署 astro-minimax\"",
+      "date": "2026-03-14T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/部署",
+      "tags": [
+        "docs",
+        "deployment"
+      ],
+      "summary": "本指南详细介绍如何将 astro-minimax 博客部署到各种平台。astro-minimax 生成静态站点，可以部署到几乎任何支持静态托管的服务。\n\nTable of contents\n\n前置准备\n\n在部署之前，确保你的博客能够在本地成功构建：\n\n构建产物位于  目录。\n\n> 如果构建失败，请…",
+      "keyPoints": [],
+      "url": "/zh/deployment-guide"
+    },
+    {
+      "id": "zh/feature-overview",
+      "title": "\"astro-minimax 功能特性总览\"",
+      "date": "2026-03-14T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/博客",
+      "tags": [
+        "docs",
+        "features"
+      ],
+      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-minimax 由三个核心包组成：\n\n| 包 | 说明 | 必需 |\n|----|------|-----…",
+      "keyPoints": [],
+      "url": "/zh/feature-overview"
+    },
     {
       "id": "en/getting-started",
       "title": "\"Getting Started: Two Integration Methods\"",
@@ -26,7 +82,7 @@
         "Automatic updates with NPM Packages",
         "Consistent blog content directory structure"
       ],
-      "url": "https://example.com/en/getting-started"
+      "url": "/en/getting-started"
     },
     {
       "id": "zh/getting-started",
@@ -46,7 +102,7 @@
         "手动合并上游更新",
         "使用pnpm update持续获取更新"
       ],
-      "url": "https://example.com/zh/getting-started"
+      "url": "/zh/getting-started"
     },
     {
       "id": "en/how-to-add-latex-equations-in-blog-posts",
@@ -65,7 +121,7 @@
         "Add katex text-color in typography CSS",
         "Write inline and block LaTeX equations"
       ],
-      "url": "https://example.com/en/how-to-add-latex-equations-in-blog-posts"
+      "url": "/en/how-to-add-latex-equations-in-blog-posts"
     },
     {
       "id": "zh/how-to-add-latex-equations-in-blog-posts",
@@ -84,7 +140,7 @@
         "导入KaTeX CSS样式",
         "为katex设置文本颜色"
       ],
-      "url": "https://example.com/zh/how-to-add-latex-equations-in-blog-posts"
+      "url": "/zh/how-to-add-latex-equations-in-blog-posts"
     },
     {
       "id": "en/setting-dates-via-git-hooks",
@@ -105,7 +161,7 @@
         "IDE代码片段填充frontmatter",
         "修改Astro配置允许空日期"
       ],
-      "url": "https://example.com/en/setting-dates-via-git-hooks"
+      "url": "/en/setting-dates-via-git-hooks"
     },
     {
       "id": "zh/setting-dates-via-git-hooks",
@@ -125,7 +181,7 @@
         "为新文件添加创建日期",
         "修改Astro配置允许空日期"
       ],
-      "url": "https://example.com/zh/setting-dates-via-git-hooks"
+      "url": "/zh/setting-dates-via-git-hooks"
     },
     {
       "id": "en/how-to-update-dependencies",
@@ -143,7 +199,7 @@
         "更新Astro-minimax模板的步骤",
         "处理Git合并冲突"
       ],
-      "url": "https://example.com/en/how-to-update-dependencies"
+      "url": "/en/how-to-update-dependencies"
     },
     {
       "id": "zh/how-to-update-dependencies",
@@ -162,7 +218,7 @@
         "更新astro-minimax模板的技巧",
         "使用git更新模板时注意合并冲突"
       ],
-      "url": "https://example.com/zh/how-to-update-dependencies"
+      "url": "/zh/how-to-update-dependencies"
     },
     {
       "id": "en/dynamic-og-images",
@@ -182,7 +238,7 @@
         "Increased build time with more blog posts",
         "Limitations with RTL languages and emoji support"
       ],
-      "url": "https://example.com/en/dynamic-og-images"
+      "url": "/en/dynamic-og-images"
     },
     {
       "id": "zh/dynamic-og-images",
@@ -202,7 +258,7 @@
         "动态OG图片增加构建时间",
         "不支持RTL语言和emoji问题"
       ],
-      "url": "https://example.com/zh/dynamic-og-images"
+      "url": "/zh/dynamic-og-images"
     },
     {
       "id": "en/predefined-color-schemes",
@@ -221,7 +277,7 @@
         "提供多种预定义颜色方案",
         "每种方案提供详细CSS代码"
       ],
-      "url": "https://example.com/en/predefined-color-schemes"
+      "url": "/en/predefined-color-schemes"
     },
     {
       "id": "zh/predefined-color-schemes",
@@ -239,7 +295,7 @@
         "深色配色方案定义为html[data-theme='dark']",
         "提供多种配色方案的CSS代码"
       ],
-      "url": "https://example.com/zh/predefined-color-schemes"
+      "url": "/zh/predefined-color-schemes"
     },
     {
       "id": "en/customizing-astro-minimax-theme-color-schemes",
@@ -259,7 +315,7 @@
         "在global.css中自定义颜色方案",
         "定义背景色、前景色、强调色等颜色属性"
       ],
-      "url": "https://example.com/en/customizing-astro-minimax-theme-color-schemes"
+      "url": "/en/customizing-astro-minimax-theme-color-schemes"
     },
     {
       "id": "zh/customizing-astro-minimax-theme-color-schemes",
@@ -278,14 +334,14 @@
         "设置initialColorScheme选择初始配色",
         "global.css中自定义亮色/暗色配色"
       ],
-      "url": "https://example.com/zh/customizing-astro-minimax-theme-color-schemes"
+      "url": "/zh/customizing-astro-minimax-theme-color-schemes"
     },
     {
       "id": "en/adding-new-post",
       "title": "Adding new posts in astro-minimax theme",
       "date": "2022-09-23T15:22:00Z",
       "lang": "en",
-      "category": "教程/博客",
+      "category": "Blog/Tutorial",
       "tags": [
         "docs"
       ],
@@ -297,7 +353,7 @@
         "Override default settings with frontmatter",
         "SEO optimization with title and description"
       ],
-      "url": "https://example.com/en/adding-new-post"
+      "url": "/en/adding-new-post"
     },
     {
       "id": "zh/adding-new-post",
@@ -317,14 +373,14 @@
         "使用Shiki进行语法高亮",
         "图片存储在src/assets/或public目录"
       ],
-      "url": "https://example.com/zh/adding-new-post"
+      "url": "/zh/adding-new-post"
     },
     {
       "id": "en/how-to-configure-astro-minimax-theme",
       "title": "How to configure astro-minimax theme",
       "date": "2022-09-23T04:58:53Z",
       "lang": "en",
-      "category": "教程/配置",
+      "category": "Blog/Configuration",
       "tags": [
         "configuration",
         "docs"
@@ -337,7 +393,7 @@
         "Enable light and dark mode",
         "Set post display preferences"
       ],
-      "url": "https://example.com/en/how-to-configure-astro-minimax-theme"
+      "url": "/en/how-to-configure-astro-minimax-theme"
     },
     {
       "id": "zh/how-to-configure-astro-minimax-theme",
@@ -356,136 +412,137 @@
         "更新布局宽度，修改global.css",
         "配置Logo或标题，三种方法"
       ],
-      "url": "https://example.com/zh/how-to-configure-astro-minimax-theme"
+      "url": "/zh/how-to-configure-astro-minimax-theme"
     }
   ],
   "stableFacts": {
     "focusAreas": [
-      "教程/配置",
       "教程/博客",
+      "教程/配置",
       "教程/工程化",
-      "教程/前端",
-      "Blog/Tutorial"
+      "Blog/Tutorial",
+      "教程/前端"
     ],
     "recurringTopics": [
       "astro-minimax",
       "docs",
       "to",
+      "blog",
+      "Astro",
+      "theme",
       "posts",
       "in",
-      "theme",
-      "blog",
       "How",
-      "Astro",
       "and",
       "for",
       "LaTeX",
       "Git",
       "OG",
-      "configuration",
-      "FAQ",
-      "color-schemes"
+      "of",
+      "configuration"
     ],
     "flagshipPosts": [
       {
+        "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
+        "date": "2026-03-14T00:00:00.000Z",
+        "url": "/en/deployment-guide"
+      },
+      {
+        "title": "\"astro-minimax Feature Overview\"",
+        "date": "2026-03-14T00:00:00.000Z",
+        "url": "/en/feature-overview"
+      },
+      {
+        "title": "\"部署指南：多平台部署 astro-minimax\"",
+        "date": "2026-03-14T00:00:00.000Z",
+        "url": "/zh/deployment-guide"
+      },
+      {
+        "title": "\"astro-minimax 功能特性总览\"",
+        "date": "2026-03-14T00:00:00.000Z",
+        "url": "/zh/feature-overview"
+      },
+      {
         "title": "\"Getting Started: Two Integration Methods\"",
         "date": "2026-03-12T00:00:00.000Z",
-        "url": "https://example.com/en/getting-started"
-      },
-      {
-        "title": "\"快速开始：两种使用方式\"",
-        "date": "2026-03-12T00:00:00.000Z",
-        "url": "https://example.com/zh/getting-started"
-      },
-      {
-        "title": "How to add LaTeX Equations in Astro blog posts",
-        "date": "2024-09-08T20:58:52.737Z",
-        "url": "https://example.com/en/how-to-add-latex-equations-in-blog-posts"
-      },
-      {
-        "title": "如何在 Astro 博客文章中添加 LaTeX 公式",
-        "date": "2024-09-08T20:58:52.737Z",
-        "url": "https://example.com/zh/how-to-add-latex-equations-in-blog-posts"
-      },
-      {
-        "title": "How to use Git Hooks to set Created and Modified Dates",
-        "date": "2024-01-03T20:40:08Z",
-        "url": "https://example.com/en/setting-dates-via-git-hooks"
+        "url": "/en/getting-started"
       }
     ],
     "contentFootprint": {
-      "posts": 18,
-      "zhPosts": 9,
-      "enPosts": 9
+      "posts": 22,
+      "zhPosts": 11,
+      "enPosts": 11
     },
     "topTags": [
       "docs",
       "configuration",
       "FAQ",
       "color-schemes",
+      "deployment",
+      "features",
       "release"
     ]
   },
   "timelineFacts": {
     "latestPosts": [
       {
+        "date": "2026-03-14T00:00:00.000Z",
+        "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
+        "url": "/en/deployment-guide",
+        "lang": "en"
+      },
+      {
+        "date": "2026-03-14T00:00:00.000Z",
+        "title": "\"astro-minimax Feature Overview\"",
+        "url": "/en/feature-overview",
+        "lang": "en"
+      },
+      {
+        "date": "2026-03-14T00:00:00.000Z",
+        "title": "\"部署指南：多平台部署 astro-minimax\"",
+        "url": "/zh/deployment-guide",
+        "lang": "zh"
+      },
+      {
+        "date": "2026-03-14T00:00:00.000Z",
+        "title": "\"astro-minimax 功能特性总览\"",
+        "url": "/zh/feature-overview",
+        "lang": "zh"
+      },
+      {
         "date": "2026-03-12T00:00:00.000Z",
         "title": "\"Getting Started: Two Integration Methods\"",
-        "url": "https://example.com/en/getting-started",
+        "url": "/en/getting-started",
         "lang": "en"
       },
       {
         "date": "2026-03-12T00:00:00.000Z",
         "title": "\"快速开始：两种使用方式\"",
-        "url": "https://example.com/zh/getting-started",
+        "url": "/zh/getting-started",
         "lang": "zh"
       },
       {
         "date": "2024-09-08T20:58:52.737Z",
         "title": "How to add LaTeX Equations in Astro blog posts",
-        "url": "https://example.com/en/how-to-add-latex-equations-in-blog-posts",
+        "url": "/en/how-to-add-latex-equations-in-blog-posts",
         "lang": "en"
       },
       {
         "date": "2024-09-08T20:58:52.737Z",
         "title": "如何在 Astro 博客文章中添加 LaTeX 公式",
-        "url": "https://example.com/zh/how-to-add-latex-equations-in-blog-posts",
+        "url": "/zh/how-to-add-latex-equations-in-blog-posts",
         "lang": "zh"
       },
       {
         "date": "2024-01-03T20:40:08Z",
         "title": "How to use Git Hooks to set Created and Modified Dates",
-        "url": "https://example.com/en/setting-dates-via-git-hooks",
+        "url": "/en/setting-dates-via-git-hooks",
         "lang": "en"
       },
       {
         "date": "2024-01-03T20:40:08Z",
         "title": "如何使用 Git 钩子设置创建和修改日期",
-        "url": "https://example.com/zh/setting-dates-via-git-hooks",
-        "lang": "zh"
-      },
-      {
-        "date": "2023-07-20T15:33:05.569Z",
-        "title": "How to update dependencies of astro-minimax",
-        "url": "https://example.com/en/how-to-update-dependencies",
-        "lang": "en"
-      },
-      {
-        "date": "2023-07-20T15:33:05.569Z",
-        "title": "如何更新 astro-minimax 的依赖",
-        "url": "https://example.com/zh/how-to-update-dependencies",
-        "lang": "zh"
-      },
-      {
-        "date": "2022-12-28T04:59:04.866Z",
-        "title": "Dynamic OG image generation in astro-minimax blog posts",
-        "url": "https://example.com/en/dynamic-og-images",
-        "lang": "en"
-      },
-      {
-        "date": "2022-12-28T04:59:04.866Z",
-        "title": "在 astro-minimax 中动态生成 OG 图片",
-        "url": "https://example.com/zh/dynamic-og-images",
+        "url": "/zh/setting-dates-via-git-hooks",
         "lang": "zh"
       }
     ]
@@ -494,5 +551,5 @@
     "model": "kimi-k2-thinking",
     "provider": "openai"
   },
-  "contextHash": "89f157d6a7edeab0"
+  "contextHash": "aa3bf2f79896ec4e"
 }

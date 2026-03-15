@@ -1,17 +1,73 @@
 {
-  "generatedAt": "2026-03-13T19:29:51.297Z",
-  "siteUrl": "https://example.com",
+  "generatedAt": "2026-03-15T20:38:29.612Z",
+  "siteUrl": "https://demo-astro-minimax.souloss.cn/",
   "sourceInfo": {
-    "totalPosts": 18,
-    "zhPosts": 9,
-    "enPosts": 9,
+    "totalPosts": 22,
+    "zhPosts": 11,
+    "enPosts": 11,
     "selectedPosts": 12
   },
   "profile": {
-    "name": "博主",
-    "siteUrl": "https://example.com"
+    "name": "Souloss",
+    "siteUrl": "https://demo-astro-minimax.souloss.cn/"
   },
   "posts": [
+    {
+      "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
+      "date": "2026-03-14T00:00:00.000Z",
+      "categories": [
+        "Blog/Deployment"
+      ],
+      "tags": [
+        "docs",
+        "deployment"
+      ],
+      "summary": "This guide covers how to deploy your astro-minimax blog to various platforms. astro-minimax generat…",
+      "keyPoints": [],
+      "url": "/en/deployment-guide"
+    },
+    {
+      "title": "\"astro-minimax Feature Overview\"",
+      "date": "2026-03-14T00:00:00.000Z",
+      "categories": [
+        "Blog/Tutorial"
+      ],
+      "tags": [
+        "docs",
+        "features"
+      ],
+      "summary": "astro-minimax is a feature-rich Astro blog theme built with a modular architecture. This article pr…",
+      "keyPoints": [],
+      "url": "/en/feature-overview"
+    },
+    {
+      "title": "\"部署指南：多平台部署 astro-minimax\"",
+      "date": "2026-03-14T00:00:00.000Z",
+      "categories": [
+        "教程/部署"
+      ],
+      "tags": [
+        "docs",
+        "deployment"
+      ],
+      "summary": "本指南详细介绍如何将 astro-minimax 博客部署到各种平台。astro-minimax 生成静态站点，可以部署到几乎任何支持静态托管的服务。\n\nTable of contents\n\n前置准…",
+      "keyPoints": [],
+      "url": "/zh/deployment-guide"
+    },
+    {
+      "title": "\"astro-minimax 功能特性总览\"",
+      "date": "2026-03-14T00:00:00.000Z",
+      "categories": [
+        "教程/博客"
+      ],
+      "tags": [
+        "docs",
+        "features"
+      ],
+      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-min…",
+      "keyPoints": [],
+      "url": "/zh/feature-overview"
+    },
     {
       "title": "\"Getting Started: Two Integration Methods\"",
       "date": "2026-03-12T00:00:00.000Z",
@@ -31,7 +87,7 @@
         "Automatic updates with NPM Packages",
         "Consistent blog content directory structure"
       ],
-      "url": "https://example.com/en/getting-started"
+      "url": "/en/getting-started"
     },
     {
       "title": "\"快速开始：两种使用方式\"",
@@ -51,7 +107,7 @@
         "手动合并上游更新",
         "使用pnpm update持续获取更新"
       ],
-      "url": "https://example.com/zh/getting-started"
+      "url": "/zh/getting-started"
     },
     {
       "title": "How to add LaTeX Equations in Astro blog posts",
@@ -70,7 +126,7 @@
         "Add katex text-color in typography CSS",
         "Write inline and block LaTeX equations"
       ],
-      "url": "https://example.com/en/how-to-add-latex-equations-in-blog-posts"
+      "url": "/en/how-to-add-latex-equations-in-blog-posts"
     },
     {
       "title": "如何在 Astro 博客文章中添加 LaTeX 公式",
@@ -89,7 +145,7 @@
         "导入KaTeX CSS样式",
         "为katex设置文本颜色"
       ],
-      "url": "https://example.com/zh/how-to-add-latex-equations-in-blog-posts"
+      "url": "/zh/how-to-add-latex-equations-in-blog-posts"
     },
     {
       "title": "How to use Git Hooks to set Created and Modified Dates",
@@ -110,7 +166,7 @@
         "IDE代码片段填充frontmatter",
         "修改Astro配置允许空日期"
       ],
-      "url": "https://example.com/en/setting-dates-via-git-hooks"
+      "url": "/en/setting-dates-via-git-hooks"
     },
     {
       "title": "如何使用 Git 钩子设置创建和修改日期",
@@ -130,7 +186,7 @@
         "为新文件添加创建日期",
         "修改Astro配置允许空日期"
       ],
-      "url": "https://example.com/zh/setting-dates-via-git-hooks"
+      "url": "/zh/setting-dates-via-git-hooks"
     },
     {
       "title": "How to update dependencies of astro-minimax",
@@ -148,7 +204,7 @@
         "更新Astro-minimax模板的步骤",
         "处理Git合并冲突"
       ],
-      "url": "https://example.com/en/how-to-update-dependencies"
+      "url": "/en/how-to-update-dependencies"
     },
     {
       "title": "如何更新 astro-minimax 的依赖",
@@ -167,84 +223,7 @@
         "更新astro-minimax模板的技巧",
         "使用git更新模板时注意合并冲突"
       ],
-      "url": "https://example.com/zh/how-to-update-dependencies"
-    },
-    {
-      "title": "Dynamic OG image generation in astro-minimax blog posts",
-      "date": "2022-12-28T04:59:04.866Z",
-      "categories": [
-        "教程/博客"
-      ],
-      "tags": [
-        "docs",
-        "release"
-      ],
-      "summary": "Astro-minimax v1.4.0 introduces dynamic OG image generation for blog posts, enhancing social media engagement.",
-      "keyPoints": [
-        "Astro-minimax v1.4.0 adds dynamic OG image generation",
-        "Uses Vercel's Satori package for image creation",
-        "Dynamic images include post title, author, and site title",
-        "Increased build time with more blog posts",
-        "Limitations with RTL languages and emoji support"
-      ],
-      "url": "https://example.com/en/dynamic-og-images"
-    },
-    {
-      "title": "在 astro-minimax 中动态生成 OG 图片",
-      "date": "2022-12-28T04:59:04.866Z",
-      "categories": [
-        "教程/博客"
-      ],
-      "tags": [
-        "docs",
-        "release"
-      ],
-      "summary": "astro-minimax v1.4.0 引入动态OG图片生成，提升社交媒体分享效果。",
-      "keyPoints": [
-        "astro-minimax v1.4.0支持动态OG图片生成",
-        "使用Vercel Satori包构建时生成OG图片",
-        "OG图片包含文章标题、作者和网站标题",
-        "动态OG图片增加构建时间",
-        "不支持RTL语言和emoji问题"
-      ],
-      "url": "https://example.com/zh/dynamic-og-images"
-    },
-    {
-      "title": "Predefined color schemes",
-      "date": "2022-09-26T12:13:24Z",
-      "categories": [
-        "教程/配置"
-      ],
-      "tags": [
-        "color-schemes"
-      ],
-      "summary": "介绍为astro-minimax博客主题预定义的颜色方案，包括浅色和深色模式。",
-      "keyPoints": [
-        "astro-minimax博客主题颜色方案",
-        "浅色模式使用:root和html[data-theme='light']",
-        "深色模式使用html[data-theme='dark']",
-        "提供多种预定义颜色方案",
-        "每种方案提供详细CSS代码"
-      ],
-      "url": "https://example.com/en/predefined-color-schemes"
-    },
-    {
-      "title": "预定义配色方案",
-      "date": "2022-09-26T12:13:24Z",
-      "categories": [
-        "教程/配置"
-      ],
-      "tags": [
-        "color-schemes"
-      ],
-      "summary": "为astro-minimax博客主题设计预定义配色方案，提供浅色和深色配色方案的CSS配置。",
-      "keyPoints": [
-        "astro-minimax博客主题预定义配色方案",
-        "浅色配色方案使用CSS选择器定义",
-        "深色配色方案定义为html[data-theme='dark']",
-        "提供多种配色方案的CSS代码"
-      ],
-      "url": "https://example.com/zh/predefined-color-schemes"
+      "url": "/zh/how-to-update-dependencies"
     }
   ],
   "topTags": [
@@ -252,17 +231,19 @@
     "configuration",
     "FAQ",
     "color-schemes",
+    "deployment",
+    "features",
     "release"
   ],
   "topCategories": [
-    "教程/配置",
     "教程/博客",
+    "教程/配置",
     "教程/工程化",
-    "教程/前端",
-    "Blog/Tutorial"
+    "Blog/Tutorial",
+    "教程/前端"
   ],
   "contentStats": {
-    "totalPosts": 18,
-    "avgPostPerMonth": 0
+    "totalPosts": 22,
+    "avgPostPerMonth": 1
   }
 }
