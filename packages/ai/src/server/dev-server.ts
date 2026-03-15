@@ -102,7 +102,7 @@ function toWebRequest(req: IncomingMessage): Promise<Request> {
 
 // Convert Web Response to Node.js ServerResponse
 async function sendWebResponse(webRes: Response, res: ServerResponse): Promise<void> {
-  res.writeHead(webRes.status, Object.fromEntries(webRes.headers.entries()));
+  res.writeHead(webRes.status, Object.fromEntries(webRes.headers as unknown as Iterable<[string, string]>));
   if (!webRes.body) {
     res.end();
     return;

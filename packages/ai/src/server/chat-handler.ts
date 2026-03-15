@@ -141,7 +141,7 @@ export async function handleChatRequest(options: ChatHandlerOptions): Promise<Re
   const requestTimer = setTimeout(() => requestAbort.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    return await runPipeline({ env, messages, latestText, context, req, requestAbort });
+    return await runPipeline({ env, messages, latestText, context, req, requestAbort, lang });
   } catch (err) {
     if (requestAbort.signal.aborted) return errors.timeout(lang);
     console.error('[chat-handler] Unexpected error:', err);
@@ -160,10 +160,11 @@ interface PipelineArgs {
   context: ChatContext;
   req: Request;
   requestAbort: AbortController;
+  lang: string;
 }
 
 async function runPipeline(args: PipelineArgs): Promise<Response> {
-  const { env, messages, latestText, context, req } = args;
+  const { env, messages, latestText, context, req, lang } = args;
 
   const manager = new ProviderManager(env, {
     enableMockFallback: true,
