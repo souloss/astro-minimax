@@ -1,4 +1,5 @@
 import type { ChatErrorResponse } from './types.js';
+import { t, type AITranslationKey } from '../utils/i18n.js';
 
 const CORS_HEADERS: HeadersInit = {
   'Content-Type': 'application/json',
@@ -24,25 +25,29 @@ export function chatError(
   return new Response(JSON.stringify(body), { status, headers });
 }
 
+function te(key: AITranslationKey, lang?: string, vars?: Record<string, string | number>): string {
+  return t(key, lang ?? 'zh', vars);
+}
+
 export const errors = {
-  methodNotAllowed: () =>
-    chatError('METHOD_NOT_ALLOWED', 'Method not allowed', 405),
-  invalidRequest: (detail?: string) =>
-    chatError('INVALID_REQUEST', detail ?? '请求格式有误', 400),
-  emptyMessage: () =>
-    chatError('INVALID_REQUEST', '消息不能为空', 400),
-  emptyContent: () =>
-    chatError('INVALID_REQUEST', '消息内容不能为空', 400),
-  inputTooLong: (max: number) =>
-    chatError('INPUT_TOO_LONG', `消息过长，最多 ${max} 字`, 400),
-  rateLimited: (retryAfter?: number) =>
-    chatError('RATE_LIMITED', '请求太频繁，请稍后再试', 429, { retryable: true, retryAfter: retryAfter ?? 10 }),
-  timeout: () =>
-    chatError('TIMEOUT', '响应超时，请重试或简化问题', 504, { retryable: true }),
-  providerUnavailable: () =>
-    chatError('PROVIDER_UNAVAILABLE', 'AI 服务暂时不可用，请稍后再试', 503, { retryable: true, retryAfter: 30 }),
-  internal: (detail?: string) =>
-    chatError('INTERNAL_ERROR', detail ?? '服务异常，请稍后再试', 500, { retryable: true, retryAfter: 5 }),
+  methodNotAllowed: (lang?: string) =>
+    chatError('METHOD_NOT_ALLOWED', lang === 'en' ? 'Method not allowed' : '方法不允许', 405),
+  invalidRequest: (detail?: string, lang?: string) =>
+    chatError('INVALID_REQUEST', detail ?? te('ai.error.format', lang), 400),
+  emptyMessage: (lang?: string) =>
+    chatError('INVALID_REQUEST', te('ai.error.emptyMessage', lang), 400),
+  emptyContent: (lang?: string) =>
+    chatError('INVALID_REQUEST', te('ai.error.emptyContent', lang), 400),
+  inputTooLong: (max: number, lang?: string) =>
+    chatError('INPUT_TOO_LONG', te('ai.error.inputTooLong', lang, { max }), 400),
+  rateLimited: (retryAfter?: number, lang?: string) =>
+    chatError('RATE_LIMITED', te('ai.error.rateLimit', lang), 429, { retryable: true, retryAfter: retryAfter ?? 10 }),
+  timeout: (lang?: string) =>
+    chatError('TIMEOUT', te('ai.error.timeout', lang), 504, { retryable: true }),
+  providerUnavailable: (lang?: string) =>
+    chatError('PROVIDER_UNAVAILABLE', te('ai.error.unavailable', lang), 503, { retryable: true, retryAfter: 30 }),
+  internal: (detail?: string, lang?: string) =>
+    chatError('INTERNAL_ERROR', detail ?? te('ai.error.generic', lang), 500, { retryable: true, retryAfter: 5 }),
 };
 
 export function corsPreflightResponse(): Response {

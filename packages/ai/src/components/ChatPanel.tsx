@@ -5,6 +5,7 @@ import type { UIMessage } from 'ai';
 import { getMockResponse, createMockStream } from '../providers/mock.js';
 import type { ArticleChatContext, ChatStatusData } from '../server/types.js';
 import { isChatStatusData } from '../server/types.js';
+import { t, getLang } from '../utils/i18n.js';
 
 export interface AIChatConfig {
   enabled?: boolean;
@@ -107,44 +108,47 @@ function getTextFromMessage(message: UIMessage): string {
 
 // ── Quick Prompts ─────────────────────────────────────────────
 
-const QUICK_PROMPTS_ZH = ['这个博客用了什么技术？', '有哪些文章推荐？', '怎么搭建类似的博客？'];
-const QUICK_PROMPTS_EN = ['What tech stack is used?', 'Recommend some articles?', 'How to build a similar blog?'];
+const QUICK_PROMPTS_ZH = [
+  t('ai.prompt.techStack', 'zh'),
+  t('ai.prompt.recommend', 'zh'),
+  t('ai.prompt.build', 'zh'),
+];
+const QUICK_PROMPTS_EN = [
+  t('ai.prompt.techStack', 'en'),
+  t('ai.prompt.recommend', 'en'),
+  t('ai.prompt.build', 'en'),
+];
 
 function getQuickPrompts(lang: string, articleContext?: ArticleChatContext): string[] {
-  const isZh = lang !== 'en';
-  if (!articleContext) return isZh ? QUICK_PROMPTS_ZH : QUICK_PROMPTS_EN;
+  const l = getLang(lang);
+  if (!articleContext) return l === 'zh' ? QUICK_PROMPTS_ZH : QUICK_PROMPTS_EN;
 
-  if (isZh) {
-    const prompts = [`总结一下《${articleContext.title}》的核心观点`];
+  if (l === 'zh') {
+    const prompts = [t('ai.prompt.summarize', 'zh', { title: articleContext.title })];
     if (articleContext.keyPoints?.length) {
-      prompts.push(`解释一下「${articleContext.keyPoints[0]}」`);
+      prompts.push(t('ai.prompt.explain', 'zh', { point: articleContext.keyPoints[0] }));
     }
-    prompts.push('这篇文章和哪些内容相关？');
+    prompts.push(t('ai.prompt.related', 'zh'));
     return prompts;
   }
-  const prompts = [`Summarize the key points of "${articleContext.title}"`];
+  const prompts = [t('ai.prompt.summarize', 'en', { title: articleContext.title })];
   if (articleContext.keyPoints?.length) {
-    prompts.push(`Explain "${articleContext.keyPoints[0]}"`);
+    prompts.push(t('ai.prompt.explain', 'en', { point: articleContext.keyPoints[0] }));
   }
-  prompts.push('What related content should I read next?');
+  prompts.push(t('ai.prompt.related', 'en'));
   return prompts;
 }
 
 // ── Welcome Message ───────────────────────────────────────────
 
 function buildWelcomeMessage(config: AIChatConfig, articleContext?: ArticleChatContext): UIMessage {
-  const lang = config.lang ?? 'zh';
-  const isZh = lang !== 'en';
-
+  const lang = getLang(config.lang);
+  
   let text: string;
   if (articleContext) {
-    text = isZh
-      ? `我在结合《${articleContext.title}》陪你阅读。\n你可以让我总结这篇文章、解释某个观点，或者顺着这篇文章继续延伸到相关主题。`
-      : `I'm reading "${articleContext.title}" with you.\nAsk me to summarize, explain a concept, or explore related topics.`;
+    text = config.welcomeMessage ?? t('ai.welcome.reading', lang, { title: articleContext.title });
   } else {
-    text = config.welcomeMessage ?? (isZh
-      ? '你好！我是博客 AI 助手，问我任何关于博客内容的问题，我可以帮你找到相关文章。'
-      : "Hi! I'm the blog AI assistant. Ask me anything and I'll help you find related articles.");
+    text = config.welcomeMessage ?? t('ai.welcome.canHelp', lang);
   }
 
   return {
@@ -156,17 +160,18 @@ function buildWelcomeMessage(config: AIChatConfig, articleContext?: ArticleChatC
 
 // ── Error Helpers ─────────────────────────────────────────────
 
-function parseErrorMessage(error: Error): string {
+function parseErrorMessage(error: Error, lang: string = 'zh'): string {
+  const l = getLang(lang);
   try {
     const parsed = JSON.parse(error.message);
     if (parsed?.error) return parsed.error;
   } catch { /* not JSON */ }
   const msg = error.message;
-  if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return '网络连接失败，请检查网络';
-  if (msg.includes('aborted')) return '请求已取消';
-  if (msg.includes('429') || msg.includes('rate')) return '请求太频繁，请稍后再试';
-  if (msg.includes('503') || msg.includes('不可用')) return 'AI 对话暂时不可用';
-  return '出了点问题，请稍后再试';
+  if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return t('ai.error.network', l);
+  if (msg.includes('aborted')) return t('ai.error.aborted', l);
+  if (msg.includes('429') || msg.includes('rate')) return t('ai.error.rateLimit', l);
+  if (msg.includes('503') || msg.includes('unavailable')) return t('ai.error.unavailable', l);
+  return t('ai.error.generic', l);
 }
 
 function isRetryable(error: Error): boolean {
@@ -360,32 +365,99 @@ function RichText({ text }: { text: string }) {
   );
 }
 
+// ── Reasoning Collapse Component ──────────────────────────────
+
+function ReasoningBlock({ text, isStreaming, lang = 'zh' }: { text: string; isStreaming?: boolean; lang?: string }) {
+  const isEmpty = text.length === 0;
+  const l = getLang(lang);
+  return (
+    <details class="group rounded-lg border border-border/50 bg-muted/30 overflow-hidden" open={isStreaming || !isEmpty}>
+      <summary class="flex cursor-pointer items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-foreground-soft transition-colors hover:bg-muted/50 hover:text-foreground">
+        <svg class="size-3.5 transition-transform group-open:rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+        <span class="flex items-center gap-1">
+          {isStreaming ? (
+            <svg class="size-3 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+            </svg>
+          ) : (
+            <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4"/>
+              <path d="M12 8h.01"/>
+            </svg>
+          )}
+          {isStreaming && isEmpty ? t('ai.reasoning.thinking', l) : isStreaming ? t('ai.reasoning.thinking', l).replace('...', '') : t('ai.reasoning.viewReasoning', l)}
+        </span>
+      </summary>
+      <div class="border-t border-border/30 bg-background/50 px-2.5 py-2">
+        {isEmpty && isStreaming ? (
+          <div class="flex items-center gap-2 text-[11px] text-foreground-soft">
+            <span class="inline-flex gap-1">
+              <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:0ms]" />
+              <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:150ms]" />
+              <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:300ms]" />
+            </span>
+            <span>{t('ai.reasoning.waiting', l)}</span>
+          </div>
+        ) : (
+          <pre class="whitespace-pre-wrap text-[11px] leading-relaxed text-foreground-soft font-mono">{text}</pre>
+        )}
+      </div>
+    </details>
+  );
+}
+
 // ── Message Rendering (parts-based) ──────────────────────────
 
-function AssistantMessage({ message, isStreaming }: { message: UIMessage; isStreaming?: boolean }) {
+type ReasoningPart = { type: 'reasoning'; text: string; state?: 'streaming' | 'done' };
+
+function AssistantMessage({ message, isStreaming, lang = 'zh' }: { message: UIMessage; isStreaming?: boolean; lang?: string }) {
   const fullText = getTextFromMessage(message);
   const displayedText = useTypewriter(fullText, isStreaming ?? false);
 
-  if (!fullText) return null;
+  const reasoningParts = message.parts.filter((p): p is ReasoningPart => p.type === 'reasoning');
+  const reasoningFullText = reasoningParts.map(p => p.text).join('');
+  const reasoningDisplayed = useTypewriter(reasoningFullText, isStreaming ?? false);
+  const hasReasoning = reasoningFullText.length > 0;
 
-  const sources = message.parts.filter(p => p.type === 'source');
+  const isWaitingForContent = isStreaming && !fullText && !reasoningFullText;
+
+  const sources = message.parts.filter(p => p.type === 'source-url' || p.type === 'source-document');
+
+  if (isWaitingForContent) {
+    return (
+      <div class="space-y-1.5">
+        <ReasoningBlock text="" isStreaming={true} lang={lang} />
+      </div>
+    );
+  }
+
+  if (!fullText && !hasReasoning) return null;
 
   return (
     <div class="space-y-1.5">
-      <RichText text={displayedText} />
+      {hasReasoning && (
+        <ReasoningBlock text={reasoningDisplayed} isStreaming={isStreaming} lang={lang} />
+      )}
+      {displayedText && <RichText text={displayedText} />}
       {!isStreaming && sources.length > 0 && (
         <div class="mt-2 flex flex-wrap gap-1.5">
-          {sources.map((s, i) => (
-            <a key={i} href={(s as { url?: string }).url ?? '#'}
-              class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/30 px-2 py-0.5 text-[11px] text-foreground-soft transition-colors hover:border-accent/40 hover:text-foreground"
-              target="_blank" rel="noopener noreferrer">
-              <svg class="size-2.5 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-              </svg>
-              {(s as { title?: string }).title ?? 'Source'}
-            </a>
-          ))}
+          {sources.map((s, i) => {
+            const part = s as { url?: string; title?: string };
+            return (
+              <a key={i} href={part.url ?? '#'}
+                class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/30 px-2 py-0.5 text-[11px] text-foreground-soft transition-colors hover:border-accent/40 hover:text-foreground"
+                target="_blank" rel="noopener noreferrer">
+                <svg class="size-2.5 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+                {part.title ?? 'Source'}
+              </a>
+            );
+          })}
         </div>
       )}
     </div>
@@ -479,9 +551,8 @@ function useMockChat(lang: string) {
 
 export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelProps) {
   const isMockMode = config.mockMode || !config.apiEndpoint;
-  const lang = config.lang ?? 'zh';
-  const isZh = lang !== 'en';
-  const placeholder = config.placeholder ?? (isZh ? '输入你的问题...' : 'Ask a question...');
+  const lang = getLang(config.lang);
+  const placeholder = config.placeholder ?? t('ai.placeholder', lang);
 
   const sessionId = useMemo(() => generateSessionId(articleContext), [articleContext]);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -514,15 +585,21 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
     messages: liveMessages,
     sendMessage: liveSendMessage,
     setMessages: liveSetMessages,
+    regenerate,
     status: liveStatus,
     error: liveError,
   } = useChat({
     transport,
-    initialMessages: [welcomeMessage],
     onError: (err) => {
       console.error('[ChatPanel] Chat error:', err.message);
     },
   });
+
+  useEffect(() => {
+    if (liveMessages.length === 0) {
+      liveSetMessages([welcomeMessage]);
+    }
+  }, []);
 
   // ── Mock Mode ───────────────────────────────────────────────
 
@@ -533,16 +610,6 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
   const isStreaming = isMockMode ? mockChat.isStreaming : (liveStatus === 'streaming' || liveStatus === 'submitted');
   const error = isMockMode ? null : liveError;
 
-  // Last user message text — used for retry when request fails
-  const lastUserMessageText = useMemo(() => {
-    for (let i = liveMessages.length - 1; i >= 0; i--) {
-      const msg = liveMessages[i];
-      if (msg.role === 'user') return getTextFromMessage(msg);
-    }
-    return '';
-  }, [liveMessages]);
-
-  // Extract status from latest assistant message metadata
   useEffect(() => {
     if (isMockMode || !liveMessages.length) return;
     for (let i = liveMessages.length - 1; i >= 0; i--) {
@@ -651,6 +718,8 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
   const renderLiveMessages = () => {
     const showQuickPrompts = liveMessages.length <= 1;
     const lastAssistantMsgId = [...liveMessages].reverse().find(m => m.role === 'assistant')?.id;
+    const lastMessage = liveMessages[liveMessages.length - 1];
+    const isWaitingForAssistant = isStreaming && lastMessage?.role === 'user';
 
     return (
       <>
@@ -685,13 +754,21 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
               <div class={msg.role === 'user'
                 ? 'max-w-[82%] rounded-2xl rounded-br-md bg-accent px-3 py-2 text-[13px] leading-relaxed text-background'
                 : 'min-w-0 flex-1 pt-0.5 text-[13px] leading-relaxed text-foreground'}>
-                {text
-                  ? isAssistant ? <AssistantMessage message={msg} isStreaming={isLastAssistantStreaming} /> : text
-                  : isStreaming ? <TypingDots statusMessage={statusMessage} /> : null}
+                {isAssistant
+                  ? <AssistantMessage message={msg} isStreaming={isLastAssistantStreaming} lang={lang} />
+                  : text}
               </div>
             </div>
           );
         })}
+        {isWaitingForAssistant && (
+          <div class="flex items-start gap-2.5">
+            <BotAvatar />
+            <div class="min-w-0 flex-1 pt-0.5">
+              <ReasoningBlock text="" isStreaming={true} lang={lang} />
+            </div>
+          </div>
+        )}
       </>
     );
   };
@@ -708,30 +785,30 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
             <BotIcon class="size-3 text-accent" />
           </div>
           <div class="flex flex-col">
-            <span class="text-[13px] font-semibold text-foreground">AI Assistant</span>
+            <span class="text-[13px] font-semibold text-foreground">{t('ai.assistantName', lang)}</span>
             {articleContext && (
               <span class="max-w-[180px] truncate text-[10px] text-foreground-soft">
-                {isZh ? '正在阅读' : 'Reading'}：{articleContext.title}
+                {t('ai.header.reading', lang)}{articleContext.title}
               </span>
             )}
           </div>
           <span class={`rounded-full px-1.5 py-px text-[10px] font-medium ${
             isMockMode ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-green-500/15 text-green-600 dark:text-green-400'
           }`}>
-            {isMockMode ? 'Mock' : 'Live'}
+            {isMockMode ? t('ai.header.mode', lang) : t('ai.status.live', lang)}
           </span>
         </div>
         <div class="flex items-center gap-0.5">
           <button type="button" onClick={handleClear}
             class="rounded-md p-1 text-foreground-soft transition-colors hover:bg-muted/60 hover:text-foreground"
-            title={isZh ? '清除' : 'Clear'}>
+            title={t('ai.clear', lang)}>
             <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
             </svg>
           </button>
           <button type="button" onClick={onClose}
             class="rounded-md p-1 text-foreground-soft transition-colors hover:bg-muted/60 hover:text-foreground"
-            title={isZh ? '关闭' : 'Close'}>
+            title={t('ai.close', lang)}>
             <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 6 6 18" /><path d="m6 6 12 12" />
             </svg>
@@ -748,11 +825,11 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
             <div class="flex items-start gap-2.5">
               <BotAvatar />
               <div class="flex flex-col gap-1 pt-0.5">
-                <p class="text-[13px] text-amber-600 dark:text-amber-400">{parseErrorMessage(error)}</p>
-                {isRetryable(error) && lastUserMessageText && (
-                  <button type="button" onClick={() => doSend(lastUserMessageText)}
+                <p class="text-[13px] text-amber-600 dark:text-amber-400">{parseErrorMessage(error, lang)}</p>
+                {isRetryable(error) && (
+                  <button type="button" onClick={() => regenerate()}
                     class="self-start rounded-md border border-amber-500/30 px-2 py-0.5 text-[11px] text-amber-600 transition-colors hover:bg-amber-500/10 dark:text-amber-400">
-                    {isZh ? '重试' : 'Retry'}
+                    {t('ai.retry', lang)}
                   </button>
                 )}
               </div>

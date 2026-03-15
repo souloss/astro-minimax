@@ -3,7 +3,7 @@
   "type": "module",
   "version": "5.5.1",
   "scripts": {
-    "dev": "astro dev & node dev-ai-server.mjs & wait",
+    "dev": "concurrently -n \"astro,ai\" -c \"blue,green\" \"astro dev\" \"node dev-ai-server.mjs\"",
     "dev:astro": "astro dev",
     "dev:ai": "node dev-ai-server.mjs",
     "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",
@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.7",
+    "concurrently": "^9.1.2",
     "@cloudflare/workers-types": "^4.20260313.1",
     "@pagefind/default-ui": "^1.4.0",
     "@shikijs/transformers": "^4.0.2",

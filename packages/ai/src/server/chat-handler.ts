@@ -5,6 +5,7 @@ import {
   streamText,
   convertToModelMessages,
 } from 'ai';
+import { t, getLang } from '../utils/i18n.js';
 import {
   getClientIP,
   checkRateLimit,
@@ -108,32 +109,33 @@ function buildArticleContextPrompt(context: ChatContext): string {
 
 export async function handleChatRequest(options: ChatHandlerOptions): Promise<Response> {
   const { env, request: req } = options;
+  const lang = getLang(env.SITE_LANG as string | undefined);
 
   if (req.method === 'OPTIONS') return corsPreflightResponse();
-  if (req.method !== 'POST') return errors.methodNotAllowed();
+  if (req.method !== 'POST') return errors.methodNotAllowed(lang);
 
   const ip = getClientIP(req);
   const rateCheck = checkRateLimit(ip, env as Record<string, string | undefined>);
-  if (!rateCheck.allowed) return rateLimitResponse(rateCheck);
+  if (!rateCheck.allowed) return rateLimitResponse(rateCheck, lang);
 
   let body: ChatRequestBody;
   try {
     body = await req.json();
   } catch {
-    return errors.invalidRequest('请求格式错误');
+    return errors.invalidRequest(t('ai.error.format', lang));
   }
 
   const context: ChatContext = body.context ?? { scope: 'global' };
   const rawMessages = (body.messages ?? []).slice(-MAX_HISTORY_MESSAGES);
-  if (!rawMessages.length) return errors.emptyMessage();
+  if (!rawMessages.length) return errors.emptyMessage(lang);
 
   const messages = filterValidMessages(rawMessages);
-  if (!messages.length) return errors.emptyMessage();
+  if (!messages.length) return errors.emptyMessage(lang);
 
   const latestMessage = messages[messages.length - 1];
   const latestText = getMessageText(latestMessage);
-  if (!latestText) return errors.emptyContent();
-  if (latestText.length > MAX_INPUT_LENGTH) return errors.inputTooLong(MAX_INPUT_LENGTH);
+  if (!latestText) return errors.emptyContent(lang);
+  if (latestText.length > MAX_INPUT_LENGTH) return errors.inputTooLong(MAX_INPUT_LENGTH, lang);
 
   const requestAbort = new AbortController();
   const requestTimer = setTimeout(() => requestAbort.abort(), REQUEST_TIMEOUT_MS);
@@ -141,9 +143,9 @@ export async function handleChatRequest(options: ChatHandlerOptions): Promise<Re
   try {
     return await runPipeline({ env, messages, latestText, context, req, requestAbort });
   } catch (err) {
-    if (requestAbort.signal.aborted) return errors.timeout();
+    if (requestAbort.signal.aborted) return errors.timeout(lang);
     console.error('[chat-handler] Unexpected error:', err);
-    return errors.internal();
+    return errors.internal(undefined, lang);
   } finally {
     clearTimeout(requestTimer);
   }
@@ -315,7 +317,7 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
           type: 'message-metadata',
           messageMetadata: createChatStatusData({
             stage: 'search',
-            message: `找到 ${articleCount} 篇相关内容`,
+            message: t('ai.status.found', lang, { count: articleCount }),
             progress: 40,
           }),
         });
@@ -345,7 +347,7 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
           type: 'message-metadata',
           messageMetadata: createChatStatusData({
             stage: 'answer',
-            message: '已基于公开记录直接给出回答',
+            message: t('ai.status.citation', lang),
             progress: 100,
             done: true,
           }),
@@ -363,7 +365,7 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
         type: 'message-metadata',
         messageMetadata: createChatStatusData({
           stage: 'answer',
-          message: '正在生成回答...',
+          message: t('ai.status.generating', lang),
           progress: 60,
         }),
       });
@@ -379,6 +381,9 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
             messages: await convertToModelMessages(messages),
             temperature: 0.3,
             maxOutputTokens: 2500,
+            onError: ({ error }) => {
+              console.error('[chat-handler] streamText error:', error);
+            },
           });
 
           let hasTextOutput = false;
@@ -411,12 +416,12 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
       // Fallback to mock if real provider didn't produce output
       if (!streamSuccess) {
         const { getMockResponse } = await import('../providers/mock.js');
-        const mockText = getMockResponse(latestText, (env.SITE_LANG as string) || 'zh');
+        const mockText = getMockResponse(latestText, lang);
         writer.write({
           type: 'message-metadata',
           messageMetadata: createChatStatusData({
             stage: 'answer',
-            message: 'AI 服务不可用，使用演示模式回复',
+            message: t('ai.status.fallback', lang),
             progress: 80,
           }),
         });

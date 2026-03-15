@@ -3,6 +3,8 @@
  * Tiers: burst (short), sustained (medium), daily (long).
  */
 
+import { t } from '../utils/i18n.js';
+
 interface RateLimitWindow {
   maxRequests: number;
   windowMs: number;
@@ -148,17 +150,20 @@ export function checkRateLimit(
   };
 }
 
-const RATE_LIMIT_MESSAGES: Record<string, string> = {
-  burst: '请求太频繁，请稍后再试',
-  sustained: '请求次数过多，请一分钟后再试',
-  daily: '今日对话次数已达上限，请明天再来',
-};
+function getRateLimitMessage(triggeredBy: 'burst' | 'sustained' | 'daily', lang?: string): string {
+  const keyMap = {
+    burst: 'ai.error.rateLimit.burst',
+    sustained: 'ai.error.rateLimit.sustained',
+    daily: 'ai.error.rateLimit.daily',
+  } as const;
+  return t(keyMap[triggeredBy], lang ?? 'zh');
+}
 
 /**
  * Builds a 429 response for a rejected rate limit check.
  */
-export function rateLimitResponse(result: RateLimitResult): Response {
-  const message = RATE_LIMIT_MESSAGES[result.triggeredBy ?? 'burst'];
+export function rateLimitResponse(result: RateLimitResult, lang?: string): Response {
+  const message = getRateLimitMessage(result.triggeredBy ?? 'burst', lang);
   const retryAfterSeconds = Math.ceil(result.retryAfterMs / 1000);
 
   return new Response(JSON.stringify({ error: message }), {
