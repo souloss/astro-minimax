@@ -24,9 +24,9 @@ export const SITE: SiteConfig = {
     archives: true,
     search: true,
     darkMode: true,
-    // friends: false,
-    // projects: false,
-    // ai: false,
+    friends: false,
+    projects: false,
+    ai: false,  // 启用 AI 聊天功能需安装 @astro-minimax/ai
     // waline: false,
     // sponsor: false,
   },
@@ -40,5 +40,16 @@ export const SITE: SiteConfig = {
       { key: "archives", enabled: true },
       { key: "about", enabled: true },
     ],
+  },
+
+  // AI 聊天配置 (需要安装 @astro-minimax/ai)
+  ai: {
+    enabled: false,
+    mockMode: false,
+    apiEndpoint: "/api/chat",
+  },
+
+  get showArchives() {
+    return this.features?.archives ?? true;
   },
 };
