@@ -42,7 +42,8 @@ astro-minimax is a minimal, modern, and modular Astro blog theme. Built on a min
 
 ### Interactive Features
 
-- [x] 🤖 **AI Chat Widget** — Multi-provider AI assistant with automatic failover
+- [x] 🤖 **AI Chat Widget** — Multi-provider AI assistant with RAG, streaming, and automatic failover
+- [x] 📖 **Read & Chat** — AI reading companion on article pages with context-aware responses
 - [x] 💬 **Waline Comments** — Interactive comment system
 - [x] 📊 **Umami Analytics** — Privacy-friendly web analytics
 - [x] ☕ **Sponsorship** — Support multiple payment methods

@@ -152,6 +152,14 @@ if (hasAPIKey()) {
 }
 ```
 
+### URL 策略
+
+工具脚本生成的 URL 均为**相对路径**（如 `/zh/my-post`），不包含域名前缀。在 AI 对话运行时，`initializeMetadata()` 会根据 `SITE_URL` 环境变量动态拼接完整 URL。这使得生成的数据文件与部署环境无关。
+
+### 数据文件与 AI 对话的关系
+
+`datas/` 目录中的 JSON 文件在运行时被 `@astro-minimax/ai/server` 的 `initializeMetadata()` 加载，用于构建搜索索引和系统提示词上下文。
+
 ### 代理支持
 
 脚本自动支持 `HTTP_PROXY` / `HTTPS_PROXY` 环境变量，无需额外配置。

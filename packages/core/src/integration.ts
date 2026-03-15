@@ -1,6 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { AstroIntegration } from "astro";
 import type { SiteConfig, SocialLink, FriendLink } from "./types";
@@ -66,6 +66,7 @@ export default function minimax(
                     "virtual:astro-minimax/user-data",
                     "virtual:astro-minimax/styles",
                     "virtual:astro-minimax/ai-widget",
+                    "virtual:astro-minimax/ai-summaries",
                   ];
                   if (virtuals.includes(id)) {
                     if (id === "virtual:astro-minimax/styles") return entryPath;
@@ -93,6 +94,18 @@ export default function minimax(
                       return `export { default } from "@astro-minimax/ai/components/AIChatWidget.astro";`;
                     }
                     return `export default function() { return null; }`;
+                  }
+                  if (id === "\0virtual:astro-minimax/ai-summaries") {
+                    const summariesPath = resolve(projectRoot, "datas", "ai-summaries.json");
+                    if (installedPkgs.has("@astro-minimax/ai") && existsSync(summariesPath)) {
+                      try {
+                        const data = JSON.parse(readFileSync(summariesPath, "utf-8"));
+                        return `export default ${JSON.stringify(data)};`;
+                      } catch {
+                        // fallback to empty
+                      }
+                    }
+                    return "export default { meta: {}, articles: {} };";
                   }
                 },
               },

@@ -101,6 +101,14 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss() as never],
+    server: {
+      proxy: {
+        "/api": {
+          target: `http://localhost:${process.env.AI_DEV_PORT || "8787"}`,
+          changeOrigin: true,
+        },
+      },
+    },
     resolve: {
       alias: [
         { find: "@/components/media", replacement: new URL("../../packages/viz/src/components", import.meta.url).pathname },

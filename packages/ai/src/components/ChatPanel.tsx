@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
+import type { UIMessage } from 'ai';
 import { getMockResponse, createMockStream } from '../providers/mock.js';
+import type { ArticleChatContext, ChatStatusData } from '../server/types.js';
+import { isChatStatusData } from '../server/types.js';
 
 export interface AIChatConfig {
   enabled?: boolean;
@@ -11,86 +16,130 @@ export interface AIChatConfig {
   lang?: string;
 }
 
+interface ChatPanelProps {
+  open: boolean;
+  onClose: () => void;
+  config: AIChatConfig;
+  articleContext?: ArticleChatContext;
+}
+
 const MIN_SEND_INTERVAL_MS = 500;
 
-function generateSessionId(): string {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
+function generateSessionId(articleContext?: ArticleChatContext): string {
+  if (articleContext?.slug) return `article:${articleContext.slug}`;
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 }
 
-// ---- AI SDK UI Message Stream parser ----
-
-async function consumeAIStream(
-  response: Response,
-  onDelta: (text: string) => void,
-  onFinish: () => void,
-  onError: (msg: string) => void,
-) {
-  const reader = response.body?.getReader();
-  if (!reader) { onError('No response body'); return; }
-  const decoder = new TextDecoder();
-  let buffer = '';
-
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() ?? '';
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || !trimmed.startsWith('data:')) continue;
-
-        const jsonStr = trimmed.slice(5).trim();
-        if (!jsonStr || jsonStr === '[DONE]') continue;
-
-        let event: Record<string, unknown>;
-        try {
-          event = JSON.parse(jsonStr);
-        } catch (parseError) {
-          console.warn('[AI Stream] JSON parse error:', parseError, 'in:', jsonStr.slice(0, 100));
-          continue;
-        }
-
-        const type = event.type as string;
-
-        if (type === 'text-delta') {
-          const delta = event.delta;
-          if (typeof delta === 'string' && delta) {
-            onDelta(delta);
-          }
-        } else if (type === 'error') {
-          const errorText = String(event.errorText || event.error || 'Stream error');
-          onError(errorText);
-        }
-      }
-    }
-
-    if (buffer.trim().startsWith('data:')) {
-      const jsonStr = buffer.trim().slice(5).trim();
-      if (jsonStr && jsonStr !== '[DONE]') {
-        try {
-          const event = JSON.parse(jsonStr) as Record<string, unknown>;
-          if (event.type === 'text-delta' && typeof event.delta === 'string') {
-            onDelta(event.delta);
-          }
-        } catch { /* ignore */ }
-      }
-    }
-  } catch (err) {
-    onError(err instanceof Error ? err.message : 'Stream failed');
-  } finally {
-    onFinish();
-  }
+function getTextFromMessage(message: UIMessage): string {
+  const parts = message.parts ?? [];
+  return Array.isArray(parts)
+    ? parts
+        .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+        .map(p => p.text)
+        .join('')
+    : '';
 }
 
-// ---- Rich text rendering (Markdown links → clickable) ----
+// ── Quick Prompts ─────────────────────────────────────────────
 
-function RichText({ text }: { text: string }) {
+const QUICK_PROMPTS_ZH = ['这个博客用了什么技术？', '有哪些文章推荐？', '怎么搭建类似的博客？'];
+const QUICK_PROMPTS_EN = ['What tech stack is used?', 'Recommend some articles?', 'How to build a similar blog?'];
+
+function getQuickPrompts(lang: string, articleContext?: ArticleChatContext): string[] {
+  const isZh = lang !== 'en';
+  if (!articleContext) return isZh ? QUICK_PROMPTS_ZH : QUICK_PROMPTS_EN;
+
+  if (isZh) {
+    const prompts = [`总结一下《${articleContext.title}》的核心观点`];
+    if (articleContext.keyPoints?.length) {
+      prompts.push(`解释一下「${articleContext.keyPoints[0]}」`);
+    }
+    prompts.push('这篇文章和哪些内容相关？');
+    return prompts;
+  }
+  const prompts = [`Summarize the key points of "${articleContext.title}"`];
+  if (articleContext.keyPoints?.length) {
+    prompts.push(`Explain "${articleContext.keyPoints[0]}"`);
+  }
+  prompts.push('What related content should I read next?');
+  return prompts;
+}
+
+// ── Welcome Message ───────────────────────────────────────────
+
+function buildWelcomeMessage(config: AIChatConfig, articleContext?: ArticleChatContext): UIMessage {
+  const lang = config.lang ?? 'zh';
+  const isZh = lang !== 'en';
+
+  let text: string;
+  if (articleContext) {
+    text = isZh
+      ? `我在结合《${articleContext.title}》陪你阅读。\n你可以让我总结这篇文章、解释某个观点，或者顺着这篇文章继续延伸到相关主题。`
+      : `I'm reading "${articleContext.title}" with you.\nAsk me to summarize, explain a concept, or explore related topics.`;
+  } else {
+    text = config.welcomeMessage ?? (isZh
+      ? '你好！我是博客 AI 助手，问我任何关于博客内容的问题，我可以帮你找到相关文章。'
+      : "Hi! I'm the blog AI assistant. Ask me anything and I'll help you find related articles.");
+  }
+
+  return {
+    id: 'welcome',
+    role: 'assistant' as const,
+    parts: [{ type: 'text' as const, text }],
+  };
+}
+
+// ── Error Helpers ─────────────────────────────────────────────
+
+function parseErrorMessage(error: Error): string {
+  try {
+    const parsed = JSON.parse(error.message);
+    if (parsed?.error) return parsed.error;
+  } catch { /* not JSON */ }
+  const msg = error.message;
+  if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return '网络连接失败，请检查网络';
+  if (msg.includes('aborted')) return '请求已取消';
+  if (msg.includes('429') || msg.includes('rate')) return '请求太频繁，请稍后再试';
+  if (msg.includes('503') || msg.includes('不可用')) return 'AI 对话暂时不可用';
+  return '出了点问题，请稍后再试';
+}
+
+function isRetryable(error: Error): boolean {
+  try {
+    const parsed = JSON.parse(error.message);
+    if (typeof parsed?.retryable === 'boolean') return parsed.retryable;
+  } catch { /* not JSON */ }
+  return true;
+}
+
+// ── Rich Text Rendering ───────────────────────────────────────
+
+type InlinePart =
+  | { type: 'text'; text: string }
+  | { type: 'link'; label: string; url: string }
+  | { type: 'bold'; text: string }
+  | { type: 'code'; text: string };
+
+function parseInlineMarkdown(text: string): InlinePart[] {
+  const parts: InlinePart[] = [];
+  const re = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|`([^`]+)`/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', text: text.slice(lastIndex, match.index) });
+    }
+    if (match[1] && match[2]) parts.push({ type: 'link', label: match[1], url: match[2] });
+    else if (match[3]) parts.push({ type: 'bold', text: match[3] });
+    else if (match[4]) parts.push({ type: 'code', text: match[4] });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) parts.push({ type: 'text', text: text.slice(lastIndex) });
+  return parts;
+}
+
+function InlineRichText({ text }: { text: string }) {
   const parts = useMemo(() => parseInlineMarkdown(text), [text]);
   return (
     <span>
@@ -98,13 +147,9 @@ function RichText({ text }: { text: string }) {
         if (p.type === 'link') {
           const isExternal = p.url.startsWith('http');
           return (
-            <a
-              key={i}
-              href={p.url}
+            <a key={i} href={p.url}
               class="inline-flex items-center gap-0.5 font-medium text-accent underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
-              target={isExternal ? '_blank' : undefined}
-              rel={isExternal ? 'noopener noreferrer' : undefined}
-            >
+              target={isExternal ? '_blank' : undefined} rel={isExternal ? 'noopener noreferrer' : undefined}>
               {p.label}
               {isExternal && <ExternalLinkIcon />}
             </a>
@@ -118,32 +163,170 @@ function RichText({ text }: { text: string }) {
   );
 }
 
-type InlinePart =
-  | { type: 'text'; text: string }
-  | { type: 'link'; label: string; url: string }
-  | { type: 'bold'; text: string }
-  | { type: 'code'; text: string };
+// ── Block-level Markdown Rendering ────────────────────────────
 
-function parseInlineMarkdown(text: string): InlinePart[] {
-  const parts: InlinePart[] = [];
-  // Matches: [label](url), **bold**, `code`
-  const re = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|`([^`]+)`/g;
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  while ((match = re.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({ type: 'text', text: text.slice(lastIndex, match.index) });
-    }
-    if (match[1] && match[2]) parts.push({ type: 'link', label: match[1], url: match[2] });
-    else if (match[3]) parts.push({ type: 'bold', text: match[3] });
-    else if (match[4]) parts.push({ type: 'code', text: match[4] });
-    lastIndex = match.index + match[0].length;
-  }
-  if (lastIndex < text.length) {
-    parts.push({ type: 'text', text: text.slice(lastIndex) });
-  }
-  return parts;
+interface BlockNode {
+  type: 'paragraph' | 'code-block' | 'blockquote' | 'list';
+  content: string;
+  lang?: string;
+  ordered?: boolean;
+  items?: string[];
 }
+
+function parseBlocks(text: string): BlockNode[] {
+  const lines = text.split('\n');
+  const blocks: BlockNode[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Fenced code block
+    if (line.startsWith('```')) {
+      const lang = line.slice(3).trim();
+      const codeLines: string[] = [];
+      i++;
+      while (i < lines.length && !lines[i].startsWith('```')) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      if (i < lines.length) i++; // skip closing ```
+      blocks.push({ type: 'code-block', content: codeLines.join('\n'), lang: lang || undefined });
+      continue;
+    }
+
+    // Blockquote (consecutive > lines)
+    if (line.startsWith('> ') || line === '>') {
+      const quoteLines: string[] = [];
+      while (i < lines.length && (lines[i].startsWith('> ') || lines[i] === '>')) {
+        quoteLines.push(lines[i].replace(/^>\s?/, ''));
+        i++;
+      }
+      blocks.push({ type: 'blockquote', content: quoteLines.join('\n') });
+      continue;
+    }
+
+    // Unordered list (- or *)
+    if (/^[-*]\s/.test(line)) {
+      const items: string[] = [];
+      while (i < lines.length && /^[-*]\s/.test(lines[i])) {
+        items.push(lines[i].replace(/^[-*]\s/, ''));
+        i++;
+      }
+      blocks.push({ type: 'list', content: '', ordered: false, items });
+      continue;
+    }
+
+    // Ordered list (1. 2. etc)
+    if (/^\d+\.\s/.test(line)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
+        items.push(lines[i].replace(/^\d+\.\s/, ''));
+        i++;
+      }
+      blocks.push({ type: 'list', content: '', ordered: true, items });
+      continue;
+    }
+
+    // Empty line - skip
+    if (!line.trim()) {
+      i++;
+      continue;
+    }
+
+    // Regular paragraph (collect consecutive non-special lines)
+    const paraLines: string[] = [];
+    while (i < lines.length && lines[i].trim() && !lines[i].startsWith('```') &&
+      !lines[i].startsWith('> ') && lines[i] !== '>' &&
+      !/^[-*]\s/.test(lines[i]) && !/^\d+\.\s/.test(lines[i])) {
+      paraLines.push(lines[i]);
+      i++;
+    }
+    if (paraLines.length) {
+      blocks.push({ type: 'paragraph', content: paraLines.join('\n') });
+    }
+  }
+
+  return blocks;
+}
+
+function RichText({ text }: { text: string }) {
+  const blocks = useMemo(() => parseBlocks(text), [text]);
+  return (
+    <div class="space-y-2">
+      {blocks.map((block, i) => {
+        switch (block.type) {
+          case 'code-block':
+            return (
+              <pre key={i} class="overflow-x-auto rounded-md bg-muted/60 px-3 py-2 text-[12px] leading-relaxed font-mono">
+                <code>{block.content}</code>
+              </pre>
+            );
+          case 'blockquote':
+            return (
+              <blockquote key={i} class="border-l-2 border-accent/40 pl-3 text-foreground-soft italic">
+                <InlineRichText text={block.content} />
+              </blockquote>
+            );
+          case 'list':
+            if (block.ordered) {
+              return (
+                <ol key={i} class="list-decimal space-y-0.5 pl-5">
+                  {block.items?.map((item, j) => (
+                    <li key={j}><InlineRichText text={item} /></li>
+                  ))}
+                </ol>
+              );
+            }
+            return (
+              <ul key={i} class="list-disc space-y-0.5 pl-5">
+                {block.items?.map((item, j) => (
+                  <li key={j}><InlineRichText text={item} /></li>
+                ))}
+              </ul>
+            );
+          case 'paragraph':
+          default:
+            return (
+              <p key={i} class="whitespace-pre-wrap"><InlineRichText text={block.content} /></p>
+            );
+        }
+      })}
+    </div>
+  );
+}
+
+// ── Message Rendering (parts-based) ──────────────────────────
+
+function AssistantMessage({ message }: { message: UIMessage }) {
+  const text = getTextFromMessage(message);
+  if (!text) return null;
+
+  const sources = message.parts.filter(p => p.type === 'source');
+
+  return (
+    <div class="space-y-1.5">
+      <RichText text={text} />
+      {sources.length > 0 && (
+        <div class="mt-2 flex flex-wrap gap-1.5">
+          {sources.map((s, i) => (
+            <a key={i} href={(s as { url?: string }).url ?? '#'}
+              class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/30 px-2 py-0.5 text-[11px] text-foreground-soft transition-colors hover:border-accent/40 hover:text-foreground"
+              target="_blank" rel="noopener noreferrer">
+              <svg class="size-2.5 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+              {(s as { title?: string }).title ?? 'Source'}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Small Components ──────────────────────────────────────────
 
 function ExternalLinkIcon() {
   return (
@@ -153,70 +336,55 @@ function ExternalLinkIcon() {
   );
 }
 
-// ---- Message types ----
+function BotAvatar() {
+  return (
+    <div class="flex size-5.5 shrink-0 items-center justify-center rounded-full bg-accent/15 mt-0.5">
+      <BotIcon class="size-3 text-accent" />
+    </div>
+  );
+}
 
-interface ChatMessage {
+function BotIcon({ class: cls }: { class?: string }) {
+  return (
+    <svg class={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
+      <path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" />
+    </svg>
+  );
+}
+
+function TypingDots({ statusMessage }: { statusMessage?: string }) {
+  return (
+    <div class="flex items-center gap-2">
+      <span class="inline-flex gap-1">
+        <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:0ms]" />
+        <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:150ms]" />
+        <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:300ms]" />
+      </span>
+      {statusMessage && (
+        <span class="text-[11px] text-foreground-soft">{statusMessage}</span>
+      )}
+    </div>
+  );
+}
+
+// ── Mock Mode Chat ────────────────────────────────────────────
+
+interface MockMessage {
   id: string;
   role: 'user' | 'assistant';
   text: string;
   streaming?: boolean;
 }
 
-// ---- Quick suggestion chips ----
-
-const QUICK_PROMPTS_ZH = ['这个博客用了什么技术？', '有哪些文章推荐？', '怎么搭建类似的博客？'];
-const QUICK_PROMPTS_EN = ['What tech stack is used?', 'Recommend some articles?', 'How to build a similar blog?'];
-
-// ---- Main ChatPanel ----
-
-interface ChatPanelProps {
-  open: boolean;
-  onClose: () => void;
-  config: AIChatConfig;
-}
-
-export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
-  const isMockMode = config.mockMode || !config.apiEndpoint;
-  const lang = config.lang ?? 'zh';
-  const isZh = lang !== 'en';
-  const placeholder = config.placeholder ?? (isZh ? '输入你的问题...' : 'Ask a question...');
-  const welcomeMessage = config.welcomeMessage ?? (isZh
-    ? '你好！我是博客 AI 助手，问我任何关于博客内容的问题，我可以帮你找到相关文章。'
-    : "Hi! I'm the blog AI assistant. Ask me anything and I'll help you find related articles.");
-
-  const sessionId = useMemo(() => generateSessionId(), []);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const lastSendRef = useRef(0);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputValue, setInputValue] = useState('');
+function useMockChat(lang: string) {
+  const [messages, setMessages] = useState<MockMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
-  const [cooldown, setCooldown] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const quickPrompts = isZh ? QUICK_PROMPTS_ZH : QUICK_PROMPTS_EN;
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 150);
-  }, [open]);
-
-  // Auto-resize textarea
-  const autoResize = useCallback(() => {
-    const el = inputRef.current;
-    if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 96) + 'px';
-  }, []);
-
-  const sendMockMessage = useCallback(async (text: string) => {
-    const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: 'user', text };
+  const sendMessage = useCallback(async (text: string) => {
+    const userMsg: MockMessage = { id: `u-${Date.now()}`, role: 'user', text };
     const assistantId = `a-${Date.now()}`;
-    const assistantMsg: ChatMessage = { id: assistantId, role: 'assistant', text: '', streaming: true };
+    const assistantMsg: MockMessage = { id: assistantId, role: 'assistant', text: '', streaming: true };
     setMessages(prev => [...prev, userMsg, assistantMsg]);
     setIsStreaming(true);
 
@@ -236,55 +404,109 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
     }
   }, [lang]);
 
-  const sendLiveMessage = useCallback(async (text: string) => {
-    const userMsg: ChatMessage = { id: `u-${Date.now()}`, role: 'user', text };
-    const assistantId = `a-${Date.now()}`;
-    const assistantMsg: ChatMessage = { id: assistantId, role: 'assistant', text: '', streaming: true };
-    setMessages(prev => [...prev, userMsg, assistantMsg]);
-    setIsStreaming(true);
-    setError(null);
+  const clear = useCallback(() => setMessages([]), []);
 
-    const uiMessages = [...messages, userMsg].map(m => ({
-      id: m.id, role: m.role,
-      parts: [{ type: 'text', text: m.text }],
-    }));
+  return { messages, isStreaming, sendMessage, clear };
+}
 
-    let accumulated = '';
+// ── Main ChatPanel ────────────────────────────────────────────
 
-    try {
-      const response = await fetch(config.apiEndpoint ?? '/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-session-id': sessionId },
-        body: JSON.stringify({ messages: uiMessages }),
-      });
+export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelProps) {
+  const isMockMode = config.mockMode || !config.apiEndpoint;
+  const lang = config.lang ?? 'zh';
+  const isZh = lang !== 'en';
+  const placeholder = config.placeholder ?? (isZh ? '输入你的问题...' : 'Ask a question...');
 
-      if (!response.ok) {
-        let errMsg = `HTTP ${response.status}`;
-        try { const b = await response.json() as { error?: string }; errMsg = b.error ?? errMsg; } catch { /* use status */ } 
-        setError(errMsg);
-        setMessages(prev => prev.filter(m => m.id !== assistantId));
-        setIsStreaming(false);
+  const sessionId = useMemo(() => generateSessionId(articleContext), [articleContext]);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const lastSendRef = useRef(0);
+  const [inputValue, setInputValue] = useState('');
+  const [cooldown, setCooldown] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string>();
+
+  const quickPrompts = useMemo(() => getQuickPrompts(lang, articleContext), [lang, articleContext]);
+  const welcomeMessage = useMemo(() => buildWelcomeMessage(config, articleContext), [config, articleContext]);
+
+  // ── Live Mode (useChat) ─────────────────────────────────────
+
+  const transport = useMemo(() => new DefaultChatTransport({
+    api: config.apiEndpoint ?? '/api/chat',
+    prepareSendMessagesRequest: ({ id, messages: msgs }) => ({
+      headers: { 'x-session-id': sessionId },
+      body: {
+        id, messages: msgs,
+        context: articleContext
+          ? { scope: 'article' as const, article: articleContext }
+          : { scope: 'global' as const },
+      },
+    }),
+  }), [config.apiEndpoint, sessionId, articleContext]);
+
+  const {
+    messages: liveMessages,
+    sendMessage: liveSendMessage,
+    setMessages: liveSetMessages,
+    status: liveStatus,
+    error: liveError,
+  } = useChat({
+    transport,
+    initialMessages: [welcomeMessage],
+    onError: (err) => {
+      console.error('[ChatPanel] Chat error:', err.message);
+    },
+  });
+
+  // ── Mock Mode ───────────────────────────────────────────────
+
+  const mockChat = useMockChat(lang);
+
+  // ── Unified State ───────────────────────────────────────────
+
+  const isStreaming = isMockMode ? mockChat.isStreaming : (liveStatus === 'streaming' || liveStatus === 'submitted');
+  const error = isMockMode ? null : liveError;
+
+  // Last user message text — used for retry when request fails
+  const lastUserMessageText = useMemo(() => {
+    for (let i = liveMessages.length - 1; i >= 0; i--) {
+      const msg = liveMessages[i];
+      if (msg.role === 'user') return getTextFromMessage(msg);
+    }
+    return '';
+  }, [liveMessages]);
+
+  // Extract status from latest assistant message metadata
+  useEffect(() => {
+    if (isMockMode || !liveMessages.length) return;
+    for (let i = liveMessages.length - 1; i >= 0; i--) {
+      const msg = liveMessages[i];
+      if (msg.role === 'assistant' && isChatStatusData(msg.metadata)) {
+        setStatusMessage((msg.metadata as ChatStatusData).message);
         return;
       }
-
-      await consumeAIStream(
-        response,
-        (delta) => {
-          accumulated += delta;
-          setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, text: accumulated } : m));
-        },
-        () => {
-          setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, streaming: false } : m));
-          setIsStreaming(false);
-        },
-        (errMsg) => { setError(errMsg); setIsStreaming(false); },
-      );
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Connection failed');
-      setMessages(prev => prev.filter(m => m.id !== assistantId));
-      setIsStreaming(false);
     }
-  }, [messages, config.apiEndpoint, sessionId]);
+    setStatusMessage(undefined);
+  }, [liveMessages, isMockMode]);
+
+  // ── Scroll & Focus ──────────────────────────────────────────
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [liveMessages, mockChat.messages]);
+
+  useEffect(() => {
+    if (open) setTimeout(() => inputRef.current?.focus(), 150);
+  }, [open]);
+
+  const autoResize = useCallback(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 96) + 'px';
+  }, []);
+
+  // ── Send Logic ──────────────────────────────────────────────
 
   const doSend = useCallback((text: string) => {
     const trimmed = text.trim();
@@ -295,40 +517,138 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
     setCooldown(true);
     setTimeout(() => setCooldown(false), MIN_SEND_INTERVAL_MS);
     setInputValue('');
-    setError(null);
-    if (inputRef.current) { inputRef.current.style.height = 'auto'; }
-    if (isMockMode) sendMockMessage(trimmed); else sendLiveMessage(trimmed);
-  }, [isStreaming, cooldown, isMockMode, sendMockMessage, sendLiveMessage]);
+    if (inputRef.current) inputRef.current.style.height = 'auto';
+
+    if (isMockMode) {
+      mockChat.sendMessage(trimmed);
+    } else {
+      liveSendMessage({ text: trimmed });
+    }
+  }, [isStreaming, cooldown, isMockMode, mockChat, liveSendMessage]);
 
   const handleSend = useCallback(() => doSend(inputValue), [doSend, inputValue]);
-
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   }, [handleSend]);
 
   const handleClear = useCallback(() => {
-    setMessages([]);
+    if (isMockMode) {
+      mockChat.clear();
+    } else {
+      liveSetMessages([welcomeMessage]);
+    }
     setInputValue('');
-    setError(null);
-  }, []);
+    setStatusMessage(undefined);
+  }, [isMockMode, mockChat, liveSetMessages, welcomeMessage]);
 
   if (!open) return null;
 
+  // ── Render Messages ─────────────────────────────────────────
+
+  const renderMockMessages = () => (
+    <>
+      {/* Welcome */}
+      {mockChat.messages.length === 0 && (
+        <div class="space-y-3">
+          <div class="flex items-start gap-2.5">
+            <BotAvatar />
+            <p class="min-w-0 flex-1 pt-0.5 text-[13px] leading-relaxed text-foreground">
+              {getTextFromMessage(welcomeMessage)}
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-1.5 pl-8">
+            {quickPrompts.map(q => (
+              <button key={q} type="button" onClick={() => doSend(q)}
+                class="rounded-lg border border-border bg-muted/30 px-2.5 py-1 text-[12px] text-foreground-soft transition-colors hover:border-accent/40 hover:bg-accent/10 hover:text-foreground"
+              >{q}</button>
+            ))}
+          </div>
+        </div>
+      )}
+      {mockChat.messages.map(msg => (
+        <div key={msg.id} class={msg.role === 'user' ? 'flex justify-end' : 'flex items-start gap-2.5'}>
+          {msg.role === 'assistant' && <BotAvatar />}
+          <div class={msg.role === 'user'
+            ? 'max-w-[82%] rounded-2xl rounded-br-md bg-accent px-3 py-2 text-[13px] leading-relaxed text-background'
+            : 'min-w-0 flex-1 pt-0.5 text-[13px] leading-relaxed text-foreground'}>
+            {msg.text
+              ? msg.role === 'assistant'
+                ? <RichText text={msg.text} />
+                : msg.text
+              : msg.streaming ? <TypingDots /> : null}
+          </div>
+        </div>
+      ))}
+    </>
+  );
+
+  const renderLiveMessages = () => {
+    const showQuickPrompts = liveMessages.length <= 1;
+    return (
+      <>
+        {liveMessages.map(msg => {
+          if (msg.id === 'welcome' && showQuickPrompts) {
+            return (
+              <div key={msg.id} class="space-y-3">
+                <div class="flex items-start gap-2.5">
+                  <BotAvatar />
+                  <p class="min-w-0 flex-1 pt-0.5 text-[13px] leading-relaxed text-foreground">
+                    {getTextFromMessage(msg)}
+                  </p>
+                </div>
+                <div class="flex flex-wrap gap-1.5 pl-8">
+                  {quickPrompts.map(q => (
+                    <button key={q} type="button" onClick={() => doSend(q)}
+                      class="rounded-lg border border-border bg-muted/30 px-2.5 py-1 text-[12px] text-foreground-soft transition-colors hover:border-accent/40 hover:bg-accent/10 hover:text-foreground"
+                    >{q}</button>
+                  ))}
+                </div>
+              </div>
+            );
+          }
+
+          const text = getTextFromMessage(msg);
+          const isAssistant = msg.role === 'assistant';
+
+          return (
+            <div key={msg.id} class={msg.role === 'user' ? 'flex justify-end' : 'flex items-start gap-2.5'}>
+              {isAssistant && <BotAvatar />}
+              <div class={msg.role === 'user'
+                ? 'max-w-[82%] rounded-2xl rounded-br-md bg-accent px-3 py-2 text-[13px] leading-relaxed text-background'
+                : 'min-w-0 flex-1 pt-0.5 text-[13px] leading-relaxed text-foreground'}>
+                {text
+                  ? isAssistant ? <AssistantMessage message={msg} /> : text
+                  : isStreaming ? <TypingDots statusMessage={statusMessage} /> : null}
+              </div>
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
-    <div
-      ref={panelRef}
-      data-ai-chat-panel
+    <div ref={panelRef} data-ai-chat-panel
       class="fixed right-4 bottom-20 z-[90] flex w-[370px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl sm:right-6 sm:bottom-20"
-      style={{ height: 'min(520px, calc(100vh - 7rem))' }}
-    >
+      style={{ height: 'min(520px, calc(100vh - 7rem))' }}>
+
       {/* Header */}
       <div class="flex shrink-0 items-center justify-between border-b border-border px-3.5 py-2.5">
         <div class="flex items-center gap-2">
           <div class="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent/15">
             <BotIcon class="size-3 text-accent" />
           </div>
-          <span class="text-[13px] font-semibold text-foreground">AI Assistant</span>
-          <span class={`rounded-full px-1.5 py-px text-[10px] font-medium ${isMockMode ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-green-500/15 text-green-600 dark:text-green-400'}`}>
+          <div class="flex flex-col">
+            <span class="text-[13px] font-semibold text-foreground">AI Assistant</span>
+            {articleContext && (
+              <span class="max-w-[180px] truncate text-[10px] text-foreground-soft">
+                {isZh ? '正在阅读' : 'Reading'}：{articleContext.title}
+              </span>
+            )}
+          </div>
+          <span class={`rounded-full px-1.5 py-px text-[10px] font-medium ${
+            isMockMode ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-green-500/15 text-green-600 dark:text-green-400'
+          }`}>
             {isMockMode ? 'Mock' : 'Live'}
           </span>
         </div>
@@ -353,48 +673,20 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
       {/* Messages */}
       <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3.5 py-3 [scrollbar-width:thin]">
         <div class="space-y-4">
-
-          {/* Welcome */}
-          {messages.length === 0 && (
-            <div class="space-y-3">
-              <div class="flex items-start gap-2.5">
-                <BotAvatar />
-                <p class="min-w-0 flex-1 pt-0.5 text-[13px] leading-relaxed text-foreground">{welcomeMessage}</p>
-              </div>
-              {/* Quick prompts */}
-              <div class="flex flex-wrap gap-1.5 pl-8">
-                {quickPrompts.map((q) => (
-                  <button
-                    key={q}
-                    type="button"
-                    onClick={() => doSend(q)}
-                    class="rounded-lg border border-border bg-muted/30 px-2.5 py-1 text-[12px] text-foreground-soft transition-colors hover:border-accent/40 hover:bg-accent/10 hover:text-foreground"
-                  >{q}</button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Messages */}
-          {messages.map(msg => (
-            <div key={msg.id} class={msg.role === 'user' ? 'flex justify-end' : 'flex items-start gap-2.5'}>
-              {msg.role === 'assistant' && <BotAvatar />}
-              <div class={msg.role === 'user'
-                ? 'max-w-[82%] rounded-2xl rounded-br-md bg-accent px-3 py-2 text-[13px] leading-relaxed text-background'
-                : 'min-w-0 flex-1 pt-0.5 text-[13px] leading-relaxed text-foreground'}>
-                {msg.text
-                  ? msg.role === 'assistant'
-                    ? <AssistantMessage text={msg.text} />
-                    : msg.text
-                  : msg.streaming ? <TypingDots /> : null}
-              </div>
-            </div>
-          ))}
+          {isMockMode ? renderMockMessages() : renderLiveMessages()}
 
           {error && (
             <div class="flex items-start gap-2.5">
               <BotAvatar />
-              <p class="pt-0.5 text-[13px] text-amber-600 dark:text-amber-400">{parseError(error)}</p>
+              <div class="flex flex-col gap-1 pt-0.5">
+                <p class="text-[13px] text-amber-600 dark:text-amber-400">{parseErrorMessage(error)}</p>
+                {isRetryable(error) && lastUserMessageText && (
+                  <button type="button" onClick={() => doSend(lastUserMessageText)}
+                    class="self-start rounded-md border border-amber-500/30 px-2 py-0.5 text-[11px] text-amber-600 transition-colors hover:bg-amber-500/10 dark:text-amber-400">
+                    {isZh ? '重试' : 'Retry'}
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
@@ -402,26 +694,17 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
         </div>
       </div>
 
-      {/* Input area */}
+      {/* Input Area */}
       <div class="shrink-0 border-t border-border px-3 pb-2.5 pt-2">
         <div class="flex items-end gap-1.5 rounded-xl border border-border bg-muted/30 px-2.5 py-1.5 transition-colors focus-within:border-accent/40 focus-within:bg-background">
-          <textarea
-            ref={inputRef}
-            rows={1}
-            value={inputValue}
+          <textarea ref={inputRef} rows={1} value={inputValue}
             onInput={(e) => { setInputValue((e.target as HTMLTextAreaElement).value); autoResize(); }}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            maxLength={500}
+            onKeyDown={handleKeyDown} placeholder={placeholder} maxLength={500}
             class="min-w-0 flex-1 resize-none bg-transparent py-0.5 text-[13px] leading-snug text-foreground outline-none placeholder:text-foreground-soft"
-            style={{ maxHeight: '96px' }}
-          />
-          <button
-            type="button"
-            onClick={handleSend}
+            style={{ maxHeight: '96px' }} />
+          <button type="button" onClick={handleSend}
             disabled={!inputValue.trim() || isStreaming || cooldown}
-            class="mb-0.5 flex size-6 shrink-0 items-center justify-center rounded-md bg-accent text-background transition-all hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-30"
-          >
+            class="mb-0.5 flex size-6 shrink-0 items-center justify-center rounded-md bg-accent text-background transition-all hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-30">
             {isStreaming ? (
               <svg class="size-3 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
             ) : (
@@ -432,53 +715,4 @@ export function ChatPanel({ open, onClose, config }: ChatPanelProps) {
       </div>
     </div>
   );
-}
-
-// ---- AssistantMessage: renders text with Markdown links as clickable cards ----
-
-function AssistantMessage({ text }: { text: string }) {
-  const paragraphs = text.split('\n').filter(Boolean);
-  return (
-    <div class="space-y-1.5">
-      {paragraphs.map((p, i) => (
-        <p key={i} class="whitespace-pre-wrap"><RichText text={p} /></p>
-      ))}
-    </div>
-  );
-}
-
-// ---- Small components ----
-
-function BotAvatar() {
-  return (
-    <div class="flex size-5.5 shrink-0 items-center justify-center rounded-full bg-accent/15 mt-0.5">
-      <BotIcon class="size-3 text-accent" />
-    </div>
-  );
-}
-
-function BotIcon({ class: cls }: { class?: string }) {
-  return (
-    <svg class={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
-      <path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" />
-    </svg>
-  );
-}
-
-function TypingDots() {
-  return (
-    <span class="inline-flex gap-1">
-      <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:0ms]" />
-      <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:150ms]" />
-      <span class="size-1.5 animate-bounce rounded-full bg-foreground-soft [animation-delay:300ms]" />
-    </span>
-  );
-}
-
-function parseError(error: string): string {
-  if (error.includes('AI 服务未配置')) return 'AI 服务暂未开放，敬请期待';
-  if (error.includes('请求太频繁') || error.includes('429') || error.includes('rate')) return '请求太频繁，请稍后再试';
-  if (error.includes('503') || error.includes('不可用')) return 'AI 对话暂时不可用';
-  return '出了点问题，请稍后再试';
 }

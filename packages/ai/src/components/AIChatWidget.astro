@@ -1,15 +1,16 @@
 ---
 import { SITE } from "virtual:astro-minimax/config";
-import AIChatContainer from "./AIChatContainer";
+import AIChatContainer from "./AIChatContainer.js";
+import type { ArticleChatContext } from "../server/types.js";
 
 interface Props {
   lang?: string;
+  articleContext?: ArticleChatContext;
 }
 
-const { lang = SITE.lang ?? "zh" } = Astro.props;
+const { lang = SITE.lang ?? "zh", articleContext } = Astro.props;
 const aiEnabled = SITE.ai?.enabled ?? false;
 
-// Only pass safe, non-sensitive fields to the client
 const aiConfig = {
   enabled: aiEnabled,
   mockMode: SITE.ai?.mockMode ?? true,
@@ -22,7 +23,8 @@ const aiConfig = {
 
 {aiEnabled && (
   <AIChatContainer
-    client:idle
+    client:only="preact"
     config={aiConfig}
+    articleContext={articleContext}
   />
 )}

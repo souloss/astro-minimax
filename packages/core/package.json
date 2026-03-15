@@ -56,6 +56,7 @@
     "astro": "^5.0.0"
   },
   "peerDependenciesMeta": {
+    "@astro-minimax/ai": { "optional": true },
     "satori": { "optional": true },
     "@resvg/resvg-js": { "optional": true },
     "@fontsource/ibm-plex-mono": { "optional": true },

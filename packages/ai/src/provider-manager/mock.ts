@@ -3,6 +3,7 @@ import { BaseProviderAdapter } from './base.js';
 import { getMockResponse } from '../providers/mock.js';
 
 const MOCK_WEIGHT = 0;
+const CHAR_DELAY_MS = 15;
 
 export class MockAdapter extends BaseProviderAdapter {
   readonly id = 'mock' as const;
@@ -24,18 +25,37 @@ export class MockAdapter extends BaseProviderAdapter {
   async streamText(options: StreamTextOptions): Promise<StreamTextResult> {
     const { userQuestion = '', lang = 'zh' } = options;
     const text = getMockResponse(userQuestion, lang);
+    const partId = `mock-${Date.now()}`;
 
     const encoder = new TextEncoder();
-    const lines = [
-      `0:"${text.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"\n`,
-      `d:{"finishReason":"stop","usage":{"inputTokens":0,"outputTokens":0}}\n`,
-    ];
-
     const stream = new ReadableStream({
-      start(controller) {
-        for (const line of lines) {
-          controller.enqueue(encoder.encode(line));
+      async start(controller) {
+        const write = (event: object) =>
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+
+        write({ type: 'text-start', id: partId });
+
+        for (let i = 0; i < text.length; ) {
+          const chunkSize = Math.random() < 0.3 ? 3 : Math.random() < 0.5 ? 2 : 1;
+          const chunk = text.slice(i, i + chunkSize);
+          i += chunkSize;
+
+          controller.enqueue(
+            encoder.encode(
+              `data: ${JSON.stringify({ type: 'text-delta', id: partId, delta: chunk })}\n\n`,
+            ),
+          );
+          await new Promise(r => setTimeout(r, CHAR_DELAY_MS + Math.random() * 20));
         }
+
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ type: 'text-end', id: partId })}\n\n`),
+        );
+        controller.enqueue(
+          encoder.encode(
+            `data: ${JSON.stringify({ type: 'finish', finishReason: 'stop' })}\n\n`,
+          ),
+        );
         controller.close();
       },
     });
@@ -45,7 +65,6 @@ export class MockAdapter extends BaseProviderAdapter {
         'Content-Type': 'text/event-stream; charset=utf-8',
         'Cache-Control': 'no-cache, no-store',
         'Access-Control-Allow-Origin': '*',
-        'x-vercel-ai-data-stream': 'v1',
       },
     });
 

@@ -30,3 +30,6 @@ export * from './data/index.js';
 
 // Stream utilities
 export * from './stream/index.js';
+
+// Server-side API handlers (chat handler, metadata init)
+export * from './server/index.js';

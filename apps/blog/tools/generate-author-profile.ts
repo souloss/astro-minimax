@@ -57,7 +57,7 @@ interface Post {
   url: string;
 }
 
-async function collectPosts(siteUrl: string): Promise<Post[]> {
+async function collectPosts(_siteUrl: string): Promise<Post[]> {
   const entries = await readdir(BLOG_DIR, { withFileTypes: true });
   const aiSummaries = await readJson<{
     articles?: Record<string, { data?: { summary?: string; keyPoints?: string[] } }>
@@ -95,7 +95,7 @@ async function collectPosts(siteUrl: string): Promise<Post[]> {
         description: String(fm.data.description || ""),
         summary: summaryEntry?.summary || truncate(stripMarkdown(fm.body), 100),
         keyPoints: summaryEntry?.keyPoints || [],
-        url: `${siteUrl.replace(/\/$/, "")}/${id}`,
+        url: `/${id}`,
       });
     }
   }

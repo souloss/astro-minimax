@@ -122,7 +122,7 @@ interface RawPost {
 }
 
 async function collectPosts(
-  siteUrl: string,
+  _siteUrl: string,
   includeBody: boolean
 ): Promise<RawPost[]> {
   const files = await collectMarkdownFiles(BLOG_DIR);
@@ -159,7 +159,7 @@ async function collectPosts(
       summary: summaryEntry?.summary || truncate(plainContent, 150),
       keyPoints: summaryEntry?.keyPoints || [],
       body: includeBody ? fm.body.slice(0, 5000) : "",
-      url: `${siteUrl.replace(/\/$/, "")}/${id}`,
+      url: `/${id}`,
     });
   }
 
