@@ -6,6 +6,7 @@ export interface StaticLayerConfig {
   siteUrl: string;
   description?: string;
   systemPromptOverride?: string;
+  lang?: string;
 }
 
 export interface SemiStaticLayerConfig {

@@ -25,6 +25,7 @@ export interface ChatRequestBody {
   context?: ChatContext;
   id?: string;
   messages: UIMessage[];
+  lang?: string;
 }
 
 export interface ChatHandlerEnv extends ProviderManagerEnv, CacheEnv {

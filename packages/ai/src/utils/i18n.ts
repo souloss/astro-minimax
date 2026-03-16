@@ -15,6 +15,7 @@ export type AITranslationKey =
   | "ai.error.unavailable"
   | "ai.error.generic"
   | "ai.error.format"
+  | "ai.error.noOutput"
   // UI labels
   | "ai.placeholder"
   | "ai.clear"
@@ -55,7 +56,12 @@ export type AITranslationKey =
   // Rate limit messages
   | "ai.error.rateLimit.burst"
   | "ai.error.rateLimit.sustained"
-  | "ai.error.rateLimit.daily";
+  | "ai.error.rateLimit.daily"
+  // Prompt section titles
+  | "ai.prompt.section.responsibilities"
+  | "ai.prompt.section.format"
+  | "ai.prompt.section.principles"
+  | "ai.prompt.section.constraints";
 
 const translations: Record<string, Record<AITranslationKey, string>> = {
   en: {
@@ -111,6 +117,11 @@ const translations: Record<string, Record<AITranslationKey, string>> = {
     "ai.error.rateLimit.burst": "Too many requests, please try again later.",
     "ai.error.rateLimit.sustained": "Too many requests, please wait a minute.",
     "ai.error.rateLimit.daily": "Daily limit reached, please come back tomorrow.",
+    "ai.error.noOutput": "Sorry, I could not generate a valid response. Please try rephrasing your question.",
+    "ai.prompt.section.responsibilities": "Your Responsibilities",
+    "ai.prompt.section.format": "Response Format",
+    "ai.prompt.section.principles": "Recommendation Principles",
+    "ai.prompt.section.constraints": "Constraints",
   },
   zh: {
     // Reasoning UI
@@ -165,6 +176,11 @@ const translations: Record<string, Record<AITranslationKey, string>> = {
     "ai.error.rateLimit.burst": "请求太频繁，请稍后再试。",
     "ai.error.rateLimit.sustained": "请求次数过多，请一分钟后再试。",
     "ai.error.rateLimit.daily": "今日对话次数已达上限，请明天再来。",
+    "ai.error.noOutput": "抱歉，我无法生成有效的回答。请尝试换一种方式提问。",
+    "ai.prompt.section.responsibilities": "你的职责",
+    "ai.prompt.section.format": "回答格式",
+    "ai.prompt.section.principles": "推荐原则",
+    "ai.prompt.section.constraints": "约束",
   },
 };
 

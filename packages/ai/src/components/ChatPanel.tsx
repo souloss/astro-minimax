@@ -574,12 +574,13 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
       headers: { 'x-session-id': sessionId },
       body: {
         id, messages: msgs,
+        lang,
         context: articleContext
           ? { scope: 'article' as const, article: articleContext }
           : { scope: 'global' as const },
       },
     }),
-  }), [config.apiEndpoint, sessionId, articleContext]);
+  }), [config.apiEndpoint, sessionId, articleContext, lang]);
 
   const {
     messages: liveMessages,

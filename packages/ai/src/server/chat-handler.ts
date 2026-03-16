@@ -118,22 +118,22 @@ function buildArticleContextPrompt(context: ChatContext): string {
 
 export async function handleChatRequest(options: ChatHandlerOptions): Promise<Response> {
   const { env, request: req } = options;
-  const lang = getLang(env.SITE_LANG as string | undefined);
 
   if (req.method === 'OPTIONS') return corsPreflightResponse();
-  if (req.method !== 'POST') return errors.methodNotAllowed(lang);
+  if (req.method !== 'POST') return errors.methodNotAllowed('zh');
 
   const ip = getClientIP(req);
   const rateCheck = checkRateLimit(ip, env as Record<string, string | undefined>);
-  if (!rateCheck.allowed) return rateLimitResponse(rateCheck, lang);
+  if (!rateCheck.allowed) return rateLimitResponse(rateCheck, 'zh');
 
   let body: ChatRequestBody;
   try {
     body = await req.json();
   } catch {
-    return errors.invalidRequest(t('ai.error.format', lang));
+    return errors.invalidRequest(t('ai.error.format', 'zh'));
   }
 
+  const lang = getLang(body.lang ?? (env.SITE_LANG as string | undefined));
   const context: ChatContext = body.context ?? { scope: 'global' };
   const rawMessages = (body.messages ?? []).slice(-MAX_HISTORY_MESSAGES);
   if (!rawMessages.length) return errors.emptyMessage(lang);
@@ -361,6 +361,7 @@ writer.write({
                 static: {
                   authorName: (env.SITE_AUTHOR as string) || '博主',
                   siteUrl: (env.SITE_URL as string) || '',
+                  lang,
                 },
                 semiStatic: {
                   authorContext: getAuthorContext(),
@@ -419,6 +420,10 @@ writer.write({
                 adapter.recordSuccess();
                 writer.write({ type: 'finish', finishReason: 'stop' });
               } else {
+                const noOutputId = `no-output-${Date.now()}`;
+                writer.write({ type: 'text-start', id: noOutputId } as never);
+                writer.write({ type: 'text-delta', id: noOutputId, delta: t('ai.error.noOutput', lang) } as never);
+                writer.write({ type: 'text-end', id: noOutputId } as never);
                 writer.write({ type: 'finish', finishReason: 'stop' });
               }
 
@@ -603,6 +608,7 @@ writer.write({
     static: {
       authorName: (env.SITE_AUTHOR as string) || '博主',
       siteUrl: (env.SITE_URL as string) || '',
+      lang,
     },
     semiStatic: {
       authorContext: getAuthorContext(),
@@ -755,6 +761,13 @@ const text = await result.text;
             } as never);
             writer.write({ type: 'text-end', id: errorId } as never);
             writer.write({ type: 'finish', finishReason: 'error' });
+            streamSuccess = true;
+          } else if (!hasTextOutput) {
+            const noOutputId = `no-output-${Date.now()}`;
+            writer.write({ type: 'text-start', id: noOutputId } as never);
+            writer.write({ type: 'text-delta', id: noOutputId, delta: t('ai.error.noOutput', lang) } as never);
+            writer.write({ type: 'text-end', id: noOutputId } as never);
+            writer.write({ type: 'finish', finishReason: 'stop' });
             streamSuccess = true;
           } else {
             writer.write({ type: 'finish', finishReason: 'stop' });
