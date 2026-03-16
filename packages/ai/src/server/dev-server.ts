@@ -245,6 +245,23 @@ async function main() {
     console.log(`   GET  http://localhost:${port}/api/ai-info`);
     console.log(`\n   Tip: Run "pnpm exec astro-ai-dev --init" to create datas/ directory.\n`);
   });
+
+  // Graceful shutdown on SIGINT (Ctrl+C) and SIGTERM
+  const shutdown = (signal: string) => {
+    console.log(`\n🛑 AI Dev Server received ${signal}, shutting down...`);
+    server.close(() => {
+      console.log('✅ AI Dev Server closed');
+      process.exit(0);
+    });
+    // Force exit after 3 seconds if connections are pending
+    setTimeout(() => {
+      console.log('⚠️  Force closing after timeout');
+      process.exit(1);
+    }, 3000);
+  };
+
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
 }
 
 main().catch((err) => {

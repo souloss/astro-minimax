@@ -1,5 +1,7 @@
 ---
 import { SITE } from "virtual:astro-minimax/config";
+import IconWechat from "../../assets/icons/IconWechat.svg";
+import IconAlipay from "../../assets/icons/IconAlipay.svg";
 
 interface Props {
   class?: string;
@@ -7,24 +9,32 @@ interface Props {
 
 const { class: className = "" } = Astro.props;
 const methods = SITE.sponsor?.methods ?? [];
+
+const iconMap: Record<string, typeof IconWechat> = {
+  wechat: IconWechat,
+  alipay: IconAlipay,
+};
 ---
 
 {
   methods.length > 0 && (
     <div class:list={["flex flex-col justify-center gap-4 sm:flex-row", className]}>
-      {methods.map(item => (
-        <div class="sponsorship-card relative justify-center overflow-hidden rounded-xl border bg-white">
-          <div class="sponsorship-card-icon absolute inset-0 flex items-center justify-center text-4xl opacity-80 transition-opacity">
-            <span>{item.icon === "wechat" ? "💬" : item.icon === "alipay" ? "💰" : "☕"}</span>
+      {methods.map(item => {
+        const IconComponent = iconMap[item.icon];
+        return (
+          <div class="sponsorship-card relative justify-center overflow-hidden rounded-xl border bg-white">
+            <div class="sponsorship-card-icon absolute inset-0 flex items-center justify-center text-4xl opacity-80 transition-opacity [&>svg]:w-16 [&>svg]:h-16 [&>svg]:text-gray-600">
+              {IconComponent ? <IconComponent /> : <span>☕</span>}
+            </div>
+            <img
+              class="sponsorship-card-img mx-auto my-0 max-w-60 transition-all"
+              src={item.image}
+              alt={item.name}
+              loading="lazy"
+            />
           </div>
-          <img
-            class="sponsorship-card-img mx-auto my-0 max-w-60 transition-all"
-            src={item.image}
-            alt={item.name}
-            loading="lazy"
-          />
-        </div>
-      ))}
+        );
+      })}
     </div>
   )
 }
