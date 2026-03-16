@@ -231,14 +231,10 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
             for (const article of cachedResponse.articles.slice(0, 3)) {
               try {
                 writer.write({
-                  type: 'source',
-                  value: {
-                    type: 'source',
-                    sourceType: 'url',
-                    id: `source-${article.title}`,
-                    url: (article as { url?: string }).url ?? '#',
-                    title: article.title,
-                  },
+                  type: 'source-url',
+                  sourceId: `source-${article.title}`,
+                  url: (article as { url?: string }).url ?? '#',
+                  title: article.title,
                 } as never);
               } catch { /* best-effort */ }
             }
@@ -346,16 +342,12 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
 
           for (const article of cachedSearch.articles.slice(0, 3)) {
             try {
-              writer.write({
-                type: 'source',
-                value: {
-                  type: 'source',
-                  sourceType: 'url',
-                  id: `source-${article.title}`,
+writer.write({
+                  type: 'source-url',
+                  sourceId: `source-${article.title}`,
                   url: (article as { url?: string }).url ?? '#',
                   title: article.title,
-                },
-              } as never);
+                } as never);
             } catch { /* best-effort */ }
           }
 
@@ -390,8 +382,13 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
                 maxOutputTokens: 2500,
               });
 
+              const streamErrors: Error[] = [];
               writer.merge(result.toUIMessageStream({ sendFinish: false }));
-              await result.consumeStream({});
+              await result.consumeStream({
+                onError: (error) => {
+                  streamErrors.push(error instanceof Error ? error : new Error(String(error)));
+                },
+              });
               const text = await result.text;
               const reasoningPromise = (result as unknown as { reasoning?: PromiseLike<unknown> }).reasoning;
               let reasoningText: string | undefined;
@@ -406,12 +403,27 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
                 } catch { /* reasoning is optional */ }
               }
               responseText = text;
-              if (text.length > 0) {
+              
+              if (streamErrors.length > 0) {
+                adapter.recordFailure(streamErrors[0]);
+                const errorId = `error-${Date.now()}`;
+                writer.write({ type: 'text-start', id: errorId } as never);
+                writer.write({ 
+                  type: 'text-delta', 
+                  id: errorId, 
+                  delta: t('ai.error.generic', lang) 
+                } as never);
+                writer.write({ type: 'text-end', id: errorId } as never);
+                writer.write({ type: 'finish', finishReason: 'error' });
+              } else if (text.length > 0) {
+                adapter.recordSuccess();
+                writer.write({ type: 'finish', finishReason: 'stop' });
+              } else {
                 writer.write({ type: 'finish', finishReason: 'stop' });
               }
 
               // Save to response cache if enabled
-              if (responseCacheConfig.enabled && text.length > 0) {
+              if (responseCacheConfig.enabled && text.length > 0 && streamErrors.length === 0) {
                 const globalTTL = getGlobalCacheTTL(publicQuestion.type);
                 const responseCacheData: CachedAIResponse = {
                   query: cachedSearch.query,
@@ -426,13 +438,25 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
                 await setResponseCache(cache, publicQuestion.type, responseCacheData, globalTTL, globalCacheContext);
               }
             } catch (err) {
-              console.error('[chat-handler] Global cache LLM error:', err);
-            }
+                console.error('[chat-handler] Global cache LLM error:', err);
+                const errorId = `error-${Date.now()}`;
+                writer.write({ type: 'text-start', id: errorId } as never);
+                writer.write({ 
+                  type: 'text-delta', 
+                  id: errorId, 
+                  delta: t('ai.error.generic', lang) 
+                } as never);
+                writer.write({ type: 'text-end', id: errorId } as never);
+                writer.write({ type: 'finish', finishReason: 'error' });
+              }
           } else {
             const { getMockResponse } = await import('../providers/mock.js');
             const mockText = getMockResponse(latestText, lang);
             responseText = mockText;
-            writer.write({ type: 'text-delta', textDelta: mockText } as never);
+            const mockId = `mock-${Date.now()}`;
+            writer.write({ type: 'text-start', id: mockId } as never);
+            writer.write({ type: 'text-delta', id: mockId, delta: mockText } as never);
+            writer.write({ type: 'text-end', id: mockId } as never);
             writer.write({ type: 'finish', finishReason: 'stop' });
           }
         },
@@ -616,14 +640,10 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
       for (const article of relatedArticles.slice(0, 3)) {
         try {
           writer.write({
-            type: 'source',
-            value: {
-              type: 'source',
-              sourceType: 'url',
-              id: `source-${article.title}`,
-              url: (article as { url?: string }).url ?? '#',
-              title: article.title,
-            },
+            type: 'source-url',
+            sourceId: `source-${article.title}`,
+            url: (article as { url?: string }).url ?? '#',
+            title: article.title,
           } as never);
         } catch {
           // source writing is best-effort
@@ -726,6 +746,19 @@ const text = await result.text;
           } else if (errors.length > 0) {
             adapter.recordFailure(errors[0]);
             console.error('[chat-handler] Stream error:', errors[0].message);
+            const errorId = `error-${Date.now()}`;
+            writer.write({ type: 'text-start', id: errorId } as never);
+            writer.write({ 
+              type: 'text-delta', 
+              id: errorId, 
+              delta: t('ai.error.generic', lang) 
+            } as never);
+            writer.write({ type: 'text-end', id: errorId } as never);
+            writer.write({ type: 'finish', finishReason: 'error' });
+            streamSuccess = true;
+          } else {
+            writer.write({ type: 'finish', finishReason: 'stop' });
+            streamSuccess = true;
           }
         } catch (err) {
           adapter.recordFailure(err instanceof Error ? err : new Error(String(err)));
@@ -745,7 +778,10 @@ const text = await result.text;
             progress: 80,
           }),
         });
-        writer.write({ type: 'text-delta', textDelta: mockText } as never);
+        const fallbackId = `fallback-${Date.now()}`;
+        writer.write({ type: 'text-start', id: fallbackId } as never);
+        writer.write({ type: 'text-delta', id: fallbackId, delta: mockText } as never);
+        writer.write({ type: 'text-end', id: fallbackId } as never);
         writer.write({ type: 'finish', finishReason: 'stop' });
       }
     },
