@@ -1,57 +1,57 @@
 {
   "$schema": "voice-profile-v1",
-  "generatedAt": "2026-03-13T19:29:50.414Z",
+  "generatedAt": "2026-03-15T20:38:29.371Z",
   "overall_tone": {
     "description": "技术博客风格，注重实践与可操作性，语言简洁明了",
     "primary_persona": "技术博主",
     "communication_style": "先给结论，再补细节"
   },
   "blog_title_style": {
-    "total": 18,
+    "total": 22,
     "patterns": {
       "usesVerticalBar": 0,
-      "usesColon": 2,
+      "usesColon": 4,
       "usesMiddleDot": 0,
       "usesQuestion": 0,
       "usesEmoji": 0,
-      "usesEnglish": 16,
+      "usesEnglish": 20,
       "usesYear": 0,
       "usesSeriesFormat": 0
     },
     "style": {
       "vertical_bar_rate": 0,
-      "colon_rate": 11,
+      "colon_rate": 18,
       "question_rate": 0,
-      "english_mix_rate": 89,
+      "english_mix_rate": 91,
       "year_in_title_rate": 0
     }
   },
   "content_style": {
-    "avgLength": 6241,
+    "avgLength": 6140,
     "codeBlockRate": 100,
-    "linkRate": 89,
-    "imageRate": 56,
+    "linkRate": 91,
+    "imageRate": 45,
     "headingRate": 100,
-    "listRate": 67,
-    "quoteRate": 67
+    "listRate": 73,
+    "quoteRate": 73
   },
   "expression_habits": {
     "frequent_expressions": [
       {
+        "word": "推荐",
+        "count": 10
+      },
+      {
         "word": "然后",
-        "count": 9
+        "count": 7
       },
       {
         "word": "分享",
-        "count": 8
-      },
-      {
-        "word": "推荐",
-        "count": 6
+        "count": 7
       },
       {
         "word": "重要",
-        "count": 6
+        "count": 5
       },
       {
         "word": "但是",
@@ -83,25 +83,37 @@
     ]
   },
   "category_styles": {
-    "教程/博客": {
-      "count": 5,
-      "avgLength": 5935
+    "Blog/Tutorial": {
+      "count": 3,
+      "avgLength": 9748
     },
     "教程/配置": {
-      "count": 6,
-      "avgLength": 8072
+      "count": 5,
+      "avgLength": 5164
     },
-    "Blog/Tutorial": {
+    "Blog/Deployment": {
       "count": 1,
-      "avgLength": 3218
+      "avgLength": 6022
+    },
+    "教程/博客": {
+      "count": 5,
+      "avgLength": 5174
     },
     "教程/前端": {
       "count": 2,
       "avgLength": 3718
     },
+    "Blog/Configuration": {
+      "count": 1,
+      "avgLength": 12812
+    },
     "教程/工程化": {
       "count": 4,
       "avgLength": 5894
+    },
+    "教程/部署": {
+      "count": 1,
+      "avgLength": 4303
     }
   },
   "style_modes": {

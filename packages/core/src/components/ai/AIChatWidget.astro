@@ -1,5 +1,6 @@
 ---
 import { SITE } from "virtual:astro-minimax/config";
+import { t } from "../../utils/i18n.js";
 
 interface Props {
   lang?: string;
@@ -16,6 +17,20 @@ const aiConfig = {
   mockMode: SITE.ai?.mockMode ?? true,
   vectorSearch: SITE.ai?.vectorSearch ?? false,
 };
+const assistantName = t("ai.assistantName", lang);
+const statusLive = t("ai.statusLive", lang);
+const statusDemo = t("ai.statusDemo", lang);
+const clearLabel = t("ai.clearConversation", lang);
+const closeLabel = t("ai.closeChat", lang);
+const closeTitle = t("ai.close", lang);
+const welcomeGlobal = t("ai.welcomeGlobal", lang);
+const placeholder = t("ai.placeholder", lang);
+const thinking = t("ai.thinking", lang);
+const errorApi = t("ai.error.api", lang);
+const errorNoResponse = t("ai.error.noResponse", lang);
+const errorConnection = t("ai.error.connection", lang);
+
+const i18nStrings = { welcomeGlobal, placeholder, thinking, errorApi, errorNoResponse, errorConnection };
 ---
 
 {
@@ -46,21 +61,21 @@ const aiConfig = {
               <path d="M9 13v2" />
             </svg>
             <span class="text-sm font-semibold text-foreground">
-              AI Assistant
+              {assistantName}
             </span>
             <span class:list={[
               "rounded-full px-2 py-0.5 text-[10px] font-medium",
               aiConfig.apiEndpoint ? "bg-green-500/15 text-green-600 dark:text-green-400" : "bg-accent/15 text-accent"
             ]}>
-              {aiConfig.apiEndpoint ? "Live" : "Mock"}
+              {aiConfig.apiEndpoint ? statusLive : statusDemo}
             </span>
           </div>
           <div class="flex items-center gap-1">
             <button
               id="ai-chat-clear"
               class="text-foreground-soft rounded-md p-1.5 transition-colors hover:bg-muted/60 hover:text-foreground"
-              aria-label="Clear conversation"
-              title="Clear conversation"
+              aria-label={clearLabel}
+              title={clearLabel}
             >
               <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
@@ -69,8 +84,8 @@ const aiConfig = {
             <button
               id="ai-chat-close"
               class="text-foreground-soft rounded-md p-1.5 transition-colors hover:bg-muted/60 hover:text-foreground"
-              aria-label="Close chat"
-              title="Close"
+              aria-label={closeLabel}
+              title={closeTitle}
             >
               <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 6 6 18" /><path d="m6 6 12 12" />
@@ -117,7 +132,7 @@ const aiConfig = {
       </div>
     </div>
 
-    <script is:inline define:vars={{ aiConfig }}>
+    <script is:inline define:vars={{ aiConfig, i18nStrings }}>
     function initAIChat() {
       const root = document.getElementById("ai-chat-root");
       if (!root) return;
@@ -135,22 +150,8 @@ const aiConfig = {
 
       if (!toggle || !panel || !close || !clear || !form || !input || !send || !messages || !welcomeMsg) return;
 
-      const i18n = {
-        zh: {
-          welcome: "你好！我是 AI 助手，可以帮你了解这个博客的内容。试试问我关于文章、技术或任何你感兴趣的话题吧！",
-          placeholder: "输入你的问题...",
-          thinking: "正在思考...",
-        },
-        en: {
-          welcome: "Hi! I'm the AI assistant. I can help you explore the blog content. Try asking me about articles, tech topics, or anything you're curious about!",
-          placeholder: "Type your question...",
-          thinking: "Thinking...",
-        },
-      };
-
-      const t = lang === "zh" ? i18n.zh : i18n.en;
-      welcomeMsg.textContent = t.welcome;
-      input.placeholder = t.placeholder;
+      welcomeMsg.textContent = i18nStrings.welcomeGlobal;
+      input.placeholder = i18nStrings.placeholder;
 
       let isOpen = false;
       let isStreaming = false;
@@ -262,7 +263,7 @@ const aiConfig = {
           if (!response.ok) {
 
 
-            textEl.textContent = (lang === "zh" ? "API 错误: " : "API Error: ") + response.status;
+            textEl.textContent = i18nStrings.errorApi.replace("{status}", response.status);
             chatHistory.push({ role: "assistant", content: textEl.textContent });
             return;
           }
@@ -301,13 +302,13 @@ const aiConfig = {
           }
 
           if (!fullText) {
-            textEl.textContent = lang === "zh" ? "未收到回复" : "No response received";
+            textEl.textContent = i18nStrings.errorNoResponse;
           }
 
           chatHistory.push({ role: "assistant", content: fullText || textEl.textContent });
 
         } catch (err) {
-          textEl.textContent = (lang === "zh" ? "连接失败: " : "Connection failed: ") + (err.message || err);
+          textEl.textContent = i18nStrings.errorConnection.replace("{error}", err.message || err);
           chatHistory.push({ role: "assistant", content: textEl.textContent });
         }
       }

@@ -26,3 +26,10 @@ declare module "virtual:astro-minimax/ai-widget" {
   const AIChatWidget: import("astro").AstroComponentFactory;
   export default AIChatWidget;
 }
+declare module "virtual:astro-minimax/ai-summaries" {
+  interface ArticleSummaryEntry {
+    data: { summary?: string; abstract?: string; keyPoints?: string[] };
+  }
+  const aiSummaries: { meta?: unknown; articles?: Record<string, ArticleSummaryEntry> };
+  export default aiSummaries;
+}

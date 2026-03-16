@@ -1,0 +1,20 @@
+{
+  "files.exclude": {
+    "**/create-astro-minimax/template/**": true,
+    "**/create-astro-minimax/templates/**": true
+  },
+  
+  "typescript.exclude": {
+    "**/create-astro-minimax/template/**": true,
+    "**/create-astro-minimax/templates/**": true
+  },
+  
+  "javascript.exclude": {
+    "**/create-astro-minimax/template/**": true,
+    "**/create-astro-minimax/templates/**": true
+  },
+  "search.exclude": {
+    "**/create-astro-minimax/template/**": true,
+    "**/create-astro-minimax/templates/**": true
+  }
+}

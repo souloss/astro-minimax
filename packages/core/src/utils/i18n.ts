@@ -76,7 +76,19 @@ export type TranslationKey =
   | "post.readingTime"
   | "post.wordCount"
   | "common.notFoundDesc"
-  | "common.goHome";
+  | "common.goHome"
+  | "ai.assistantName"
+  | "ai.statusLive"
+  | "ai.statusDemo"
+  | "ai.clearConversation"
+  | "ai.closeChat"
+  | "ai.close"
+  | "ai.welcomeGlobal"
+  | "ai.placeholder"
+  | "ai.thinking"
+  | "ai.error.api"
+  | "ai.error.noResponse"
+  | "ai.error.connection";
 
 const translations: Record<string, Record<TranslationKey, string>> = {
   en: {
@@ -157,6 +169,18 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "post.wordCount": "{count} words",
     "common.notFoundDesc": "The page you are looking for doesn't exist.",
     "common.goHome": "Go back home",
+    "ai.assistantName": "Blog Avatar",
+    "ai.statusLive": "Live",
+    "ai.statusDemo": "Demo",
+    "ai.clearConversation": "Clear conversation",
+    "ai.closeChat": "Close chat",
+    "ai.close": "Close",
+    "ai.welcomeGlobal": "Hi! I'm the Blog Avatar. I can help you explore the blog content. Try asking me about articles, tech topics, or anything you're curious about!",
+    "ai.placeholder": "Type your question...",
+    "ai.thinking": "Thinking...",
+    "ai.error.api": "API Error: {status}",
+    "ai.error.noResponse": "No response received",
+    "ai.error.connection": "Connection failed: {error}",
   },
   zh: {
     "nav.home": "首页",
@@ -236,6 +260,18 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "post.wordCount": "{count} 字",
     "common.notFoundDesc": "你访问的页面不存在。",
     "common.goHome": "返回首页",
+    "ai.assistantName": "博客分身",
+    "ai.statusLive": "在线",
+    "ai.statusDemo": "演示",
+    "ai.clearConversation": "清除对话",
+    "ai.closeChat": "关闭聊天",
+    "ai.close": "关闭",
+    "ai.welcomeGlobal": "你好！我是博客分身，可以帮你了解这个博客的内容。试试问我关于文章、技术或任何你感兴趣的话题吧！",
+    "ai.placeholder": "输入你的问题...",
+    "ai.thinking": "正在思考...",
+    "ai.error.api": "API 错误: {status}",
+    "ai.error.noResponse": "未收到回复",
+    "ai.error.connection": "连接失败: {error}",
   },
 };
 

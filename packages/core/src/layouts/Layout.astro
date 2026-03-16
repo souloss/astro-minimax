@@ -6,6 +6,17 @@ import FloatingActions from "../components/nav/FloatingActions.astro";
 import AIChatWidget from "virtual:astro-minimax/ai-widget";
 import "virtual:astro-minimax/styles";
 
+/** Shape must match ArticleChatContext from @astro-minimax/ai/server */
+interface ArticleContext {
+  slug: string;
+  title: string;
+  categories?: string[];
+  summary?: string;
+  abstract?: string;
+  keyPoints?: string[];
+  relatedSlugs?: string[];
+}
+
 type Props = {
   title?: string;
   author?: string;
@@ -18,6 +29,7 @@ type Props = {
   scrollSmooth?: boolean;
   lang?: string;
   tags?: string[];
+  articleContext?: ArticleContext;
 };
 
 const {
@@ -32,6 +44,7 @@ const {
   modDatetime,
   scrollSmooth = false,
   tags = [],
+  articleContext,
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.url);
@@ -306,7 +319,7 @@ const structuredData = pubDatetime
   <body>
     <slot />
     <FloatingActions />
-    <AIChatWidget lang={lang} />
+    <AIChatWidget lang={lang} articleContext={articleContext} />
 
     <script>
       import '../scripts/theme.ts';

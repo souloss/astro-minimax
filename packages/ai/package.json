@@ -5,6 +5,9 @@
   "description": "Vendor-agnostic AI integration package with full RAG pipeline for astro-minimax blogs.",
   "author": "Souloss",
   "license": "MIT",
+  "bin": {
+    "astro-ai-dev": "./dist/server/dev-server.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -38,6 +41,10 @@
       "types": "./dist/stream/index.d.ts",
       "import": "./dist/stream/index.js"
     },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.js"
+    },
     "./components/*": "./src/components/*",
     "./styles/source.css": "./src/styles/source.css",
     "./package.json": "./package.json"
@@ -58,7 +65,8 @@
   "dependencies": {
     "@ai-sdk/openai-compatible": "^2.0.35",
     "ai": "^6.0.116",
-    "workers-ai-provider": "^0.2.0"
+    "undici": "^6.0.0",
+    "workers-ai-provider": "^3.1.2"
   },
   "peerDependencies": {
     "@ai-sdk/react": "^3.0.0",
@@ -66,14 +74,19 @@
     "preact": "^10.0.0"
   },
   "peerDependenciesMeta": {
-    "@ai-sdk/react": { "optional": true },
-    "preact": { "optional": true }
+    "@ai-sdk/react": {
+      "optional": true
+    },
+    "preact": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
+    "@types/node": "^22.0.0",
     "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.12.0"
   }
 }

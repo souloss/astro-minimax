@@ -17,19 +17,6 @@ interface WindowEventMap {
   themechange: CustomEvent<ThemeChangeDetail>;
 }
 
-interface ViewTransition {
-  finished: Promise<void>;
-  ready: Promise<void>;
-  updateCallbackDone: Promise<void>;
-  skipTransition: () => void;
-}
-
-interface Document {
-  startViewTransition?: (
-    callback: () => void | Promise<void>
-  ) => ViewTransition;
-}
-
 // Cloudflare Workers AI Types
 // The Ai type is provided by @cloudflare/workers-types
 interface Env {

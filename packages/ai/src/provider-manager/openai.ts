@@ -1,7 +1,16 @@
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { streamText, convertToModelMessages } from 'ai';
+import { ProxyAgent, fetch as undiciFetch } from 'undici';
 import type { OpenAIProviderConfig, StreamTextOptions, StreamTextResult } from './types.js';
 import { BaseProviderAdapter } from './base.js';
+
+function createProxyFetch(): ((url: string | URL, init?: RequestInit) => Promise<Response>) | undefined {
+  const proxyUrl = process.env.https_proxy || process.env.HTTPS_PROXY || process.env.http_proxy || process.env.HTTP_PROXY;
+  if (!proxyUrl) return undefined;
+  const agent = new ProxyAgent(proxyUrl);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return ((url: string | URL, init?: RequestInit) => undiciFetch(url, { ...init, dispatcher: agent } as any)) as any;
+}
 
 export class OpenAIAdapter extends BaseProviderAdapter {
   readonly id: string;
@@ -28,11 +37,14 @@ export class OpenAIAdapter extends BaseProviderAdapter {
     this.timeout = config.timeout ?? 30000;
     this.config = config;
 
+    const proxyFetch = createProxyFetch();
     this.provider = createOpenAICompatible({
       name: `openai-${config.id}`,
       baseURL: config.baseURL,
       apiKey: config.apiKey,
       includeUsage: true,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(proxyFetch && { fetch: proxyFetch as any }),
     });
   }
 

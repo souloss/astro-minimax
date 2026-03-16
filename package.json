@@ -4,10 +4,15 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter astro-minimax-blog dev",
-    "build": "pnpm --filter astro-minimax-blog build",
+    "build": "pnpm --filter @astro-minimax/ai build && pnpm --filter astro-minimax-blog build",
     "preview": "pnpm --filter astro-minimax-blog preview",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
+  },
+  "pnpm": {
+    "overrides": {
+      "@astrojs/rss": "^4.0.17"
+    }
   },
   "devDependencies": {
     "prettier": "^3.8.1",

@@ -1,6 +1,41 @@
 # @astro-minimax/ai
 
-Vendor-agnostic AI integration package with a full RAG pipeline for astro-minimax blogs. Provides a chat widget, provider abstraction, prompt engineering, search indexing, and streaming response utilities.
+Vendor-agnostic AI integration package with full RAG pipeline for astro-minimax blogs. Supports OpenAI-compatible APIs, Cloudflare Workers AI, and mock fallback.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Components (ChatPanel / AIChatWidget / AIChatContainer) │
+│  → useChat + DefaultChatTransport                        │
+└──────────────────────────┬──────────────────────────────┘
+                           │ POST /api/chat
+┌──────────────────────────▼──────────────────────────────┐
+│  Server (chat-handler.ts)                                │
+│  Rate Limit → Validate → Search → Evidence → Prompt →   │
+│  Provider Manager → streamText → SSE Response            │
+└──────────────────────────┬──────────────────────────────┘
+                           │
+     ┌─────────────────────┼──────────────────────┐
+     │                     │                      │
+ ┌───▼───┐          ┌─────▼─────┐          ┌─────▼────┐
+ │OpenAI │          │Workers AI │          │   Mock   │
+ │Compat │          │ Binding   │          │ Fallback │
+ └───────┘          └───────────┘          └──────────┘
+```
+
+### Modules
+
+| Module | Purpose |
+|--------|---------|
+| `server/` | Reusable API handlers (`handleChatRequest`, `initializeMetadata`) |
+| `provider-manager/` | Multi-provider management with priority, failover, health tracking |
+| `search/` | In-memory article/project search with session caching |
+| `intelligence/` | Keyword extraction, evidence analysis, citation guard |
+| `prompt/` | Three-layer system prompt builder (static → semi-static → dynamic) |
+| `data/` | Build-time metadata loading (summaries, author context, voice profile) |
+| `stream/` | Stream helpers and response utilities |
+| `components/` | Preact UI components (ChatPanel, AIChatWidget, AIChatContainer) |
 
 ## Installation
 
@@ -8,90 +43,166 @@ Vendor-agnostic AI integration package with a full RAG pipeline for astro-minima
 pnpm add @astro-minimax/ai
 ```
 
-Peer dependencies: `preact` (for chat UI), `@ai-sdk/react` (optional), `@cloudflare/workers-types` (optional).
+The `@astro-minimax/core` integration auto-detects this package and renders the AI chat widget.
 
-## Features
+## Configuration
 
-- **Chat Widget** — Floating AI assistant panel with Tailwind-based UI
-- **Provider System** — Vendor-agnostic AI provider factory (OpenAI-compatible, Workers AI, mock)
-- **RAG Pipeline** — Search indexing, intent detection, keyword extraction, evidence analysis, citation guard
-- **Prompt Engineering** — Multi-layer prompt builder (static, semi-static, dynamic layers)
-- **Streaming** — SSE-based streaming response utilities
+In `src/config.ts`:
 
-## Chat Widget
-
-The chat UI is automatically injected by `@astro-minimax/core` when this package is installed. No manual setup needed.
-
-### How It Works
-
-1. `@astro-minimax/core` integration detects `@astro-minimax/ai` at build time
-2. `Layout.astro` conditionally renders `AIChatWidget` via `virtual:astro-minimax/ai-widget`
-3. The widget reads AI config from `virtual:astro-minimax/config` (SITE.ai settings)
-
-### Configuration
-
-In your `src/config.ts`:
-
-```ts
+```typescript
 export const SITE = {
-  // ...other config
   ai: {
     enabled: true,
-    mockMode: false,         // true for demo mode without API
+    mockMode: false,
     apiEndpoint: "/api/chat",
-    welcomeMessage: "Hi! Ask me anything about this blog.",
-    placeholder: "Type your question...",
+    welcomeMessage: undefined, // auto-generated
+    placeholder: undefined,
   },
 };
 ```
 
-### UI Design
+### Environment Variables
 
-`ChatPanel.tsx` uses Tailwind utility classes with the core theme's design tokens:
-- `bg-background`, `text-foreground`, `border-border` — semantic color tokens
-- `bg-accent/15`, `text-accent` — accent colors
-- `dark:` variant — works with `@custom-variant dark` from theme.css
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `AI_BASE_URL` | For OpenAI | Base URL of OpenAI-compatible API |
+| `AI_API_KEY` | For OpenAI | API key |
+| `AI_MODEL` | Recommended | Model name (default: `gpt-4o-mini`) |
+| `AI_KEYWORD_MODEL` | Optional | Model for keyword extraction (defaults to `AI_MODEL`) |
+| `AI_EVIDENCE_MODEL` | Optional | Model for evidence analysis (defaults to keyword model) |
+| `AI_BINDING_NAME` | For Workers | Cloudflare AI binding name (default: `AI`) |
+| `SITE_AUTHOR` | Recommended | Author name for prompts |
+| `SITE_URL` | Recommended | Site URL for article links |
 
-## CSS Architecture
+## Server Module
 
-`src/styles/source.css` declares `@source "../"` so Tailwind scans all AI component files. The core integration auto-detects this package and includes it in the generated entry CSS.
+The server module provides reusable request handlers, decoupled from any specific runtime (Cloudflare, Node.js, etc.).
 
-## Exports
+### Usage in Cloudflare Pages Functions
 
-| Export | Description |
-|--------|-------------|
-| `.` | Core types and utilities |
-| `./providers` | AI provider factory and types |
-| `./middleware` | Rate limiter and middleware utilities |
-| `./search` | Search index, search API, session cache |
-| `./intelligence` | Intent detection, keyword extraction, evidence analysis, citation guard |
-| `./prompt` | Multi-layer prompt builder |
-| `./data` | Metadata loader and data types |
-| `./stream` | Streaming response utilities and mock stream |
-| `./components/*` | Astro/Preact components (AIChatWidget, ChatPanel, AIChatContainer) |
-| `./styles/source.css` | Tailwind source declaration |
+```typescript
+// functions/api/chat.ts
+import { handleChatRequest, initializeMetadata } from '@astro-minimax/ai/server';
+import summaries from '../../datas/ai-summaries.json';
+import authorContext from '../../datas/author-context.json';
+import voiceProfile from '../../datas/voice-profile.json';
 
-## API Endpoint
+export const onRequest: PagesFunction = async (context) => {
+  initializeMetadata({ summaries, authorContext, voiceProfile }, context.env);
+  return handleChatRequest({ env: context.env, request: context.request });
+};
+```
 
-The chat widget sends requests to `SITE.ai.apiEndpoint` (default: `/api/chat`). The endpoint should accept POST requests with:
+### Chat API Contract
+
+**Request:** `POST /api/chat`
 
 ```json
 {
-  "messages": [{ "role": "user", "content": "..." }],
-  "sessionId": "uuid"
+  "context": {
+    "scope": "article",
+    "article": {
+      "slug": "my-post",
+      "title": "My Post Title",
+      "summary": "Brief summary...",
+      "keyPoints": ["Point 1", "Point 2"],
+      "categories": ["tech"]
+    }
+  },
+  "id": "article:my-post",
+  "messages": [...]
 }
 ```
 
-And return an SSE stream following the AI SDK response format.
+`context.scope` values:
+- `"global"` — General blog chat (default)
+- `"article"` — Reading companion mode, focused on a specific article
 
-## Development
+**Response:** UI Message Stream Protocol (SSE)
 
-```bash
-# Build TypeScript (providers, middleware, etc.)
-pnpm --filter @astro-minimax/ai build
+- `text-start` / `text-delta` / `text-end` — Streaming text content
+- `source` — RAG article references
+- `message-metadata` — Processing status updates
+- `finish` — Stream completion
 
-# Watch mode
-pnpm --filter @astro-minimax/ai build:watch
+**Error Response:**
+
+```json
+{
+  "error": "请求太频繁，请稍后再试",
+  "code": "RATE_LIMITED",
+  "retryable": true,
+  "retryAfter": 10
+}
 ```
 
-Components in `src/components/` are consumed directly as source files (not built) — Astro processes `.astro` files and Vite handles `.tsx` files.
+| Code | Status | Retryable | Description |
+|------|--------|-----------|-------------|
+| `RATE_LIMITED` | 429 | Yes | Too many requests |
+| `PROVIDER_UNAVAILABLE` | 503 | Yes | All providers failed |
+| `TIMEOUT` | 504 | Yes | Request timeout |
+| `INPUT_TOO_LONG` | 400 | No | Message exceeds limit |
+| `INVALID_REQUEST` | 400 | No | Malformed request |
+| `INTERNAL_ERROR` | 500 | Yes | Server error |
+
+## Provider System
+
+### Priority & Failover
+
+```
+Workers AI (weight: 100) → OpenAI Compatible (weight: 90) → Mock (weight: 0)
+```
+
+When a provider fails, the next one is tried automatically. Mock fallback ensures users always get a response.
+
+### Timeout Budget (per request: 45s total)
+
+| Stage | Timeout | Behavior on timeout |
+|-------|---------|-------------------|
+| Keyword extraction | 5s | Falls back to local search query |
+| Evidence analysis | 8s | Skipped |
+| LLM streaming | 30s | Tries next provider, then mock |
+
+## "Read & Chat" (边读边聊)
+
+When a user opens the AI chat on an article page, the system enters **reading companion mode**:
+
+1. **Article context** flows from `PostDetails.astro` → `Layout.astro` → `AIChatWidget` → `ChatPanel`
+2. **Welcome message** references the current article title
+3. **Quick prompts** are article-specific (summarize, explain, related topics)
+4. **API request** includes `context: { scope: "article", article: {...} }`
+5. **Server** enhances the prompt with article summary, key points, and reading companion instructions
+
+## Components
+
+### AIChatWidget.astro
+
+Astro entry point. Accepts `lang` and optional `articleContext` props. Renders `AIChatContainer` with `client:idle`.
+
+### AIChatContainer.tsx
+
+Manages open/close state. Exposes `window.__aiChatToggle` for the floating action button.
+
+### ChatPanel.tsx
+
+Core chat UI built on `useChat` from `@ai-sdk/react`:
+- `DefaultChatTransport` with `prepareSendMessagesRequest` for context injection
+- Parts-based message rendering (`text`, `source`, custom data parts)
+- Error display with retry button (`regenerate()`)
+- Status indicators from message metadata
+- Mock mode with character-by-character streaming simulation
+
+## Exports
+
+| Path | Contents |
+|------|----------|
+| `.` | All modules |
+| `./server` | `handleChatRequest`, `initializeMetadata`, error helpers, types |
+| `./providers` | Mock response/stream utilities |
+| `./middleware` | Rate limiting |
+| `./search` | Article/project search, session cache |
+| `./intelligence` | Keyword extraction, evidence analysis, citation guard |
+| `./prompt` | System prompt builder |
+| `./data` | Metadata loading |
+| `./stream` | Stream utilities |
+| `./components/*` | Astro/Preact components |

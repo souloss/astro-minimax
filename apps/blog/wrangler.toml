@@ -1,8 +1,15 @@
 name = "astro-minimax"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-03-12"
+compatibility_flags = ["nodejs_compat"]
 
 # Workers AI Binding
 # Name can be customized via AI_BINDING_NAME environment variable
 [ai]
 binding = "souloss"
+
+# KV Namespace for AI Chat Cache
+# Used for caching search context and conversation state
+[[kv_namespaces]]
+binding = "CACHE_KV"
+id = "f5e9580343a0427d85cf85e5f0d79961"

@@ -3,8 +3,10 @@ import IconArrowNarrowUp from "../../assets/icons/IconArrowNarrowUp.svg";
 import IconMoon from "../../assets/icons/IconMoon.svg";
 import IconSunHigh from "../../assets/icons/IconSunHigh.svg";
 import { SITE } from "virtual:astro-minimax/config";
+import { t } from "../../utils/i18n.js";
 
 const aiEnabled = SITE.ai?.enabled ?? false;
+const lang = SITE.lang;
 ---
 
 <div
@@ -13,14 +15,14 @@ const aiEnabled = SITE.ai?.enabled ?? false;
   role="group"
   aria-label="Page actions"
 >
-  <!-- AI Assistant -->
+  <!-- Blog Avatar / 博客分身 -->
   {
     aiEnabled && (
       <button
         id="ai-chat-toggle-fab"
         class="fab-btn flex size-11 items-center justify-center rounded-full border border-accent bg-accent text-background shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
-        aria-label="AI Assistant"
-        title="AI Assistant"
+        aria-label={t('ai.assistantName')}
+        title={t('ai.assistantName')}
       >
         <svg
           class="size-5"

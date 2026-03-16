@@ -1,3 +1,14 @@
+/// <reference types="astro/content" />
+declare module "remark-collapse" {
+  import type { Plugin } from "unified";
+  const plugin: Plugin;
+  export default plugin;
+}
+declare module "remark-github-alerts" {
+  import type { Plugin } from "unified";
+  const plugin: Plugin;
+  export default plugin;
+}
 interface ThemeChangeDetail {
   isDark: boolean;
   theme: string;
@@ -15,17 +26,4 @@ interface Window {
 
 interface WindowEventMap {
   themechange: CustomEvent<ThemeChangeDetail>;
-}
-
-interface ViewTransition {
-  finished: Promise<void>;
-  ready: Promise<void>;
-  updateCallbackDone: Promise<void>;
-  skipTransition: () => void;
-}
-
-interface Document {
-  startViewTransition?: (
-    callback: () => void | Promise<void>
-  ) => ViewTransition;
 }
