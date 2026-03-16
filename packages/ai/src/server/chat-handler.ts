@@ -259,6 +259,8 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
 
             let hasThinking = !!cachedResponse.thinking;
             let thinkingId: string | undefined;
+            const textId = `text-${Date.now()}`;
+            let textStarted = false;
 
             for await (const chunk of playbackGenerator) {
               if (chunk.type === 'thinking') {
@@ -272,12 +274,20 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
                   writer.write({ type: 'reasoning-end', id: thinkingId } as never);
                   thinkingId = undefined;
                 }
-                writer.write({ type: 'text-delta', delta: chunk.text, id: `cache-${Date.now()}` } as never);
+                if (!textStarted) {
+                  writer.write({ type: 'text-start', id: textId } as never);
+                  textStarted = true;
+                }
+                writer.write({ type: 'text-delta', id: textId, delta: chunk.text } as never);
               }
             }
 
             if (thinkingId) {
               writer.write({ type: 'reasoning-end', id: thinkingId } as never);
+            }
+
+            if (textStarted) {
+              writer.write({ type: 'text-end', id: textId } as never);
             }
 
             writer.write({
