@@ -70,7 +70,7 @@ export const SITE = {
 | `AI_MODEL`          | Recommended | Model name (default: `gpt-4o-mini`)                     |
 | `AI_KEYWORD_MODEL`  | Optional    | Model for keyword extraction (defaults to `AI_MODEL`)   |
 | `AI_EVIDENCE_MODEL` | Optional    | Model for evidence analysis (defaults to keyword model) |
-| `AI_BINDING_NAME`   | For Workers | Cloudflare AI binding name (default: `AI`)              |
+| `AI_BINDING_NAME`   | For Workers | Cloudflare AI binding name (default: `minimaxAI`)       |
 | `SITE_AUTHOR`       | Recommended | Author name for prompts                                 |
 | `SITE_URL`          | Recommended | Site URL for article links                              |
 

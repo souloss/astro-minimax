@@ -56,7 +56,7 @@ If AI chat is enabled, configure in Cloudflare Pages:
 | Variable | Description |
 |----------|-------------|
 | `NODE_VERSION` | `22` (recommended) |
-| `AI_BINDING_NAME` | AI Binding name (defaults to `AI`) |
+| `AI_BINDING_NAME` | AI Binding name (defaults to `minimaxAI`) |
 
 ### AI Binding Configuration
 

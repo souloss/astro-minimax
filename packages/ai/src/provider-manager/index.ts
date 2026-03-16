@@ -3,7 +3,7 @@ export { BaseProviderAdapter } from './base.js';
 export { OpenAIAdapter } from './openai.js';
 export { WorkersAIAdapter } from './workers.js';
 export { MockAdapter } from './mock.js';
-export { parseProviderConfigs, validateProviderConfig, hasAnyProviderConfigured } from './config.js';
+export { parseProviderConfigs, validateProviderConfig, hasAnyProviderConfigured, DEFAULT_WORKERS_BINDING_NAME } from './config.js';
 
 export type {
   ProviderConfig,

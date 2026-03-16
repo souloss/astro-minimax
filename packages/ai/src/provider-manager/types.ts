@@ -52,7 +52,7 @@ export interface OpenAIProviderConfig extends BaseProviderConfig {
  */
 export interface WorkersAIProviderConfig extends BaseProviderConfig {
   type: 'workers';
-  /** AI binding name in Cloudflare environment. Default: 'AI' */
+  /** AI binding name in Cloudflare environment. Default: 'minimaxAI' */
   bindingName: string;
 }
 

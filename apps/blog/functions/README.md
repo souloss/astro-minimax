@@ -32,7 +32,7 @@ Configure in `.env` (local) or Cloudflare Dashboard (production):
 | `AI_BASE_URL` | OpenAI-compatible API base URL |
 | `AI_API_KEY` | API key |
 | `AI_MODEL` | Model name |
-| `AI_BINDING_NAME` | Workers AI binding name (default: `souloss`) |
+| `AI_BINDING_NAME` | Workers AI binding name (default: `minimaxAI`) |
 | `SITE_AUTHOR` | Author name for AI prompts |
 | `SITE_URL` | Site URL for article links |
 

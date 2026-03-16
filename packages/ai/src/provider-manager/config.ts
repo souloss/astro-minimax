@@ -5,6 +5,8 @@ import type {
   WorkersAIProviderConfig,
 } from './types.js';
 
+export const DEFAULT_WORKERS_BINDING_NAME = 'minimaxAI';
+
 const DEFAULT_WEIGHT = 100;
 const DEFAULT_TIMEOUT = 30000;
 const DEFAULT_MODEL = 'gpt-4o-mini';
@@ -14,7 +16,7 @@ function hasOpenAIConfig(env: ProviderManagerEnv): boolean {
 }
 
 function hasWorkersAIBinding(env: ProviderManagerEnv): boolean {
-  const bindingName = (env.AI_BINDING_NAME as string) || 'minimaxAI';
+  const bindingName = (env.AI_BINDING_NAME as string) || DEFAULT_WORKERS_BINDING_NAME;
   return !!(env as Record<string, unknown>)[bindingName];
 }
 
@@ -36,7 +38,7 @@ function createOpenAIConfigFromEnv(env: ProviderManagerEnv): OpenAIProviderConfi
 }
 
 function createWorkersAIConfigFromEnv(env: ProviderManagerEnv): WorkersAIProviderConfig | null {
-  const bindingName = (env.AI_BINDING_NAME as string) || 'minimaxAI';
+  const bindingName = (env.AI_BINDING_NAME as string) || DEFAULT_WORKERS_BINDING_NAME;
   if (!(env as Record<string, unknown>)[bindingName]) return null;
 
   return {
@@ -79,7 +81,7 @@ function parseAIProvidersJSON(jsonString: string): ProviderConfig[] | null {
           timeout,
           enabled,
           id: config.id || `workers-${index}`,
-          bindingName: config.bindingName || 'AI',
+          bindingName: config.bindingName || DEFAULT_WORKERS_BINDING_NAME,
         } as WorkersAIProviderConfig;
       }
       
