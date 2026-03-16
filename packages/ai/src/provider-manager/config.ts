@@ -44,11 +44,11 @@ function createWorkersAIConfigFromEnv(env: ProviderManagerEnv): WorkersAIProvide
   return {
     id: 'workers-ai-default',
     type: 'workers',
-    weight: DEFAULT_WEIGHT, // Highest priority (free tier available)
+    weight: DEFAULT_WEIGHT,
     bindingName,
-    model: (env.AI_MODEL as string) || '@cf/zai-org/glm-4.7-flash',
-    keywordModel: env.AI_KEYWORD_MODEL as string | undefined,
-    evidenceModel: env.AI_EVIDENCE_MODEL as string | undefined,
+    model: (env.AI_WORKERS_MODEL as string) || '@cf/zai-org/glm-4.7-flash',
+    keywordModel: (env.AI_WORKERS_MODEL as string) || undefined,
+    evidenceModel: (env.AI_WORKERS_MODEL as string) || undefined,
     timeout: DEFAULT_TIMEOUT,
     enabled: true,
   };

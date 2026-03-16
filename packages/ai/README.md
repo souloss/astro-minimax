@@ -63,16 +63,17 @@ export const SITE = {
 
 ### Environment Variables
 
-| Variable            | Required    | Description                                             |
-| ------------------- | ----------- | ------------------------------------------------------- |
-| `AI_BASE_URL`       | For OpenAI  | Base URL of OpenAI-compatible API                       |
-| `AI_API_KEY`        | For OpenAI  | API key                                                 |
-| `AI_MODEL`          | Recommended | Model name (default: `gpt-4o-mini`)                     |
-| `AI_KEYWORD_MODEL`  | Optional    | Model for keyword extraction (defaults to `AI_MODEL`)   |
-| `AI_EVIDENCE_MODEL` | Optional    | Model for evidence analysis (defaults to keyword model) |
-| `AI_BINDING_NAME`   | For Workers | Cloudflare AI binding name (default: `minimaxAI`)       |
-| `SITE_AUTHOR`       | Recommended | Author name for prompts                                 |
-| `SITE_URL`          | Recommended | Site URL for article links                              |
+| Variable            | Required    | Description                                                 |
+| ------------------- | ----------- | ----------------------------------------------------------- |
+| `AI_BASE_URL`       | For OpenAI  | Base URL of OpenAI-compatible API                           |
+| `AI_API_KEY`        | For OpenAI  | API key                                                     |
+| `AI_MODEL`          | Recommended | Model name for OpenAI provider (default: `gpt-4o-mini`)     |
+| `AI_KEYWORD_MODEL`  | Optional    | Model for keyword extraction (defaults to `AI_MODEL`)       |
+| `AI_EVIDENCE_MODEL` | Optional    | Model for evidence analysis (defaults to keyword model)     |
+| `AI_BINDING_NAME`   | For Workers | Cloudflare AI binding name (default: `minimaxAI`)           |
+| `AI_WORKERS_MODEL`  | For Workers | Model for Workers AI (default: `@cf/zai-org/glm-4.7-flash`) |
+| `SITE_AUTHOR`       | Recommended | Author name for prompts                                     |
+| `SITE_URL`          | Recommended | Site URL for article links                                  |
 
 ### Response Cache Configuration
 

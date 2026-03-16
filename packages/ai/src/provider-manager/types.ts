@@ -69,13 +69,15 @@ export interface ProviderManagerEnv {
   [key: string]: unknown;
   /** JSON string containing array of ProviderConfig */
   AI_PROVIDERS?: string;
-  // Legacy single-provider config (for backward compatibility)
+  // OpenAI-compatible provider config
   AI_BASE_URL?: string;
   AI_API_KEY?: string;
   AI_MODEL?: string;
   AI_KEYWORD_MODEL?: string;
   AI_EVIDENCE_MODEL?: string;
+  // Workers AI provider config
   AI_BINDING_NAME?: string;
+  AI_WORKERS_MODEL?: string;
 }
 
 // ============================================================================
