@@ -8,8 +8,8 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astro-minimax/core": "workspace:*",
-    "@astro-minimax/viz": "workspace:*",
+    "@astro-minimax/core": "^0.1.0",
+    "@astro-minimax/viz": "^0.1.4",
     "@astrojs/mdx": "^5.0.0",
     "@astrojs/preact": "^5.0.0",
     "@astrojs/rss": "^4.0.17",

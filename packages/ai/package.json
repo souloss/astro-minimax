@@ -5,6 +5,9 @@
   "description": "Vendor-agnostic AI integration package with full RAG pipeline for astro-minimax blogs.",
   "author": "Souloss",
   "license": "MIT",
+  "bin": {
+    "astro-ai-dev": "./dist/server/dev-server.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -71,8 +74,12 @@
     "preact": "^10.0.0"
   },
   "peerDependenciesMeta": {
-    "@ai-sdk/react": { "optional": true },
-    "preact": { "optional": true }
+    "@ai-sdk/react": {
+      "optional": true
+    },
+    "preact": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
