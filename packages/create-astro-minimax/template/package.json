@@ -5,7 +5,14 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build && pagefind --site dist",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "tools:summarize": "tsx tools/summarize.ts",
+    "tools:generate-related": "tsx tools/generate-related.ts",
+    "tools:vectorize": "tsx tools/vectorize.ts",
+    "ai:process": "tsx tools/ai-process.ts",
+    "context:build": "tsx tools/build-author-context.ts",
+    "voice:build": "tsx tools/build-voice-profile.ts",
+    "profile:generate": "tsx tools/generate-author-profile.ts"
   },
   "dependencies": {
     "@astro-minimax/core": "^0.1.0",
@@ -38,7 +45,11 @@
     "@astrojs/check": "^0.9.6",
     "@pagefind/default-ui": "^1.4.0",
     "@shikijs/transformers": "^4.0.0",
+    "@types/lodash.kebabcase": "^4.1.9",
+    "@types/mdast": "^4.0.4",
     "pagefind": "^1.4.0",
-    "typescript": "^5.9.3"
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "unist-util-visit": "^5.1.0"
   }
 }
