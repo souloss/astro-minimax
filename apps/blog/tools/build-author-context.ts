@@ -148,6 +148,9 @@ async function collectPosts(
     const summaryEntry = aiSummaries.articles?.[id]?.data;
     const plainContent = stripMarkdown(fm.body);
 
+    // URL 格式: /{lang}/posts/{slug}/
+    // slug 是 id 的最后部分（去掉语言前缀）
+    const slug = id.split("/").slice(1).join("/");
     posts.push({
       id,
       title: String(data.title),
@@ -159,7 +162,7 @@ async function collectPosts(
       summary: summaryEntry?.summary || truncate(plainContent, 150),
       keyPoints: summaryEntry?.keyPoints || [],
       body: includeBody ? fm.body.slice(0, 5000) : "",
-      url: `/${id}`,
+      url: `/${lang}/posts/${slug}/`,
     });
   }
 

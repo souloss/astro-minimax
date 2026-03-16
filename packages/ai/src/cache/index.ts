@@ -34,6 +34,20 @@ export {
   type DetectedPublicQuestion,
 } from './global-cache.js';
 
+export {
+  getResponseCache,
+  setResponseCache,
+  deleteResponseCache,
+  getResponseCacheConfig,
+  buildResponseCacheKey,
+  createResponsePlaybackGenerator,
+  DEFAULT_RESPONSE_CACHE_CONFIG,
+  type CachedAIResponse,
+  type ResponseCacheConfig,
+  type ResponseCacheEnv,
+  type PlaybackChunk,
+} from './response-cache.js';
+
 import { MemoryCacheAdapter } from './memory-adapter.js';
 import { KVCacheAdapter } from './kv-adapter.js';
 import type { CacheAdapter, CacheEnv, CacheManagerConfig } from './types.js';

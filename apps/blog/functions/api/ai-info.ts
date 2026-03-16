@@ -19,7 +19,7 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
 
   const manager = new ProviderManager(env, { enableMockFallback: true });
   const providerStatus = manager.getProviderStatus();
-  const bindingName = (env.AI_BINDING_NAME as string) || 'souloss';
+  const bindingName = (env.AI_BINDING_NAME as string) || 'minimaxAI';
 
   return new Response(JSON.stringify({
     status: 'ok',

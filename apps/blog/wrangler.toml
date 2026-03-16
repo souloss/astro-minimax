@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 # Workers AI Binding
 # Name can be customized via AI_BINDING_NAME environment variable
 [ai]
-binding = "souloss"
+binding = "minimaxAI"
 
 # KV Namespace for AI Chat Cache
 # Used for caching search context and conversation state

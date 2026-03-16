@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-15T20:38:29.612Z",
+  "generatedAt": "2026-03-16T08:01:40.328Z",
   "siteUrl": "https://demo-astro-minimax.souloss.cn/",
   "sourceInfo": {
     "totalPosts": 22,
@@ -24,7 +24,7 @@
       ],
       "summary": "This guide covers how to deploy your astro-minimax blog to various platforms. astro-minimax generat…",
       "keyPoints": [],
-      "url": "/en/deployment-guide"
+      "url": "/en/posts/deployment-guide/"
     },
     {
       "title": "\"astro-minimax Feature Overview\"",
@@ -38,7 +38,7 @@
       ],
       "summary": "astro-minimax is a feature-rich Astro blog theme built with a modular architecture. This article pr…",
       "keyPoints": [],
-      "url": "/en/feature-overview"
+      "url": "/en/posts/feature-overview/"
     },
     {
       "title": "\"部署指南：多平台部署 astro-minimax\"",
@@ -52,7 +52,7 @@
       ],
       "summary": "本指南详细介绍如何将 astro-minimax 博客部署到各种平台。astro-minimax 生成静态站点，可以部署到几乎任何支持静态托管的服务。\n\nTable of contents\n\n前置准…",
       "keyPoints": [],
-      "url": "/zh/deployment-guide"
+      "url": "/zh/posts/deployment-guide/"
     },
     {
       "title": "\"astro-minimax 功能特性总览\"",
@@ -66,7 +66,7 @@
       ],
       "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-min…",
       "keyPoints": [],
-      "url": "/zh/feature-overview"
+      "url": "/zh/posts/feature-overview/"
     },
     {
       "title": "\"Getting Started: Two Integration Methods\"",
@@ -87,7 +87,7 @@
         "Automatic updates with NPM Packages",
         "Consistent blog content directory structure"
       ],
-      "url": "/en/getting-started"
+      "url": "/en/posts/getting-started/"
     },
     {
       "title": "\"快速开始：两种使用方式\"",
@@ -107,7 +107,7 @@
         "手动合并上游更新",
         "使用pnpm update持续获取更新"
       ],
-      "url": "/zh/getting-started"
+      "url": "/zh/posts/getting-started/"
     },
     {
       "title": "How to add LaTeX Equations in Astro blog posts",
@@ -126,7 +126,7 @@
         "Add katex text-color in typography CSS",
         "Write inline and block LaTeX equations"
       ],
-      "url": "/en/how-to-add-latex-equations-in-blog-posts"
+      "url": "/en/posts/how-to-add-latex-equations-in-blog-posts/"
     },
     {
       "title": "如何在 Astro 博客文章中添加 LaTeX 公式",
@@ -145,7 +145,7 @@
         "导入KaTeX CSS样式",
         "为katex设置文本颜色"
       ],
-      "url": "/zh/how-to-add-latex-equations-in-blog-posts"
+      "url": "/zh/posts/how-to-add-latex-equations-in-blog-posts/"
     },
     {
       "title": "How to use Git Hooks to set Created and Modified Dates",
@@ -166,7 +166,7 @@
         "IDE代码片段填充frontmatter",
         "修改Astro配置允许空日期"
       ],
-      "url": "/en/setting-dates-via-git-hooks"
+      "url": "/en/posts/setting-dates-via-git-hooks/"
     },
     {
       "title": "如何使用 Git 钩子设置创建和修改日期",
@@ -186,7 +186,7 @@
         "为新文件添加创建日期",
         "修改Astro配置允许空日期"
       ],
-      "url": "/zh/setting-dates-via-git-hooks"
+      "url": "/zh/posts/setting-dates-via-git-hooks/"
     },
     {
       "title": "How to update dependencies of astro-minimax",
@@ -204,7 +204,7 @@
         "更新Astro-minimax模板的步骤",
         "处理Git合并冲突"
       ],
-      "url": "/en/how-to-update-dependencies"
+      "url": "/en/posts/how-to-update-dependencies/"
     },
     {
       "title": "如何更新 astro-minimax 的依赖",
@@ -223,7 +223,7 @@
         "更新astro-minimax模板的技巧",
         "使用git更新模板时注意合并冲突"
       ],
-      "url": "/zh/how-to-update-dependencies"
+      "url": "/zh/posts/how-to-update-dependencies/"
     }
   ],
   "topTags": [

@@ -7,7 +7,7 @@ import voiceProfile from '../../datas/voice-profile.json';
 
 interface FunctionEnv extends ChatHandlerEnv {
   CACHE_KV: KVNamespace;
-  souloss: Ai;
+  minimaxAI: Ai;
   [key: string]: unknown;
 }
 

@@ -14,7 +14,7 @@ function hasOpenAIConfig(env: ProviderManagerEnv): boolean {
 }
 
 function hasWorkersAIBinding(env: ProviderManagerEnv): boolean {
-  const bindingName = (env.AI_BINDING_NAME as string) || 'AI';
+  const bindingName = (env.AI_BINDING_NAME as string) || 'minimaxAI';
   return !!(env as Record<string, unknown>)[bindingName];
 }
 
@@ -36,7 +36,7 @@ function createOpenAIConfigFromEnv(env: ProviderManagerEnv): OpenAIProviderConfi
 }
 
 function createWorkersAIConfigFromEnv(env: ProviderManagerEnv): WorkersAIProviderConfig | null {
-  const bindingName = (env.AI_BINDING_NAME as string) || 'AI';
+  const bindingName = (env.AI_BINDING_NAME as string) || 'minimaxAI';
   if (!(env as Record<string, unknown>)[bindingName]) return null;
 
   return {

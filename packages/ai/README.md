@@ -26,16 +26,16 @@ Vendor-agnostic AI integration package with full RAG pipeline for astro-minimax 
 
 ### Modules
 
-| Module | Purpose |
-|--------|---------|
-| `server/` | Reusable API handlers (`handleChatRequest`, `initializeMetadata`) |
-| `provider-manager/` | Multi-provider management with priority, failover, health tracking |
-| `search/` | In-memory article/project search with session caching |
-| `intelligence/` | Keyword extraction, evidence analysis, citation guard |
-| `prompt/` | Three-layer system prompt builder (static → semi-static → dynamic) |
-| `data/` | Build-time metadata loading (summaries, author context, voice profile) |
-| `stream/` | Stream helpers and response utilities |
-| `components/` | Preact UI components (ChatPanel, AIChatWidget, AIChatContainer) |
+| Module              | Purpose                                                                |
+| ------------------- | ---------------------------------------------------------------------- |
+| `server/`           | Reusable API handlers (`handleChatRequest`, `initializeMetadata`)      |
+| `provider-manager/` | Multi-provider management with priority, failover, health tracking     |
+| `search/`           | In-memory article/project search with session caching                  |
+| `intelligence/`     | Keyword extraction, evidence analysis, citation guard                  |
+| `prompt/`           | Three-layer system prompt builder (static → semi-static → dynamic)     |
+| `data/`             | Build-time metadata loading (summaries, author context, voice profile) |
+| `stream/`           | Stream helpers and response utilities                                  |
+| `components/`       | Preact UI components (ChatPanel, AIChatWidget, AIChatContainer)        |
 
 ## Installation
 
@@ -63,16 +63,28 @@ export const SITE = {
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `AI_BASE_URL` | For OpenAI | Base URL of OpenAI-compatible API |
-| `AI_API_KEY` | For OpenAI | API key |
-| `AI_MODEL` | Recommended | Model name (default: `gpt-4o-mini`) |
-| `AI_KEYWORD_MODEL` | Optional | Model for keyword extraction (defaults to `AI_MODEL`) |
-| `AI_EVIDENCE_MODEL` | Optional | Model for evidence analysis (defaults to keyword model) |
-| `AI_BINDING_NAME` | For Workers | Cloudflare AI binding name (default: `AI`) |
-| `SITE_AUTHOR` | Recommended | Author name for prompts |
-| `SITE_URL` | Recommended | Site URL for article links |
+| Variable            | Required    | Description                                             |
+| ------------------- | ----------- | ------------------------------------------------------- |
+| `AI_BASE_URL`       | For OpenAI  | Base URL of OpenAI-compatible API                       |
+| `AI_API_KEY`        | For OpenAI  | API key                                                 |
+| `AI_MODEL`          | Recommended | Model name (default: `gpt-4o-mini`)                     |
+| `AI_KEYWORD_MODEL`  | Optional    | Model for keyword extraction (defaults to `AI_MODEL`)   |
+| `AI_EVIDENCE_MODEL` | Optional    | Model for evidence analysis (defaults to keyword model) |
+| `AI_BINDING_NAME`   | For Workers | Cloudflare AI binding name (default: `AI`)              |
+| `SITE_AUTHOR`       | Recommended | Author name for prompts                                 |
+| `SITE_URL`          | Recommended | Site URL for article links                              |
+
+### Response Cache Configuration
+
+| Variable                           | Default | Description                               |
+| ---------------------------------- | ------- | ----------------------------------------- |
+| `AI_RESPONSE_CACHE_ENABLED`        | `false` | Enable AI response caching                |
+| `AI_RESPONSE_CACHE_TTL`            | `3600`  | Cache TTL in seconds (1 hour)             |
+| `AI_RESPONSE_CACHE_PLAYBACK_DELAY` | `20`    | Delay between chunks during playback (ms) |
+| `AI_RESPONSE_CACHE_CHUNK_SIZE`     | `15`    | Characters per chunk during playback      |
+| `AI_RESPONSE_CACHE_THINKING_DELAY` | `5`     | Delay for thinking content playback (ms)  |
+
+When enabled, the system caches complete AI responses (including thinking/reasoning content) for public questions like "What tech stack does this blog use?". Subsequent identical queries are served from cache with simulated streaming playback, reducing API costs and response time.
 
 ## Server Module
 
@@ -115,6 +127,7 @@ export const onRequest: PagesFunction = async (context) => {
 ```
 
 `context.scope` values:
+
 - `"global"` — General blog chat (default)
 - `"article"` — Reading companion mode, focused on a specific article
 
@@ -136,14 +149,14 @@ export const onRequest: PagesFunction = async (context) => {
 }
 ```
 
-| Code | Status | Retryable | Description |
-|------|--------|-----------|-------------|
-| `RATE_LIMITED` | 429 | Yes | Too many requests |
-| `PROVIDER_UNAVAILABLE` | 503 | Yes | All providers failed |
-| `TIMEOUT` | 504 | Yes | Request timeout |
-| `INPUT_TOO_LONG` | 400 | No | Message exceeds limit |
-| `INVALID_REQUEST` | 400 | No | Malformed request |
-| `INTERNAL_ERROR` | 500 | Yes | Server error |
+| Code                   | Status | Retryable | Description           |
+| ---------------------- | ------ | --------- | --------------------- |
+| `RATE_LIMITED`         | 429    | Yes       | Too many requests     |
+| `PROVIDER_UNAVAILABLE` | 503    | Yes       | All providers failed  |
+| `TIMEOUT`              | 504    | Yes       | Request timeout       |
+| `INPUT_TOO_LONG`       | 400    | No        | Message exceeds limit |
+| `INVALID_REQUEST`      | 400    | No        | Malformed request     |
+| `INTERNAL_ERROR`       | 500    | Yes       | Server error          |
 
 ## Provider System
 
@@ -157,11 +170,11 @@ When a provider fails, the next one is tried automatically. Mock fallback ensure
 
 ### Timeout Budget (per request: 45s total)
 
-| Stage | Timeout | Behavior on timeout |
-|-------|---------|-------------------|
-| Keyword extraction | 5s | Falls back to local search query |
-| Evidence analysis | 8s | Skipped |
-| LLM streaming | 30s | Tries next provider, then mock |
+| Stage              | Timeout | Behavior on timeout              |
+| ------------------ | ------- | -------------------------------- |
+| Keyword extraction | 5s      | Falls back to local search query |
+| Evidence analysis  | 8s      | Skipped                          |
+| LLM streaming      | 30s     | Tries next provider, then mock   |
 
 ## "Read & Chat" (边读边聊)
 
@@ -186,6 +199,7 @@ Manages open/close state. Exposes `window.__aiChatToggle` for the floating actio
 ### ChatPanel.tsx
 
 Core chat UI built on `useChat` from `@ai-sdk/react`:
+
 - `DefaultChatTransport` with `prepareSendMessagesRequest` for context injection
 - Parts-based message rendering (`text`, `source`, custom data parts)
 - Error display with retry button (`regenerate()`)
@@ -194,15 +208,15 @@ Core chat UI built on `useChat` from `@ai-sdk/react`:
 
 ## Exports
 
-| Path | Contents |
-|------|----------|
-| `.` | All modules |
-| `./server` | `handleChatRequest`, `initializeMetadata`, error helpers, types |
-| `./providers` | Mock response/stream utilities |
-| `./middleware` | Rate limiting |
-| `./search` | Article/project search, session cache |
-| `./intelligence` | Keyword extraction, evidence analysis, citation guard |
-| `./prompt` | System prompt builder |
-| `./data` | Metadata loading |
-| `./stream` | Stream utilities |
-| `./components/*` | Astro/Preact components |
+| Path             | Contents                                                        |
+| ---------------- | --------------------------------------------------------------- |
+| `.`              | All modules                                                     |
+| `./server`       | `handleChatRequest`, `initializeMetadata`, error helpers, types |
+| `./providers`    | Mock response/stream utilities                                  |
+| `./middleware`   | Rate limiting                                                   |
+| `./search`       | Article/project search, session cache                           |
+| `./intelligence` | Keyword extraction, evidence analysis, citation guard           |
+| `./prompt`       | System prompt builder                                           |
+| `./data`         | Metadata loading                                                |
+| `./stream`       | Stream utilities                                                |
+| `./components/*` | Astro/Preact components                                         |

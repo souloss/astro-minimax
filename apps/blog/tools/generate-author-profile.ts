@@ -84,6 +84,7 @@ async function collectPosts(_siteUrl: string): Promise<Post[]> {
       const relativePath = filePath.replace(BLOG_DIR + "/", "");
       const id = relativePath.replace(/\.md$/, "");
       const lang = relativePath.startsWith("en/") ? "en" : "zh";
+      const slug = id.split("/").slice(1).join("/");
       const summaryEntry = aiSummaries.articles?.[id]?.data;
 
       posts.push({
@@ -95,7 +96,7 @@ async function collectPosts(_siteUrl: string): Promise<Post[]> {
         description: String(fm.data.description || ""),
         summary: summaryEntry?.summary || truncate(stripMarkdown(fm.body), 100),
         keyPoints: summaryEntry?.keyPoints || [],
-        url: `/${id}`,
+        url: `/${lang}/posts/${slug}/`,
       });
     }
   }

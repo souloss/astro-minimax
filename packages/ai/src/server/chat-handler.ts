@@ -35,8 +35,12 @@ import {
   getGlobalSearchCache,
   setGlobalSearchCache,
   getGlobalCacheTTL,
+  getResponseCache,
+  setResponseCache,
+  getResponseCacheConfig,
+  createResponsePlaybackGenerator,
 } from '../index.js';
-import type { CacheAdapter, CachedSearchContext, PublicQuestionType } from '../index.js';
+import type { CacheAdapter, CachedSearchContext, PublicQuestionType, CachedAIResponse, ResponseCacheConfig, PlaybackChunk } from '../index.js';
 import type { ChatHandlerOptions, ChatRequestBody, ChatContext } from './types.js';
 import { createChatStatusData } from './types.js';
 import { errors, corsPreflightResponse } from './errors.js';
@@ -172,6 +176,7 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
   const { env, messages, latestText, context, req, lang } = args;
 
   const cache = createCacheAdapter(env);
+  const responseCacheConfig = getResponseCacheConfig(env);
 
   const manager = new ProviderManager(env, {
     enableMockFallback: true,
@@ -194,6 +199,112 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
 
   if (publicQuestion && (!publicQuestion.needsContext || articleSlug)) {
     const globalCacheContext = { articleSlug, lang };
+
+    // Check response cache first if enabled
+    if (responseCacheConfig.enabled) {
+      const cachedResponse = await getResponseCache(cache, publicQuestion.type, globalCacheContext);
+      
+      if (cachedResponse) {
+        globalCacheHit = true;
+        globalCacheType = publicQuestion.type;
+
+        const stream = createUIMessageStream({
+          execute: async ({ writer }) => {
+            writer.write({
+              type: 'message-metadata',
+              messageMetadata: createChatStatusData({
+                stage: 'search',
+                message: t('ai.status.found', lang, { count: cachedResponse.articles.length + cachedResponse.projects.length }),
+                progress: 40,
+              }),
+            });
+
+            writer.write({
+              type: 'message-metadata',
+              messageMetadata: createChatStatusData({
+                stage: 'answer',
+                message: t('ai.status.generating', lang),
+                progress: 60,
+              }),
+            });
+
+            for (const article of cachedResponse.articles.slice(0, 3)) {
+              try {
+                writer.write({
+                  type: 'source',
+                  value: {
+                    type: 'source',
+                    sourceType: 'url',
+                    id: `source-${article.title}`,
+                    url: (article as { url?: string }).url ?? '#',
+                    title: article.title,
+                  },
+                } as never);
+              } catch { /* best-effort */ }
+            }
+
+            writer.write({
+              type: 'message-metadata',
+              messageMetadata: createChatStatusData({
+                stage: 'answer',
+                message: t('ai.status.generating', lang),
+                progress: 70,
+              }),
+            });
+
+            const playbackGenerator = createResponsePlaybackGenerator(
+              cachedResponse,
+              responseCacheConfig
+            );
+
+            let hasThinking = !!cachedResponse.thinking;
+            let thinkingId: string | undefined;
+
+            for await (const chunk of playbackGenerator) {
+              if (chunk.type === 'thinking') {
+                if (!thinkingId) {
+                  thinkingId = `thinking-${Date.now()}`;
+                  writer.write({ type: 'reasoning-start', id: thinkingId } as never);
+                }
+                writer.write({ type: 'reasoning-delta', id: thinkingId, delta: chunk.text } as never);
+              } else {
+                if (thinkingId) {
+                  writer.write({ type: 'reasoning-end', id: thinkingId } as never);
+                  thinkingId = undefined;
+                }
+                writer.write({ type: 'text-delta', delta: chunk.text, id: `cache-${Date.now()}` } as never);
+              }
+            }
+
+            if (thinkingId) {
+              writer.write({ type: 'reasoning-end', id: thinkingId } as never);
+            }
+
+            writer.write({
+              type: 'message-metadata',
+              messageMetadata: createChatStatusData({
+                stage: 'answer',
+                message: t('ai.status.generating', lang),
+                progress: 100,
+                done: true,
+              }),
+            });
+
+            writer.write({ type: 'finish', finishReason: 'stop' });
+          },
+        });
+
+        return createUIMessageStreamResponse({
+          stream,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Cache-Control': 'no-cache',
+          },
+        });
+      }
+    }
+
+    // Check search context cache
     const cachedSearch = await getGlobalSearchCache(cache, publicQuestion.type, globalCacheContext);
 
     if (cachedSearch) {
@@ -222,6 +333,23 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
               }),
             });
           }
+
+          for (const article of cachedSearch.articles.slice(0, 3)) {
+            try {
+              writer.write({
+                type: 'source',
+                value: {
+                  type: 'source',
+                  sourceType: 'url',
+                  id: `source-${article.title}`,
+                  url: (article as { url?: string }).url ?? '#',
+                  title: article.title,
+                },
+              } as never);
+            } catch { /* best-effort */ }
+          }
+
+          let responseText = '';
 
           if (adapter) {
             try {
@@ -255,8 +383,37 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
               writer.merge(result.toUIMessageStream({ sendFinish: false }));
               await result.consumeStream({});
               const text = await result.text;
+              const reasoningPromise = (result as unknown as { reasoning?: PromiseLike<unknown> }).reasoning;
+              let reasoningText: string | undefined;
+              if (reasoningPromise) {
+                try {
+                  const reasoningOutput = await Promise.resolve(reasoningPromise);
+                  reasoningText = typeof reasoningOutput === 'string' ? reasoningOutput : 
+                    (Array.isArray(reasoningOutput) ? reasoningOutput.map((r): string => {
+                      if (typeof r === 'object' && r !== null && 'text' in r) return (r as { text: string }).text;
+                      return String(r);
+                    }).join('') : undefined);
+                } catch { /* reasoning is optional */ }
+              }
+              responseText = text;
               if (text.length > 0) {
                 writer.write({ type: 'finish', finishReason: 'stop' });
+              }
+
+              // Save to response cache if enabled
+              if (responseCacheConfig.enabled && text.length > 0) {
+                const globalTTL = getGlobalCacheTTL(publicQuestion.type);
+                const responseCacheData: CachedAIResponse = {
+                  query: cachedSearch.query,
+                  thinking: reasoningText,
+                  response: text,
+                  articles: cachedSearch.articles,
+                  projects: cachedSearch.projects,
+                  lang,
+                  model: adapter.model,
+                  updatedAt: Date.now(),
+                };
+                await setResponseCache(cache, publicQuestion.type, responseCacheData, globalTTL, globalCacheContext);
               }
             } catch (err) {
               console.error('[chat-handler] Global cache LLM error:', err);
@@ -264,6 +421,7 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
           } else {
             const { getMockResponse } = await import('../providers/mock.js');
             const mockText = getMockResponse(latestText, lang);
+            responseText = mockText;
             writer.write({ type: 'text-delta', textDelta: mockText } as never);
             writer.write({ type: 'finish', finishReason: 'stop' });
           }
@@ -493,6 +651,8 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
 
       // Try real provider with stream-level error detection
       let streamSuccess = false;
+      let responseText = '';
+      let reasoningText: string | undefined;
       if (adapter) {
         try {
           const provider = adapter.getProvider();
@@ -517,13 +677,42 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
             },
           });
 
-          const text = await result.text;
+const text = await result.text;
+          const reasoningPromise = (result as unknown as { reasoning?: PromiseLike<unknown> }).reasoning;
+          let reasoningText: string | undefined;
+          if (reasoningPromise) {
+            try {
+              const reasoningOutput = await Promise.resolve(reasoningPromise);
+              reasoningText = typeof reasoningOutput === 'string' ? reasoningOutput : 
+                (Array.isArray(reasoningOutput) ? reasoningOutput.map((r): string => {
+                  if (typeof r === 'object' && r !== null && 'text' in r) return (r as { text: string }).text;
+                  return String(r);
+                }).join('') : undefined);
+            } catch { }
+          }
+          responseText = text;
           hasTextOutput = text.length > 0;
 
           if (hasTextOutput && errors.length === 0) {
             adapter.recordSuccess();
             writer.write({ type: 'finish', finishReason: 'stop' });
             streamSuccess = true;
+
+            // Save to response cache if enabled and public question
+            if (responseCacheConfig.enabled && publicQuestion && (!publicQuestion.needsContext || articleSlug)) {
+              const globalTTL = getGlobalCacheTTL(publicQuestion.type);
+              const responseCacheData: CachedAIResponse = {
+                query: searchQuery,
+                thinking: reasoningText,
+                response: text,
+                articles: relatedArticles,
+                projects: relatedProjects,
+                lang,
+                model: adapter.model,
+                updatedAt: Date.now(),
+              };
+              await setResponseCache(cache, publicQuestion.type, responseCacheData, globalTTL, { articleSlug, lang });
+            }
           } else if (errors.length > 0) {
             adapter.recordFailure(errors[0]);
             console.error('[chat-handler] Stream error:', errors[0].message);

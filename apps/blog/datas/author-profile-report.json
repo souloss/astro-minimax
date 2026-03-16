@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-03-15T20:38:29.616Z",
+    "lastUpdated": "2026-03-16T08:01:40.332Z",
     "model": "rule-based-template",
     "generatedBy": "rule-based"
   },
@@ -54,31 +54,31 @@
       "posts": [
         {
           "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
-          "url": "/en/deployment-guide",
+          "url": "/en/posts/deployment-guide/",
           "reason": "This guide covers how to deploy your astro-minimax blog to v",
           "date": "2026-03-14T00:00:00.000Z"
         },
         {
           "title": "\"astro-minimax Feature Overview\"",
-          "url": "/en/feature-overview",
+          "url": "/en/posts/feature-overview/",
           "reason": "astro-minimax is a feature-rich Astro blog theme built with ",
           "date": "2026-03-14T00:00:00.000Z"
         },
         {
           "title": "\"部署指南：多平台部署 astro-minimax\"",
-          "url": "/zh/deployment-guide",
+          "url": "/zh/posts/deployment-guide/",
           "reason": "本指南详细介绍如何将 astro-minimax 博客部署到各种平台。astro-minimax 生成静态站点，可以部署",
           "date": "2026-03-14T00:00:00.000Z"
         },
         {
           "title": "\"astro-minimax 功能特性总览\"",
-          "url": "/zh/feature-overview",
+          "url": "/zh/posts/feature-overview/",
           "reason": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用",
           "date": "2026-03-14T00:00:00.000Z"
         },
         {
           "title": "\"Getting Started: Two Integration Methods\"",
-          "url": "/en/getting-started",
+          "url": "/en/posts/getting-started/",
           "reason": "astro-minimax provides two integration methods for setting u",
           "date": "2026-03-12T00:00:00.000Z"
         }

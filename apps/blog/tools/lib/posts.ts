@@ -21,6 +21,13 @@ export interface PostMeta {
   draft?: boolean;
 }
 
+export function getPostURL(id: string): string {
+  const parts = id.split("/");
+  const lang = parts[0];
+  const slug = parts.slice(1).join("/");
+  return `/${lang}/posts/${slug}/`;
+}
+
 export async function getAllPosts(opts?: {
   includeDrafts?: boolean;
   stripBody?: boolean;
