@@ -1,5 +1,6 @@
 import type { UIMessage } from 'ai';
 import type { ProviderManagerEnv } from '../provider-manager/types.js';
+import type { CacheEnv } from '../cache/types.js';
 
 // ── Chat Context ──────────────────────────────────────────────
 
@@ -26,7 +27,7 @@ export interface ChatRequestBody {
   messages: UIMessage[];
 }
 
-export interface ChatHandlerEnv extends ProviderManagerEnv {
+export interface ChatHandlerEnv extends ProviderManagerEnv, CacheEnv {
   SITE_AUTHOR?: string;
   SITE_URL?: string;
   [key: string]: unknown;

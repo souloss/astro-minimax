@@ -16,6 +16,9 @@ export * from './provider-manager/index.js';
 // Middleware (rate limiting)
 export * from './middleware/index.js';
 
+// Cache abstraction layer
+export * from './cache/index.js';
+
 // Search API + session cache
 export * from './search/index.js';
 

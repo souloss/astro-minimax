@@ -6,6 +6,8 @@ import authorContextJson from '../../datas/author-context.json';
 import voiceProfile from '../../datas/voice-profile.json';
 
 interface FunctionEnv extends ChatHandlerEnv {
+  CACHE_KV: KVNamespace;
+  souloss: Ai;
   [key: string]: unknown;
 }
 

@@ -15,7 +15,6 @@ import {
   getSessionCacheKey,
   getCachedContext,
   setCachedContext,
-  cleanupCache,
   shouldReuseSearchContext,
   buildLocalSearchQuery,
   shouldRunKeywordExtraction,
@@ -31,7 +30,13 @@ import {
   getVoiceProfile,
   mergeResults,
   ProviderManager,
+  createCacheAdapter,
+  detectPublicQuestion,
+  getGlobalSearchCache,
+  setGlobalSearchCache,
+  getGlobalCacheTTL,
 } from '../index.js';
+import type { CacheAdapter, CachedSearchContext, PublicQuestionType } from '../index.js';
 import type { ChatHandlerOptions, ChatRequestBody, ChatContext } from './types.js';
 import { createChatStatusData } from './types.js';
 import { errors, corsPreflightResponse } from './errors.js';
@@ -166,6 +171,8 @@ interface PipelineArgs {
 async function runPipeline(args: PipelineArgs): Promise<Response> {
   const { env, messages, latestText, context, req, lang } = args;
 
+  const cache = createCacheAdapter(env);
+
   const manager = new ProviderManager(env, {
     enableMockFallback: true,
     unhealthyThreshold: 3,
@@ -175,13 +182,110 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
   const hasRealProvider = manager.hasProviders();
   const adapter = hasRealProvider ? await manager.getAvailableAdapter() : null;
 
+  // ── Global Cache Check for Public Questions ─────────────────────────
+
+  const articleSlug = context.scope === 'article' && context.article?.slug 
+    ? context.article.slug 
+    : undefined;
+
+  const publicQuestion = detectPublicQuestion(latestText);
+  let globalCacheHit = false;
+  let globalCacheType: PublicQuestionType | undefined;
+
+  if (publicQuestion && (!publicQuestion.needsContext || articleSlug)) {
+    const globalCacheContext = { articleSlug, lang };
+    const cachedSearch = await getGlobalSearchCache(cache, publicQuestion.type, globalCacheContext);
+
+    if (cachedSearch) {
+      globalCacheHit = true;
+      globalCacheType = publicQuestion.type;
+
+      const stream = createUIMessageStream({
+        execute: async ({ writer }) => {
+          writer.write({
+            type: 'message-metadata',
+            messageMetadata: createChatStatusData({
+              stage: 'search',
+              message: t('ai.status.found', lang, { count: cachedSearch.articles.length + cachedSearch.projects.length }),
+              progress: 40,
+            }),
+          });
+
+          const articleCount = cachedSearch.articles.length + cachedSearch.projects.length;
+          if (articleCount > 0) {
+            writer.write({
+              type: 'message-metadata',
+              messageMetadata: createChatStatusData({
+                stage: 'answer',
+                message: t('ai.status.generating', lang),
+                progress: 60,
+              }),
+            });
+          }
+
+          if (adapter) {
+            try {
+              const provider = adapter.getProvider();
+              const articlePrompt = buildArticleContextPrompt(context);
+              const systemPrompt = buildSystemPrompt({
+                static: {
+                  authorName: (env.SITE_AUTHOR as string) || '博主',
+                  siteUrl: (env.SITE_URL as string) || '',
+                },
+                semiStatic: {
+                  authorContext: getAuthorContext(),
+                  voiceProfile: getVoiceProfile(),
+                },
+                dynamic: {
+                  userQuery: cachedSearch.query,
+                  articles: cachedSearch.articles,
+                  projects: cachedSearch.projects,
+                  evidenceSection: articlePrompt,
+                },
+              });
+
+              const result = streamText({
+                model: (provider as { chatModel: (m: string) => never }).chatModel(adapter.model),
+                system: systemPrompt,
+                messages: await convertToModelMessages(messages),
+                temperature: 0.3,
+                maxOutputTokens: 2500,
+              });
+
+              writer.merge(result.toUIMessageStream({ sendFinish: false }));
+              await result.consumeStream({});
+              const text = await result.text;
+              if (text.length > 0) {
+                writer.write({ type: 'finish', finishReason: 'stop' });
+              }
+            } catch (err) {
+              console.error('[chat-handler] Global cache LLM error:', err);
+            }
+          } else {
+            const { getMockResponse } = await import('../providers/mock.js');
+            const mockText = getMockResponse(latestText, lang);
+            writer.write({ type: 'text-delta', textDelta: mockText } as never);
+            writer.write({ type: 'finish', finishReason: 'stop' });
+          }
+        },
+      });
+
+      return createUIMessageStreamResponse({
+        stream,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'no-cache',
+        },
+      });
+    }
+  }
+
   // ── Search / Retrieval ──────────────────────────────────────
 
   const cacheKey = getSessionCacheKey(req);
   const now = Date.now();
-  cleanupCache(now);
 
-  const cachedContext = cacheKey ? getCachedContext(cacheKey) : undefined;
+  const cachedContext = cacheKey ? await getCachedContext(cacheKey, cache) : undefined;
   const userTurnCount = messages.filter((m: UIMessage) => m.role === 'user').length;
   const reuseContext = shouldReuseSearchContext({ latestText, cachedContext, userTurnCount, now });
 
@@ -191,7 +295,7 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
 
   if (reuseContext && cachedContext && cacheKey) {
     searchQuery = cachedContext.query;
-    setCachedContext(cacheKey, { ...cachedContext, updatedAt: now });
+    await setCachedContext(cacheKey, { ...cachedContext, updatedAt: now }, cache);
   } else {
     if (hasRealProvider && adapter) {
       const runKW = shouldRunKeywordExtraction({
@@ -236,12 +340,28 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
     }
 
     if (cacheKey) {
-      setCachedContext(cacheKey, {
+      await setCachedContext(cacheKey, {
         query: searchQuery,
         articles: relatedArticles,
         projects: relatedProjects,
         updatedAt: now,
-      });
+      }, cache);
+    }
+
+    if (publicQuestion && (!publicQuestion.needsContext || articleSlug)) {
+      const globalTTL = getGlobalCacheTTL(publicQuestion.type);
+      await setGlobalSearchCache(
+        cache,
+        publicQuestion.type,
+        {
+          query: searchQuery,
+          articles: relatedArticles,
+          projects: relatedProjects,
+          updatedAt: now,
+        },
+        globalTTL,
+        { articleSlug, lang }
+      );
     }
   }
 
