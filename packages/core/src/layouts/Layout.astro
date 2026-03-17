@@ -321,8 +321,117 @@ const structuredData = pubDatetime
     <FloatingActions />
     <AIChatWidget lang={lang} articleContext={articleContext} />
 
-    <script>
-      import '../scripts/theme.ts';
+    <script is:inline>
+      // Theme toggle logic - inlined to ensure bundling works in monorepo setup
+      const THEME = "theme";
+      const LIGHT = "light";
+      const DARK = "dark";
+      const initialColorScheme = "";
+
+      function getPreferTheme() {
+        const currentTheme = localStorage.getItem(THEME);
+        if (currentTheme) return currentTheme;
+        if (initialColorScheme) return initialColorScheme;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+      }
+
+      let themeValue = window.theme?.themeValue ?? getPreferTheme();
+
+      function setPreference() {
+        localStorage.setItem(THEME, themeValue);
+        reflectPreference();
+      }
+
+      function reflectPreference() {
+        document.firstElementChild?.setAttribute("data-theme", themeValue);
+        document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
+        const body = document.body;
+        if (body) {
+          const computedStyles = window.getComputedStyle(body);
+          const bgColor = computedStyles.backgroundColor;
+          document.querySelector("meta[name='theme-color']")?.setAttribute("content", bgColor);
+        }
+        requestAnimationFrame(() => {
+          window.dispatchEvent(new CustomEvent("themechange", { detail: { isDark: themeValue === DARK, theme: themeValue } }));
+        });
+      }
+
+      function supportsViewTransitions() {
+        return "startViewTransition" in document;
+      }
+
+      function toggleThemeWithTransition(event) {
+        const newTheme = themeValue === LIGHT ? DARK : LIGHT;
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const x = event?.clientX ?? window.innerWidth / 2;
+        const y = event?.clientY ?? window.innerHeight / 2;
+
+        themeValue = newTheme;
+        window.theme?.setTheme(themeValue);
+
+        if (prefersReducedMotion) {
+          setPreference();
+          return;
+        }
+
+        if (supportsViewTransitions()) {
+          document.documentElement.style.setProperty("--theme-x", x + "px");
+          document.documentElement.style.setProperty("--theme-y", y + "px");
+          const html = document.documentElement;
+          html.classList.add("theme-transition");
+          if (newTheme === DARK) {
+            html.classList.add("dark-transition");
+          } else {
+            html.classList.remove("dark-transition");
+          }
+          const transition = document.startViewTransition?.(() => setPreference());
+          transition?.finished.then(() => {
+            html.classList.remove("theme-transition", "dark-transition");
+          });
+        } else {
+          document.documentElement.classList.add("no-view-transitions");
+          setPreference();
+          setTimeout(() => {
+            document.documentElement.classList.remove("no-view-transitions");
+          }, 400);
+        }
+      }
+
+      if (window.theme) {
+        window.theme.setPreference = setPreference;
+        window.theme.reflectPreference = reflectPreference;
+      } else {
+        window.theme = {
+          themeValue,
+          setPreference,
+          reflectPreference,
+          getTheme: () => themeValue,
+          setTheme: (val) => { themeValue = val; },
+        };
+      }
+
+      reflectPreference();
+
+      function setThemeFeature() {
+        reflectPreference();
+        document.querySelector("#theme-btn")?.addEventListener("click", (e) => toggleThemeWithTransition(e));
+      }
+
+      setThemeFeature();
+      document.addEventListener("astro:after-swap", setThemeFeature);
+
+      document.addEventListener("astro:before-swap", (event) => {
+        const bgColor = document.querySelector("meta[name='theme-color']")?.getAttribute("content");
+        if (bgColor) {
+          event.newDocument.querySelector("meta[name='theme-color']")?.setAttribute("content", bgColor);
+        }
+      });
+
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches: isDark }) => {
+        themeValue = isDark ? DARK : LIGHT;
+        window.theme?.setTheme(themeValue);
+        setPreference();
+      });
     </script>
     <script>
       import '../scripts/lightbox.ts';
