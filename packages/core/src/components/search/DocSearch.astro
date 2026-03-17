@@ -1,0 +1,119 @@
+---
+/**
+ * Algolia DocSearch integration component.
+ * Renders the DocSearch button and modal overlay.
+ *
+ * Usage:
+ *   <DocSearch appId="xxx" apiKey="xxx" indexName="xxx" />
+ *
+ * Or configured via SITE.search.docsearch in config.ts.
+ */
+interface Props {
+  appId: string;
+  apiKey: string;
+  indexName: string;
+  placeholder?: string;
+  lang?: string;
+}
+
+const { appId, apiKey, indexName, placeholder, lang = 'en' } = Astro.props;
+const searchPlaceholder = placeholder || (lang === 'zh' ? '搜索文档...' : 'Search docs...');
+---
+
+<div id="docsearch-container"></div>
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@docsearch/css@3/dist/style.min.css"
+/>
+
+<script
+  define:vars={{ appId, apiKey, indexName, searchPlaceholder }}
+>
+  function initDocSearch() {
+    if (document.querySelector('.DocSearch-Button')) return;
+
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@docsearch/js@3/dist/umd/index.js';
+    script.onload = () => {
+      if (typeof window.docsearch === 'function') {
+        window.docsearch({
+          appId,
+          apiKey,
+          indexName,
+          container: '#docsearch-container',
+          placeholder: searchPlaceholder,
+        });
+      }
+    };
+    document.head.appendChild(script);
+  }
+
+  // Init on load and after Astro navigation
+  initDocSearch();
+  document.addEventListener('astro:after-swap', initDocSearch);
+</script>
+
+<style is:global>
+  :root {
+    --docsearch-primary-color: var(--accent);
+    --docsearch-text-color: var(--foreground);
+    --docsearch-muted-color: var(--muted-foreground, #6b7280);
+    --docsearch-container-background: rgba(0, 0, 0, 0.5);
+    --docsearch-modal-background: var(--background);
+    --docsearch-modal-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --docsearch-searchbox-background: var(--muted, #f3f4f6);
+    --docsearch-searchbox-focus-background: var(--background);
+    --docsearch-hit-background: var(--background);
+    --docsearch-hit-color: var(--foreground);
+    --docsearch-hit-active-color: var(--background);
+    --docsearch-highlight-color: var(--accent);
+    --docsearch-footer-background: var(--background);
+    --docsearch-footer-shadow: 0 -1px 0 0 var(--border);
+    --docsearch-key-gradient: linear-gradient(-225deg, var(--muted, #d5dbe4), var(--muted, #f8f8f8));
+    --docsearch-key-shadow: inset 0 -2px 0 0 var(--border), inset 0 0 1px 1px var(--background), 0 1px 2px 1px rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="dark"] {
+    --docsearch-container-background: rgba(0, 0, 0, 0.65);
+    --docsearch-key-gradient: linear-gradient(-225deg, #1e293b, #334155);
+  }
+
+  .DocSearch-Button {
+    margin: 0;
+    padding: 0 6px 0 8px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: var(--muted-foreground, #6b7280);
+    background: var(--muted, #f3f4f6);
+    border: 1px solid var(--border);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .DocSearch-Button:hover {
+    color: var(--foreground);
+    border-color: var(--accent);
+  }
+
+  .DocSearch-Button .DocSearch-Search-Icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .DocSearch-Button-Placeholder {
+    font-size: 0.8rem;
+    padding: 0 2px;
+  }
+
+  @media (max-width: 768px) {
+    .DocSearch-Button-Placeholder,
+    .DocSearch-Button-Keys {
+      display: none;
+    }
+  }
+</style>

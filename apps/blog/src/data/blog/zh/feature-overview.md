@@ -121,7 +121,9 @@ ogImage: ./cover.png
 
 ## 搜索
 
-### Pagefind 全文搜索
+支持两种搜索方案，通过 `search.provider` 配置切换：
+
+### Pagefind 全文搜索（默认）
 
 内置 [Pagefind](https://pagefind.app/) 静态搜索引擎：
 
@@ -129,9 +131,31 @@ ogImage: ./cover.png
 - 完全静态，无需服务端
 - 支持中文分词
 - 搜索结果高亮显示
-- 快捷键 `Ctrl+K` 或 `/` 打开搜索
+- 高级过滤（分类、语言、标签）
 
 搜索索引在 `pnpm run build` 时自动生成。
+
+### Algolia DocSearch
+
+支持 [Algolia DocSearch](https://docsearch.algolia.com/) 云搜索：
+
+- 毫秒级搜索响应
+- 键盘快捷键 `Ctrl+K` 打开搜索
+- 支持搜索建议和自动补全
+- 搜索分析和统计
+
+配置方式：
+
+```typescript
+search: {
+  provider: 'docsearch',
+  docsearch: {
+    appId: 'YOUR_APP_ID',
+    apiKey: 'YOUR_SEARCH_API_KEY',
+    indexName: 'YOUR_INDEX_NAME',
+  },
+},
+```
 
 ---
 

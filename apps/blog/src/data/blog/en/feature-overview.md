@@ -121,7 +121,9 @@ See [Adding New Posts](/en/posts/adding-new-post) for details.
 
 ## Search
 
-### Pagefind Full-text Search
+Two search providers available, configurable via `search.provider`:
+
+### Pagefind Full-text Search (Default)
 
 Built-in [Pagefind](https://pagefind.app/) static search engine:
 
@@ -129,9 +131,31 @@ Built-in [Pagefind](https://pagefind.app/) static search engine:
 - Fully static, no server required
 - Chinese text segmentation support
 - Search result highlighting
-- Keyboard shortcut `Ctrl+K` or `/` to open search
+- Advanced filters (category, language, tags)
 
 The search index is automatically generated during `pnpm run build`.
+
+### Algolia DocSearch
+
+Support for [Algolia DocSearch](https://docsearch.algolia.com/) cloud search:
+
+- Millisecond search response
+- `Ctrl+K` keyboard shortcut to open search
+- Search suggestions and autocomplete
+- Search analytics and insights
+
+Configuration:
+
+```typescript
+search: {
+  provider: 'docsearch',
+  docsearch: {
+    appId: 'YOUR_APP_ID',
+    apiKey: 'YOUR_SEARCH_API_KEY',
+    indexName: 'YOUR_INDEX_NAME',
+  },
+},
+```
 
 ---
 

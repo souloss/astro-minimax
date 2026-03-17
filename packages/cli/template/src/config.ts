@@ -87,6 +87,17 @@ export const SITE: SiteConfig = {
   //   src: "https://your-umami-instance.com/script.js",
   // },
 
+  // Search provider: 'pagefind' (default, static) or 'docsearch' (Algolia)
+  // search: {
+  //   provider: 'docsearch',
+  //   docsearch: {
+  //     appId: 'YOUR_ALGOLIA_APP_ID',
+  //     apiKey: 'YOUR_ALGOLIA_SEARCH_API_KEY',
+  //     indexName: 'YOUR_INDEX_NAME',
+  //     placeholder: 'Search docs...',
+  //   },
+  // },
+
   copyright: {
     license: "CC BY-NC-SA 4.0",
     licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",

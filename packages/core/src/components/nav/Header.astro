@@ -12,6 +12,10 @@ import IconMenuDeep from "../../assets/icons/IconMenuDeep.svg";
 import { SITE } from "virtual:astro-minimax/config";
 import { t, type TranslationKey } from "../../utils/i18n";
 import { isPathActive } from "../../utils/pathUtils";
+import DocSearch from "../search/DocSearch.astro";
+
+const useDocSearch = SITE.search?.provider === 'docsearch' && SITE.search?.docsearch;
+const dsConfig = SITE.search?.docsearch;
 
 const { pathname } = Astro.url;
 const isActive = (path: string) => isPathActive(path, pathname);
@@ -103,18 +107,28 @@ const navItems = SITE.nav.items
           >
             <span id="lang-label">EN</span>
           </button>
-          <a
-            href={`/${lang}/search`}
-            class:list={[
-              "flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-              "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
-              { "bg-muted/80 text-foreground": isActive(`/${lang}/search`) },
-            ]}
-            title={t("nav.search", lang)}
-            aria-label={t("nav.search", lang)}
-          >
-            <IconSearch class="size-4" />
-          </a>
+          {useDocSearch && dsConfig ? (
+            <DocSearch
+              appId={dsConfig.appId}
+              apiKey={dsConfig.apiKey}
+              indexName={dsConfig.indexName}
+              placeholder={dsConfig.placeholder}
+              lang={lang}
+            />
+          ) : (
+            <a
+              href={`/${lang}/search`}
+              class:list={[
+                "flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+                "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                { "bg-muted/80 text-foreground": isActive(`/${lang}/search`) },
+              ]}
+              title={t("nav.search", lang)}
+              aria-label={t("nav.search", lang)}
+            >
+              <IconSearch class="size-4" />
+            </a>
+          )}
         </li>
       </ul>
 

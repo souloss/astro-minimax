@@ -91,6 +91,18 @@ export interface ProjectConfig {
   description?: string;
 }
 
+export interface DocSearchConfig {
+  appId: string;
+  apiKey: string;
+  indexName: string;
+  placeholder?: string;
+}
+
+export interface SearchConfig {
+  provider?: 'pagefind' | 'docsearch';
+  docsearch?: DocSearchConfig;
+}
+
 export interface SiteConfig {
   website: string;
   author: string;
@@ -117,6 +129,7 @@ export interface SiteConfig {
   ai?: AiConfig;
   sponsor?: SponsorConfig;
   copyright?: CopyrightConfig;
+  search?: SearchConfig;
 
   lightAndDarkMode?: boolean;
   showArchives?: boolean;
