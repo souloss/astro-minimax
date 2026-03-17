@@ -511,17 +511,17 @@ CLI 工具随 `@astro-minimax/cli` 包安装，也可以通过 `npx astro-minima
 | `astro-minimax post`   | 文章管理（新建、列表、统计）                  |
 | `astro-minimax data`   | 数据管理（状态查看、缓存清理）                |
 
-### 快捷脚本
-
-所有命令都有对应的 `pnpm run` 快捷方式：
+### 使用示例
 
 ```bash
-pnpm run ai:process       # AI 处理所有文章
-pnpm run ai:eval           # 评估 AI 对话质量
-pnpm run profile:build     # 构建完整作者画像
-pnpm run post:new          # 创建新文章
-pnpm run data:status       # 查看数据状态
+astro-minimax post new "文章标题"    # 创建新文章
+astro-minimax ai process              # AI 处理所有文章
+astro-minimax ai eval                 # 评估 AI 对话质量
+astro-minimax profile build           # 构建完整作者画像
+astro-minimax data status             # 查看数据状态
 ```
+
+> 所有命令也有 `pnpm run` 快捷方式（如 `pnpm run ai:process`）。详见 [CLI 使用指南](/zh/posts/cli-guide)。
 
 ### AI 评估系统
 

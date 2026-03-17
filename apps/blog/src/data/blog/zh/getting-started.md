@@ -42,11 +42,13 @@ pnpm run dev
 CLI 还提供实用的管理命令：
 
 ```bash
-pnpm run post:new -- "文章标题"    # 创建新文章
-pnpm run ai:process                 # AI 处理文章（摘要+SEO）
-pnpm run profile:build              # 构建作者画像
-pnpm run data:status                # 查看数据状态
+astro-minimax post new "文章标题"    # 创建新文章
+astro-minimax ai process              # AI 处理文章（摘要+SEO）
+astro-minimax profile build           # 构建作者画像
+astro-minimax data status             # 查看数据状态
 ```
+
+> 所有命令也有 `pnpm run` 快捷方式，如 `pnpm run post:new -- "标题"`。详见 [CLI 使用指南](/zh/posts/cli-guide)。
 
 ---
 

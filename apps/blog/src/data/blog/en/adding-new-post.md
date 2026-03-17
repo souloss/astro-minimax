@@ -16,7 +16,7 @@ description:
 
 Here are some rules/recommendations, tips & ticks for creating new posts in astro-minimax blog theme.
 
-> **Quick create:** Use the CLI to quickly create posts: `pnpm run post:new -- "Post Title"` or `pnpm run post:new -- "Title" --lang=en`.
+> **Quick create:** Use the CLI to quickly create posts: `astro-minimax post new "Post Title"` or `astro-minimax post new "Title" --lang=en`.
 
 > **Path note:** If you're using the GitHub Template method, the blog content directory is at `apps/blog/src/data/blog/`. If using CLI or NPM package integration, it's at `src/data/blog/` in your project root.
 

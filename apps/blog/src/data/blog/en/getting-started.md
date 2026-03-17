@@ -42,11 +42,13 @@ The generated project includes all config files, a sample article, and the full 
 The CLI also provides handy management commands:
 
 ```bash
-pnpm run post:new -- "Post Title"   # Create a new post
-pnpm run ai:process                  # AI process articles (summaries + SEO)
-pnpm run profile:build               # Build author profile
-pnpm run data:status                 # View data status
+astro-minimax post new "Post Title"   # Create a new post
+astro-minimax ai process               # AI process articles (summaries + SEO)
+astro-minimax profile build            # Build author profile
+astro-minimax data status              # View data status
 ```
+
+> All commands also have `pnpm run` shortcuts, e.g. `pnpm run post:new -- "Title"`. See [CLI Guide](/en/posts/cli-guide).
 
 ---
 

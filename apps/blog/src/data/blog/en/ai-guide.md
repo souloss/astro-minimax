@@ -46,8 +46,8 @@ SITE_URL=https://your-blog.com
 ### 3. Build AI Data
 
 ```bash
-pnpm run ai:process       # Generate summaries + SEO data
-pnpm run profile:build     # Build author profile
+astro-minimax ai process       # Generate summaries + SEO data
+astro-minimax profile build     # Build author profile
 ```
 
 ### 4. Start Dev Server

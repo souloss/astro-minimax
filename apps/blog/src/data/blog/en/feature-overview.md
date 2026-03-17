@@ -509,17 +509,17 @@ CLI tools are included with the `@astro-minimax/cli` package, or use `npx astro-
 | `astro-minimax post`     | Post management (new, list, stats)               |
 | `astro-minimax data`     | Data management (status, clear)                  |
 
-### Shortcut Scripts
-
-All commands have corresponding `pnpm run` shortcuts:
+### Usage Examples
 
 ```bash
-pnpm run ai:process       # AI process all articles
-pnpm run ai:eval           # Evaluate AI chat quality
-pnpm run profile:build     # Build complete author profile
-pnpm run post:new          # Create a new post
-pnpm run data:status       # View data status
+astro-minimax post new "Post Title"   # Create a new post
+astro-minimax ai process               # AI process all articles
+astro-minimax ai eval                  # Evaluate AI chat quality
+astro-minimax profile build            # Build complete author profile
+astro-minimax data status              # View data status
 ```
+
+> All commands also have `pnpm run` shortcuts (e.g. `pnpm run ai:process`). See [CLI Guide](/en/posts/cli-guide).
 
 ### AI Evaluation System
 
