@@ -15,19 +15,6 @@ Beyond the basics, Markdown supports a rich set of extended features. This artic
 
 ---
 
-## Table of Contents
-
-- [Math Formulas](#math-formulas)
-- [KaTeX Examples](#katex-examples)
-- [Code Blocks with Syntax Highlighting](#code-blocks-with-syntax-highlighting)
-- [Code Block Advanced Features](#code-block-advanced-features)
-- [GitHub Alerts](#github-alerts)
-- [Abbreviations](#abbreviations)
-- [Definition Lists](#definition-lists)
-- [Keyboard Shortcuts](#keyboard-shortcuts)
-
----
-
 ## Math Formulas
 
 ### Inline Math

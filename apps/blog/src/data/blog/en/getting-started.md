@@ -1,7 +1,7 @@
 ---
 title: "Getting Started: Three Integration Methods"
 pubDatetime: 2026-03-12T00:00:00.000Z
-modDatetime: 2026-03-14T00:00:00.000Z
+modDatetime: 2026-03-17T20:44:00Z
 author: Souloss
 description: "Start using astro-minimax via CLI, GitHub Template, or NPM packages — pick the method that fits your workflow."
 tags:
@@ -11,8 +11,6 @@ category: Blog/Tutorial
 featured: true
 draft: false
 ---
-
-## Table of contents
 
 ## Overview
 

@@ -1,9 +1,4 @@
 /// <reference types="astro/content" />
-declare module "remark-collapse" {
-  import type { Plugin } from "unified";
-  const plugin: Plugin;
-  export default plugin;
-}
 declare module "remark-github-alerts" {
   import type { Plugin } from "unified";
   const plugin: Plugin;

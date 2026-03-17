@@ -14,8 +14,6 @@ draft: false
 
 astro-minimax includes a built-in AI chat assistant with multi-provider failover, RAG retrieval, streaming responses, and Mock fallback. This guide covers the complete setup.
 
-## Table of contents
-
 ## Quick Setup
 
 ### 1. Enable AI

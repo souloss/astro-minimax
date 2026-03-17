@@ -1,7 +1,7 @@
 ---
 author: Souloss
 pubDatetime: 2022-09-25T15:20:35Z
-modDatetime: 2026-01-09T15:00:15.170Z
+modDatetime: 2026-03-17T20:43:59Z
 title: Customizing astro-minimax theme color schemes
 featured: false
 draft: false
@@ -15,8 +15,6 @@ description:
 ---
 
 This post will explain how you can enable/disable light & dark mode for the website. Moreover, you'll learn how you can customize color schemes of the entire website.
-
-## Table of contents
 
 ## Enable/disable light & dark mode
 

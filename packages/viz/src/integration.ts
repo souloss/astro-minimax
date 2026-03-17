@@ -1,6 +1,6 @@
 import type { AstroIntegration } from "astro";
 import { remarkMermaidCodeblock } from "./plugins/remark-mermaid-codeblock";
-import remarkMarkmap from "remark-markmap";
+import { remarkMarkmapCodeblock } from "./plugins/remark-markmap-codeblock";
 
 export interface VizConfig {
   mermaid?: boolean;
@@ -20,16 +20,7 @@ export default function minimaxViz(config: VizConfig = {}): AstroIntegration {
         }
 
         if (config.markmap !== false) {
-          remarkPlugins.push([
-            remarkMarkmap,
-            {
-              darkThemeSelector: () =>
-                document.documentElement.matches('[data-theme="dark"]') ||
-                document.documentElement.classList.contains("dark") ||
-                (window.matchMedia?.("(prefers-color-scheme: dark)").matches ??
-                  false),
-            },
-          ]);
+          remarkPlugins.push(remarkMarkmapCodeblock);
         }
 
         if (remarkPlugins.length > 0) {

@@ -1,119 +1,95 @@
 ---
-author: Simon Smale
+author: Souloss
 pubDatetime: 2024-01-03T20:40:08Z
-modDatetime: 2024-01-08T18:59:05Z
-title: How to use Git Hooks to set Created and Modified Dates
+modDatetime: 2026-03-17T20:44:00Z
+title: How to Use Git Hooks to Auto-Set Post Dates
 featured: false
 draft: false
-category: 教程/工程化
+category: Tutorial/Engineering
 tags:
   - docs
-  - FAQ
-canonicalURL: https://smale.codes/posts/setting-dates-via-git-hooks/
-description: How to use Git Hooks to set your Created and Modified Dates on astro-minimax
+  - git
+  - automation
+description: How to use Git hooks to automatically set created and modified dates in astro-minimax.
 ---
 
-In this post I will explain how to use the pre-commit Git hook to automate the input of the created (`pubDatetime`) and modified (`modDatetime`) in the astro-minimax blog theme frontmatter
+The frontmatter of astro-minimax blog posts includes `pubDatetime` (publication date) and `modDatetime` (modification date) fields. Manually maintaining these dates is tedious and easy to forget. This article explains how to handle this automatically with Git hooks.
 
-## Table of contents
+## Option 1: One-Click Install via CLI (Recommended)
 
-## Have them Everywhere
+The astro-minimax CLI provides a `hooks` command that automatically installs Husky and configures the pre-commit hook:
 
-[Git hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) are great for automating tasks like [adding](https://gist.github.com/SSmale/3b380e5bbed3233159fb7031451726ea) or [checking](https://itnext.io/using-git-hooks-to-enforce-branch-naming-policy-ffd81fa01e5e) the branch name to your commit messages or [stopping you committing plain text secrets](https://gist.github.com/SSmale/367deee757a9b2e119d241e120249000). Their biggest flaw is that client-side hooks are per machine.
+```bash
+# Run in your blog project root
+astro-minimax hooks install
+```
 
-You can get around this by having a `hooks` directory and manually copy them to the `.git/hooks` directory or set up a symlink, but this all requires you to remember to set it up, and that is not something I am good at doing.
+This will:
+1. Install Husky as a dev dependency
+2. Create the `.husky/pre-commit` hook script
+3. Configure the `prepare` script in package.json
 
-As this project uses npm, we are able to make use of a package called [Husky](https://typicode.github.io/husky/) (this is already installed in astro-minimax) to automatically install the hooks for us.
+After installation, every `git commit` will automatically:
+- Add `pubDatetime` to new posts
+- Update `modDatetime` for modified published posts
+- Support `draft: first` first-publish mode
 
-> astro-minimax does not include pre-commit hooks by default. GitHub Actions are recommended for automation. For local hooks, you can [install Husky](https://typicode.github.io/husky/get-started.html) yourself.
+To uninstall:
 
-## The Hook
+```bash
+astro-minimax hooks uninstall
+```
 
-As we want this hook to run as we commit the code to update the dates and then have that as part of our change we are going to use the `pre-commit` hook. This has already been set up by this astro-minimax project, but if it hadn't, you would run `npx husky add .husky/pre-commit 'echo "This is our new pre-commit hook"'`.
+## Option 2: Manual Configuration
 
-Navigating to the `hooks/pre-commit` file, we are going to add one or both of the following snippets.
+If you prefer to configure it yourself, follow these steps.
 
-### Updating the modified date when a file is edited
+### Step 1: Install Husky
 
----
+[Husky](https://typicode.github.io/husky/) is a Git hook management tool that makes it easy to manage hooks in your project.
 
-UPDATE:
+```bash
+pnpm add -D husky
+```
 
-This section has been updated with a new version of the hook that is smarter. It will now not increment the `modDatetime` until the post is published. On the first publish, set the draft status to `first` and watch the magic happen.
+Then initialize:
 
----
+```bash
+npx husky init
+```
+
+This creates a `.husky/` directory and adds a `prepare` script to `package.json`.
+
+### Step 2: Create the pre-commit Hook
+
+Edit `.husky/pre-commit`:
 
 ```shell
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
 # Modified files, update the modDatetime
 git diff --cached --name-status |
-grep -i '^M.*\.md$' |
-while read _ file; do
-  filecontent=$(cat "$file")
-  frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
-  draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
-  if [ "$draft" = "false" ]; then
-    echo "$file modDateTime updated"
-    cat $file | sed "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
-    mv tmp $file
-    git add $file
-  fi
-  if [ "$draft" = "first" ]; then
-    echo "First release of $file, draft set to false and modDateTime removed"
-    cat $file | sed "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime:/" | sed "/---.*/,/---.*/s/^draft:.*$/draft: false/" > tmp
-    mv tmp $file
-    git add $file
-  fi
-done
-```
+  grep -i '^M.*\.md$' |
+  while read _ file; do
+    filecontent=$(cat "$file")
+    frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
+    draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
+    if [ "$draft" = "false" ]; then
+      echo "$file modDateTime updated"
+      cat $file | sed "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
+      mv tmp $file
+      git add $file
+    fi
+    if [ "$draft" = "first" ]; then
+      echo "First release of $file, draft set to false and modDateTime removed"
+      cat $file | sed "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime:/" | sed "/---.*/,/---.*/s/^draft:.*$/draft: false/" > tmp
+      mv tmp $file
+      git add $file
+    fi
+  done
 
-`git diff --cached --name-status` gets the files from git that have been staged for committing. The output looks like:
-
-```shell
-A       src/data/blog/en/setting-dates-via-git-hooks.md
-```
-
-The letter at the start denotes what action has been taken, in the above example the file has been added. Modified files have `M`
-
-We pipe that output into the grep command where we are looking at each line to find that have been modified. The line needs to start with `M` (`^(M)`), have any number of characters after that (`.*`) and end with the `.md` file extension (`.(md)$`).This is going to filter out the lines that are not modified markdown files `egrep -i "^(M).*\.(md)$"`.
-
----
-
-#### Improvement - More Explicit
-
-This could be added to only look for files that we markdown files in the `blog` directory, as these are the only ones that will have the right frontmatter
-
----
-
-The regex will capture the two parts, the letter and the file path. We are going to pipe this list into a while loop to iterate over the matching lines and assign the letter to `a` and the path to `b`. We are going to ignore `a` for now.
-
-To know the draft status of the file, we need its frontmatter. In the following code we are using `cat` to get the content of the file, then using `awk` to split the file on the frontmatter separator (`---`) and taking the second block (the fonmtmatter, the bit between the `---`). From here we are using `awk` again to find the draft key and print is value.
-
-```shell
-  filecontent=$(cat "$file")
-  frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
-  draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
-```
-
-Now we have the value for `draft` we are going to do 1 of 3 things, set the modDatetime to now (when draft is false `if [ "$draft" = "false" ]; then`), clear the modDatetime and set draft to false (when draft is set to first `if [ "$draft" = "first" ]; then`), or nothing (in any other case).
-
-The next part with the sed command is a bit magical to me as I don't often use it, it was copied from [another blog post on doing something similar](https://mademistakes.com/notes/adding-last-modified-timestamps-with-git/). In essence, it is looking inside the frontmatter tags (`---`) of the file to find the `pubDatetime:` key, getting the full line and replacing it with the `pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/"` same key again and the current datetime formatted correctly.
-
-This replacement is in the context of the whole file so we put that into a temporary file (`> tmp`), then we move (`mv`) the new file into the location of the old file, overwriting it. This is then added to git ready to be committed as if we made the change ourselves.
-
----
-
-#### NOTE
-
-For the `sed` to work the frontmatter needs to already have the `modDatetime` key in the frontmatter. There are some other changes you will need to make for the app to build with a blank date, see [further down](#empty-moddatetime-changes)
-
----
-
-### Adding the Date for new files
-
-Adding the date for a new file is the same process as above, but this time we are looking for lines that have been added (`A`) and we are going to replace the `pubDatetime` value.
-
-```shell
-# New files, add/update the pubDatetime
+# New files, add the pubDatetime
 git diff --cached --name-status | egrep -i "^(A).*\.(md)$" | while read a b; do
   cat $b | sed "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
   mv tmp $b
@@ -121,70 +97,58 @@ git diff --cached --name-status | egrep -i "^(A).*\.(md)$" | while read a b; do
 done
 ```
 
+### Hook Logic Explained
+
+**Updating `modDatetime` for modified files:**
+
+1. `git diff --cached --name-status` gets staged files
+2. Filter for modified `.md` files (starting with `M`)
+3. Read file's frontmatter and check `draft` status
+4. If `draft: false`, update `modDatetime` to current time
+5. If `draft: first`, this is first publish - set `draft` to `false` and clear `modDatetime`
+
+**Adding `pubDatetime` for new files:**
+
+1. Filter for new `.md` files (starting with `A`)
+2. Set `pubDatetime` to current time
+
+### Step 3: Ensure Correct Frontmatter Format
+
+For the `sed` commands to work, posts need `pubDatetime` and `modDatetime` fields in frontmatter (values can be empty):
+
+```yaml
 ---
-
-#### Improvement - Only Loop Once
-
-We could use the `a` variable to switch inside the loop and either update the `modDatetime` or add the `pubDatetime` in one loop.
-
+title: "Post Title"
+pubDatetime: 2024-01-01T00:00:00Z
+modDatetime: 2026-03-17T20:44:00Z
+draft: false
 ---
-
-## Populating the frontmatter
-
-If your IDE supports snippets, you can create a custom snippet to populate frontmatter. Alternatively, use the CLI command `astro-minimax post new "Title"` to auto-create posts with proper frontmatter.
-
-<video autoplay muted="muted" controls plays-inline="true" class="border border-skin-line">
-  <source src="https://github.com/souloss/astro-minimax/assets/17761689/e13babbc-2d78-405d-8758-ca31915e41b0" type="video/mp4">
-</video>
-
-## Empty `modDatetime` changes
-
-To allow Astro to compile the markdown and do its thing, it needs to know what is expected in the frontmatter. It does this via the config in `src/content.config.ts`
-
-To allow the key to be there with no value we need to edit line 10 to add the `.nullable()` function.
-
-```ts
-const blog = defineCollection({
-  type: "content",
-  schema: ({ image }) =>
-    z.object({
-      author: z.string().default(SITE.author),
-      pubDatetime: z.date(),
-      modDatetime: z.date().optional(), // [!code --]
-      modDatetime: z.date().optional().nullable(), // [!code ++]
-      title: z.string(),
-      featured: z.boolean().optional(),
-      draft: z.boolean().optional(),
-      tags: z.array(z.string()).default(["others"]),
-      ogImage: image().or(z.string()).optional(),
-      description: z.string(),
-      canonicalURL: z.string().optional(),
-      readingTime: z.string().optional(),
-    }),
-});
 ```
 
-To stop the IDE complaining in the blog engine files I have also done the following:
+Using the CLI to create posts will include these fields automatically:
 
-1. added `| null` to line 15 in `src/layouts/Layout.astro` so that it looks like
+```bash
+astro-minimax post new "Post Title"
+```
 
-   ```typescript
-   export interface Props {
-     title?: string;
-     author?: string;
-     description?: string;
-     ogImage?: string;
-     canonicalURL?: string;
-     pubDatetime?: Date;
-     modDatetime?: Date | null;
-   }
-   ```
+## First Publish Workflow
 
-2. added `| null` to line 5 in `src/components/ui/Datetime.astro` so that it looks like
+Using `draft: first` enables automatic first-publish handling:
 
-   ```typescript
-   interface DatetimesProps {
-     pubDatetime: string | Date;
-     modDatetime: string | Date | undefined | null;
-   }
-   ```
+1. Create a new post with `draft: first`
+2. On commit, the hook detects `draft: first`
+3. Automatically sets `draft` to `false` and clears `modDatetime`
+4. Future modifications will automatically update `modDatetime`
+
+This eliminates manual date management for first publications.
+
+## Notes
+
+1. **Git hooks are local only** — Team members need to run `astro-minimax hooks install` individually
+2. **Files must be staged first** — The hook runs on `git commit` and processes `git add`ed files
+3. **Depends on sed and awk** — Syntax differs slightly between macOS and Linux; the script above was tested on Linux
+
+## Related Links
+
+- [Husky Documentation](https://typicode.github.io/husky/)
+- [Git Hooks Documentation](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)

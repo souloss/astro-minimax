@@ -15,18 +15,6 @@ Excalidraw 是一个虚拟白板工具，可以生成手绘风格的图表。它
 
 ---
 
-## 目录
-
-- [什么是 Excalidraw？](#什么是-excalidraw)
-- [集成方式](#集成方式)
-- [使用 ExcalidrawEmbed 组件（MDX）](#使用-excalidrawembed-组件mdx)
-- [通过 iframe 嵌入（Markdown）](#通过-iframe-嵌入markdown)
-- [创建可分享的场景](#创建可分享的场景)
-- [示例场景](#示例场景)
-- [技巧与最佳实践](#技巧与最佳实践)
-
----
-
 ## 什么是 Excalidraw？
 
 [Excalidraw](https://excalidraw.com) 是一个开源虚拟白板，具有以下核心特性：

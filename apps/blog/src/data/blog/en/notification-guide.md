@@ -15,8 +15,6 @@ draft: false
 
 astro-minimax includes a built-in multi-channel notification system that automatically sends notifications to Telegram, Email, or custom Webhooks when your blog receives comments or users interact with the AI chat.
 
-## Table of contents
-
 ## Feature Overview
 
 The notification system supports:

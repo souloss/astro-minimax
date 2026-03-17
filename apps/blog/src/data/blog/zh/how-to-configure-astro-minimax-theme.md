@@ -1,7 +1,7 @@
 ---
 author: Souloss
 pubDatetime: 2022-09-23T04:58:53Z
-modDatetime: 2026-03-14T00:00:00.000Z
+modDatetime: 2026-03-17T20:44:00Z
 title: 如何配置 astro-minimax 主题
 featured: true
 draft: false
@@ -15,8 +15,6 @@ description: 如何让 astro-minimax 主题完全符合你的需求。
 astro-minimax 是一个高度可定制的 Astro 博客主题。使用 astro-minimax，你可以根据个人喜好定制一切。本文将解释如何通过配置文件轻松进行一些自定义设置。
 
 > **路径提示：** 如果你使用 GitHub Template 方式，配置文件位于 `apps/blog/src/config.ts`。如果使用 NPM 包集成方式，则位于你项目的 `src/config.ts`。
-
-## Table of contents
 
 ## 配置 SITE
 
@@ -214,7 +212,7 @@ import dummyLogo from "@/assets/dummy-logo.png";
 
 ## 配置社交链接
 
-![An arrow pointing at social link icons](https://github.com/user-attachments/assets/8b895400-d088-442f-881b-02d2443e00cf)
+![社交链接图标示例](/images/social-links-demo.png)
 
 在 `src/constants.ts` 的 `SOCIALS` 对象中配置社交链接：
 
@@ -251,7 +249,7 @@ export const SOCIALS = [
 
 在 `src/constants.ts` 的 `SHARE_LINKS` 对象中配置文章分享按钮：
 
-![An arrow pointing at share link icons](https://github.com/user-attachments/assets/4f930b68-b625-45df-8c41-e076dd2b838e)
+![分享链接图标示例](/images/share-links-demo.png)
 
 ```ts
 export const SHARE_LINKS = [

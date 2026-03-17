@@ -6,6 +6,7 @@ import { postCommand } from "./commands/post.js";
 import { aiCommand } from "./commands/ai.js";
 import { profileCommand } from "./commands/profile.js";
 import { dataCommand } from "./commands/data.js";
+import { hooksCommand } from "./commands/hooks.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -23,6 +24,7 @@ const commands: Command[] = [
   { name: "ai", description: "AI content processing (process, seo, summary, eval)", run: aiCommand },
   { name: "profile", description: "Author profile (build, context, voice, report)", run: profileCommand },
   { name: "data", description: "Data status and management", run: dataCommand },
+  { name: "hooks", description: "Git hooks setup (install, uninstall)", run: hooksCommand },
 ];
 
 function printHelp(): void {
@@ -38,6 +40,7 @@ Commands:
   ai                AI content processing (process, seo, summary, eval)
   profile           Author profile (build, context, voice, report)
   data              Data management (status, clear)
+  hooks             Git hooks setup (install, uninstall)
 
 Run "astro-minimax <command> --help" for detailed usage.
 
@@ -46,6 +49,7 @@ Examples:
   astro-minimax post new "Hello World"
   astro-minimax ai process
   astro-minimax profile build
+  astro-minimax hooks install
 
 Documentation: https://github.com/souloss/astro-minimax
 `);
@@ -78,7 +82,7 @@ async function main(): Promise<void> {
 
   if (!command) {
     console.error(`Unknown command: ${commandName}`);
-    console.error("\nAvailable commands: init, post, ai, profile, data");
+    console.error("\nAvailable commands: init, post, ai, profile, data, hooks");
     console.error('Run "astro-minimax --help" for usage.');
     process.exit(1);
   }

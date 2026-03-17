@@ -81,6 +81,73 @@ No `src/pages/` directory — all routes are injected by `@astro-minimax/core`.
 | Alerts  | `> [!NOTE]`          | GitHub-style alerts                       |
 | Tables  | Markdown tables      | Styled responsive tables                  |
 
+## CLI Commands
+
+### `astro-minimax init <project>`
+
+Create a new blog project.
+
+### `astro-minimax post <subcommand>`
+
+Manage blog posts:
+
+| Subcommand | Description |
+| ---------- | ----------- |
+| `new "Title"` | Create a new post with frontmatter |
+| `list` | List all posts |
+| `stats` | Show post statistics |
+
+### `astro-minimax hooks <subcommand>`
+
+Manage Git hooks for automatic date management:
+
+| Subcommand | Description |
+| ---------- | ----------- |
+| `install` | Install Husky and pre-commit hook |
+| `uninstall` | Remove hooks and Husky |
+| `status` | Show current hooks status |
+
+**What the pre-commit hook does:**
+
+- Adds `pubDatetime` for new `.md` files
+- Updates `modDatetime` for modified files when `draft: false`
+- Handles `draft: first` for first-time publishing
+
+**Works with:**
+- Single projects (created via `astro-minimax init`)
+- Monorepos (detects git root automatically)
+
+### `astro-minimax ai <subcommand>`
+
+AI content processing:
+
+| Subcommand | Description |
+| ---------- | ----------- |
+| `process` | Process posts (summary + SEO) |
+| `seo` | Generate SEO metadata |
+| `summary` | Generate summaries |
+| `eval` | Evaluate AI chat quality |
+
+### `astro-minimax profile <subcommand>`
+
+Author profile management:
+
+| Subcommand | Description |
+| ---------- | ----------- |
+| `build` | Build complete profile |
+| `context` | Build author context |
+| `voice` | Build voice profile |
+| `report` | Generate profile report |
+
+### `astro-minimax data <subcommand>`
+
+Data management:
+
+| Subcommand | Description |
+| ---------- | ----------- |
+| `status` | Show data file status |
+| `clear` | Clear generated cache |
+
 ## Customization
 
 - **Colors**: Override CSS custom properties in your own CSS file

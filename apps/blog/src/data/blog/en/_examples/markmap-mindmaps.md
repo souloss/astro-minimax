@@ -15,18 +15,6 @@ Mindmaps are a powerful tool for organizing thoughts, planning projects, and vis
 
 ---
 
-## Table of Contents
-
-- [How Markmap Works](#how-markmap-works)
-- [Basic Mindmap](#basic-mindmap)
-- [Project Planning Mindmap](#project-planning-mindmap)
-- [Technology Stack Overview](#technology-stack-overview)
-- [Learning Roadmap](#learning-roadmap)
-- [Software Architecture Mindmap](#software-architecture-mindmap)
-- [Tips for Effective Mindmaps](#tips-for-effective-mindmaps)
-
----
-
 ## How Markmap Works
 
 Markmap transforms Markdown lists into interactive mindmaps. The syntax is straightforward:

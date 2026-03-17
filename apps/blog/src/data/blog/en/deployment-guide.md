@@ -13,8 +13,6 @@ draft: false
 
 This guide covers how to deploy your astro-minimax blog to various platforms. astro-minimax generates static sites, so it can be deployed to almost any static hosting service.
 
-## Table of contents
-
 ## Prerequisites
 
 Before deploying, make sure your blog builds successfully locally:

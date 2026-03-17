@@ -13,8 +13,6 @@ draft: false
 
 astro-minimax is a feature-rich Astro blog theme built with a modular architecture. This article provides a comprehensive overview of all features and how to use them.
 
-## Table of contents
-
 ## Architecture Overview
 
 astro-minimax consists of five core packages:
@@ -103,7 +101,7 @@ Post metadata is defined via frontmatter:
 ---
 title: Post Title
 pubDatetime: 2026-03-14T10:00:00Z
-modDatetime: 2026-03-14T12:00:00Z
+modDatetime: 2026-03-17T20:43:59Z
 author: Souloss
 description: Post description
 tags: [astro, tutorial]

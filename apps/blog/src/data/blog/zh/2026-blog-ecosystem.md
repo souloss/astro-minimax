@@ -140,8 +140,6 @@ draft: false
 #### Newsletter (Resend)
 ```
 
-## Table of contents
-
 ## 一、框架选型
 
 框架决定了博客的技术基础。2026 年的主流选择：

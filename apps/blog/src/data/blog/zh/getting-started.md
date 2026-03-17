@@ -1,7 +1,7 @@
 ---
 title: "快速开始：三种使用方式"
 pubDatetime: 2026-03-12T00:00:00.000Z
-modDatetime: 2026-03-14T00:00:00.000Z
+modDatetime: 2026-03-17T20:44:00Z
 author: Souloss
 description: "通过 CLI 一键创建、GitHub Template 或 NPM 包集成三种方式开始使用 astro-minimax。"
 tags:
@@ -11,8 +11,6 @@ category: 教程/博客
 featured: true
 draft: false
 ---
-
-## Table of contents
 
 ## 概览
 

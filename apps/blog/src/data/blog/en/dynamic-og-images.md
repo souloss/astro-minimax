@@ -1,7 +1,7 @@
 ---
 author: Souloss
 pubDatetime: 2022-12-28T04:59:04.866Z
-modDatetime: 2025-03-12T13:39:20.763Z
+modDatetime: 2026-03-17T20:43:59Z
 title: Dynamic OG image generation in astro-minimax blog posts
 slug: dynamic-og-image-generation-in-astro-minimax-blog-posts
 featured: false
@@ -14,8 +14,6 @@ description: Built-in dynamic OG image generation using Satori, automatically cr
 ---
 
 astro-minimax includes built-in dynamic OG image generation. Articles without a specified `ogImage` get one auto-generated at build time.
-
-## Table of contents
 
 ## Intro
 
@@ -41,7 +39,7 @@ Dynamic OG images will be generated at build time for blog posts that
 ## Anatomy of astro-minimax dynamic OG image
 
 Dynamic OG image of astro-minimax includes _the blog post title_, _author name_ and _site title_. Author name and site title will be retrieved via `SITE.author` and `SITE.title` of **"src/config.ts"** file. The title is generated from the blog post frontmatter `title`.  
-![Example Dynamic OG Image link](https://user-images.githubusercontent.com/53733092/209704501-e9c2236a-3f4d-4c67-bab3-025aebd63382.png)
+![Example Dynamic OG Image link](/images/og-image-demo.png)
 
 ### Issue Non-Latin Characters
 
@@ -78,15 +76,11 @@ async function loadGoogleFonts(
 }
 ```
 
-> Check out [this PR](https://github.com/souloss/astro-minimax/pull/318) for more info.
-
 ## Trade-off
 
 While this is a nice feature to have, there's a trade-off. Each OG image takes roughly one second to generate. This might not be noticeable at first, but as the number of blog posts grows, you might want to disable this feature. Since every OG image takes time to generate, having many of them will increase the build time linearly.
 
 For example: If one OG image takes one second to generate, then 60 images will take around one minute, and 600 images will take approximately 10 minutes. This can significantly impact build times as your content scales.
-
-Related issue: [#428](https://github.com/souloss/astro-minimax/issues/428)
 
 ## Limitations
 

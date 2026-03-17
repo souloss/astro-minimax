@@ -32,7 +32,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "pnpm -r clean",
-    "postinstall": "pnpm --filter @astro-minimax/notify build && pnpm --filter @astro-minimax/ai build && pnpm --filter @astro-minimax/cli build"
+    "postinstall": "pnpm --filter @astro-minimax/notify build && pnpm --filter @astro-minimax/ai build && pnpm --filter @astro-minimax/cli build",
+    "prepare": "husky"
   },
   "pnpm": {
     "overrides": {
@@ -40,6 +41,7 @@
     }
   },
   "devDependencies": {
+    "husky": "^9.1.7",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",

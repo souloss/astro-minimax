@@ -5,8 +5,7 @@ import minimaxViz from "@astro-minimax/viz";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
-import remarkToc from "remark-toc";
-import remarkCollapse from "remark-collapse";
+
 import remarkMath from "remark-math";
 import remarkGithubAlerts from "remark-github-alerts";
 import remarkEmoji from "remark-emoji";
@@ -77,8 +76,6 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [
-      remarkToc,
-      [remarkCollapse, { test: "Table of contents" }],
       remarkMath,
       remarkGithubAlerts,
       remarkEmoji,

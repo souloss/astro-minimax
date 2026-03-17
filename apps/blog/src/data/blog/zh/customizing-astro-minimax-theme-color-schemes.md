@@ -1,7 +1,7 @@
 ---
 author: Souloss
 pubDatetime: 2022-09-25T15:20:35Z
-modDatetime: 2026-01-09T15:00:15.170Z
+modDatetime: 2026-03-17T20:44:00Z
 title: 自定义 astro-minimax 主题配色方案
 featured: false
 draft: false
@@ -13,8 +13,6 @@ description: 如何启用/禁用明暗模式，以及自定义 astro-minimax 主
 ---
 
 本文将解释如何为网站启用/禁用明暗模式。此外，你将学习如何自定义整个网站的配色方案。
-
-## Table of contents
 
 ## 启用/禁用明暗模式
 

@@ -21,8 +21,6 @@ This document demonstrates how to use LaTeX equations in your Markdown files for
   </figcaption>
 </figure>
 
-## Table of contents
-
 ## Instructions
 
 In this section, you will find instructions on how to add support for LaTeX in your Markdown files for astro-minimax.
@@ -40,15 +38,13 @@ In this section, you will find instructions on how to add support for LaTeX in y
    import remarkMath from "remark-math";
    import rehypeKatex from "rehype-katex";
 
-   export default defineConfig({
-     // ...
-     markdown: {
-       remarkPlugins: [
-         remarkMath, // [!code ++]
-         remarkToc,
-         [remarkCollapse, { test: "Table of contents" }],
-       ],
-       rehypePlugins: [rehypeKatex], // [!code ++]
+export default defineConfig({
+      // ...
+      markdown: {
+        remarkPlugins: [
+          remarkMath, // [!code ++]
+        ],
+        rehypePlugins: [rehypeKatex], // [!code ++]
        shikiConfig: {
          // For more themes, visit https://shiki.style/themes
          themes: { light: "min-light", dark: "night-owl" },

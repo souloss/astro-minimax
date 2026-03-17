@@ -13,8 +13,6 @@ draft: false
 
 astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。
 
-## Table of contents
-
 ## 架构概览
 
 astro-minimax 由五个核心包组成，形成清晰的层次架构：
@@ -134,7 +132,7 @@ series:
 ---
 title: 文章标题
 pubDatetime: 2026-03-14T10:00:00Z
-modDatetime: 2026-03-14T12:00:00Z
+modDatetime: 2026-03-17T20:44:00Z
 author: Souloss
 description: 文章描述
 tags: [astro, tutorial]

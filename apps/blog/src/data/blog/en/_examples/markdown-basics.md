@@ -15,21 +15,6 @@ This article covers all the fundamental Markdown syntax you need to write rich, 
 
 ---
 
-## Table of Contents
-
-- [Headings](#headings)
-- [Text Formatting](#text-formatting)
-- [Lists](#lists)
-- [Links and Images](#links-and-images)
-- [Blockquotes](#blockquotes)
-- [Horizontal Rules](#horizontal-rules)
-- [Tables](#tables)
-- [Task Lists](#task-lists)
-- [Footnotes](#footnotes)
-- [Emoji Support](#emoji-support)
-
----
-
 ## Headings
 
 Markdown supports six levels of headings. Use `#` symbols to define the heading level.
@@ -46,7 +31,7 @@ Markdown supports six levels of headings. Use `#` symbols to define the heading 
 
 ###### Heading Level 6
 
-Each heading creates an anchor link automatically, which is how the Table of Contents above works. For accessibility, avoid skipping heading levels — go from `h2` to `h3`, not from `h2` to `h5`.
+Each heading creates an anchor link automatically, making it easy to share and link directly to specific sections. For accessibility, avoid skipping heading levels — go from `h2` to `h3`, not from `h2` to `h5`.
 
 ---
 

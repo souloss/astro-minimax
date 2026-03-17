@@ -1,7 +1,7 @@
 ---
 author: Souloss
 pubDatetime: 2022-09-23T15:22:00Z
-modDatetime: 2026-03-14T00:00:00.000Z
+modDatetime: 2026-03-17T20:43:59Z
 title: Adding new posts in astro-minimax theme
 slug: adding-new-posts-in-astro-minimax-theme
 featured: true
@@ -29,8 +29,6 @@ Here are some rules/recommendations, tips & ticks for creating new posts in astr
     Photo by <a href="https://www.pexels.com/photo/brown-wooden-desk-159618/">Pixabay</a>
   </figcaption>
 </figure>
-
-## Table of contents
 
 ## Creating a Blog Post
 
@@ -126,29 +124,6 @@ canonicalURL: https://example.org/my-article-was-already-posted-here
 ---
 ```
 
-## Adding table of contents
-
-By default, a post (article) does not include any table of contents (toc). To include toc, you have to specify it in a specific way.
-
-Write `Table of contents` in h2 format (## in markdown) and place it where you want it to be appeared on the post.
-
-For instance, if you want to place your table of contents just under the intro paragraph (like I usually do), you can do that in the following way.
-
-<!-- prettier-ignore-start -->
-```md
----
-# frontmatter
----
-
-Here are some recommendations, tips & ticks for creating new posts in astro-minimax blog theme.
-
-<!-- [!code ++] -->
-## Table of contents
-
-<!-- the rest of the post -->
-```
-<!-- prettier-ignore-end -->
-
 ## Headings
 
 There's one thing to note about headings. The astro-minimax blog posts use title (title in the frontmatter) as the main heading of the post. Therefore, the rest of the heading in the post should be using h2 \~ h6.
@@ -175,7 +150,7 @@ import {
 export default defineConfig({
   // ...
   markdown: {
-    remarkPlugins: [remarkToc, [remarkCollapse, { test: "Table of contents" }]],
+    remarkPlugins: [remarkMath, remarkGithubAlerts, remarkEmoji, remarkReadingTime],
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "min-light", dark: "night-owl" },

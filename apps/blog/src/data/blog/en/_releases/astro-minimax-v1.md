@@ -15,8 +15,6 @@ astro-minimax is a minimal, responsive, accessible and SEO-friendly Astro blog t
 
 ![astro-minimax](@/assets/images/astro-minimax-v1.png)
 
-## Table of contents
-
 ## Project Origins
 
 astro-minimax originated from deep customization and feature expansion of the AstroPaper theme. While preserving the minimal, high-performance, and accessible nature of the original, we've added numerous practical features making it more suitable for Chinese users and modern blogging needs.

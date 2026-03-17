@@ -14,8 +14,6 @@ draft: false
 
 `@astro-minimax/cli` 提供一套完整的命令行工具，用于博客项目管理和 AI 内容处理。本文介绍所有可用命令及其用法。
 
-## Table of contents
-
 ## 安装
 
 CLI 工具作为开发依赖自动安装：

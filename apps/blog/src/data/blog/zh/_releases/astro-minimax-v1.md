@@ -14,8 +14,6 @@ astro-minimax 是一个极简、响应式、无障碍且对 SEO 友好的 Astro 
 
 ![astro-minimax](@/assets/images/astro-minimax-v1.png)
 
-## Table of contents
-
 ## 项目起源
 
 astro-minimax 源自对 AstroPaper 主题的深度定制和功能扩展。在保留原主题极简、高性能、无障碍等优点的基础上，新增了大量实用功能，使其更适合中文用户和现代博客需求。

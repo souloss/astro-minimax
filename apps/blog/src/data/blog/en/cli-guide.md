@@ -14,8 +14,6 @@ draft: false
 
 `@astro-minimax/cli` provides a comprehensive command-line toolkit for blog project management and AI content processing. This guide covers all available commands.
 
-## Table of contents
-
 ## Installation
 
 The CLI is installed as a dev dependency:

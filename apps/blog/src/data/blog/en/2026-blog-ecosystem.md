@@ -136,8 +136,6 @@ Building a personal tech blog involves 10+ technical decisions. This guide exhau
 #### Newsletter (Resend)
 ```
 
-## Table of contents
-
 ## 1. Framework Selection
 
 ### Static Site Generators (SSG)

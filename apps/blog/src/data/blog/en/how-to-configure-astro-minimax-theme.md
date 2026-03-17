@@ -1,7 +1,7 @@
 ---
 author: Souloss
 pubDatetime: 2022-09-23T04:58:53Z
-modDatetime: 2026-03-14T00:00:00.000Z
+modDatetime: 2026-03-17T20:44:00Z
 title: How to configure astro-minimax theme
 slug: how-to-configure-astro-minimax-theme
 featured: true
@@ -16,8 +16,6 @@ description: How you can make astro-minimax theme absolutely yours.
 astro-minimax is a highly customizable Astro blog theme. With astro-minimax, you can customize everything according to your personal taste. This article will explain how you can make some customizations easily in the config file.
 
 > **Path note:** If you're using the GitHub Template method, the config file is at `apps/blog/src/config.ts`. For NPM package integration, it's at `src/config.ts` in your project root.
-
-## Table of contents
 
 ## Configuring SITE
 
@@ -215,7 +213,7 @@ import dummyLogo from "@/assets/dummy-logo.png";
 
 ## Configuring social links
 
-![An arrow pointing at social link icons](https://github.com/user-attachments/assets/8b895400-d088-442f-881b-02d2443e00cf)
+![Social links icons example](/images/social-links-demo.png)
 
 Configure social links in `SOCIALS` inside `src/constants.ts`:
 
@@ -252,7 +250,7 @@ Available built-in icons: `IconGitHub`, `IconBrandX`, `IconLinkedin`, `IconFaceb
 
 Configure post share buttons in `SHARE_LINKS` inside `src/constants.ts`:
 
-![An arrow pointing at share link icons](https://github.com/user-attachments/assets/4f930b68-b625-45df-8c41-e076dd2b838e)
+![Share links icons example](/images/share-links-demo.png)
 
 ```ts
 export const SHARE_LINKS = [

@@ -33,8 +33,6 @@ pnpm update @astro-minimax/core@latest @astro-minimax/viz@latest @astro-minimax/
 
 ![Forrest Gump Fake Quote](@/assets/images/forrest-gump-quote.png)
 
-## Table of contents
-
 ## 更新包依赖
 
 有几种更新依赖的方法，我尝试过各种方法来找到最简单的途径。一种方法是使用 `npm install package-name@latest` 手动更新每个包。这是最直接的更新方式，但可能不是最高效的选择。

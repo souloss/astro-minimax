@@ -232,8 +232,8 @@ interface AiChatEvent {
 你好！AI 对话通知功能测试成功...
 
 📎 引用文章:
-  · 京都马拉松
-  · 东京旅行
+  · 2026 年个人技术博客生态全览：从零构建你的博客系统
+  · 为什么选择 astro-minimax：设计决策与技术思考
 
 ⚙️ 模型配置:
   · API Host: api.openai.com

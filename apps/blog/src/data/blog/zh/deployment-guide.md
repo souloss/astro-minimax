@@ -13,8 +13,6 @@ draft: false
 
 本指南详细介绍如何将 astro-minimax 博客部署到各种平台。astro-minimax 生成静态站点，可以部署到几乎任何支持静态托管的服务。
 
-## Table of contents
-
 ## 前置准备
 
 在部署之前，确保你的博客能够在本地成功构建：

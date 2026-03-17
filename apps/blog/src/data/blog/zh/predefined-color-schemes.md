@@ -1,7 +1,7 @@
 ---
 author: Souloss
 pubDatetime: 2022-09-26T12:13:24Z
-modDatetime: 2024-01-04T09:09:06Z
+modDatetime: 2026-03-17T20:44:00Z
 title: 预定义配色方案
 featured: false
 draft: false
@@ -15,15 +15,13 @@ description: 为 astro-minimax 博客主题精心设计的一些预定义配色�
 
 如果你不知道如何配置配色方案，请查看[这篇博客文章](/zh/posts/customizing-astro-minimax-theme-color-schemes/)。
 
-## Table of contents
-
 ## 浅色配色方案
 
 浅色配色方案必须使用 CSS 选择器 `:root` 和 `html[data-theme="light"]` 来定义。
 
 ### Lobster
 
-![lobster-color-scheme](https://user-images.githubusercontent.com/53733092/192282447-1d222faf-a3ce-44a9-9cfe-ac873155e5a9.png)
+![lobster-color-scheme](/images/color-scheme-lobster.png)
 
 ```css
 :root,
@@ -38,7 +36,7 @@ html[data-theme="light"] {
 
 ### Leaf Blue
 
-![leaf-blue-color-scheme](https://user-images.githubusercontent.com/53733092/192318782-e80e3c39-54b5-423e-8f4b-9ae60402fc8d.png)
+![leaf-blue-color-scheme](/images/color-scheme-leaf-blue.png)
 
 ```css
 :root,
@@ -53,7 +51,7 @@ html[data-theme="light"] {
 
 ### Pinky light
 
-![pinky-color-scheme](https://user-images.githubusercontent.com/53733092/192286510-892d0042-2d6d-471e-bb72-954221ae2d17.png)
+![pinky-color-scheme](/images/color-scheme-pinky.png)
 
 ```css
 :root,
@@ -72,7 +70,7 @@ html[data-theme="light"] {
 
 ### astro-minimax 1 原始深色主题
 
-![astro-minimax 1 default dark theme](https://user-images.githubusercontent.com/53733092/215769153-13b0ad8d-5ba2-44b1-af06-e5ae61293f62.png)
+![astro-minimax 1 default dark theme](/images/color-scheme-astro-minimax1-dark.png)
 
 ```css
 html[data-theme="dark"] {
@@ -86,7 +84,7 @@ html[data-theme="dark"] {
 
 ### Deep Oyster
 
-![deep-oyster-color-scheme](https://user-images.githubusercontent.com/53733092/192314524-45ec5904-3d8f-450a-9edf-1e32c5e11d6c.png)
+![deep-oyster-color-scheme](/images/color-scheme-deep-oyster.png)
 
 ```css
 html[data-theme="dark"] {
@@ -100,7 +98,7 @@ html[data-theme="dark"] {
 
 ### Pikky dark
 
-![pinky-dark-color-scheme](https://user-images.githubusercontent.com/53733092/192307050-fbd55326-911c-4001-87c6-a8ad9378ac2e.png)
+![pinky-dark-color-scheme](/images/color-scheme-pinky-dark.png)
 
 ```css
 html[data-theme="dark"] {
@@ -114,7 +112,7 @@ html[data-theme="dark"] {
 
 ### Astro dark (高对比度)
 
-![astro-dark-color-scheme](https://user-images.githubusercontent.com/53733092/215680520-59427bb0-f4cb-48c0-bccc-f182a428d72d.svg)
+![astro-dark-color-scheme](/images/color-scheme-astro-dark.png)
 
 ```css
 html[data-theme="dark"] {
@@ -128,7 +126,7 @@ html[data-theme="dark"] {
 
 ### Astro dark (astro-minimax 2 新默认深色主题)
 
-![new dark color scheme - low contrast](https://user-images.githubusercontent.com/53733092/215772856-d5b7ae35-ddaa-4ed6-b0bf-3fa5dbcf834c.png)
+![new dark color scheme - low contrast](/images/color-scheme-astro-dark-low-contrast.png)
 
 ```css
 html[data-theme="dark"] {

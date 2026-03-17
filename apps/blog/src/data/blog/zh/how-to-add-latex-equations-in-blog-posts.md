@@ -21,8 +21,6 @@ description: 学习如何在 Astro 博客文章中使用 Markdown、KaTeX 和 re
   </figcaption>
 </figure>
 
-## Table of contents
-
 ## 说明
 
 在本节中，你将找到如何在 astro-minimax 的 Markdown 文件中添加 LaTeX 支持的说明。
@@ -40,15 +38,13 @@ description: 学习如何在 Astro 博客文章中使用 Markdown、KaTeX 和 re
    import remarkMath from "remark-math";
    import rehypeKatex from "rehype-katex";
 
-   export default defineConfig({
-     // ...
-     markdown: {
-       remarkPlugins: [
-         remarkMath, // [!code ++]
-         remarkToc,
-         [remarkCollapse, { test: "Table of contents" }],
-       ],
-       rehypePlugins: [rehypeKatex], // [!code ++]
+export default defineConfig({
+      // ...
+      markdown: {
+        remarkPlugins: [
+          remarkMath, // [!code ++]
+        ],
+        rehypePlugins: [rehypeKatex], // [!code ++]
        shikiConfig: {
          // For more themes, visit https://shiki.style/themes
          themes: { light: "min-light", dark: "night-owl" },

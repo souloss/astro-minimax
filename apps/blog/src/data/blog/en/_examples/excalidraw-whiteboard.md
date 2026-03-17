@@ -15,18 +15,6 @@ Excalidraw is a virtual whiteboard tool that produces hand-drawn style diagrams.
 
 ---
 
-## Table of Contents
-
-- [What is Excalidraw?](#what-is-excalidraw)
-- [Integration Methods](#integration-methods)
-- [Using the ExcalidrawEmbed Component (MDX)](#using-the-excalidrawembed-component-mdx)
-- [Embedding via iframe (Markdown)](#embedding-via-iframe-markdown)
-- [Creating Shareable Scenes](#creating-shareable-scenes)
-- [Example Scenes](#example-scenes)
-- [Tips and Best Practices](#tips-and-best-practices)
-
----
-
 ## What is Excalidraw?
 
 [Excalidraw](https://excalidraw.com) is an open-source virtual whiteboard with these key features:

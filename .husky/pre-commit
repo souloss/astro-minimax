@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# astro-minimax pre-commit hook
+# Auto-update pubDatetime/modDatetime for blog posts
+
+git diff --cached --name-status | while read -r status file; do
+  case "$file" in
+    apps/blog/src/data/blog/*.md|apps/blog/src/data/blog/**/*.md)
+      case "$status" in
+        M)
+          filecontent=$(cat "$file" 2>/dev/null) || continue
+          frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
+          draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
+          if [ "$draft" = "false" ]; then
+            echo "Updated modDatetime: $file"
+            sed -i.bak "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
+            git add "$file"
+          fi
+          if [ "$draft" = "first" ]; then
+            echo "First release: $file"
+            sed -i.bak -e "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime:/" -e "/---.*/,/---.*/s/^draft:.*$/draft: false/" "$file" && rm -f "$file.bak"
+            git add "$file"
+          fi
+          ;;
+        A)
+          echo "Added pubDatetime: $file"
+          sed -i.bak "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
+          git add "$file"
+          ;;
+      esac
+      ;;
+  esac
+done

@@ -14,8 +14,6 @@ draft: false
 
 astro-minimax 内置 AI 聊天助手，支持多 Provider 自动故障转移、RAG 检索增强、流式响应和 Mock 降级。本文介绍完整的 AI 配置流程。
 
-## Table of contents
-
 ## 概览
 
 AI 聊天系统由以下模块组成：
