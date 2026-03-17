@@ -47,9 +47,9 @@ Examples:
   }
 
   const scriptMap: Record<string, string> = {
-    build: "build-author-context.ts",
-    context: "generate-author-profile.ts",
-    voice: "build-voice-profile.ts",
+    build: "build-author-context.js",
+    context: "generate-author-profile.js",
+    voice: "build-voice-profile.js",
   };
 
   const script = scriptMap[subcommand];

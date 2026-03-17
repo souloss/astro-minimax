@@ -56,9 +56,9 @@ Examples:
   }
 
   const scriptMap: Record<string, { script: string; extraArgs?: string[] }> = {
-    process: { script: "ai-process.ts" },
-    seo: { script: "ai-process.ts", extraArgs: ["--task=seo"] },
-    summary: { script: "ai-process.ts", extraArgs: ["--task=summary"] },
+    process: { script: "ai-process.js" },
+    seo: { script: "ai-process.js", extraArgs: ["--task=seo"] },
+    summary: { script: "ai-process.js", extraArgs: ["--task=summary"] },
   };
 
   const config = scriptMap[subcommand];
