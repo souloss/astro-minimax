@@ -8,14 +8,14 @@ English | [**简体中文**](./README.md)
 
 > **astro-minima-X** — Minima as the foundation, X for infinite extensibility.
 
-astro-minimax is a minimal, modern, and modular Astro blog theme. Built on a minimal aesthetic with rich visualization components and feature extensions. Supports i18n, AI chat, Mermaid diagrams, Markmap mind maps, terminal replay, and more.
+astro-minimax is a minimal, modern, and modular Astro blog theme. Built on a minimal aesthetic with rich visualization components and feature extensions. Supports i18n, AI chat, multiple search providers, Mermaid diagrams, Markmap mind maps, and more.
 
 ## Design Philosophy
 
 - **Minimal First** — Clean design, content-focused
-- **Modular & Pluggable** — Core theme + visualization plugins + AI integration separated, use what you need
-- **Modern** — Astro v5, Tailwind v4, strict TypeScript
-- **Content-System Separation** — Flexible integration via NPM packages or GitHub Template
+- **Modular & Pluggable** — Five independent packages, compose what you need
+- **Modern** — Astro v6, Tailwind v4, strict TypeScript, AI SDK v6
+- **Content-System Separation** — Flexible integration via CLI / NPM packages / GitHub Template
 
 ## Features
 
@@ -27,7 +27,7 @@ astro-minimax is a minimal, modern, and modular Astro blog theme. Built on a min
 - [x] Responsive design
 - [x] SEO friendly
 - [x] Light/Dark theme with View Transitions
-- [x] Full-text search (Pagefind)
+- [x] Full-text search (Pagefind or Algolia DocSearch)
 - [x] Dynamic OG image generation
 - [x] Multi-language (Chinese/English)
 - [x] Categories, tags, series & archives
@@ -42,139 +42,116 @@ astro-minimax is a minimal, modern, and modular Astro blog theme. Built on a min
 
 ### Interactive Features
 
-- [x] 🤖 **AI Chat Widget** — Multi-provider AI assistant with RAG, streaming, and automatic failover
-- [x] 📖 **Read & Chat** — AI reading companion on article pages with context-aware responses
+- [x] 🤖 **AI Chat** — Multi-provider failover, RAG retrieval, streaming, source priority anti-hallucination
+- [x] 📖 **Read & Chat** — AI reading companion with context-aware responses
+- [x] 🔒 **AI Privacy Protection** — Auto-refuses sensitive personal info queries
+- [x] 🧪 **AI Quality Evaluation** — Golden test set with automated assessment
 - [x] 💬 **Waline Comments** — Interactive comment system
+- [x] 🔔 **Multi-channel Notifications** — Telegram / Email / Webhook
 - [x] 📊 **Umami Analytics** — Privacy-friendly web analytics
-- [x] ☕ **Sponsorship** — Support multiple payment methods
+- [x] ☕ **Sponsorship** — Multiple payment methods
 
-## Two Integration Methods
+## Three Integration Methods
 
-### Method 1: GitHub Template (Recommended)
+### Method 1: CLI (Recommended)
+
+```bash
+npx @astro-minimax/cli init my-blog
+cd my-blog && pnpm install && pnpm run dev
+```
+
+### Method 2: GitHub Template
 
 ```bash
 pnpm create astro@latest --template souloss/astro-minimax
 cd my-blog && pnpm install && pnpm run dev
 ```
 
-### Method 2: NPM Packages
+### Method 3: NPM Packages
 
 ```bash
 pnpm add @astro-minimax/core
-pnpm add @astro-minimax/viz  # optional, visualization plugins
-pnpm add @astro-minimax/ai   # optional, AI chat integration
+pnpm add @astro-minimax/viz     # optional, visualization plugins
+pnpm add @astro-minimax/ai      # optional, AI chat
+pnpm add -D @astro-minimax/cli  # recommended, CLI tools
 ```
 
 See [Getting Started](apps/blog/src/data/blog/en/getting-started.md) for details.
 
 ## Project Structure
 
-This project uses a monorepo structure managed by pnpm workspace:
-
 ```bash
 astro-minimax/
-├── pnpm-workspace.yaml          # Workspace config
-├── package.json                 # Root: workspace scripts + shared devDeps
-├── tsconfig.json                # Root: base TS config
-│
 ├── packages/
-│   ├── core/                    # @astro-minimax/core — Core theme package
-│   │   └── src/
-│   │       ├── layouts/         #   Layout components
-│   │       ├── components/      #   UI components (nav, blog, social, etc.)
-│   │       ├── utils/           #   Utility functions
-│   │       ├── plugins/         #   Remark/Rehype plugins
-│   │       ├── styles/          #   Global styles
-│   │       ├── scripts/         #   Client scripts
-│   │       ├── assets/icons/    #   SVG icons
-│   │       └── types.ts         #   Type definitions
-│   │
-│   ├── viz/                     # @astro-minimax/viz — Visualization plugins
-│   │   └── src/
-│   │       ├── components/      #   Mermaid, Markmap, Rough.js, Excalidraw, Asciinema
-│   │       ├── plugins/         #   Remark plugins
-│   │       └── scripts/         #   Client scripts
-│   │
-│   └── ai/                      # @astro-minimax/ai — AI integration package
-│       └── src/
-│           ├── components/      #   ChatPanel, AIChatWidget
-│           ├── providers/       #   Cloudflare Workers AI, OpenAI compatible
-│           ├── prompt/          #   Prompt building system
-│           ├── search/          #   RAG retrieval
-│           └── intelligence/    #   Intent detection, citation verification
-│
+│   ├── core/      # @astro-minimax/core — Core theme (layouts, components, styles, routing, plugins)
+│   ├── viz/       # @astro-minimax/viz — Visualization plugins (Mermaid, Markmap, etc.)
+│   ├── ai/        # @astro-minimax/ai — AI integration (RAG, multi-provider, streaming)
+│   ├── notify/    # @astro-minimax/notify — Multi-channel notifications
+│   └── cli/       # @astro-minimax/cli — CLI toolchain (scaffolding, processing, evaluation)
 └── apps/
-    └── blog/                    # Example blog / dev preview site
-        ├── astro.config.ts      #   Astro configuration
-        ├── package.json
-        ├── wrangler.toml        #   Cloudflare deployment config
-        ├── functions/           #   Cloudflare Pages Functions (AI API)
-        ├── tools/               #   AI data build scripts
-        ├── datas/               #   AI-related data
-        ├── public/              #   Static assets
-        └── src/
-            ├── config.ts        #   Site configuration
-            ├── constants.ts     #   Social link constants
-            ├── content.config.ts#   Content collection definition
-            ├── data/
-            │   ├── blog/zh/     #   Chinese blog posts
-            │   └── blog/en/     #   English blog posts
-            └── pages/           #   Page routes
+    └── blog/      # Example blog / dev preview site
 ```
 
 ## Tech Stack
 
 | Category | Technology |
 |----------|-----------|
-| **Framework** | [Astro v5](https://astro.build/) |
+| **Framework** | [Astro v6](https://astro.build/) |
 | **Styling** | [TailwindCSS v4](https://tailwindcss.com/) |
-| **Search** | [Pagefind](https://pagefind.app/) |
+| **Search** | [Pagefind](https://pagefind.app/) / [Algolia DocSearch](https://docsearch.algolia.com/) |
 | **Comments** | [Waline](https://waline.js.org/) |
 | **Diagrams** | [Mermaid](https://mermaid.js.org/) |
 | **Mind Maps** | [Markmap](https://markmap.js.org/) |
-| **AI** | [Vercel AI SDK](https://sdk.vercel.ai/) + Cloudflare Workers AI |
+| **AI** | [Vercel AI SDK v6](https://sdk.vercel.ai/) + Cloudflare Workers AI |
+| **Notifications** | Telegram / Email (Resend) / Webhook |
 | **Analytics** | [Umami](https://umami.is/) |
 | **Deployment** | Cloudflare Pages / Vercel / Netlify / Docker |
 
-## Commands
+## CLI Commands
 
-All commands are run from the project root:
+Full command-line toolkit via `@astro-minimax/cli`:
 
-| Command | Action |
-|---------|--------|
-| `pnpm install` | Install all workspace dependencies |
-| `pnpm run dev` | Start blog dev server |
-| `pnpm run build` | Build blog for production (with type check and search index) |
-| `pnpm run preview` | Preview build |
-| `pnpm run format` | Format code |
-| `pnpm run format:check` | Check code formatting |
+```bash
+# Blog management
+astro-minimax init my-blog       # Create new blog
+astro-minimax post new "Title"   # Create new post
+astro-minimax post list          # List all posts
+astro-minimax post stats         # Post statistics
 
-Additional scripts available in `apps/blog/`:
+# AI content processing
+astro-minimax ai process         # AI process articles (summaries + SEO)
+astro-minimax ai eval            # Evaluate AI chat quality
 
-| Command | Action |
-|---------|--------|
-| `pnpm run lint` | ESLint code check |
-| `pnpm run ai:process` | AI data processing pipeline |
-| `pnpm run tools:summarize` | Generate post summaries |
-| `pnpm run tools:translate` | AI-assisted translation |
+# Author profile
+astro-minimax profile build      # Build complete profile (context + voice + report)
 
-## Documentation
+# Data management
+astro-minimax data status        # View data file status
+astro-minimax data clear         # Clear generated caches
+```
 
-- [Getting Started](apps/blog/src/data/blog/en/getting-started.md)
-- [Configure Theme](apps/blog/src/data/blog/en/how-to-configure-astro-minimax-theme.md)
-- [Add Posts](apps/blog/src/data/blog/en/adding-new-post.md)
-- [Feature Overview](apps/blog/src/data/blog/en/feature-overview.md)
-- [Deployment Guide](apps/blog/src/data/blog/en/deployment-guide.md)
-- [Customize Colors](apps/blog/src/data/blog/en/customizing-astro-minimax-theme-color-schemes.md)
-- [Dynamic OG Images](apps/blog/src/data/blog/en/dynamic-og-images.md)
+Shortcut scripts are also available: `pnpm run ai:process`, `pnpm run profile:build`, etc.
 
 ## Packages
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [`@astro-minimax/core`](packages/core/) | 0.1.0 | Core theme: layouts, components, styles, utilities, Remark/Rehype plugins |
-| [`@astro-minimax/viz`](packages/viz/) | 0.1.4 | Visualization plugins: Mermaid, Markmap, Rough.js, Excalidraw, Asciinema |
-| [`@astro-minimax/ai`](packages/ai/) | 0.2.0 | AI integration: multi-provider, auto failover, RAG retrieval, streaming |
+| [`@astro-minimax/core`](packages/core/) | 0.5.0 | Core theme: layouts, components, styles, route injection, virtual module system |
+| [`@astro-minimax/viz`](packages/viz/) | 0.5.0 | Visualization plugins: Mermaid, Markmap, Rough.js, Excalidraw, Asciinema |
+| [`@astro-minimax/ai`](packages/ai/) | 0.5.0 | AI integration: multi-provider failover, RAG, source priority, privacy protection |
+| [`@astro-minimax/notify`](packages/notify/) | 0.5.0 | Notifications: Telegram Bot, Email (Resend), Webhook |
+| [`@astro-minimax/cli`](packages/cli/) | 0.6.0 | CLI tools: scaffolding, AI processing, profile building, quality evaluation |
+
+## Documentation
+
+- [Getting Started](apps/blog/src/data/blog/en/getting-started.md)
+- [Feature Overview](apps/blog/src/data/blog/en/feature-overview.md)
+- [Configure Theme](apps/blog/src/data/blog/en/how-to-configure-astro-minimax-theme.md)
+- [Add Posts](apps/blog/src/data/blog/en/adding-new-post.md)
+- [Deployment Guide](apps/blog/src/data/blog/en/deployment-guide.md)
+- [Notification System](apps/blog/src/data/blog/en/notification-guide.md)
+- [Customize Colors](apps/blog/src/data/blog/en/customizing-astro-minimax-theme-color-schemes.md)
+- [Dynamic OG Images](apps/blog/src/data/blog/en/dynamic-og-images.md)
 
 ## Credits
 
