@@ -31,9 +31,9 @@ export const onRequest: PagesFunction<TestEnv> = async (context) => {
       provider: 'test',
     },
     usage: {
-      promptTokens: 100,
-      completionTokens: 50,
-      totalTokens: 150,
+      total: 150,
+      input: 100,
+      output: 50,
     },
     timing: {
       total: 1000,
