@@ -78,8 +78,19 @@ AI_MODEL=gpt-4o-mini
 
 ### Failover Chain
 
-```
-Workers AI (weight: 100) → OpenAI API (weight: 90) → Mock (weight: 0)
+```mermaid
+flowchart LR
+    Request[User Request] --> W{Workers AI}
+    W -->|Success| Response[Streaming Response]
+    W -->|3 failures| O{OpenAI API}
+    O -->|Success| Response
+    O -->|Fail| M[Mock Fallback]
+    M --> Response
+
+    style W fill:#f97316,color:#fff
+    style O fill:#3b82f6,color:#fff
+    style M fill:#6b7280,color:#fff
+    style Response fill:#22c55e,color:#fff
 ```
 
 ## Security Features

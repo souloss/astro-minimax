@@ -15,6 +15,45 @@ draft: false
 
 Building a personal tech blog involves 10+ technical decisions. This guide exhaustively covers every capability domain in the 2026 blog ecosystem to help you make informed choices.
 
+```markmap
+# 2026 Blog Ecosystem
+## Framework
+### Astro
+### Hugo
+### Next.js
+### Hexo
+## Content
+### Markdown (Git)
+### Headless CMS
+### WordPress
+## Search
+### Pagefind
+### Algolia DocSearch
+### RAG (AI)
+## Comments
+### Waline
+### Giscus
+### Disqus
+## AI
+### Chat (RAG)
+### Summaries
+### SEO
+### Translation
+## Analytics
+### Umami
+### Plausible
+### Cloudflare
+## Notifications
+### Telegram
+### Email
+### Webhook
+## Deploy
+### Cloudflare Pages
+### Vercel
+### GitHub Pages
+### Docker
+```
+
 ## Table of contents
 
 ## 1. Framework Selection
@@ -112,6 +151,35 @@ Building a personal tech blog involves 10+ technical decisions. This guide exhau
 | **Docker + VPS** | VPS cost | None | Full control |
 
 ## Quick Decision Matrix
+
+## Selection Flowchart
+
+```mermaid
+flowchart TD
+    Start[Want to build a tech blog] --> Q1{Need AI features?}
+    Q1 -->|Yes| Q2{Need Edge Runtime?}
+    Q1 -->|No| Q3{Preferred language?}
+
+    Q2 -->|Yes| CF[Astro + Cloudflare Pages]
+    Q2 -->|No| OpenAI[Astro/Next.js + any host]
+
+    Q3 -->|TypeScript| Q4{Need SSR?}
+    Q3 -->|Go| Hugo[Hugo + GitHub Pages]
+    Q3 -->|No code| WP[WordPress]
+
+    Q4 -->|Yes| Next[Next.js + Vercel]
+    Q4 -->|No| Astro[Astro + any host]
+
+    CF --> Done[Start writing!]
+    OpenAI --> Done
+    Hugo --> Done
+    WP --> Done
+    Next --> Done
+    Astro --> Done
+
+    style CF fill:#f97316,color:#fff
+    style Done fill:#22c55e,color:#fff
+```
 
 ### Minimal (Zero Cost)
 

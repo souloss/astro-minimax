@@ -18,6 +18,18 @@ draft: false
 
 astro-minimax offers three integration methods for different use cases:
 
+```mermaid
+flowchart TD
+    Start[Get started with astro-minimax] --> Q{Your scenario?}
+    Q -->|Fastest start| CLI["Method 1: CLI<br/>npx @astro-minimax/cli init"]
+    Q -->|Full code control| Template["Method 2: GitHub Template<br/>Fork monorepo"]
+    Q -->|Existing Astro project| NPM["Method 3: NPM Packages<br/>pnpm add @astro-minimax/core"]
+
+    style CLI fill:#22c55e,color:#fff
+    style Template fill:#3b82f6,color:#fff
+    style NPM fill:#8b5cf6,color:#fff
+```
+
 | Method | Best For | Updates |
 |--------|----------|---------|
 | **CLI (Recommended)** | Fastest start, standalone project | `pnpm update` |
