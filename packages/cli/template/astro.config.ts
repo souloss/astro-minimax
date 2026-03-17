@@ -11,6 +11,7 @@ import remarkMath from "remark-math";
 import remarkGithubAlerts from "remark-github-alerts";
 import remarkEmoji from "remark-emoji";
 import rehypeKatex from "rehype-katex";
+import type { ShikiTransformer } from "shiki";
 import { remarkReadingTime } from "@astro-minimax/core/plugins/remark-reading-time";
 import { remarkAddZoomable } from "@astro-minimax/core/plugins/remark-add-zoomable";
 import { rehypeExternalLinks } from "@astro-minimax/core/plugins/rehype-external-links";
@@ -32,7 +33,7 @@ import { SITE } from "./src/config";
 import { SOCIALS, SHARE_LINKS } from "./src/constants";
 import { FRIENDS } from "./src/data/friends";
 
-const asTransformer = (t: unknown) => t;
+const asTransformer = (t: unknown): ShikiTransformer => t as ShikiTransformer;
 
 const shikiTransformers = [
   asTransformer(updateStyle()),
@@ -82,7 +83,7 @@ export default defineConfig({
       remarkGithubAlerts,
       remarkEmoji,
       remarkReadingTime,
-      [remarkAddZoomable, { className: "zoomable" }],
+      [remarkAddZoomable as ShikiTransformer, { className: "zoomable" }],
     ],
     rehypePlugins: [
       rehypeKatex,
