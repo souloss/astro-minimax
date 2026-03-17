@@ -19,6 +19,5 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
   return handleChatRequest({ 
     env: context.env, 
     request: context.request,
-    waitUntil: context.waitUntil,
   });
 };
