@@ -1,8 +1,87 @@
 import { tokenize, normalizeText } from '../search/search-utils.js';
-import type { CachedSearchContext } from '../search/types.js';
+import type { CachedSearchContext, ArticleContext } from '../search/types.js';
 import { SESSION_CACHE_TTL_MS } from '../search/session-cache.js';
 
 const MAX_FOLLOW_UP_LENGTH = 48;
+
+// ── Intent Classification ────────────────────────────────────
+
+export type IntentCategory =
+  | 'setup'
+  | 'config'
+  | 'content'
+  | 'feature'
+  | 'deployment'
+  | 'troubleshooting'
+  | 'general';
+
+const INTENT_KEYWORDS: Record<IntentCategory, string[]> = {
+  setup: ['搭建', '创建', '安装', 'install', 'setup', 'create', 'init', 'scaffold', '新建', '开始'],
+  config: ['配置', '设置', 'config', 'settings', '环境变量', '.env', 'wrangler', 'tsconfig', '主题色', '颜色'],
+  content: ['文章', '博客', '写作', 'markdown', 'mdx', '标签', '分类', '摘要', '封面', '翻译'],
+  feature: ['功能', '特性', 'feature', '支持', 'AI', 'RAG', '搜索', '评论', 'RSS', '暗色', '深色'],
+  deployment: ['部署', 'deploy', 'cloudflare', 'vercel', 'netlify', 'build', '构建', 'CI', 'CD'],
+  troubleshooting: ['报错', '错误', 'error', 'bug', '问题', '不工作', '失败', 'fail', '修复', 'fix'],
+  general: [],
+};
+
+/**
+ * Classifies the user query into an intent category.
+ * Used to adjust search relevance scoring.
+ */
+export function classifyIntent(query: string): IntentCategory {
+  const q = query.toLowerCase();
+  const scores: Partial<Record<IntentCategory, number>> = {};
+
+  for (const [intent, keywords] of Object.entries(INTENT_KEYWORDS) as [IntentCategory, string[]][]) {
+    if (intent === 'general') continue;
+    const score = keywords.reduce((acc, kw) => acc + (q.includes(kw.toLowerCase()) ? 1 : 0), 0);
+    if (score > 0) scores[intent] = score;
+  }
+
+  const sorted = Object.entries(scores).sort((a, b) => (b[1] as number) - (a[1] as number));
+  return (sorted[0]?.[0] as IntentCategory) || 'general';
+}
+
+/**
+ * Re-ranks articles by intent relevance.
+ * Boosts articles whose title/categories/keyPoints match the detected intent.
+ */
+export function rankArticlesByIntent(
+  query: string,
+  articles: ArticleContext[],
+): ArticleContext[] {
+  const intent = classifyIntent(query);
+  if (intent === 'general' || articles.length <= 1) return articles;
+
+  const keywords = INTENT_KEYWORDS[intent];
+  if (!keywords.length) return articles;
+
+  const scored = articles.map(article => {
+    let boost = 0;
+    const searchableText = [
+      article.title,
+      ...article.keyPoints,
+      ...(article.categories ?? []),
+      article.summary ?? '',
+    ].join(' ').toLowerCase();
+
+    for (const kw of keywords) {
+      if (searchableText.includes(kw.toLowerCase())) boost += 2;
+    }
+
+    if (article.title.toLowerCase().includes(query.toLowerCase().slice(0, 10))) {
+      boost += 3;
+    }
+
+    return { article, boost };
+  });
+
+  scored.sort((a, b) => b.boost - a.boost);
+  return scored.map(s => s.article);
+}
+
+// ── Follow-up Detection ──────────────────────────────────────
 
 /**
  * Determines if the latest message is likely a follow-up to the previous context.

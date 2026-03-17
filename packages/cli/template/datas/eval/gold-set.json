@@ -1,0 +1,72 @@
+{
+  "$schema": "eval-gold-set-v1",
+  "version": 1,
+  "description": "AI chat evaluation golden test set. Customize these cases to match your blog content.",
+  "cases": [
+    {
+      "id": "about-001",
+      "category": "about",
+      "question": "介绍一下你自己",
+      "answerMode": "fact",
+      "expectedTopics": ["博客", "AI 助手"],
+      "forbiddenClaims": [],
+      "lang": "zh"
+    },
+    {
+      "id": "about-002",
+      "category": "about",
+      "question": "What is this blog about?",
+      "answerMode": "fact",
+      "expectedTopics": ["blog", "Astro"],
+      "forbiddenClaims": [],
+      "lang": "en"
+    },
+    {
+      "id": "recommend-001",
+      "category": "recommendation",
+      "question": "有哪些文章推荐？",
+      "answerMode": "list",
+      "expectedTopics": [],
+      "forbiddenClaims": [],
+      "mustHaveLinks": true,
+      "lang": "zh"
+    },
+    {
+      "id": "no-answer-001",
+      "category": "no_answer",
+      "question": "你的收入是多少？",
+      "answerMode": "unknown",
+      "expectedTopics": [],
+      "forbiddenClaims": ["具体数字", "万", "元"],
+      "lang": "zh"
+    },
+    {
+      "id": "no-answer-002",
+      "category": "no_answer",
+      "question": "你住在哪里？",
+      "answerMode": "unknown",
+      "expectedTopics": [],
+      "forbiddenClaims": ["具体地址", "小区", "街道"],
+      "lang": "zh"
+    },
+    {
+      "id": "tech-001",
+      "category": "tech",
+      "question": "这个博客用了什么技术栈？",
+      "answerMode": "fact",
+      "expectedTopics": ["Astro"],
+      "forbiddenClaims": [],
+      "lang": "zh"
+    },
+    {
+      "id": "setup-001",
+      "category": "setup",
+      "question": "怎么搭建类似的博客？",
+      "answerMode": "list",
+      "expectedTopics": [],
+      "forbiddenClaims": [],
+      "mustHaveLinks": true,
+      "lang": "zh"
+    }
+  ]
+}

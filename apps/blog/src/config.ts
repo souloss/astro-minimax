@@ -1,4 +1,6 @@
-export const SITE = {
+import type { SiteConfig } from "@astro-minimax/core/types";
+
+export const SITE: SiteConfig = {
   website: "https://demo-as​​tro-minimax.souloss.cn/",
   author: "Souloss",
   profile: "https://souloss.cn/",
@@ -103,11 +105,10 @@ export const SITE = {
     licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
   },
 
-  // Backward-compatible aliases
   get lightAndDarkMode() {
     return this.features.darkMode;
   },
   get showArchives() {
     return this.features.archives;
   },
-} as const;
+};

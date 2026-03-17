@@ -79,29 +79,56 @@ Total: **45 seconds**
 │ - Author identity & rules        │
 │ - Response format guidelines     │
 │ - Citation requirements          │
+│ - Source priority protocol (L1>L2>L3>L5) │
+│ - Privacy protection rules       │
 ├─────────────────────────────────┤
 │ Semi-Static Layer                │
 │ - Author context (posts, skills) │
 │ - Voice profile (tone, style)    │
 ├─────────────────────────────────┤
-│ Dynamic Layer                    │
+│ Dynamic Layer (i18n: zh/en)      │
 │ - Retrieved articles & projects  │
 │ - Evidence analysis results      │
 │ - Article context (if reading)   │
 │ - Reading companion instructions │
+│ - Intent-ranked search results   │
 └─────────────────────────────────┘
 ```
+
+### Source Priority Protocol
+
+The static layer enforces a source priority protocol to prevent hallucination:
+
+- **L1** (highest): Original blog content from retrieved articles
+- **L2**: Curated data (author bio, project list)
+- **L3**: Structured facts (tag statistics, category aggregations)
+- **L5** (lowest): Voice style (expression only, not factual evidence)
+
+### Privacy Protection
+
+The Citation Guard performs a privacy preflight check before LLM invocation:
+
+- Detects queries about personal sensitive info (address, income, family, phone, ID, age)
+- Returns a polite refusal without calling the LLM
+- Supports Chinese and English refusal messages
+
+### Intent Classification
+
+After search, articles are re-ranked by intent relevance:
+
+- 7 intent categories: setup, config, content, feature, deployment, troubleshooting, general
+- Articles whose title/keyPoints/categories match the detected intent are boosted
 
 ## Metadata Pipeline
 
 ```
-Build Time                          Runtime
-┌────────────────┐                 ┌──────────────────────┐
-│ tools/          │                 │ initializeMetadata() │
-│ - ai-process   │──generates──▶  │ → preloadMetadata()  │
-│ - context:build│  datas/*.json   │ → initArticleIndex() │
-│ - voice:build  │                 │ → initProjectIndex() │
-└────────────────┘                 └──────────────────────┘
+Build Time (CLI)                    Runtime
+┌─────────────────────┐            ┌──────────────────────┐
+│ astro-minimax cli    │            │ initializeMetadata() │
+│ - ai process        │──datas/──▶│ → preloadMetadata()  │
+│ - profile build     │  *.json    │ → initArticleIndex() │
+│ - ai eval (QA)      │            │ → initProjectIndex() │
+└─────────────────────┘            └──────────────────────┘
 ```
 
 Data files in `datas/`:

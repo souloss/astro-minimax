@@ -11,7 +11,6 @@ import remarkMath from "remark-math";
 import remarkGithubAlerts from "remark-github-alerts";
 import remarkEmoji from "remark-emoji";
 import rehypeKatex from "rehype-katex";
-import type { ShikiTransformer } from "shiki";
 import { remarkReadingTime } from "@astro-minimax/core/plugins/remark-reading-time";
 import { remarkAddZoomable } from "@astro-minimax/core/plugins/remark-add-zoomable";
 import { rehypeExternalLinks } from "@astro-minimax/core/plugins/rehype-external-links";
@@ -33,7 +32,8 @@ import { SITE } from "./src/config";
 import { SOCIALS, SHARE_LINKS } from "./src/constants";
 import { FRIENDS } from "./src/data/friends";
 
-const asTransformer = (t: unknown): ShikiTransformer => t as ShikiTransformer;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const asTransformer = (t: any) => t;
 
 const shikiTransformers = [
   asTransformer(updateStyle()),
@@ -83,7 +83,8 @@ export default defineConfig({
       remarkGithubAlerts,
       remarkEmoji,
       remarkReadingTime,
-      [remarkAddZoomable as ShikiTransformer, { className: "zoomable" }],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [remarkAddZoomable as any, { className: "zoomable" }],
     ],
     rehypePlugins: [
       rehypeKatex,
@@ -99,28 +100,10 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [
-      tailwindcss() as never,
-      {
-        name: "astro-minimax-preact-singleton",
-        enforce: "pre" as const,
-        async resolveId(source, importer, options) {
-          if (source.startsWith("@/components/media")) {
-            const vizDir = new URL("../../packages/viz/src/components", import.meta.url).pathname;
-            return this.resolve(source.replace("@/components/media", vizDir), importer, { ...options, skipSelf: true });
-          }
-        },
-      },
-    ],
+    plugins: [tailwindcss() as never],
     server: {
       fs: {
-        strict: true,
-        allow: [
-          new URL("../../packages", import.meta.url).pathname,
-          new URL("../../node_modules", import.meta.url).pathname,
-          "./src",
-          "./.astro",
-        ],
+        strict: false,
       },
       proxy: {
         "/api": {
@@ -131,8 +114,7 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        "@/components/media": new URL("../../packages/viz/src/components", import.meta.url).pathname,
-        "@/" : new URL("./src/", import.meta.url).pathname,
+        "@/": new URL("./src/", import.meta.url).pathname,
         "react": "preact/compat",
         "react-dom": "preact/compat",
         "react/jsx-runtime": "preact/jsx-runtime",

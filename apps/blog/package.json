@@ -42,6 +42,7 @@
     "ai:process": "astro-minimax ai process",
     "ai:seo": "astro-minimax ai seo",
     "ai:summary": "astro-minimax ai summary",
+    "ai:eval": "astro-minimax ai eval",
     "profile:build": "astro-minimax profile build",
     "profile:context": "astro-minimax profile context",
     "profile:voice": "astro-minimax profile voice",

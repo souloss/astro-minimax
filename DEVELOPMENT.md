@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node.js >= 18
+- Node.js >= 22.12.0
 - pnpm >= 9
 
 ## Quick Start
@@ -22,13 +22,13 @@ astro-minimax/
 │   ├── src/config.ts   # Site configuration
 │   ├── src/data/blog/  # Blog content (Markdown)
 │   ├── datas/          # AI-generated metadata (do not edit manually)
-│   ├── functions/      # Cloudflare Pages Functions (thin adapters)
-│   └── tools/          # Build-time AI processing scripts
+│   └── functions/      # Cloudflare Pages Functions (thin adapters)
 ├── packages/
 │   ├── core/           # Theme: layouts, components, pages, styles
 │   ├── ai/             # AI: RAG pipeline, providers, chat UI
 │   ├── viz/            # Visualization: Mermaid, Markmap, etc.
-│   └── cli/            # Scaffolding CLI
+│   ├── notify/         # Multi-channel notifications (Telegram, Webhook, Email)
+│   └── cli/            # CLI tools + scaffolding (AI processing, profile, eval)
 └── docs/               # Architecture documentation
 ```
 
@@ -91,15 +91,31 @@ Changes in other `src/` files require `pnpm run build` or watch mode.
 
 No build step — exports source files directly. Changes take effect immediately.
 
-## Build-Time Tools
+## Build-Time Tools (CLI)
 
-AI processing scripts live in `apps/blog/tools/`:
+All tools are in `packages/cli` and accessible via the `astro-minimax` CLI or `pnpm run` shortcuts:
 
 ```bash
+# AI content processing
 pnpm run ai:process         # Generate summaries + SEO metadata
-pnpm run context:build      # Build author context
-pnpm run voice:build        # Build voice profile
-pnpm run tools:vectorize    # Generate article vectors
+pnpm run ai:seo             # Generate SEO metadata only
+pnpm run ai:summary         # Generate summaries only
+pnpm run ai:eval            # Evaluate AI chat quality
+
+# Author profile
+pnpm run profile:build      # Build complete profile (context + voice + report)
+pnpm run profile:context    # Build author context
+pnpm run profile:voice      # Build voice profile
+pnpm run profile:report     # Generate author profile report
+
+# Post management
+pnpm run post:new           # Create a new post
+pnpm run post:list          # List all posts
+pnpm run post:stats         # Show post statistics
+
+# Data management
+pnpm run data:status        # Show data files status
+pnpm run data:clear         # Clear generated data caches
 ```
 
 These scripts read from `src/data/blog/` and write to `datas/`. The generated JSON files are loaded by the AI server at runtime.

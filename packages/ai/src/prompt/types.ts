@@ -19,6 +19,7 @@ export interface DynamicLayerConfig {
   articles: ArticleContext[];
   projects: ProjectContext[];
   evidenceSection?: string;
+  lang?: string;
 }
 
 export interface PromptBuildConfig {

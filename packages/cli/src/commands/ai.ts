@@ -18,6 +18,7 @@ Subcommands:
   process           Process posts with AI (summaries + SEO metadata)
   seo               Generate SEO metadata only
   summary           Generate summaries only
+  eval              Evaluate AI chat quality with golden test set
 
 Options for "process":
   --force             Reprocess all posts (ignore cache)
@@ -27,11 +28,21 @@ Options for "process":
   --dry-run           Preview what would be processed
   --lang=<zh|en>      Process only specified language
 
+Options for "eval":
+  --url=<url>         API base URL (default: http://localhost:4321)
+  --category=<cat>    Only evaluate specific category
+  --id=<case-id>      Only evaluate specific test case
+  --verbose           Show detailed output
+  --json              Output JSON report
+
 Description:
   Processes blog posts to generate AI-powered content:
   - Summaries for search and preview
   - SEO metadata (keywords, descriptions)
   - Caches results to avoid reprocessing
+
+  The "eval" subcommand tests the AI chat against a golden test set
+  (datas/eval/gold-set.json) and generates a quality report.
 
 Examples:
   astro-minimax ai process
@@ -40,6 +51,9 @@ Examples:
   astro-minimax ai process --recent=5
   astro-minimax ai seo --lang=en
   astro-minimax ai summary
+  astro-minimax ai eval
+  astro-minimax ai eval --url=https://your-blog.com
+  astro-minimax ai eval --category=no_answer --verbose
 `);
     return;
   }
@@ -59,6 +73,7 @@ Examples:
     process: { script: "ai-process.js" },
     seo: { script: "ai-process.js", extraArgs: ["--task=seo"] },
     summary: { script: "ai-process.js", extraArgs: ["--task=summary"] },
+    eval: { script: "eval-ai-chat.js" },
   };
 
   const config = scriptMap[subcommand];

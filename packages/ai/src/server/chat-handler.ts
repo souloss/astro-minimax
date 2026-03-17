@@ -39,6 +39,7 @@ import {
   setResponseCache,
   getResponseCacheConfig,
   createResponsePlaybackGenerator,
+  rankArticlesByIntent,
 } from '../index.js';
 import type { CacheAdapter, CachedSearchContext, PublicQuestionType, CachedAIResponse, ResponseCacheConfig, PlaybackChunk } from '../index.js';
 import type { ChatHandlerOptions, ChatRequestBody, ChatContext } from './types.js';
@@ -602,6 +603,8 @@ writer.write({
       timing.search = Date.now() - searchStart;
     }
 
+    relatedArticles = rankArticlesByIntent(latestText, relatedArticles);
+
     if (cacheKey) {
       await setCachedContext(cacheKey, {
         query: searchQuery,
@@ -667,6 +670,7 @@ writer.write({
     userQuery: latestText,
     articles: relatedArticles,
     projects: relatedProjects,
+    lang,
   });
 
   // ── Build System Prompt ─────────────────────────────────────
@@ -689,6 +693,7 @@ writer.write({
       evidenceSection: articlePrompt
         ? `${evidenceSection}\n${articlePrompt}`
         : evidenceSection,
+      lang,
     },
   });
 

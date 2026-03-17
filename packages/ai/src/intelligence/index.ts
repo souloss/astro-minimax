@@ -4,7 +4,11 @@ export {
   hasQueryOverlap,
   shouldReuseSearchContext,
   buildLocalSearchQuery,
+  classifyIntent,
+  rankArticlesByIntent,
 } from './intent-detect.js';
+
+export type { IntentCategory } from './intent-detect.js';
 
 export {
   shouldRunKeywordExtraction,
@@ -23,7 +27,10 @@ export {
 export {
   getCitationGuardPreflight,
   createCitationGuardTransform,
+  resolveAnswerMode,
 } from './citation-guard.js';
+
+export type { AnswerMode } from './citation-guard.js';
 
 export type {
   QueryComplexity,
