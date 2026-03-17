@@ -15,6 +15,26 @@ draft: false
 
 astro-minimax 内置多渠道通知系统，可以在博客收到评论或用户进行 AI 对话时，自动发送通知到 Telegram、邮箱或自定义 Webhook。
 
+```mermaid
+flowchart LR
+    Event[博客事件] --> N{通知系统}
+    N --> T[🤖 Telegram Bot]
+    N --> E[📧 Email]
+    N --> W[🔗 Webhook]
+
+    subgraph 事件类型
+        C[💬 新评论]
+        A[🗣 AI 对话]
+    end
+
+    C --> Event
+    A --> Event
+
+    style T fill:#0088cc,color:#fff
+    style E fill:#ef4444,color:#fff
+    style W fill:#8b5cf6,color:#fff
+```
+
 ## Table of contents
 
 ## 功能概览

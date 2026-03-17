@@ -18,6 +18,18 @@ draft: false
 
 astro-minimax 提供三种使用方式，适合不同场景：
 
+```mermaid
+flowchart TD
+    Start[开始使用 astro-minimax] --> Q{你的场景?}
+    Q -->|最快上手| CLI["方式一：CLI 创建<br/>npx @astro-minimax/cli init"]
+    Q -->|完全控制代码| Template["方式二：GitHub Template<br/>Fork monorepo"]
+    Q -->|已有 Astro 项目| NPM["方式三：NPM 包<br/>pnpm add @astro-minimax/core"]
+
+    style CLI fill:#22c55e,color:#fff
+    style Template fill:#3b82f6,color:#fff
+    style NPM fill:#8b5cf6,color:#fff
+```
+
 | 方式 | 适合场景 | 更新方式 |
 |------|----------|----------|
 | **CLI 创建（推荐）** | 最快上手，独立项目 | `pnpm update` |

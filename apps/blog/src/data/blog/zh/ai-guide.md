@@ -106,8 +106,19 @@ AI_EVIDENCE_MODEL=gpt-4o-mini   # 证据分析模型
 
 ### 故障转移机制
 
-```
-Workers AI (权重: 100) → OpenAI API (权重: 90) → Mock 降级 (权重: 0)
+```mermaid
+flowchart LR
+    Request[用户请求] --> W{Workers AI}
+    W -->|成功| Response[流式响应]
+    W -->|失败 3 次| O{OpenAI API}
+    O -->|成功| Response
+    O -->|失败| M[Mock 降级]
+    M --> Response
+
+    style W fill:#f97316,color:#fff
+    style O fill:#3b82f6,color:#fff
+    style M fill:#6b7280,color:#fff
+    style Response fill:#22c55e,color:#fff
 ```
 
 - 连续失败 3 次标记为不健康
