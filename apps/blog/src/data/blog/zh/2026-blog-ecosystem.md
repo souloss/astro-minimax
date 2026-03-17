@@ -16,42 +16,128 @@ draft: false
 构建个人技术博客看似简单，实际涉及 10+ 个技术决策。本文穷举式地梳理 2026 年博客生态的每个能力域，帮你做出知情的选择。
 
 ```markmap
-# 2026 博客生态
-## 框架
-### Astro
-### Hugo
-### Next.js
-### Hexo
-## 内容管理
-### Markdown (Git)
+# 2026 博客生态全景
+## 🏗️ 框架选型
+### SSG（静态生成）
+#### Astro — 岛屿架构，零 JS
+#### Hugo — Go 编写，构建最快
+#### Hexo — 中文生态丰富
+### 全栈框架
+#### Next.js — React 全栈
+#### Nuxt — Vue 全栈
+### 文档框架
+#### VitePress — Vue 驱动文档
+#### Starlight — Astro 文档
+## 📝 内容管理
+### 文件系统 (Git-based)
+#### Markdown/MDX
+#### 离线编辑（VS Code/Obsidian）
+#### 版本控制（Git）
 ### Headless CMS
-### WordPress
-## 搜索
-### Pagefind
-### Algolia DocSearch
-### RAG (AI)
-## 评论
-### Waline
-### Giscus
-### Disqus
-## AI 集成
-### 聊天 (RAG)
-### 摘要生成
-### SEO 优化
-### 翻译
-## 统计分析
-### Umami
-### Plausible
-### Cloudflare
-## 通知
-### Telegram
-### Email
-### Webhook
-## 部署
-### Cloudflare Pages
-### Vercel
-### GitHub Pages
-### Docker
+#### Strapi（自托管）
+#### Sanity（云托管）
+#### Contentful（企业级）
+### 传统 CMS
+#### WordPress — 最大生态
+#### Ghost — 现代 CMS
+## 🎨 样式系统
+### Tailwind CSS — 原子化
+### UnoCSS — 按需生成
+### CSS Modules — 组件作用域
+### vanilla CSS — 零依赖
+## 🔍 搜索方案
+### 静态搜索
+#### Pagefind — 零成本 WASM
+#### FlexSearch — 内存搜索
+### 云搜索
+#### Algolia DocSearch — 毫秒响应
+#### Meilisearch — 自托管
+### AI 搜索
+#### RAG — 意图理解
+#### 语义搜索 — Embedding 向量
+## 💬 评论系统
+### 自托管
+#### Waline — 中文友好
+#### Twikoo — 轻量
+#### Artalk — SQLite
+### GitHub 集成
+#### Giscus — Discussions
+#### Utterances — Issues
+### 云服务
+#### Disqus — 最大平台
+## 🤖 AI 集成
+### 对话式
+#### RAG 聊天 — 基于博客内容回答
+#### 边读边聊 — 文章上下文感知
+### 内容生成
+#### 摘要生成 — LLM API
+#### SEO 优化 — 元数据生成
+#### 翻译 — 多语言互译
+#### 标签建议 — 关键词提取
+#### 封面生成 — DALL-E/SD
+### 质量保障
+#### 来源分层 — 防幻觉
+#### 隐私保护 — 拒绝敏感信息
+#### 评估系统 — 黄金测试集
+### Provider
+#### Cloudflare Workers AI（免费边缘）
+#### OpenAI / DeepSeek / Moonshot
+#### 本地模型 (Ollama)
+## 📊 分析统计
+### 隐私友好
+#### Umami — 无 Cookie
+#### Plausible — 简洁合规
+#### Cloudflare Analytics — 零 JS
+### 传统方案
+#### Google Analytics — 功能最全
+#### PostHog — 产品分析
+## 🔔 通知系统
+### 即时通讯
+#### Telegram Bot — 移动实时
+#### Discord Webhook
+#### 飞书/钉钉 Webhook
+### 邮件
+#### Resend — 开发者友好
+#### Mailgun / SendGrid
+### 通用
+#### Webhook — 对接任何系统
+## 🚀 部署运维
+### 边缘部署
+#### Cloudflare Pages — AI + CDN
+#### Vercel — Next.js 最佳
+#### Netlify — 易用
+### 静态托管
+#### GitHub Pages — 零成本
+#### 阿里云 OSS + CDN
+### 容器化
+#### Docker + Nginx
+#### Railway / Fly.io
+## 🛠️ 开发工具
+### CLI 工具链
+#### 项目脚手架
+#### AI 内容处理
+#### 质量评估
+### 代码增强
+#### 语法高亮 (Shiki)
+#### 数学公式 (KaTeX)
+#### 图表 (Mermaid)
+#### 思维导图 (Markmap)
+### SEO 工具
+#### 动态 OG 图片
+#### sitemap.xml
+#### robots.txt
+#### RSS Feed
+## 📢 运营推广
+### 搜索引擎
+#### Google Search Console
+#### Bing Webmaster
+### 社交分享
+#### Twitter/X
+#### 微信公众号
+#### LinkedIn
+### 订阅分发
+#### RSS
+#### Newsletter (Resend)
 ```
 
 ## Table of contents

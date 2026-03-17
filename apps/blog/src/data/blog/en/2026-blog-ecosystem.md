@@ -17,41 +17,123 @@ Building a personal tech blog involves 10+ technical decisions. This guide exhau
 
 ```markmap
 # 2026 Blog Ecosystem
-## Framework
-### Astro
-### Hugo
-### Next.js
-### Hexo
-## Content
-### Markdown (Git)
+## 🏗️ Framework
+### SSG (Static)
+#### Astro — Islands, zero JS
+#### Hugo — Go, fastest build
+#### Hexo — Rich CJK ecosystem
+### Full-stack
+#### Next.js — React full-stack
+#### Nuxt — Vue full-stack
+### Docs
+#### VitePress — Vue docs
+#### Starlight — Astro docs
+## 📝 Content
+### Git-based
+#### Markdown/MDX
+#### Offline editing (VS Code/Obsidian)
+#### Version control (Git)
 ### Headless CMS
-### WordPress
-## Search
-### Pagefind
-### Algolia DocSearch
-### RAG (AI)
-## Comments
-### Waline
-### Giscus
-### Disqus
-## AI
-### Chat (RAG)
-### Summaries
-### SEO
-### Translation
-## Analytics
-### Umami
-### Plausible
-### Cloudflare
-## Notifications
-### Telegram
+#### Strapi (self-hosted)
+#### Sanity (cloud)
+#### Contentful (enterprise)
+### Traditional
+#### WordPress
+#### Ghost
+## 🎨 Styling
+### Tailwind CSS — Utility-first
+### UnoCSS — On-demand
+### CSS Modules — Scoped
+### vanilla CSS — Zero deps
+## 🔍 Search
+### Static
+#### Pagefind — Free WASM
+#### FlexSearch — In-memory
+### Cloud
+#### Algolia DocSearch — ms response
+#### Meilisearch — Self-hosted
+### AI
+#### RAG — Intent understanding
+#### Semantic — Embedding vectors
+## 💬 Comments
+### Self-hosted
+#### Waline — CJK-friendly
+#### Twikoo — Lightweight
+#### Artalk — SQLite
+### GitHub
+#### Giscus — Discussions
+#### Utterances — Issues
+### Cloud
+#### Disqus — Largest platform
+## 🤖 AI
+### Conversational
+#### RAG Chat — Blog content Q&A
+#### Read & Chat — Article context
+### Generation
+#### Summaries — LLM API
+#### SEO — Metadata
+#### Translation — Multi-language
+#### Tags — Keyword extraction
+#### Covers — DALL-E/SD
+### Quality
+#### Source Layers — Anti-hallucination
+#### Privacy — Refuse sensitive info
+#### Evaluation — Golden test set
+### Providers
+#### Cloudflare Workers AI (free edge)
+#### OpenAI / DeepSeek / Moonshot
+#### Local models (Ollama)
+## 📊 Analytics
+### Privacy-first
+#### Umami — No cookies
+#### Plausible — Simple, GDPR
+#### Cloudflare Analytics — Zero JS
+### Traditional
+#### Google Analytics — Most features
+#### PostHog — Product analytics
+## 🔔 Notifications
+### IM
+#### Telegram Bot — Mobile
+#### Discord Webhook
 ### Email
-### Webhook
-## Deploy
-### Cloudflare Pages
-### Vercel
-### GitHub Pages
-### Docker
+#### Resend — Dev-friendly
+#### Mailgun / SendGrid
+### Universal
+#### Webhook — Any system
+## 🚀 Deploy
+### Edge
+#### Cloudflare Pages — AI + CDN
+#### Vercel — Next.js
+#### Netlify — Easy
+### Static
+#### GitHub Pages — Free
+### Container
+#### Docker + Nginx
+#### Railway / Fly.io
+## 🛠️ Dev Tools
+### CLI
+#### Scaffolding
+#### AI processing
+#### Quality evaluation
+### Code
+#### Syntax (Shiki)
+#### Math (KaTeX)
+#### Diagrams (Mermaid)
+#### Mindmaps (Markmap)
+### SEO
+#### Dynamic OG images
+#### sitemap.xml
+#### RSS Feed
+## 📢 Operations
+### Search Engines
+#### Google Search Console
+#### Bing Webmaster
+### Social
+#### Twitter/X
+#### LinkedIn
+### Distribution
+#### RSS
+#### Newsletter (Resend)
 ```
 
 ## Table of contents
