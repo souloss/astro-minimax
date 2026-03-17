@@ -107,49 +107,118 @@ Write your content here...
   console.log(`  Category: ${category}\n`);
 }
 
+interface PostInfo {
+  title: string;
+  date: string;
+  draft: boolean;
+  filePath: string;
+  relativePath: string;
+}
+
+async function collectMarkdownFiles(dir: string): Promise<string[]> {
+  const { readdir } = await import("node:fs/promises");
+  const files: string[] = [];
+
+  async function walk(d: string) {
+    if (!existsSync(d)) return;
+    const entries = await readdir(d, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = join(d, entry.name);
+      if (entry.isDirectory() && !entry.name.startsWith("_")) {
+        await walk(fullPath);
+      } else if (entry.isFile() && (entry.name.endsWith(".md") || entry.name.endsWith(".mdx"))) {
+        files.push(fullPath);
+      }
+    }
+  }
+
+  await walk(dir);
+  return files;
+}
+
+function parseTitle(content: string, fallback: string): string {
+  const m = content.match(/^title:\s*(?:["'](.+?)["']|(.+))$/m);
+  return m?.[1] ?? m?.[2]?.trim() ?? fallback;
+}
+
+function parseDate(content: string): string {
+  const m = content.match(/^pubDatetime:\s*(.+)$/m);
+  if (!m) return "";
+  try {
+    return new Date(m[1].trim()).toISOString().slice(0, 10);
+  } catch {
+    return m[1].trim().slice(0, 10);
+  }
+}
+
+function isDraft(content: string): boolean {
+  return /^draft:\s*true$/m.test(content);
+}
+
+async function getPostInfos(langDir: string, lang: string): Promise<PostInfo[]> {
+  const { readFile } = await import("node:fs/promises");
+  const files = await collectMarkdownFiles(langDir);
+  const posts: PostInfo[] = [];
+
+  for (const filePath of files) {
+    const content = await readFile(filePath, "utf-8");
+    const relativePath = filePath.replace(langDir + "/", "");
+    posts.push({
+      title: parseTitle(content, relativePath),
+      date: parseDate(content),
+      draft: isDraft(content),
+      filePath,
+      relativePath,
+    });
+  }
+
+  posts.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  return posts;
+}
+
 async function listPosts(): Promise<void> {
-  const { readdir, readFile } = await import("node:fs/promises");
-  const zhDir = join(process.cwd(), "src", "data", "blog", "zh");
-  const enDir = join(process.cwd(), "src", "data", "blog", "en");
+  const blogDir = join(process.cwd(), "src", "data", "blog");
+  const zhDir = join(blogDir, "zh");
+  const enDir = join(blogDir, "en");
 
-  console.log("\n  Blog Posts:\n");
+  console.log("\n  Blog Posts\n");
 
-  for (const [lang, dir] of [
-    ["zh", zhDir],
-    ["en", enDir],
-  ]) {
+  for (const [lang, dir] of [["zh", zhDir], ["en", enDir]] as const) {
     if (!existsSync(dir)) continue;
 
-    const files = (await readdir(dir)).filter((f) => f.endsWith(".md"));
-    console.log(`  [${lang.toUpperCase()}] ${files.length} posts`);
+    const posts = await getPostInfos(dir, lang);
+    const published = posts.filter(p => !p.draft);
+    const drafts = posts.filter(p => p.draft);
 
-    for (const file of files.slice(0, 5)) {
-      const content = await readFile(join(dir, file), "utf-8");
-      const titleMatch = content.match(/title:\s*["'](.+?)["']/);
-      const title = titleMatch ? titleMatch[1] : file;
-      console.log(`    • ${title}`);
+    console.log(`  [${ lang === "zh" ? "中文" : "English" }] ${published.length} published${drafts.length ? `, ${drafts.length} draft(s)` : ""}`);
+    console.log(`  ${"─".repeat(50)}`);
+
+    for (const post of published) {
+      const dateStr = post.date ? `${post.date} ` : "";
+      console.log(`    ${dateStr} ${post.title}`);
     }
-    if (files.length > 5) {
-      console.log(`    ... and ${files.length - 5} more`);
+
+    if (drafts.length) {
+      console.log(`\n    Drafts:`);
+      for (const post of drafts) {
+        console.log(`    ✏️  ${post.title}`);
+      }
     }
+
     console.log();
   }
 }
 
 async function showStats(): Promise<void> {
-  const { readdir } = await import("node:fs/promises");
-  const zhDir = join(process.cwd(), "src", "data", "blog", "zh");
-  const enDir = join(process.cwd(), "src", "data", "blog", "en");
+  const blogDir = join(process.cwd(), "src", "data", "blog");
+  const zhDir = join(blogDir, "zh");
+  const enDir = join(blogDir, "en");
 
-  const zhCount = existsSync(zhDir)
-    ? (await readdir(zhDir)).filter((f) => f.endsWith(".md")).length
-    : 0;
-  const enCount = existsSync(enDir)
-    ? (await readdir(enDir)).filter((f) => f.endsWith(".md")).length
-    : 0;
+  const zhPosts = existsSync(zhDir) ? await collectMarkdownFiles(zhDir) : [];
+  const enPosts = existsSync(enDir) ? await collectMarkdownFiles(enDir) : [];
 
-  console.log("\n  Post Statistics:\n");
-  console.log(`  Chinese (zh):  ${zhCount}`);
-  console.log(`  English (en):  ${enCount}`);
-  console.log(`  Total:         ${zhCount + enCount}\n`);
+  console.log("\n  Post Statistics\n");
+  console.log(`  Chinese (zh):  ${zhPosts.length}`);
+  console.log(`  English (en):  ${enPosts.length}`);
+  console.log(`  Total:         ${zhPosts.length + enPosts.length}\n`);
 }
