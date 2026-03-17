@@ -18,7 +18,17 @@ function getNotifier(env: NotifyEnv): Notifier | null {
   if (notifierInstance) return notifierInstance;
   
   const hasConfig = env.NOTIFY_TELEGRAM_BOT_TOKEN || env.NOTIFY_WEBHOOK_URL || env.NOTIFY_RESEND_API_KEY;
-  if (!hasConfig) return null;
+  if (!hasConfig) {
+    console.warn('[notify] No notification providers configured. Missing environment variables: NOTIFY_TELEGRAM_BOT_TOKEN, NOTIFY_WEBHOOK_URL, or NOTIFY_RESEND_API_KEY');
+    return null;
+  }
+
+  const providers: string[] = [];
+  if (env.NOTIFY_TELEGRAM_BOT_TOKEN && env.NOTIFY_TELEGRAM_CHAT_ID) providers.push('telegram');
+  if (env.NOTIFY_WEBHOOK_URL) providers.push('webhook');
+  if (env.NOTIFY_RESEND_API_KEY && env.NOTIFY_RESEND_FROM && env.NOTIFY_RESEND_TO) providers.push('email');
+  
+  console.log(`[notify] Initializing notifier with providers: ${providers.join(', ') || 'none'}`);
 
   notifierInstance = createNotifier({
     telegram: env.NOTIFY_TELEGRAM_BOT_TOKEN && env.NOTIFY_TELEGRAM_CHAT_ID ? {
@@ -65,6 +75,7 @@ export function notifyAiChat(options: ChatNotifyOptions): Promise<NotifyResult |
   
   const notifier = getNotifier(env);
   if (!notifier) {
+    console.warn('[notify] AI chat notification skipped: no notifier available. Check environment variables.');
     return Promise.resolve(null);
   }
 
