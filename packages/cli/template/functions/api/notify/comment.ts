@@ -168,7 +168,8 @@ function extractPostTitle(url: string): string {
     return '博客文章';
   }
   
-  const match = url.match(/\/(?:[a-z]{2}\/)?posts\/([^/]+)/);
+  // Match /posts/xxx, /zh/posts/xxx, or /post/xxx formats
+  const match = url.match(/\/(?:[a-z]{2}\/)?posts?\/([^/]+)/);
   if (match && match[1]) {
     try {
       return decodeURIComponent(match[1].replace(/-/g, ' '));
