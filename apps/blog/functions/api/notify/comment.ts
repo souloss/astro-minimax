@@ -3,20 +3,16 @@ import { createNotifier } from '@astro-minimax/notify';
 
 interface WalineComment {
   objectId?: string;
-  url: string;
-  nick: string;
-  mail: string;
+  url?: string;
+  nick?: string;
+  mail?: string;
   link?: string;
-  comment: string;
+  comment?: string;
   ip?: string;
   ua?: string;
   insertedAt?: string;
   status?: string;
-}
-
-interface WalineWebhookPayload {
-  type: 'new_comment' | 'new_reply';
-  data: WalineComment;
+  type?: string;
 }
 
 interface FunctionEnv {
@@ -35,37 +31,38 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
 
   try {
     if (!env.NOTIFY_TELEGRAM_BOT_TOKEN && !env.NOTIFY_WEBHOOK_URL && !env.NOTIFY_RESEND_API_KEY) {
-      return new Response(JSON.stringify({ error: 'No notification providers configured' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      console.warn('[notify/comment] No providers configured');
+      return jsonError('No notification providers configured', 400);
     }
 
-    let payload: WalineWebhookPayload;
+    let rawData: unknown;
     try {
-      payload = await request.json() as WalineWebhookPayload;
+      rawData = await request.json();
     } catch (parseError) {
       console.error('[notify/comment] Failed to parse JSON:', parseError);
-      return new Response(JSON.stringify({ error: 'Invalid JSON payload' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return jsonError('Invalid JSON payload', 400);
     }
 
-    if (payload.type !== 'new_comment' && payload.type !== 'new_reply') {
-      return new Response(JSON.stringify({ error: 'Unsupported event type' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+    console.log('[notify/comment] Raw payload:', JSON.stringify(rawData).slice(0, 500));
 
-    const { data } = payload;
-    const siteUrl = env.SITE_URL || 'https://your-blog.pages.dev';
+    const { commentData, eventType } = parseWalinePayload(rawData);
     
-    const urlPath = data?.url || '';
+    if (!commentData) {
+      console.error('[notify/comment] Could not extract comment data from payload');
+      return jsonError('Invalid payload structure', 400);
+    }
+
+    const siteUrl = env.SITE_URL || 'https://your-blog.pages.dev';
+    const urlPath = getStringValue(commentData.url) || '';
     const postUrl = urlPath.startsWith('http') 
       ? urlPath 
       : `${siteUrl}${urlPath}`;
+
+    const author = getStringValue(commentData.nick) || '匿名用户';
+    const content = getStringValue(commentData.comment) || '';
+    const postTitle = extractPostTitle(urlPath);
+
+    console.log('[notify/comment] Processing:', { urlPath, author, postTitle });
 
     const notifier = createNotifier({
       telegram: env.NOTIFY_TELEGRAM_BOT_TOKEN && env.NOTIFY_TELEGRAM_CHAT_ID ? {
@@ -83,12 +80,10 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
       } : undefined,
     });
 
-    console.log('[notify/comment] Sending notification for:', { urlPath, author: data?.nick });
-
     const result = await notifier.comment({
-      author: data?.nick || '匿名用户',
-      content: data?.comment || '',
-      postTitle: extractPostTitle(urlPath),
+      author,
+      content,
+      postTitle,
       postUrl,
     });
 
@@ -96,7 +91,7 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
 
     return new Response(JSON.stringify({
       success: result.success,
-      event: 'comment',
+      event: eventType,
       channels: result.results.map(r => ({
         channel: r.channel,
         success: r.success,
@@ -107,22 +102,56 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     });
   } catch (error) {
     console.error('[notify/comment] Unexpected error:', error);
-    return new Response(JSON.stringify({ 
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return jsonError(
+      error instanceof Error ? error.message : 'Unknown error',
+      500
+    );
   }
 };
+
+function parseWalinePayload(raw: unknown): { commentData: WalineComment | null; eventType: string } {
+  if (!raw || typeof raw !== 'object') {
+    return { commentData: null, eventType: 'unknown' };
+  }
+
+  const data = raw as Record<string, unknown>;
+
+  if (data.type && (data.type === 'new_comment' || data.type === 'new_reply')) {
+    return { 
+      commentData: data.data as WalineComment, 
+      eventType: data.type as string 
+    };
+  }
+
+  if (data.url || data.nick || data.comment || data.mail) {
+    const type = data.rid ? 'new_reply' : 'new_comment';
+    return { 
+      commentData: data as WalineComment, 
+      eventType: type 
+    };
+  }
+
+  return { commentData: null, eventType: 'unknown' };
+}
+
+function getStringValue(value: unknown): string | null {
+  if (value === null || value === undefined) return null;
+  if (typeof value === 'string') return value;
+  return String(value);
+}
+
+function jsonError(message: string, status: number): Response {
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
 
 function extractPostTitle(url: string): string {
   if (!url || typeof url !== 'string') {
     return '博客文章';
   }
   
-  // Match both /posts/xxx and /zh/posts/xxx patterns
   const match = url.match(/\/(?:[a-z]{2}\/)?posts\/([^/]+)/);
   if (match && match[1]) {
     try {

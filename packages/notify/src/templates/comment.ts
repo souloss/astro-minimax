@@ -80,7 +80,13 @@ export function emailTemplate(event: CommentEvent): EmailTemplate {
   };
 }
 
-function escapeHtml(text: string): string {
+function escapeHtml(text: unknown): string {
+  if (text === null || text === undefined) {
+    return '';
+  }
+  if (typeof text !== 'string') {
+    return String(text);
+  }
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
