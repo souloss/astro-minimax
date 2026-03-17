@@ -69,7 +69,7 @@ done
 `git diff --cached --name-status` 从 git 获取已暂存待提交的文件。输出如下：
 
 ```shell
-A       src/content/blog/setting-dates-via-git-hooks.md
+A       src/data/blog/zh/setting-dates-via-git-hooks.md
 ```
 
 开头的字母表示已采取的操作，在上面的示例中文件已被添加。修改的文件有 `M`。
@@ -139,7 +139,7 @@ done
 
 ## 空 `modDatetime` 更改
 
-要让 Astro 编译 markdown 并执行其操作，它需要知道 frontmatter 中期望什么。它通过 `src/content/config.ts` 中的配置来完成此操作。
+要让 Astro 编译 markdown 并执行其操作，它需要知道 frontmatter 中期望什么。它通过 `src/content.config.ts` 中的配置来完成此操作。
 
 要允许键存在但没有值，我们需要编辑第 10 行以添加 `.nullable()` 函数。
 

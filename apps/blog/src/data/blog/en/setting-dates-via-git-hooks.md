@@ -69,7 +69,7 @@ done
 `git diff --cached --name-status` gets the files from git that have been staged for committing. The output looks like:
 
 ```shell
-A       src/content/blog/setting-dates-via-git-hooks.md
+A       src/data/blog/en/setting-dates-via-git-hooks.md
 ```
 
 The letter at the start denotes what action has been taken, in the above example the file has been added. Modified files have `M`
@@ -139,7 +139,7 @@ If your IDE supports snippets, you can create a custom snippet to populate front
 
 ## Empty `modDatetime` changes
 
-To allow Astro to compile the markdown and do its thing, it needs to know what is expected in the frontmatter. It does this via the config in `src/content/config.ts`
+To allow Astro to compile the markdown and do its thing, it needs to know what is expected in the frontmatter. It does this via the config in `src/content.config.ts`
 
 To allow the key to be there with no value we need to edit line 10 to add the `.nullable()` function.
 
