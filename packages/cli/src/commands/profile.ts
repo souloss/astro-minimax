@@ -15,15 +15,16 @@ Usage:
   astro-minimax profile <subcommand>
 
 Subcommands:
-  build             Build complete author profile (context + voice)
+  build             Build complete author profile (context + voice + report)
   context           Build author context from posts
   voice             Build writing style profile
+  report            Generate author profile report
 
 Description:
   Generates author-related data for AI-powered features:
   - Author context: Writing patterns, topics, expertise
   - Voice profile: Style characteristics for AI responses
-  - Combined profile: Full author representation
+  - Profile report: Structured author profile for About page
 
   These profiles help the AI chat feature respond in a style
   consistent with the blog author's voice.
@@ -32,6 +33,7 @@ Examples:
   astro-minimax profile build
   astro-minimax profile context
   astro-minimax profile voice
+  astro-minimax profile report
 `);
     return;
   }
@@ -46,20 +48,31 @@ Examples:
     process.exit(1);
   }
 
-  const scriptMap: Record<string, string> = {
-    build: "build-author-context.js",
-    context: "generate-author-profile.js",
+  const scriptMap: Record<string, string | string[]> = {
+    build: [
+      "build-author-context.js",
+      "build-voice-profile.js",
+      "generate-author-profile.js",
+    ],
+    context: "build-author-context.js",
     voice: "build-voice-profile.js",
+    report: "generate-author-profile.js",
   };
 
-  const script = scriptMap[subcommand];
-  if (!script) {
+  const scripts = scriptMap[subcommand];
+  if (!scripts) {
     console.error(`Unknown subcommand: ${subcommand}`);
-    console.error("Available: build, context, voice");
+    console.error("Available: build, context, voice, report");
     process.exit(1);
   }
 
-  await runTool(script, subArgs, blogDir);
+  if (Array.isArray(scripts)) {
+    for (const script of scripts) {
+      await runTool(script, subArgs, blogDir);
+    }
+  } else {
+    await runTool(scripts, subArgs, blogDir);
+  }
 }
 
 async function runTool(script: string, args: string[], cwd: string): Promise<void> {

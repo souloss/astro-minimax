@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-03-16T08:01:40.328Z",
+  "generatedAt": "2026-03-17T14:45:19.226Z",
   "siteUrl": "https://demo-astro-minimax.souloss.cn/",
   "sourceInfo": {
-    "totalPosts": 22,
-    "zhPosts": 11,
-    "enPosts": 11,
+    "totalPosts": 24,
+    "zhPosts": 12,
+    "enPosts": 12,
     "selectedPosts": 12
   },
   "profile": {
@@ -12,6 +12,38 @@
     "siteUrl": "https://demo-astro-minimax.souloss.cn/"
   },
   "posts": [
+    {
+      "title": "\"Blog Notification System Configuration Guide\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "categories": [
+        "Tutorial/Configuration"
+      ],
+      "tags": [
+        "docs",
+        "notification",
+        "telegram",
+        "email"
+      ],
+      "summary": "astro-minimax includes a built-in multi-channel notification system that automatically sends notifi…",
+      "keyPoints": [],
+      "url": "/en/posts/notification-guide/"
+    },
+    {
+      "title": "\"博客通知系统配置指南\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "categories": [
+        "教程/配置"
+      ],
+      "tags": [
+        "docs",
+        "notification",
+        "telegram",
+        "email"
+      ],
+      "summary": "astro-minimax 内置多渠道通知系统，可以在博客收到评论或用户进行 AI 对话时，自动发送通知到 Telegram、邮箱或自定义 Webhook。\n\nTable of contents\n\n…",
+      "keyPoints": [],
+      "url": "/zh/posts/notification-guide/"
+    },
     {
       "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
       "date": "2026-03-14T00:00:00.000Z",
@@ -187,43 +219,6 @@
         "修改Astro配置允许空日期"
       ],
       "url": "/zh/posts/setting-dates-via-git-hooks/"
-    },
-    {
-      "title": "How to update dependencies of astro-minimax",
-      "date": "2023-07-20T15:33:05.569Z",
-      "categories": [
-        "教程/工程化"
-      ],
-      "tags": [
-        "FAQ"
-      ],
-      "summary": "本文介绍了如何更新Astro-minimax项目的依赖，并提供了更新模板的技巧。",
-      "keyPoints": [
-        "更新项目依赖的重要性",
-        "使用npm-check-updates工具更新依赖",
-        "更新Astro-minimax模板的步骤",
-        "处理Git合并冲突"
-      ],
-      "url": "/en/posts/how-to-update-dependencies/"
-    },
-    {
-      "title": "如何更新 astro-minimax 的依赖",
-      "date": "2023-07-20T15:33:05.569Z",
-      "categories": [
-        "教程/工程化"
-      ],
-      "tags": [
-        "FAQ"
-      ],
-      "summary": "文章介绍了如何更新astro-minimax项目的依赖和模板，包括使用npm-check-updates和git操作。",
-      "keyPoints": [
-        "更新项目依赖的重要性",
-        "使用npm-check-updates更新依赖",
-        "更新补丁、次版本和主版本依赖",
-        "更新astro-minimax模板的技巧",
-        "使用git更新模板时注意合并冲突"
-      ],
-      "url": "/zh/posts/how-to-update-dependencies/"
     }
   ],
   "topTags": [
@@ -231,19 +226,22 @@
     "configuration",
     "FAQ",
     "color-schemes",
+    "notification",
+    "telegram",
+    "email",
     "deployment",
     "features",
     "release"
   ],
   "topCategories": [
-    "教程/博客",
     "教程/配置",
+    "教程/博客",
     "教程/工程化",
     "Blog/Tutorial",
     "教程/前端"
   ],
   "contentStats": {
-    "totalPosts": 22,
+    "totalPosts": 24,
     "avgPostPerMonth": 1
   }
 }

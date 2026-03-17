@@ -1,7 +1,37 @@
 {
-  "generatedAt": "2026-03-16T08:01:09.173Z",
-  "count": 22,
+  "generatedAt": "2026-03-17T14:45:17.705Z",
+  "count": 24,
   "posts": [
+    {
+      "id": "en/notification-guide",
+      "title": "\"Blog Notification System Configuration Guide\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/Configuration",
+      "tags": [
+        "docs",
+        "notification",
+        "telegram",
+        "email"
+      ],
+      "summary": "astro-minimax includes a built-in multi-channel notification system that automatically sends notifications to Telegram, Email, or custom Webhooks whe…",
+      "url": "/en/posts/notification-guide/"
+    },
+    {
+      "id": "zh/notification-guide",
+      "title": "\"博客通知系统配置指南\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/配置",
+      "tags": [
+        "docs",
+        "notification",
+        "telegram",
+        "email"
+      ],
+      "summary": "astro-minimax 内置多渠道通知系统，可以在博客收到评论或用户进行 AI 对话时，自动发送通知到 Telegram、邮箱或自定义 Webhook。\n\nTable of contents\n\n功能概览\n\n通知系统支持以下功能：\n\n| 功能     | 说明                  …",
+      "url": "/zh/posts/notification-guide/"
+    },
     {
       "id": "en/deployment-guide",
       "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
@@ -51,7 +81,7 @@
         "docs",
         "features"
       ],
-      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-minimax 由三个核心包组成：\n\n| 包 | 说明 | 必需 |\n|----|------|-----…",
+      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-minimax 由四个核心包组成：\n\n| 包                      | 说明     …",
       "url": "/zh/posts/feature-overview/"
     },
     {

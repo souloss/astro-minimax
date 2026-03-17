@@ -1,39 +1,39 @@
 {
   "$schema": "voice-profile-v1",
-  "generatedAt": "2026-03-15T20:38:29.371Z",
+  "generatedAt": "2026-03-17T14:45:18.391Z",
   "overall_tone": {
     "description": "技术博客风格，注重实践与可操作性，语言简洁明了",
     "primary_persona": "技术博主",
     "communication_style": "先给结论，再补细节"
   },
   "blog_title_style": {
-    "total": 22,
+    "total": 24,
     "patterns": {
       "usesVerticalBar": 0,
       "usesColon": 4,
       "usesMiddleDot": 0,
       "usesQuestion": 0,
       "usesEmoji": 0,
-      "usesEnglish": 20,
+      "usesEnglish": 21,
       "usesYear": 0,
       "usesSeriesFormat": 0
     },
     "style": {
       "vertical_bar_rate": 0,
-      "colon_rate": 18,
+      "colon_rate": 17,
       "question_rate": 0,
-      "english_mix_rate": 91,
+      "english_mix_rate": 88,
       "year_in_title_rate": 0
     }
   },
   "content_style": {
-    "avgLength": 6140,
+    "avgLength": 6193,
     "codeBlockRate": 100,
-    "linkRate": 91,
-    "imageRate": 45,
+    "linkRate": 92,
+    "imageRate": 42,
     "headingRate": 100,
-    "listRate": 73,
-    "quoteRate": 73
+    "listRate": 75,
+    "quoteRate": 75
   },
   "expression_habits": {
     "frequent_expressions": [
@@ -72,6 +72,10 @@
       {
         "word": "关键",
         "count": 1
+      },
+      {
+        "word": "总结",
+        "count": 1
       }
     ],
     "style_notes": [
@@ -85,19 +89,19 @@
   "category_styles": {
     "Blog/Tutorial": {
       "count": 3,
-      "avgLength": 9748
+      "avgLength": 10197
     },
     "教程/配置": {
-      "count": 5,
-      "avgLength": 5164
+      "count": 6,
+      "avgLength": 5051
     },
     "Blog/Deployment": {
       "count": 1,
-      "avgLength": 6022
+      "avgLength": 6029
     },
     "教程/博客": {
       "count": 5,
-      "avgLength": 5174
+      "avgLength": 5377
     },
     "教程/前端": {
       "count": 2,
@@ -111,9 +115,13 @@
       "count": 4,
       "avgLength": 5894
     },
+    "Tutorial/Configuration": {
+      "count": 1,
+      "avgLength": 6702
+    },
     "教程/部署": {
       "count": 1,
-      "avgLength": 4303
+      "avgLength": 4310
     }
   },
   "style_modes": {

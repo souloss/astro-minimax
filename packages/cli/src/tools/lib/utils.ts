@@ -3,13 +3,10 @@
  */
 
 import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { createHash } from "node:crypto";
 
-export const __filename = fileURLToPath(import.meta.url);
-export const __dirname = dirname(__filename);
-export const ROOT_DIR = join(__dirname, "..", "..");
+export const ROOT_DIR = process.cwd();
 export const DATA_DIR = join(ROOT_DIR, "datas");
 export const BLOG_DIR = join(ROOT_DIR, "src/data/blog");
 
@@ -133,6 +130,5 @@ export function toPlainDate(value: unknown): string {
 }
 
 export function contentHash(text: string): string {
-  const { createHash } = require("node:crypto");
   return createHash("sha256").update(text).digest("hex").slice(0, 12);
 }

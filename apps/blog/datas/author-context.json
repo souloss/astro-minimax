@@ -1,12 +1,44 @@
 {
   "$schema": "author-context-v1",
-  "generatedAt": "2026-03-16T08:01:09.177Z",
+  "generatedAt": "2026-03-17T14:45:17.709Z",
   "profile": {
     "name": "Souloss",
     "siteUrl": "https://demo-astro-minimax.souloss.cn/",
     "description": ""
   },
   "posts": [
+    {
+      "id": "en/notification-guide",
+      "title": "\"Blog Notification System Configuration Guide\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/Configuration",
+      "tags": [
+        "docs",
+        "notification",
+        "telegram",
+        "email"
+      ],
+      "summary": "astro-minimax includes a built-in multi-channel notification system that automatically sends notifications to Telegram, Email, or custom Webhooks whe…",
+      "keyPoints": [],
+      "url": "/en/posts/notification-guide/"
+    },
+    {
+      "id": "zh/notification-guide",
+      "title": "\"博客通知系统配置指南\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/配置",
+      "tags": [
+        "docs",
+        "notification",
+        "telegram",
+        "email"
+      ],
+      "summary": "astro-minimax 内置多渠道通知系统，可以在博客收到评论或用户进行 AI 对话时，自动发送通知到 Telegram、邮箱或自定义 Webhook。\n\nTable of contents\n\n功能概览\n\n通知系统支持以下功能：\n\n| 功能     | 说明                  …",
+      "keyPoints": [],
+      "url": "/zh/posts/notification-guide/"
+    },
     {
       "id": "en/deployment-guide",
       "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
@@ -59,7 +91,7 @@
         "docs",
         "features"
       ],
-      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-minimax 由三个核心包组成：\n\n| 包 | 说明 | 必需 |\n|----|------|-----…",
+      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-minimax 由四个核心包组成：\n\n| 包                      | 说明     …",
       "keyPoints": [],
       "url": "/zh/posts/feature-overview/"
     },
@@ -417,8 +449,8 @@
   ],
   "stableFacts": {
     "focusAreas": [
-      "教程/博客",
       "教程/配置",
+      "教程/博客",
       "教程/工程化",
       "Blog/Tutorial",
       "教程/前端"
@@ -433,15 +465,25 @@
       "posts",
       "in",
       "How",
+      "of",
       "and",
       "for",
       "LaTeX",
       "Git",
       "OG",
-      "of",
-      "configuration"
+      "Guide"
     ],
     "flagshipPosts": [
+      {
+        "title": "\"Blog Notification System Configuration Guide\"",
+        "date": "2026-03-17T00:00:00.000Z",
+        "url": "/en/posts/notification-guide/"
+      },
+      {
+        "title": "\"博客通知系统配置指南\"",
+        "date": "2026-03-17T00:00:00.000Z",
+        "url": "/zh/posts/notification-guide/"
+      },
       {
         "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
         "date": "2026-03-14T00:00:00.000Z",
@@ -456,28 +498,21 @@
         "title": "\"部署指南：多平台部署 astro-minimax\"",
         "date": "2026-03-14T00:00:00.000Z",
         "url": "/zh/posts/deployment-guide/"
-      },
-      {
-        "title": "\"astro-minimax 功能特性总览\"",
-        "date": "2026-03-14T00:00:00.000Z",
-        "url": "/zh/posts/feature-overview/"
-      },
-      {
-        "title": "\"Getting Started: Two Integration Methods\"",
-        "date": "2026-03-12T00:00:00.000Z",
-        "url": "/en/posts/getting-started/"
       }
     ],
     "contentFootprint": {
-      "posts": 22,
-      "zhPosts": 11,
-      "enPosts": 11
+      "posts": 24,
+      "zhPosts": 12,
+      "enPosts": 12
     },
     "topTags": [
       "docs",
       "configuration",
       "FAQ",
       "color-schemes",
+      "notification",
+      "telegram",
+      "email",
       "deployment",
       "features",
       "release"
@@ -485,6 +520,18 @@
   },
   "timelineFacts": {
     "latestPosts": [
+      {
+        "date": "2026-03-17T00:00:00.000Z",
+        "title": "\"Blog Notification System Configuration Guide\"",
+        "url": "/en/posts/notification-guide/",
+        "lang": "en"
+      },
+      {
+        "date": "2026-03-17T00:00:00.000Z",
+        "title": "\"博客通知系统配置指南\"",
+        "url": "/zh/posts/notification-guide/",
+        "lang": "zh"
+      },
       {
         "date": "2026-03-14T00:00:00.000Z",
         "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
@@ -532,18 +579,6 @@
         "title": "如何在 Astro 博客文章中添加 LaTeX 公式",
         "url": "/zh/posts/how-to-add-latex-equations-in-blog-posts/",
         "lang": "zh"
-      },
-      {
-        "date": "2024-01-03T20:40:08Z",
-        "title": "How to use Git Hooks to set Created and Modified Dates",
-        "url": "/en/posts/setting-dates-via-git-hooks/",
-        "lang": "en"
-      },
-      {
-        "date": "2024-01-03T20:40:08Z",
-        "title": "如何使用 Git 钩子设置创建和修改日期",
-        "url": "/zh/posts/setting-dates-via-git-hooks/",
-        "lang": "zh"
       }
     ]
   },
@@ -551,5 +586,5 @@
     "model": "kimi-k2-thinking",
     "provider": "openai"
   },
-  "contextHash": "01385d4eff0653d0"
+  "contextHash": "07590408e3e8cb54"
 }

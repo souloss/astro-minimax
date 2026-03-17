@@ -8,7 +8,20 @@
     "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",
     "preview": "wrangler pages dev dist",
     "preview:astro": "astro preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "cli": "astro-minimax",
+    "ai:process": "astro-minimax ai process",
+    "ai:seo": "astro-minimax ai seo",
+    "ai:summary": "astro-minimax ai summary",
+    "profile:build": "astro-minimax profile build",
+    "profile:context": "astro-minimax profile context",
+    "profile:voice": "astro-minimax profile voice",
+    "profile:report": "astro-minimax profile report",
+    "post:new": "astro-minimax post new",
+    "post:list": "astro-minimax post list",
+    "post:stats": "astro-minimax post stats",
+    "data:status": "astro-minimax data status",
+    "data:clear": "astro-minimax data clear"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^2.0.35",
@@ -45,6 +58,7 @@
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
+    "@astro-minimax/cli": "^0.6.0",
     "@astrojs/check": "^0.9.6",
     "@cloudflare/workers-types": "^4.20260313.1",
     "@pagefind/default-ui": "^1.4.0",
