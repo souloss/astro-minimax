@@ -17,17 +17,17 @@ draft: false
 
 ```markmap
 # 2026 博客生态全景
-## 🏗️ 框架选型
-### SSG（静态生成）
-#### Astro — 岛屿架构，零 JS
-#### Hugo — Go 编写，构建最快
-#### Hexo — 中文生态丰富
-### 全栈框架
-#### Next.js — React 全栈
-#### Nuxt — Vue 全栈
-### 文档框架
-#### VitePress — Vue 驱动文档
-#### Starlight — Astro 文档
+## 🏗️ 框架选型 — 决定技术基础和开发体验
+### SSG（静态生成）— 构建时渲染，部署纯静态文件
+#### Astro — 岛屿架构零 JS，多框架混用，最适合内容站
+#### Hugo — Go 编写毫秒级构建，单二进制无依赖
+#### Hexo — 中文插件生态最丰富，上手快但扩展性有限
+### 全栈框架 — 前后端一体，支持 SSR 和 API
+#### Next.js — React 生态标配，Vercel 深度集成
+#### Nuxt — Vue 开发者首选，约定式路由
+### 文档框架 — 专为技术文档优化
+#### VitePress — 极快的 Vue 文档站，适合单项目文档
+#### Starlight — Astro 驱动，适合多语言文档集
 ## 📝 内容管理
 ### 文件系统 (Git-based)
 #### Markdown/MDX
