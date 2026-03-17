@@ -2,14 +2,12 @@
 
 Thin adapter layer for Cloudflare Pages deployment. Core logic lives in `@astro-minimax/ai/server`.
 
-> **Note:** For monorepo projects, the `functions/` directory must be at the repository root (same location as `wrangler.toml`) for Cloudflare Pages to detect it.
-
 ## Structure
 
 ```
 functions/
   api/
-    chat.ts           → AI chat endpoint (uses datas from apps/blog/datas/)
+    chat.ts           → AI chat endpoint
     ai-info.ts        → Provider status endpoint
     notify/
       comment.ts      → Comment notification webhook
@@ -18,11 +16,11 @@ functions/
 ## Local Development
 
 ```bash
-# From repository root
+# From apps/blog directory
 pnpm run dev
 
-# Or from apps/blog:
-cd apps/blog && pnpm run dev
+# Or from repository root
+pnpm --filter astro-minimax-blog dev
 ```
 
 ## Environment Variables
@@ -40,15 +38,17 @@ Configure in `.env` (local) or Cloudflare Dashboard (production):
 
 ## Deployment
 
+For monorepo deployment, set **Root directory** to `apps/blog` in Cloudflare Pages project settings.
+
 ```bash
 # Build the site
 pnpm run build
 
-# Deploy to Cloudflare Pages
-npx wrangler pages deploy apps/blog/dist --project-name=astro-minimax
+# Deploy (from apps/blog directory)
+npx wrangler pages deploy dist --project-name=astro-minimax
 ```
 
-Workers AI binding is configured in `wrangler.toml` at repository root:
+Workers AI binding is configured in `wrangler.toml`:
 
 ```toml
 [ai]
