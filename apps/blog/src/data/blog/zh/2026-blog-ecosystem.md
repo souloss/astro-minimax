@@ -7,7 +7,7 @@ tags:
   - blog
   - guide
   - ecosystem
-  - 2026
+  - "2026"
 category: 教程/博客
 featured: true
 draft: false
