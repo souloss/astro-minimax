@@ -109,9 +109,11 @@ Manage Git hooks for automatic date management:
 
 **What the pre-commit hook does:**
 
-- Adds `pubDatetime` for new `.md` files
-- Updates `modDatetime` for modified files when `draft: false`
+- Auto-fills `pubDatetime` for new `.md` files (only if empty)
+- Auto-fills `modDatetime` for modified files when `draft: false` (only if empty)
 - Handles `draft: first` for first-time publishing
+
+> **Important:** Manually specified dates are NEVER overwritten. The hook only fills empty/missing values.
 
 **Works with:**
 - Single projects (created via `astro-minimax init`)

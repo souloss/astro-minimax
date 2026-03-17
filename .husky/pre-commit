@@ -2,7 +2,8 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # astro-minimax pre-commit hook
-# Auto-update pubDatetime/modDatetime for blog posts
+# Auto-fill pubDatetime/modDatetime only when empty or missing
+# Will NOT overwrite manually specified dates
 
 git diff --cached --name-status | while read -r status file; do
   case "$file" in
@@ -12,11 +13,16 @@ git diff --cached --name-status | while read -r status file; do
           filecontent=$(cat "$file" 2>/dev/null) || continue
           frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
           draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
+          
           if [ "$draft" = "false" ]; then
-            echo "Updated modDatetime: $file"
-            sed -i.bak "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
-            git add "$file"
+            modDatetime=$(echo "$frontmatter" | awk '/^modDatetime: /{print $2}')
+            if [ -z "$modDatetime" ] || [ "$modDatetime" = "" ]; then
+              echo "Auto-filled modDatetime: $file"
+              sed -i.bak "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
+              git add "$file"
+            fi
           fi
+          
           if [ "$draft" = "first" ]; then
             echo "First release: $file"
             sed -i.bak -e "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime:/" -e "/---.*/,/---.*/s/^draft:.*$/draft: false/" "$file" && rm -f "$file.bak"
@@ -24,9 +30,15 @@ git diff --cached --name-status | while read -r status file; do
           fi
           ;;
         A)
-          echo "Added pubDatetime: $file"
-          sed -i.bak "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
-          git add "$file"
+          filecontent=$(cat "$file" 2>/dev/null) || continue
+          frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
+          pubDatetime=$(echo "$frontmatter" | awk '/^pubDatetime: /{print $2}')
+          
+          if [ -z "$pubDatetime" ] || [ "$pubDatetime" = "" ]; then
+            echo "Auto-filled pubDatetime: $file"
+            sed -i.bak "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
+            git add "$file"
+          fi
           ;;
       esac
       ;;

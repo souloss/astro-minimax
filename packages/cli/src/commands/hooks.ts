@@ -99,7 +99,8 @@ function generatePreCommitScript(ctx: ProjectContext): string {
 . "$(dirname -- "$0")/_/husky.sh"
 
 # astro-minimax pre-commit hook
-# Auto-update pubDatetime/modDatetime for blog posts
+# Auto-fill pubDatetime/modDatetime only when empty or missing
+# Will NOT overwrite manually specified dates
 
 git diff --cached --name-status | while read -r status file; do
   case "$file" in
@@ -109,11 +110,16 @@ git diff --cached --name-status | while read -r status file; do
           filecontent=$(cat "$file" 2>/dev/null) || continue
           frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
           draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
+          
           if [ "$draft" = "false" ]; then
-            echo "Updated modDatetime: $file"
-            sed -i.bak "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
-            git add "$file"
+            modDatetime=$(echo "$frontmatter" | awk '/^modDatetime: /{print $2}')
+            if [ -z "$modDatetime" ] || [ "$modDatetime" = "" ]; then
+              echo "Auto-filled modDatetime: $file"
+              sed -i.bak "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
+              git add "$file"
+            fi
           fi
+          
           if [ "$draft" = "first" ]; then
             echo "First release: $file"
             sed -i.bak -e "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime:/" -e "/---.*/,/---.*/s/^draft:.*$/draft: false/" "$file" && rm -f "$file.bak"
@@ -121,9 +127,15 @@ git diff --cached --name-status | while read -r status file; do
           fi
           ;;
         A)
-          echo "Added pubDatetime: $file"
-          sed -i.bak "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
-          git add "$file"
+          filecontent=$(cat "$file" 2>/dev/null) || continue
+          frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
+          pubDatetime=$(echo "$frontmatter" | awk '/^pubDatetime: /{print $2}')
+          
+          if [ -z "$pubDatetime" ] || [ "$pubDatetime" = "" ]; then
+            echo "Auto-filled pubDatetime: $file"
+            sed -i.bak "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
+            git add "$file"
+          fi
           ;;
       esac
       ;;
@@ -286,10 +298,11 @@ fi
 
   console.log("  ═══════════════════════════════════════");
   console.log("  Git hooks installed successfully!\n");
-  console.log("  The pre-commit hook will:");
-  console.log("    • Add pubDatetime for new .md files");
-  console.log("    • Update modDatetime when draft: false");
-  console.log("    • Handle draft: first for first publish");
+  console.log("  The pre-commit hook will auto-fill:");
+  console.log("    • pubDatetime (new files, if empty)");
+  console.log("    • modDatetime (modified files, draft: false, if empty)");
+  console.log("    • Handle draft: first for first publish\n");
+  console.log("  Manually specified dates are NEVER overwritten.");
   console.log(`\n  Watching: ${ctx.relativeBlogPath}/*.md\n`);
 }
 
@@ -380,11 +393,14 @@ Subcommands:
   uninstall   Remove Husky and hooks
   status      Show current hooks status
 
-Features:
-  The pre-commit hook automatically manages blog post dates:
-  • Adds pubDatetime for new .md files
-  • Updates modDatetime for modified files (when draft: false)
-  • Handles "draft: first" for first-time publishing
+Pre-commit Hook Behavior:
+  The hook auto-fills dates ONLY when empty or missing:
+  • New files: Fill pubDatetime if not specified
+  • Modified files (draft: false): Fill modDatetime if empty
+  • First release (draft: first): Set draft to false
+
+  Important: Manually specified dates are NEVER overwritten.
+  If you set pubDatetime or modDatetime yourself, the hook respects it.
 
 Project Types:
   • Single project: Blog created via 'astro-minimax init'

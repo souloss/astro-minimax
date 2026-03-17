@@ -1,7 +1,7 @@
 ---
 author: Souloss
 pubDatetime: 2024-01-03T20:40:08Z
-modDatetime: 2026-03-17T20:44:00Z
+modDatetime: 2026-03-18T00:00:00Z
 title: How to Use Git Hooks to Auto-Set Post Dates
 featured: false
 draft: false
@@ -15,29 +15,42 @@ description: How to use Git hooks to automatically set created and modified date
 
 The frontmatter of astro-minimax blog posts includes `pubDatetime` (publication date) and `modDatetime` (modification date) fields. Manually maintaining these dates is tedious and easy to forget. This article explains how to handle this automatically with Git hooks.
 
+## Important Note
+
+> **The hook only auto-fills empty date fields. It will NOT overwrite values you've manually specified.**
+> 
+> If you've already set `pubDatetime` or `modDatetime` in your frontmatter, the hook preserves your values.
+
 ## Option 1: One-Click Install via CLI (Recommended)
 
 The astro-minimax CLI provides a `hooks` command that automatically installs Husky and configures the pre-commit hook:
 
 ```bash
-# Run in your blog project root
+# Run from anywhere in your blog project (supports subdirectories)
 astro-minimax hooks install
 ```
 
 This will:
-1. Install Husky as a dev dependency
-2. Create the `.husky/pre-commit` hook script
-3. Configure the `prepare` script in package.json
+1. Detect project type (single project / Monorepo)
+2. Install Husky as a dev dependency
+3. Create `.husky/pre-commit` hook script
+4. Configure the `prepare` script
 
-After installation, every `git commit` will automatically:
-- Add `pubDatetime` to new posts
-- Update `modDatetime` for modified published posts
-- Support `draft: first` first-publish mode
+After installation, every `git commit` will auto-fill empty date fields:
 
-To uninstall:
+| Scenario | Condition | Behavior |
+|----------|-----------|----------|
+| New post | `pubDatetime` is empty | Auto-fill with current time |
+| New post | `pubDatetime` has value | Skip, keep original value |
+| Modified post | `draft: false` + `modDatetime` empty | Auto-fill with current time |
+| Modified post | `draft: false` + `modDatetime` has value | Skip, keep original value |
+| First publish | `draft: first` | Change to `draft: false`, clear `modDatetime` |
+
+Other commands:
 
 ```bash
-astro-minimax hooks uninstall
+astro-minimax hooks status     # Show current status
+astro-minimax hooks uninstall  # Remove hooks
 ```
 
 ## Option 2: Manual Configuration
@@ -46,19 +59,12 @@ If you prefer to configure it yourself, follow these steps.
 
 ### Step 1: Install Husky
 
-[Husky](https://typicode.github.io/husky/) is a Git hook management tool that makes it easy to manage hooks in your project.
+[Husky](https://typicode.github.io/husky/) is a Git hook management tool:
 
 ```bash
 pnpm add -D husky
-```
-
-Then initialize:
-
-```bash
 npx husky init
 ```
-
-This creates a `.husky/` directory and adds a `prepare` script to `package.json`.
 
 ### Step 2: Create the pre-commit Hook
 
@@ -68,85 +74,84 @@ Edit `.husky/pre-commit`:
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Modified files, update the modDatetime
-git diff --cached --name-status |
-  grep -i '^M.*\.md$' |
-  while read _ file; do
-    filecontent=$(cat "$file")
-    frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
-    draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
-    if [ "$draft" = "false" ]; then
-      echo "$file modDateTime updated"
-      cat $file | sed "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
-      mv tmp $file
-      git add $file
-    fi
-    if [ "$draft" = "first" ]; then
-      echo "First release of $file, draft set to false and modDateTime removed"
-      cat $file | sed "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime:/" | sed "/---.*/,/---.*/s/^draft:.*$/draft: false/" > tmp
-      mv tmp $file
-      git add $file
-    fi
-  done
+# Only auto-fill empty date fields, never overwrite existing values
 
-# New files, add the pubDatetime
-git diff --cached --name-status | egrep -i "^(A).*\.(md)$" | while read a b; do
-  cat $b | sed "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
-  mv tmp $b
-  git add $b
+git diff --cached --name-status | while read -r status file; do
+  case "$file" in
+    src/data/blog/*.md|src/data/blog/**/*.md)
+      case "$status" in
+        M)
+          filecontent=$(cat "$file" 2>/dev/null) || continue
+          frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
+          draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
+          
+          if [ "$draft" = "false" ]; then
+            modDatetime=$(echo "$frontmatter" | awk '/^modDatetime: /{print $2}')
+            if [ -z "$modDatetime" ] || [ "$modDatetime" = "" ]; then
+              echo "Auto-filled modDatetime: $file"
+              sed -i.bak "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
+              git add "$file"
+            fi
+          fi
+          
+          if [ "$draft" = "first" ]; then
+            echo "First release: $file"
+            sed -i.bak -e "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime:/" -e "/---.*/,/---.*/s/^draft:.*$/draft: false/" "$file" && rm -f "$file.bak"
+            git add "$file"
+          fi
+          ;;
+        A)
+          filecontent=$(cat "$file" 2>/dev/null) || continue
+          frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
+          pubDatetime=$(echo "$frontmatter" | awk '/^pubDatetime: /{print $2}')
+          
+          if [ -z "$pubDatetime" ] || [ "$pubDatetime" = "" ]; then
+            echo "Auto-filled pubDatetime: $file"
+            sed -i.bak "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" "$file" && rm -f "$file.bak"
+            git add "$file"
+          fi
+          ;;
+      esac
+      ;;
+  esac
 done
 ```
 
 ### Hook Logic Explained
 
-**Updating `modDatetime` for modified files:**
+**New files (A):**
+1. Check if `pubDatetime` is empty
+2. If empty, fill with current time; if has value, skip
 
-1. `git diff --cached --name-status` gets staged files
-2. Filter for modified `.md` files (starting with `M`)
-3. Read file's frontmatter and check `draft` status
-4. If `draft: false`, update `modDatetime` to current time
-5. If `draft: first`, this is first publish - set `draft` to `false` and clear `modDatetime`
-
-**Adding `pubDatetime` for new files:**
-
-1. Filter for new `.md` files (starting with `A`)
-2. Set `pubDatetime` to current time
-
-### Step 3: Ensure Correct Frontmatter Format
-
-For the `sed` commands to work, posts need `pubDatetime` and `modDatetime` fields in frontmatter (values can be empty):
-
-```yaml
----
-title: "Post Title"
-pubDatetime: 2024-01-01T00:00:00Z
-modDatetime: 2026-03-17T20:44:00Z
-draft: false
----
-```
-
-Using the CLI to create posts will include these fields automatically:
-
-```bash
-astro-minimax post new "Post Title"
-```
+**Modified files (M):**
+1. Check `draft` status
+2. If `draft: false`: check if `modDatetime` is empty, fill if empty
+3. If `draft: first`: change to `draft: false`, clear `modDatetime`
 
 ## First Publish Workflow
 
-Using `draft: first` enables automatic first-publish handling:
+Use `draft: first` for automated first-time publishing:
 
-1. Create a new post with `draft: first`
-2. On commit, the hook detects `draft: first`
-3. Automatically sets `draft` to `false` and clears `modDatetime`
-4. Future modifications will automatically update `modDatetime`
+```yaml
+---
+title: "New Post"
+pubDatetime:           # Leave empty, hook will auto-fill
+modDatetime:           # Leave empty
+draft: first           # First publish marker
+---
+```
 
-This eliminates manual date management for first publications.
+On commit, the hook will:
+1. Auto-fill `pubDatetime`
+2. Change `draft` to `false`
+3. Future modifications will auto-update `modDatetime`
 
 ## Notes
 
 1. **Git hooks are local only** — Team members need to run `astro-minimax hooks install` individually
 2. **Files must be staged first** — The hook runs on `git commit` and processes `git add`ed files
-3. **Depends on sed and awk** — Syntax differs slightly between macOS and Linux; the script above was tested on Linux
+3. **Monorepo support** — CLI automatically detects git root and installs hooks in the correct location
+4. **Manually specified dates are preserved** — The hook only fills empty values
 
 ## Related Links
 
