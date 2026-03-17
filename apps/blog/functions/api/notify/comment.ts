@@ -84,7 +84,7 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
   const result = await notifier.comment({
     author: data.nick,
     content: data.comment,
-    postTitle: extractPostTitle(data.url),
+    postTitle: extractPostTitle(urlPath),
     postUrl,
   });
 
