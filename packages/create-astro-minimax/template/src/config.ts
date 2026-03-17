@@ -1,22 +1,22 @@
 import type { SiteConfig } from "@astro-minimax/core/types";
 
 export const SITE: SiteConfig = {
-  // ── 必填 ────────────────────────────────────────────────
-  website: "https://your-blog.example.com/", // 你的网站地址
-  title: "My Blog",                          // 博客名称
-  author: "Author",                          // 你的名字
-  desc: "A blog powered by astro-minimax.",  // 博客描述
+  website: "https://your-blog.example.com/",
+  title: "My Blog",
+  author: "Author",
+  desc: "A blog powered by astro-minimax.",
 
-  // ── 语言与地区 ──────────────────────────────────────────
+  profile: "https://your-profile.com/",
+  ogImage: "og-image.jpg",
+  startDate: "2024-01-01",
+
   lang: "zh",
   timezone: "Asia/Shanghai",
   dir: "ltr",
 
-  // ── 分页 ────────────────────────────────────────────────
   postPerIndex: 4,
   postPerPage: 8,
 
-  // ── 功能开关 ────────────────────────────────────────────
   features: {
     tags: true,
     categories: true,
@@ -26,9 +26,7 @@ export const SITE: SiteConfig = {
     darkMode: true,
     friends: false,
     projects: false,
-    ai: false,  // 启用 AI 聊天功能需安装 @astro-minimax/ai
-    // waline: false,
-    // sponsor: false,
+    ai: false,
   },
 
   nav: {
@@ -37,12 +35,63 @@ export const SITE: SiteConfig = {
       { key: "posts", enabled: true },
       { key: "tags", enabled: true },
       { key: "categories", enabled: true },
-      { key: "archives", enabled: true },
+      { key: "series", enabled: true },
+      { key: "projects", enabled: true },
       { key: "about", enabled: true },
+      { key: "friends", enabled: true },
+      { key: "archives", enabled: true },
     ],
   },
 
-  // AI 聊天配置 (需要安装 @astro-minimax/ai)
+  editPost: {
+    enabled: false,
+    text: "Edit this page",
+    url: "https://github.com/your-username/your-repo/edit/main/",
+  },
+
+  projects: [
+    // { repo: "your-username/your-repo", featured: true },
+  ],
+
+  // waline: {
+  //   enabled: true,
+  //   serverURL: "https://your-waline-instance.example.com/",
+  //   emoji: [
+  //     "https://unpkg.com/@waline/emojis@1.2.0/weibo",
+  //     "https://unpkg.com/@waline/emojis@1.2.0/bilibili",
+  //   ],
+  //   lang: "zh-CN",
+  //   pageview: true,
+  //   reaction: true,
+  //   login: "enable",
+  //   wordLimit: [0, 1000],
+  //   imageUploader: false,
+  //   requiredMeta: ["nick", "mail"],
+  //   copyright: true,
+  //   recaptchaV3Key: "",
+  //   turnstileKey: "",
+  // },
+
+  // sponsor: {
+  //   enabled: true,
+  //   methods: [
+  //     { name: "WeChat Pay", icon: "wechat", image: "/images/wechat-pay.svg" },
+  //     { name: "Alipay", icon: "alipay", image: "/images/alipay.svg" },
+  //   ],
+  //   sponsors: [],
+  // },
+
+  // umami: {
+  //   enabled: true,
+  //   websiteId: "your-website-id",
+  //   src: "https://your-umami-instance.com/script.js",
+  // },
+
+  copyright: {
+    license: "CC BY-NC-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  },
+
   ai: {
     enabled: false,
     mockMode: false,

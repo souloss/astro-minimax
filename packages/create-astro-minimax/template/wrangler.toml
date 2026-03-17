@@ -1,0 +1,16 @@
+name = "astro-minimax"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-03-12"
+compatibility_flags = ["nodejs_compat"]
+
+# Workers AI Binding
+# Uncomment to enable AI features on Cloudflare
+# [ai]
+# binding = "minimaxAI"
+
+# KV Namespace for AI Chat Cache
+# Create with: wrangler kv:namespace create CACHE_KV
+# Uncomment after creating the namespace
+# [[kv_namespaces]]
+# binding = "CACHE_KV"
+# id = "your-kv-namespace-id"
