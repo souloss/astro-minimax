@@ -241,6 +241,13 @@ const nextPost =
     class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
     data-pagefind-body
   >
+    {/* Pagefind filter metadata (hidden, used for search filtering) */}
+    <div class="hidden">
+      {category && <span data-pagefind-filter="category">{category}</span>}
+      <span data-pagefind-filter="lang">{lang}</span>
+      {tags?.map(tag => <span data-pagefind-filter="tag">{tag}</span>)}
+    </div>
+
     {/* Article Hero Section */}
     <div class="mb-6">
       {bannerImageUrl && (
