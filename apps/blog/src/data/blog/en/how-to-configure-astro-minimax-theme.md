@@ -309,6 +309,40 @@ waline: {
 
 > You need to deploy a Waline server first. See the [Waline documentation](https://waline.js.org/en/guide/get-started/).
 
+## Configuring Search
+
+astro-minimax supports two search providers. Pagefind is used by default with no extra configuration.
+
+### Pagefind (Default)
+
+Built-in static search engine. Search index is auto-generated at build time. Works out of the box.
+
+### Algolia DocSearch
+
+To use [Algolia DocSearch](https://docsearch.algolia.com/) cloud search, configure `SITE.search`:
+
+```js file=src/config.ts
+search: {
+  provider: 'docsearch',
+  docsearch: {
+    appId: 'YOUR_ALGOLIA_APP_ID',
+    apiKey: 'YOUR_ALGOLIA_SEARCH_API_KEY',
+    indexName: 'YOUR_INDEX_NAME',
+    placeholder: 'Search docs...',
+  },
+},
+```
+
+| Option | Description |
+|--------|-------------|
+| `provider` | Search provider: `'pagefind'` (default) or `'docsearch'` |
+| `docsearch.appId` | Algolia Application ID |
+| `docsearch.apiKey` | Algolia Search-Only API Key |
+| `docsearch.indexName` | Algolia index name |
+| `docsearch.placeholder` | Search box placeholder text |
+
+> DocSearch requires [applying](https://docsearch.algolia.com/apply/) or self-hosting an Algolia index. When enabled, the DocSearch button replaces the default Pagefind search link in the header.
+
 ## Configuring AI Chat
 
 astro-minimax includes a built-in AI chat assistant powered by `@astro-minimax/ai`. Configure it in `SITE.ai`:

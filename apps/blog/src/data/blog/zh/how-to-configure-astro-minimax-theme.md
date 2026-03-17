@@ -308,6 +308,40 @@ waline: {
 
 > 需要先部署 Waline 服务端。详见 [Waline 官方文档](https://waline.js.org/guide/get-started/)。
 
+## 配置搜索
+
+astro-minimax 支持两种搜索方案。默认使用 Pagefind，无需额外配置。
+
+### Pagefind（默认）
+
+内置的静态搜索引擎，构建时自动生成索引。无需任何配置即可使用。
+
+### Algolia DocSearch
+
+如需使用 [Algolia DocSearch](https://docsearch.algolia.com/) 云搜索，在 `SITE.search` 中配置：
+
+```js file=src/config.ts
+search: {
+  provider: 'docsearch',
+  docsearch: {
+    appId: 'YOUR_ALGOLIA_APP_ID',
+    apiKey: 'YOUR_ALGOLIA_SEARCH_API_KEY',
+    indexName: 'YOUR_INDEX_NAME',
+    placeholder: '搜索文档...',
+  },
+},
+```
+
+| 选项 | 说明 |
+|------|------|
+| `provider` | 搜索方案：`'pagefind'`（默认）或 `'docsearch'` |
+| `docsearch.appId` | Algolia Application ID |
+| `docsearch.apiKey` | Algolia Search-Only API Key |
+| `docsearch.indexName` | Algolia 索引名称 |
+| `docsearch.placeholder` | 搜索框占位文本 |
+
+> 使用 DocSearch 需要 [申请](https://docsearch.algolia.com/apply/) 或自建 Algolia 索引。DocSearch 组件会替换 Header 中的默认 Pagefind 搜索入口。
+
 ## 配置 AI 聊天
 
 astro-minimax 内置 AI 聊天助手，基于 `@astro-minimax/ai` 包实现。在 `SITE.ai` 中配置：
