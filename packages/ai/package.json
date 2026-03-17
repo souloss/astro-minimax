@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^2.0.35",
+    "@astro-minimax/notify": "workspace:*",
     "ai": "^6.0.116",
     "undici": "^6.0.0",
     "workers-ai-provider": "^3.1.2"

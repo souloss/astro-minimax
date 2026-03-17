@@ -17,13 +17,14 @@ astro-minimax is a feature-rich Astro blog theme built with a modular architectu
 
 ## Architecture Overview
 
-astro-minimax consists of three core packages:
+astro-minimax consists of four core packages:
 
-| Package | Description | Required |
-|---------|-------------|----------|
-| `@astro-minimax/core` | Core theme: layouts, components, styles, utilities, plugins | Yes |
-| `@astro-minimax/viz` | Visualization plugins: Mermaid, Markmap, Rough.js, Excalidraw, Asciinema, etc. | Optional |
-| `@astro-minimax/ai` | AI integration: multi-provider chat, RAG retrieval, streaming | Optional |
+| Package                 | Description                                                                    | Required |
+| ----------------------- | ------------------------------------------------------------------------------ | -------- |
+| `@astro-minimax/core`   | Core theme: layouts, components, styles, utilities, plugins                    | Yes      |
+| `@astro-minimax/viz`    | Visualization plugins: Mermaid, Markmap, Rough.js, Excalidraw, Asciinema, etc. | Optional |
+| `@astro-minimax/ai`     | AI integration: multi-provider chat, RAG retrieval, streaming                  | Optional |
+| `@astro-minimax/notify` | Notification system: Telegram, Email, Webhook multi-channel notifications      | Optional |
 
 ---
 
@@ -251,13 +252,13 @@ import AsciinemaPlayer from '@astro-minimax/viz/components/AsciinemaPlayer.astro
 
 ### More Components
 
-| Component | Description |
-|-----------|-------------|
-| `Bilibili` | Bilibili video embed |
-| `MusicPlayer` | Music player (NetEase, QQ Music, Kugou, etc.) |
-| `CodeRunner` | Interactive JavaScript code runner |
-| `FullHtmlEmbed` | Full HTML page embed |
-| `VizContainer` | Visualization container (zoom, pan, fullscreen) |
+| Component       | Description                                     |
+| --------------- | ----------------------------------------------- |
+| `Bilibili`      | Bilibili video embed                            |
+| `MusicPlayer`   | Music player (NetEase, QQ Music, Kugou, etc.)   |
+| `CodeRunner`    | Interactive JavaScript code runner              |
+| `FullHtmlEmbed` | Full HTML page embed                            |
+| `VizContainer`  | Visualization container (zoom, pan, fullscreen) |
 
 ---
 
@@ -326,6 +327,18 @@ Donation feature supporting multiple payment methods:
 - Custom payment methods
 
 Shows donation buttons and QR codes at the bottom of posts. Supports displaying a sponsors list.
+
+### Notification System
+
+Multi-channel notifications to stay updated on blog activity:
+
+- **Telegram Bot**: Receive comment and AI chat notifications
+- **Email (Resend)**: Email notifications
+- **Webhook**: Custom notification channels
+
+Rich notification content including token usage, phase timing, referenced articles, and automatic session ID anonymization for privacy.
+
+See [Notification System Configuration Guide](/en/posts/notification-guide) for details.
 
 ---
 
@@ -412,20 +425,20 @@ Requires self-hosted Umami instance.
 
 ## Additional Features
 
-| Feature | Description |
-|---------|-------------|
-| **Friends page** | Display friend links with avatars and descriptions |
-| **Projects showcase** | GitHub repo cards with auto-fetched repo info |
-| **Image lightbox** | Click-to-zoom image preview |
-| **Reading position** | Save and restore reading position |
-| **Floating TOC** | Sidebar floating table of contents |
-| **Breadcrumb** | Page hierarchy navigation |
-| **Copyright notice** | License info at post bottom |
-| **Edit link** | "Edit on GitHub" link under post title |
-| **Keyboard navigation** | Keyboard shortcut support |
-| **Accessibility** | WCAG 2.1 AA compliance |
-| **View Transitions** | Page transition animations |
-| **Prefetching** | Link prefetching for faster navigation |
+| Feature                 | Description                                        |
+| ----------------------- | -------------------------------------------------- |
+| **Friends page**        | Display friend links with avatars and descriptions |
+| **Projects showcase**   | GitHub repo cards with auto-fetched repo info      |
+| **Image lightbox**      | Click-to-zoom image preview                        |
+| **Reading position**    | Save and restore reading position                  |
+| **Floating TOC**        | Sidebar floating table of contents                 |
+| **Breadcrumb**          | Page hierarchy navigation                          |
+| **Copyright notice**    | License info at post bottom                        |
+| **Edit link**           | "Edit on GitHub" link under post title             |
+| **Keyboard navigation** | Keyboard shortcut support                          |
+| **Accessibility**       | WCAG 2.1 AA compliance                             |
+| **View Transitions**    | Page transition animations                         |
+| **Prefetching**         | Link prefetching for faster navigation             |
 
 ---
 

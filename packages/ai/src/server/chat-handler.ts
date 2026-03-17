@@ -44,6 +44,8 @@ import type { CacheAdapter, CachedSearchContext, PublicQuestionType, CachedAIRes
 import type { ChatHandlerOptions, ChatRequestBody, ChatContext } from './types.js';
 import { createChatStatusData } from './types.js';
 import { errors, corsPreflightResponse } from './errors.js';
+import { notifyAiChat, type ChatNotifyOptions } from './notify.js';
+import type { ArticleRef, ModelInfo, TokenUsage, PhaseTiming } from '@astro-minimax/notify';
 
 const MAX_HISTORY_MESSAGES = 20;
 const MAX_INPUT_LENGTH = 500;
@@ -172,8 +174,17 @@ interface PipelineArgs {
   lang: string;
 }
 
+interface TimingTracker {
+  start: number;
+  keywordExtraction?: number;
+  search?: number;
+  evidenceAnalysis?: number;
+  generation?: number;
+}
+
 async function runPipeline(args: PipelineArgs): Promise<Response> {
   const { env, messages, latestText, context, req, lang } = args;
+  const timing: TimingTracker = { start: Date.now() };
 
   const cache = createCacheAdapter(env);
   const responseCacheConfig = getResponseCacheConfig(env);
@@ -502,6 +513,7 @@ writer.write({
       });
 
       if (runKW) {
+        const kwStart = Date.now();
         const abortCtrl = new AbortController();
         const timeoutId = setTimeout(() => abortCtrl.abort(), KEYWORD_EXTRACTION_TIMEOUT_MS);
         try {
@@ -512,19 +524,22 @@ writer.write({
             model: adapter.keywordModel,
             abortSignal: abortCtrl.signal,
           });
+          timing.keywordExtraction = Date.now() - kwStart;
           if (kwResult.query && !kwResult.usedFallback) {
             searchQuery = kwResult.query;
             if (kwResult.primaryQuery && kwResult.primaryQuery !== searchQuery) {
+              const searchStart = Date.now();
               const primary = searchArticles(kwResult.primaryQuery, { enableDeepContent: false });
               relatedArticles = mergeResults(
                 searchArticles(searchQuery, { enableDeepContent: true }),
                 primary,
               );
               relatedProjects = searchProjects(searchQuery);
+              timing.search = Date.now() - searchStart;
             }
           }
         } catch {
-          // keyword extraction is optional
+          timing.keywordExtraction = Date.now() - kwStart;
         } finally {
           clearTimeout(timeoutId);
         }
@@ -532,8 +547,10 @@ writer.write({
     }
 
     if (!relatedArticles.length) {
+      const searchStart = Date.now();
       relatedArticles = searchArticles(searchQuery, { enableDeepContent: true });
       relatedProjects = searchProjects(searchQuery);
+      timing.search = Date.now() - searchStart;
     }
 
     if (cacheKey) {
@@ -570,6 +587,7 @@ writer.write({
     const skipEvidence = shouldSkipAnalysis(latestText, relatedArticles.length, 'moderate');
 
     if (!skipEvidence) {
+      const evidenceStart = Date.now();
       const abortCtrl = new AbortController();
       const timeoutId = setTimeout(() => abortCtrl.abort(), EVIDENCE_ANALYSIS_TIMEOUT_MS);
       try {
@@ -585,8 +603,9 @@ writer.write({
         if (evidenceResult.analysis) {
           evidenceSection = buildEvidenceSection(evidenceResult.analysis);
         }
+        timing.evidenceAnalysis = Date.now() - evidenceStart;
       } catch {
-        // evidence analysis is optional
+        timing.evidenceAnalysis = Date.now() - evidenceStart;
       } finally {
         clearTimeout(timeoutId);
       }
@@ -685,10 +704,13 @@ writer.write({
         }),
       });
 
-      // Try real provider with stream-level error detection
+// Try real provider with stream-level error detection
       let streamSuccess = false;
       let responseText = '';
       let reasoningText: string | undefined;
+      let tokenUsage: TokenUsage | undefined;
+      const generationStart = Date.now();
+      
       if (adapter) {
         try {
           const provider = adapter.getProvider();
@@ -713,9 +735,10 @@ writer.write({
             },
           });
 
-const text = await result.text;
+          const text = await result.text;
           const reasoningPromise = (result as unknown as { reasoning?: PromiseLike<unknown> }).reasoning;
-          let reasoningText: string | undefined;
+          const usagePromise = (result as unknown as { usage?: PromiseLike<{ inputTokens?: number; outputTokens?: number; totalTokens?: number }> }).usage;
+          
           if (reasoningPromise) {
             try {
               const reasoningOutput = await Promise.resolve(reasoningPromise);
@@ -726,6 +749,21 @@ const text = await result.text;
                 }).join('') : undefined);
             } catch { }
           }
+          
+          if (usagePromise) {
+            try {
+              const usage = await Promise.resolve(usagePromise);
+              const inputTokens = usage.inputTokens ?? 0;
+              const outputTokens = usage.outputTokens ?? 0;
+              tokenUsage = {
+                total: usage.totalTokens ?? inputTokens + outputTokens,
+                input: inputTokens,
+                output: outputTokens,
+              };
+            } catch { }
+          }
+          
+          timing.generation = Date.now() - generationStart;
           responseText = text;
           hasTextOutput = text.length > 0;
 
@@ -774,6 +812,7 @@ const text = await result.text;
             streamSuccess = true;
           }
         } catch (err) {
+          timing.generation = Date.now() - generationStart;
           adapter.recordFailure(err instanceof Error ? err : new Error(String(err)));
           console.error('[chat-handler] Provider threw:', (err as Error).message);
         }
@@ -783,6 +822,8 @@ const text = await result.text;
       if (!streamSuccess) {
         const { getMockResponse } = await import('../providers/mock.js');
         const mockText = getMockResponse(latestText, lang);
+        timing.generation = Date.now() - generationStart;
+        responseText = mockText;
         writer.write({
           type: 'message-metadata',
           messageMetadata: createChatStatusData({
@@ -796,6 +837,41 @@ const text = await result.text;
         writer.write({ type: 'text-delta', id: fallbackId, delta: mockText } as never);
         writer.write({ type: 'text-end', id: fallbackId } as never);
         writer.write({ type: 'finish', finishReason: 'stop' });
+      }
+
+      // Send notification (fire and forget)
+      if (responseText) {
+        const notifyTiming: PhaseTiming = {
+          total: Date.now() - timing.start,
+          keywordExtraction: timing.keywordExtraction,
+          search: timing.search,
+          evidenceAnalysis: timing.evidenceAnalysis,
+          generation: timing.generation,
+        };
+        
+        const notifyModel: ModelInfo | undefined = adapter ? {
+          name: adapter.model,
+          provider: (env.AI_PROVIDER as string) || undefined,
+          apiHost: (env.AI_BASE_URL as string) || undefined,
+        } : undefined;
+
+        const notifyArticles: ArticleRef[] = relatedArticles.slice(0, 5).map(a => ({
+          title: a.title,
+          url: (a as { url?: string }).url,
+        }));
+
+        const sessionId = cacheKey || `dev-${Date.now().toString(36)}`;
+
+        void notifyAiChat({
+          env,
+          sessionId,
+          messages,
+          aiResponse: responseText,
+          referencedArticles: notifyArticles,
+          model: notifyModel,
+          usage: tokenUsage,
+          timing: notifyTiming,
+        });
       }
     },
   });

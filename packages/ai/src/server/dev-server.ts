@@ -27,6 +27,14 @@ const DEFAULT_SUMMARIES = { meta: { lastUpdated: new Date().toISOString(), model
 const DEFAULT_AUTHOR_CONTEXT = { author: {}, posts: [] };
 const DEFAULT_VOICE_PROFILE = { style: {}, examples: [] };
 
+function extractPostTitle(url: string): string {
+  const match = url.match(/\/posts\/([^/]+)/);
+  if (match) {
+    return decodeURIComponent(match[1].replace(/-/g, ' '));
+  }
+  return '博客文章';
+}
+
 function findBlogRoot(): { root: string; datasDir: string; hasDatas: boolean } {
   let dir = process.cwd();
 
@@ -213,6 +221,55 @@ async function main() {
         const webReq = await toWebRequest(req);
         const webRes = await handleChatRequest({ env: env as never, request: webReq });
         await sendWebResponse(webRes, res);
+        return;
+      }
+
+      if (url.startsWith('/api/notify/comment')) {
+        const { createNotifier } = await import('@astro-minimax/notify');
+        const webReq = await toWebRequest(req);
+        const body = await webReq.json() as { type?: string; data?: { nick?: string; mail?: string; url?: string; comment?: string } };
+        
+        if (body.type !== 'new_comment' && body.type !== 'new_reply') {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Unsupported event type' }));
+          return;
+        }
+
+        const data = body.data || {};
+        const siteUrl = process.env.SITE_URL || 'http://localhost:4321';
+        const postUrl = data.url?.startsWith('http') ? data.url : `${siteUrl}${data.url || '/'}`;
+
+        const notifier = createNotifier({
+          telegram: process.env.NOTIFY_TELEGRAM_BOT_TOKEN && process.env.NOTIFY_TELEGRAM_CHAT_ID ? {
+            botToken: process.env.NOTIFY_TELEGRAM_BOT_TOKEN,
+            chatId: process.env.NOTIFY_TELEGRAM_CHAT_ID,
+          } : undefined,
+          webhook: process.env.NOTIFY_WEBHOOK_URL ? {
+            url: process.env.NOTIFY_WEBHOOK_URL,
+          } : undefined,
+          email: process.env.NOTIFY_RESEND_API_KEY && process.env.NOTIFY_RESEND_FROM && process.env.NOTIFY_RESEND_TO ? {
+            provider: 'resend',
+            apiKey: process.env.NOTIFY_RESEND_API_KEY,
+            from: process.env.NOTIFY_RESEND_FROM,
+            to: process.env.NOTIFY_RESEND_TO,
+          } : undefined,
+        });
+
+        const result = await notifier.comment({
+          author: data.nick || '匿名用户',
+          content: data.comment || '',
+          postTitle: extractPostTitle(data.url || '/'),
+          postUrl,
+        });
+
+        console.log('[notify] Comment notification sent:', result.success ? '✓' : '✗', result.results);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: result.success,
+          event: 'comment',
+          channels: result.results.map(r => ({ channel: r.channel, success: r.success, error: r.error })),
+        }));
         return;
       }
 

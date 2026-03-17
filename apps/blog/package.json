@@ -28,6 +28,7 @@
     "@ai-sdk/react": "^3.0.118",
     "@astro-minimax/ai": "workspace:*",
     "@astro-minimax/core": "workspace:*",
+    "@astro-minimax/notify": "workspace:*",
     "@astro-minimax/viz": "workspace:*",
     "@astrojs/mdx": "^5.0.0",
     "@astrojs/preact": "^5.0.0",

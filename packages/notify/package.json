@@ -1,0 +1,47 @@
+{
+  "name": "@astro-minimax/notify",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Multi-channel notification package for astro-minimax blogs",
+  "author": "Souloss",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "build:watch": "tsc -p tsconfig.build.json --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "grammy": "^1.41.1",
+    "undici": "^6.0.0"
+  },
+  "peerDependencies": {
+    "resend": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "resend": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260313.1",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
