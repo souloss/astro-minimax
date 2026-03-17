@@ -63,7 +63,9 @@ export type AITranslationKey =
   | "ai.prompt.section.principles"
   | "ai.prompt.section.constraints"
   | "ai.prompt.section.sourceLayers"
-  | "ai.prompt.section.privacy";
+  | "ai.prompt.section.privacy"
+  | "ai.prompt.section.answerModes"
+  | "ai.prompt.section.preOutputChecks";
 
 const translations: Record<string, Record<AITranslationKey, string>> = {
   en: {
@@ -126,6 +128,8 @@ const translations: Record<string, Record<AITranslationKey, string>> = {
     "ai.prompt.section.constraints": "Constraints",
     "ai.prompt.section.sourceLayers": "Source Priority Protocol (must follow)",
     "ai.prompt.section.privacy": "Privacy Protection",
+    "ai.prompt.section.answerModes": "Answer Mode Guide (follow detected mode)",
+    "ai.prompt.section.preOutputChecks": "Pre-Output Checks (execute mentally, do not output steps)",
   },
   zh: {
     // Reasoning UI
@@ -187,6 +191,8 @@ const translations: Record<string, Record<AITranslationKey, string>> = {
     "ai.prompt.section.constraints": "约束",
     "ai.prompt.section.sourceLayers": "来源分层协议（必须遵守）",
     "ai.prompt.section.privacy": "隐私保护",
+    "ai.prompt.section.answerModes": "回答模式指导（按检测到的模式执行）",
+    "ai.prompt.section.preOutputChecks": "输出前检查（在心里执行，不输出步骤）",
   },
 };
 
