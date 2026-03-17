@@ -1,28 +1,33 @@
-import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
 export async function postCommand(args: string[]): Promise<void> {
   if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
     console.log(`
-Blog post management
+Manage blog posts
 
 Usage:
   astro-minimax post <subcommand> [options]
 
 Subcommands:
-  new <title>      Create a new blog post
-  list             List all posts
-  stats            Show post statistics
+  new <title>       Create a new blog post
+  list              List all posts
+  stats             Show post statistics
 
-Options for 'new':
-  --lang=<zh|en>   Language (default: zh)
-  --category=<cat> Category path (e.g., "Tutorial/Frontend")
+Options for "new":
+  --lang=<zh|en>        Post language (default: zh)
+  --category=<path>     Category path (e.g., "Tutorial/Frontend")
+
+Description:
+  The "new" subcommand creates a markdown file with proper frontmatter
+  in the correct language directory (src/data/blog/<lang>/).
 
 Examples:
   astro-minimax post new "Hello World"
   astro-minimax post new "Getting Started" --lang=en
+  astro-minimax post new "Tutorial" --category="Tutorial/Frontend"
   astro-minimax post list
+  astro-minimax post stats
 `);
     return;
   }
@@ -33,6 +38,7 @@ Examples:
   const contentDir = join(process.cwd(), "src", "data", "blog");
   if (!existsSync(contentDir)) {
     console.error("Error: Not in an astro-minimax blog directory.");
+    console.error("Run this command from your blog's root directory.");
     process.exit(1);
   }
 
@@ -47,7 +53,8 @@ Examples:
       await showStats();
       break;
     default:
-      console.error(`Unknown post subcommand: ${subcommand}`);
+      console.error(`Unknown subcommand: ${subcommand}`);
+      console.error("Available: new, list, stats");
       process.exit(1);
   }
 }
@@ -55,7 +62,7 @@ Examples:
 async function createNewPost(args: string[]): Promise<void> {
   if (args.length === 0 || args[0].startsWith("--")) {
     console.error("Error: Post title is required.");
-    console.error("Usage: astro-minimax post new <title>");
+    console.error('Usage: astro-minimax post new "<title>"');
     process.exit(1);
   }
 
@@ -64,7 +71,7 @@ async function createNewPost(args: string[]): Promise<void> {
   const categoryArg = args.find((a) => a.startsWith("--category="));
 
   const lang = langArg ? langArg.split("=")[1] : "zh";
-  const category = categoryArg ? categoryArg.split("=")[1] : "";
+  const category = categoryArg ? categoryArg.split("=")[1] : "Blog";
 
   const slug = title
     .toLowerCase()
@@ -77,7 +84,7 @@ title: "${title}"
 date: ${date}
 updated: ${date}
 categories:
-  - ${category || "Blog"}
+  - ${category}
 tags:
   - draft
 ---
@@ -94,10 +101,10 @@ Write your content here...
   await mkdir(postDir, { recursive: true });
   await writeFile(postPath, frontmatter);
 
-  console.log(`\n  ✅ Created post: ${postPath}\n`);
-  console.log(`  Title: ${title}`);
+  console.log(`\n  ✅ Created: ${postPath}\n`);
+  console.log(`  Title:    ${title}`);
   console.log(`  Language: ${lang}`);
-  console.log(`  Slug: ${slug}\n`);
+  console.log(`  Category: ${category}\n`);
 }
 
 async function listPosts(): Promise<void> {
@@ -120,7 +127,7 @@ async function listPosts(): Promise<void> {
       const content = await readFile(join(dir, file), "utf-8");
       const titleMatch = content.match(/title:\s*["'](.+?)["']/);
       const title = titleMatch ? titleMatch[1] : file;
-      console.log(`    - ${title}`);
+      console.log(`    • ${title}`);
     }
     if (files.length > 5) {
       console.log(`    ... and ${files.length - 5} more`);
@@ -142,7 +149,7 @@ async function showStats(): Promise<void> {
     : 0;
 
   console.log("\n  Post Statistics:\n");
-  console.log(`  Chinese (zh):  ${zhCount} posts`);
-  console.log(`  English (en):  ${enCount} posts`);
-  console.log(`  Total:         ${zhCount + enCount} posts\n`);
+  console.log(`  Chinese (zh):  ${zhCount}`);
+  console.log(`  English (en):  ${enCount}`);
+  console.log(`  Total:         ${zhCount + enCount}\n`);
 }

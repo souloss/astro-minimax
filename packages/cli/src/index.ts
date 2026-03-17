@@ -1,76 +1,75 @@
 #!/usr/bin/env node
-import { cpSync, mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { initCommand } from "./commands/init.js";
-import { aiCommand } from "./commands/ai.js";
 import { postCommand } from "./commands/post.js";
+import { aiCommand } from "./commands/ai.js";
 import { profileCommand } from "./commands/profile.js";
+import { dataCommand } from "./commands/data.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
+
+const VERSION = "0.6.0";
 
 interface Command {
   name: string;
   description: string;
-  usage: string;
   run: (args: string[]) => Promise<void> | void;
 }
 
 const commands: Command[] = [
-  {
-    name: "init",
-    description: "Create a new blog project",
-    usage: "astro-minimax init <project-name>",
-    run: initCommand,
-  },
-  {
-    name: "ai",
-    description: "AI-powered content processing",
-    usage: "astro-minimax ai <subcommand>",
-    run: aiCommand,
-  },
-  {
-    name: "post",
-    description: "Blog post management",
-    usage: "astro-minimax post <subcommand>",
-    run: postCommand,
-  },
-  {
-    name: "profile",
-    description: "Author profile management",
-    usage: "astro-minimax profile <subcommand>",
-    run: profileCommand,
-  },
+  { name: "init", description: "Create a new blog project", run: initCommand },
+  { name: "post", description: "Manage blog posts", run: postCommand },
+  { name: "ai", description: "AI-powered content processing", run: aiCommand },
+  { name: "profile", description: "Author profile management", run: profileCommand },
+  { name: "data", description: "Data status and management", run: dataCommand },
 ];
 
 function printHelp(): void {
   console.log(`
-astro-minimax - A minimalist Astro blog CLI
+astro-minimax v${VERSION} - A minimalist Astro blog CLI
 
 Usage:
-  astro-minimax <command> [options]
+  astro-minimax <command> [subcommand] [options]
 
 Commands:
-  init <project>      Create a new blog project
-  ai <subcommand>     AI-powered content processing
-  post <subcommand>   Blog post management
-  profile <subcommand> Author profile management
+  init <project>    Create a new blog project
+  post              Manage blog posts (new, list, stats)
+  ai                AI content processing (process, seo, summary)
+  profile           Author profile (build, context, voice)
+  data              Data management (status, clear)
+
+Run "astro-minimax <command> --help" for detailed usage.
 
 Examples:
   astro-minimax init my-blog
-  astro-minimax ai process
   astro-minimax post new "Hello World"
+  astro-minimax ai process
   astro-minimax profile build
 
-Docs: https://github.com/souloss/astro-minimax
+Documentation: https://github.com/souloss/astro-minimax
 `);
+}
+
+function printVersion(): void {
+  console.log(`astro-minimax v${VERSION}`);
 }
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
 
-  if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
+  if (args.length === 0) {
     printHelp();
+    process.exit(0);
+  }
+
+  if (args[0] === "--help" || args[0] === "-h") {
+    printHelp();
+    process.exit(0);
+  }
+
+  if (args[0] === "--version" || args[0] === "-v") {
+    printVersion();
     process.exit(0);
   }
 
@@ -79,14 +78,16 @@ async function main(): Promise<void> {
 
   if (!command) {
     console.error(`Unknown command: ${commandName}`);
-    console.error("Run 'astro-minimax --help' for usage.");
+    console.error("\nAvailable commands: init, post, ai, profile, data");
+    console.error('Run "astro-minimax --help" for usage.');
     process.exit(1);
   }
 
   try {
     await command.run(args.slice(1));
   } catch (error) {
-    console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`\nError: ${message}\n`);
     process.exit(1);
   }
 }
