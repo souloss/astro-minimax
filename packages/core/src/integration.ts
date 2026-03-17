@@ -64,6 +64,8 @@ export default function minimax(
                     "virtual:astro-minimax/styles",
                     "virtual:astro-minimax/ai-widget",
                     "virtual:astro-minimax/ai-summaries",
+                    "virtual:astro-minimax/viz-mermaid-init",
+                    "virtual:astro-minimax/viz-markmap-init",
                   ];
                   if (virtuals.includes(id)) {
                     if (id === "virtual:astro-minimax/styles") return entryPath;
@@ -85,6 +87,18 @@ export default function minimax(
                   }
                   if (id === "\0virtual:astro-minimax/user-data") {
                     return `export const FRIENDS = ${JSON.stringify(userConfig.friends ?? [])};`;
+                  }
+                  if (id === "\0virtual:astro-minimax/viz-mermaid-init") {
+                    if (installedPkgs.has("@astro-minimax/viz")) {
+                      return `export { default } from "@astro-minimax/viz/components/MermaidInit.astro";`;
+                    }
+                    return `const MermaidInit = () => null;\nMermaidInit.isAstroComponentFactory = true;\nexport default MermaidInit;`;
+                  }
+                  if (id === "\0virtual:astro-minimax/viz-markmap-init") {
+                    if (installedPkgs.has("@astro-minimax/viz")) {
+                      return `export { default } from "@astro-minimax/viz/components/MarkmapInit.astro";`;
+                    }
+                    return `const MarkmapInit = () => null;\nMarkmapInit.isAstroComponentFactory = true;\nexport default MarkmapInit;`;
                   }
                   if (id === "\0virtual:astro-minimax/ai-widget") {
                     if (installedPkgs.has("@astro-minimax/ai")) {
@@ -245,6 +259,14 @@ declare module "virtual:astro-minimax/styles" {}
 declare module "virtual:astro-minimax/ai-widget" {
   const AIChatWidget: import("astro").AstroComponentFactory;
   export default AIChatWidget;
+}
+declare module "virtual:astro-minimax/viz-mermaid-init" {
+  const MermaidInit: import("astro").AstroComponentFactory;
+  export default MermaidInit;
+}
+declare module "virtual:astro-minimax/viz-markmap-init" {
+  const MarkmapInit: import("astro").AstroComponentFactory;
+  export default MarkmapInit;
 }`,
         });
       },

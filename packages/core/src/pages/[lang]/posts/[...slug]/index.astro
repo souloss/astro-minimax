@@ -4,8 +4,8 @@ import PostDetails from "../../../../layouts/PostDetails.astro";
 import getSortedPosts from "../../../../utils/getSortedPosts";
 import { getPostsByLang, getPostLang } from "../../../../utils/getPostsByLang";
 import { getPostSlug } from "../../../../utils/getPath";
-import MarkmapInit from "@astro-minimax/viz/components/MarkmapInit.astro";
-import MermaidInit from "@astro-minimax/viz/components/MermaidInit.astro";
+import MarkmapInit from "virtual:astro-minimax/viz-markmap-init";
+import MermaidInit from "virtual:astro-minimax/viz-mermaid-init";
 
 type Props = {
   post: CollectionEntry<"blog">;
