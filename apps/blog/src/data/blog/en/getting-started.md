@@ -1,9 +1,9 @@
 ---
-title: "Getting Started: Two Integration Methods"
+title: "Getting Started: Three Integration Methods"
 pubDatetime: 2026-03-12T00:00:00.000Z
 modDatetime: 2026-03-14T00:00:00.000Z
 author: Souloss
-description: "Start using astro-minimax via GitHub Template for quick setup or NPM packages for modular integration."
+description: "Start using astro-minimax via CLI, GitHub Template, or NPM packages — pick the method that fits your workflow."
 tags:
   - docs
   - configuration
@@ -16,16 +16,41 @@ draft: false
 
 ## Overview
 
-astro-minimax offers two integration methods for different use cases:
+astro-minimax offers three integration methods for different use cases:
 
 | Method | Best For | Updates |
 |--------|----------|---------|
+| **CLI (Recommended)** | Fastest start, standalone project | `pnpm update` |
 | **GitHub Template** | One-time setup, full customization | Manual upstream merge |
-| **NPM Packages** | Content-system separation, continuous updates | `pnpm update` |
+| **NPM Packages** | Existing Astro project, à la carte features | `pnpm update` |
 
 ---
 
-## Method 1: GitHub Template (Recommended for Beginners)
+## Method 1: CLI (Recommended)
+
+Create a complete blog project with one command:
+
+```bash
+npx @astro-minimax/cli init my-blog
+cd my-blog
+pnpm install
+pnpm run dev
+```
+
+The generated project includes all config files, a sample article, and the full AI toolchain. Edit `src/config.ts` to customize your site, then add posts to `src/data/blog/`.
+
+The CLI also provides handy management commands:
+
+```bash
+pnpm run post:new -- "Post Title"   # Create a new post
+pnpm run ai:process                  # AI process articles (summaries + SEO)
+pnpm run profile:build               # Build author profile
+pnpm run data:status                 # View data status
+```
+
+---
+
+## Method 2: GitHub Template
 
 ### 1. Create Repository
 
@@ -53,7 +78,9 @@ your-blog/
 ├── packages/
 │   ├── core/                  # Core theme (layouts, components, styles)
 │   ├── viz/                   # Visualization plugins (Mermaid, Markmap, etc.)
-│   └── ai/                    # AI integration
+│   ├── ai/                    # AI integration
+│   ├── notify/                # Notification system
+│   └── cli/                   # CLI tools
 └── apps/
     └── blog/                  # Your blog site
         ├── astro.config.ts    # Astro config
@@ -157,7 +184,7 @@ git merge upstream/main
 
 ---
 
-## Method 2: NPM Package Integration
+## Method 3: NPM Package Integration
 
 For users who want to separate content from the theme system. The core theme, visualization plugins, and AI features are published as independent npm packages.
 

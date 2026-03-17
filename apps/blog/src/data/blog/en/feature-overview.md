@@ -17,14 +17,15 @@ astro-minimax is a feature-rich Astro blog theme built with a modular architectu
 
 ## Architecture Overview
 
-astro-minimax consists of four core packages:
+astro-minimax consists of five core packages:
 
-| Package                 | Description                                                                    | Required |
-| ----------------------- | ------------------------------------------------------------------------------ | -------- |
-| `@astro-minimax/core`   | Core theme: layouts, components, styles, utilities, plugins                    | Yes      |
-| `@astro-minimax/viz`    | Visualization plugins: Mermaid, Markmap, Rough.js, Excalidraw, Asciinema, etc. | Optional |
-| `@astro-minimax/ai`     | AI integration: multi-provider chat, RAG retrieval, streaming                  | Optional |
-| `@astro-minimax/notify` | Notification system: Telegram, Email, Webhook multi-channel notifications      | Optional |
+| Package                 | Description                                                                    | Required    |
+| ----------------------- | ------------------------------------------------------------------------------ | ----------- |
+| `@astro-minimax/core`   | Core theme: layouts, components, styles, utilities, plugins                    | Yes         |
+| `@astro-minimax/viz`    | Visualization plugins: Mermaid, Markmap, Rough.js, Excalidraw, Asciinema, etc. | Optional    |
+| `@astro-minimax/ai`     | AI integration: multi-provider chat, RAG retrieval, streaming                  | Optional    |
+| `@astro-minimax/notify` | Notification system: Telegram, Email, Webhook multi-channel notifications      | Optional    |
+| `@astro-minimax/cli`    | CLI tools: blog scaffolding, AI processing, profile building, quality eval     | Recommended |
 
 ---
 
@@ -269,10 +270,14 @@ The `@astro-minimax/ai` package provides intelligent conversation capabilities.
 ### Key Features
 
 - **Multi-provider support** — Cloudflare Workers AI + OpenAI-compatible APIs
-- **Automatic failover** — Seamlessly switches to backup when primary fails
+- **Automatic failover** — Seamlessly switches to backup when primary fails, Mock fallback guarantees availability
 - **Streaming responses** — Real-time SSE streaming output
 - **RAG retrieval** — Context-enhanced answers based on blog content
-- **Intent detection** — Smart recognition of question types
+- **Source priority protocol** — L1-L5 source layers to prevent AI hallucination
+- **Intent classification** — 7 topic categories for improved search relevance
+- **Privacy protection** — Automatically refuses sensitive personal info queries (address, income, family, etc.)
+- **Reading companion** — Article pages auto-inject context for contextual Q&A
+- **Global/session cache** — Public questions cached across users for faster responses
 - **Mock mode** — No real API needed during development
 
 ### Usage
@@ -461,6 +466,51 @@ features: {
   sponsor: true,     // Sponsorship
 },
 ```
+
+## CLI Tools
+
+The `@astro-minimax/cli` package provides a comprehensive command-line toolkit for blog management and AI content processing.
+
+### Installation
+
+CLI tools are included with the `@astro-minimax/cli` package, or use `npx astro-minimax` for one-off commands.
+
+### Main Commands
+
+| Command                  | Description                                      |
+| ------------------------ | ------------------------------------------------ |
+| `astro-minimax init`     | Create a new blog project                        |
+| `astro-minimax ai`       | AI content processing (summaries, SEO, eval)     |
+| `astro-minimax profile`  | Author profile management (context, voice, report)|
+| `astro-minimax post`     | Post management (new, list, stats)               |
+| `astro-minimax data`     | Data management (status, clear)                  |
+
+### Shortcut Scripts
+
+All commands have corresponding `pnpm run` shortcuts:
+
+```bash
+pnpm run ai:process       # AI process all articles
+pnpm run ai:eval           # Evaluate AI chat quality
+pnpm run profile:build     # Build complete author profile
+pnpm run post:new          # Create a new post
+pnpm run data:status       # View data status
+```
+
+### AI Evaluation System
+
+Built-in golden test set (`datas/eval/gold-set.json`) for automated AI chat quality assessment:
+
+- 5 automated checks: non-empty, topic coverage, forbidden claims, link validation, answer mode
+- Test against local dev server or production deployment
+- Generates detailed report (`datas/eval/report.json`)
+
+```bash
+pnpm run ai:eval                                  # Local test
+pnpm run ai:eval -- --url=https://your-blog.com   # Remote test
+```
+
+---
 
 ## More Resources
 

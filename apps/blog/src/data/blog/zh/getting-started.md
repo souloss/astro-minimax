@@ -1,9 +1,9 @@
 ---
-title: "快速开始：两种使用方式"
+title: "快速开始：三种使用方式"
 pubDatetime: 2026-03-12T00:00:00.000Z
 modDatetime: 2026-03-14T00:00:00.000Z
 author: Souloss
-description: "通过 GitHub Template 一键创建或 NPM 包集成两种方式开始使用 astro-minimax。"
+description: "通过 CLI 一键创建、GitHub Template 或 NPM 包集成三种方式开始使用 astro-minimax。"
 tags:
   - docs
   - configuration
@@ -16,16 +16,41 @@ draft: false
 
 ## 概览
 
-astro-minimax 提供两种使用方式，适合不同场景：
+astro-minimax 提供三种使用方式，适合不同场景：
 
 | 方式 | 适合场景 | 更新方式 |
 |------|----------|----------|
+| **CLI 创建（推荐）** | 最快上手，独立项目 | `pnpm update` |
 | **GitHub Template** | 一次性创建，完全自定义 | 手动合并上游更新 |
-| **NPM 包集成** | 内容与系统分离，持续获取更新 | `pnpm update` |
+| **NPM 包集成** | 已有 Astro 项目，按需引入 | `pnpm update` |
 
 ---
 
-## 方式一：GitHub Template（推荐新手）
+## 方式一：CLI 创建（推荐）
+
+使用 `@astro-minimax/cli` 一键创建完整博客项目：
+
+```bash
+npx @astro-minimax/cli init my-blog
+cd my-blog
+pnpm install
+pnpm run dev
+```
+
+生成的项目包含完整的配置文件、示例文章和 AI 工具链。编辑 `src/config.ts` 自定义站点信息，在 `src/data/blog/` 下添加文章即可。
+
+CLI 还提供实用的管理命令：
+
+```bash
+pnpm run post:new -- "文章标题"    # 创建新文章
+pnpm run ai:process                 # AI 处理文章（摘要+SEO）
+pnpm run profile:build              # 构建作者画像
+pnpm run data:status                # 查看数据状态
+```
+
+---
+
+## 方式二：GitHub Template
 
 ### 1. 创建仓库
 
@@ -53,7 +78,9 @@ your-blog/
 ├── packages/
 │   ├── core/                  # 核心主题包（布局、组件、样式）
 │   ├── viz/                   # 可视化插件包（Mermaid、Markmap 等）
-│   └── ai/                    # AI 集成包
+│   ├── ai/                    # AI 集成包
+│   ├── notify/                # 通知系统包
+│   └── cli/                   # CLI 工具包
 └── apps/
     └── blog/                  # 你的博客站点
         ├── astro.config.ts    # Astro 配置
@@ -157,7 +184,7 @@ git merge upstream/main
 
 ---
 
-## 方式二：NPM 包集成
+## 方式三：NPM 包集成
 
 适合希望将内容与主题系统分离的用户。主题核心、可视化插件和 AI 功能作为独立 npm 包发布。
 
