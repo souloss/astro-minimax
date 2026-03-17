@@ -3,7 +3,7 @@ import { ProviderManager, hasAnyProviderConfigured, DEFAULT_WORKERS_BINDING_NAME
 import { initializeMetadata } from '@astro-minimax/ai/server';
 import type { ChatHandlerEnv } from '@astro-minimax/ai/server';
 import aiSummaries from '../../datas/ai-summaries.json';
-import authorContextJson from '../../datas/author-context.json';
+import authorContext from '../../datas/author-context.json';
 import voiceProfile from '../../datas/voice-profile.json';
 
 interface FunctionEnv extends ChatHandlerEnv {
@@ -13,7 +13,7 @@ interface FunctionEnv extends ChatHandlerEnv {
 export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
   const env = context.env;
   initializeMetadata(
-    { summaries: aiSummaries, authorContext: authorContextJson, voiceProfile },
+    { summaries: aiSummaries, authorContext, voiceProfile },
     env,
   );
 
