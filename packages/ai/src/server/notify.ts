@@ -83,6 +83,7 @@ export function notifyAiChat(options: ChatNotifyOptions): Promise<NotifyResult |
   const lastUserMessage = userMessages[userMessages.length - 1];
   
   if (!lastUserMessage) {
+    console.warn('[notify] AI chat notification skipped: no user message found in messages array');
     return Promise.resolve(null);
   }
 
