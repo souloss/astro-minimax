@@ -2,14 +2,42 @@
   "name": "create-astro-minimax",
   "version": "0.1.0",
   "type": "module",
-  "description": "Create a new astro-minimax blog project",
+  "description": "Create a new astro-minimax blog project — a minimalist, fast, and modern Astro blog theme with AI-powered features.",
+  "author": "Souloss",
   "license": "MIT",
+  "keywords": [
+    "astro",
+    "scaffold",
+    "cli",
+    "template",
+    "blog-starter",
+    "create-app"
+  ],
+  "homepage": "https://github.com/souloss/astro-minimax#readme",
+  "bugs": {
+    "url": "https://github.com/souloss/astro-minimax/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/souloss/astro-minimax",
+    "directory": "packages/create-astro-minimax"
+  },
   "bin": "./index.js",
   "files": [
     "index.js",
     "template/"
   ],
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
-    "astro": "^5.0.0"
-  }
+    "astro": "^5.0.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
 }

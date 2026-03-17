@@ -1,5 +1,5 @@
 name = "astro-minimax"
-pages_build_output_dir = "dist"
+pages_build_output_dir = "apps/blog/dist"
 compatibility_date = "2026-03-12"
 compatibility_flags = ["nodejs_compat"]
 

@@ -2,9 +2,29 @@
   "name": "@astro-minimax/ai",
   "version": "0.2.0",
   "type": "module",
-  "description": "Vendor-agnostic AI integration package with full RAG pipeline for astro-minimax blogs.",
+  "description": "Vendor-agnostic AI integration package with full RAG pipeline for astro-minimax blogs — supports OpenAI, Cloudflare AI, and custom providers.",
   "author": "Souloss",
   "license": "MIT",
+  "keywords": [
+    "astro",
+    "ai",
+    "llm",
+    "rag",
+    "openai",
+    "cloudflare-ai",
+    "vector-search",
+    "streaming",
+    "chatbot"
+  ],
+  "homepage": "https://github.com/souloss/astro-minimax#readme",
+  "bugs": {
+    "url": "https://github.com/souloss/astro-minimax/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/souloss/astro-minimax",
+    "directory": "packages/ai"
+  },
   "bin": {
     "astro-ai-dev": "./dist/server/dev-server.js"
   },
@@ -59,6 +79,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "build:watch": "tsc -p tsconfig.build.json --watch",
+    "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm run clean && pnpm run build"
   },
@@ -88,6 +109,8 @@
     "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=22.12.0"
-  }
+    "node": ">=22.12.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
 }

@@ -11,7 +11,9 @@
     "mermaid",
     "markmap",
     "excalidraw",
-    "asciinema"
+    "asciinema",
+    "diagrams",
+    "charts"
   ],
   "homepage": "https://github.com/souloss/astro-minimax#readme",
   "bugs": {
@@ -36,6 +38,11 @@
   "files": [
     "src/"
   ],
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf node_modules/.cache"
+  },
   "peerDependencies": {
     "astro": "^5.0.0 || ^6.0.0",
     "mermaid": "^11.0.0"
@@ -45,5 +52,13 @@
     "markmap-view": "^0.18.10",
     "remark-markmap": "^1.1.5",
     "unist-util-visit": "^5.0.0"
-  }
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
 }

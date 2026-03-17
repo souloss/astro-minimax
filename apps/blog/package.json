@@ -1,7 +1,30 @@
 {
   "name": "astro-minimax-blog",
-  "type": "module",
   "version": "5.5.1",
+  "private": true,
+  "type": "module",
+  "description": "A modern, minimalist blog built with Astro, featuring AI-powered search, multi-channel notifications, and rich visualizations.",
+  "author": "Souloss",
+  "license": "MIT",
+  "keywords": [
+    "astro",
+    "blog",
+    "personal-website",
+    "tailwindcss",
+    "cloudflare-pages",
+    "ai",
+    "rag",
+    "minimalist"
+  ],
+  "homepage": "https://github.com/souloss/astro-minimax#readme",
+  "bugs": {
+    "url": "https://github.com/souloss/astro-minimax/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/souloss/astro-minimax",
+    "directory": "apps/blog"
+  },
   "scripts": {
     "dev": "concurrently -n \"astro,ai\" -c \"blue,green\" \"astro dev\" \"pnpm exec astro-ai-dev\"",
     "dev:astro": "astro dev",
@@ -12,6 +35,9 @@
     "sync": "astro sync",
     "astro": "astro",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "astro check",
+    "clean": "rm -rf dist .astro node_modules/.cache",
     "tools:summarize": "tsx tools/summarize.ts",
     "tools:generate-related": "tsx tools/generate-related.ts",
     "tools:translate": "tsx tools/translate.ts",
@@ -58,7 +84,6 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.7",
-    "concurrently": "^9.1.2",
     "@cloudflare/workers-types": "^4.20260313.1",
     "@pagefind/default-ui": "^1.4.0",
     "@shikijs/transformers": "^4.0.2",
@@ -66,6 +91,7 @@
     "@types/lodash.kebabcase": "^4.1.9",
     "@types/mdast": "^4.0.4",
     "@typescript-eslint/parser": "^8.56.1",
+    "concurrently": "^9.1.2",
     "eslint": "^9.39.3",
     "eslint-plugin-astro": "^1.6.0",
     "globals": "^16.5.0",
@@ -77,5 +103,10 @@
     "undici": "^7.24.1",
     "unist-util-visit": "^5.1.0",
     "wrangler": "^4.73.0"
-  }
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
 }

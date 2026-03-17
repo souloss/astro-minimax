@@ -10,7 +10,9 @@
     "astro-theme",
     "blog",
     "minimalist",
-    "tailwindcss"
+    "tailwindcss",
+    "responsive",
+    "seo"
   ],
   "homepage": "https://github.com/souloss/astro-minimax#readme",
   "bugs": {
@@ -39,6 +41,11 @@
   "files": [
     "src/"
   ],
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf node_modules/.cache"
+  },
   "peerDependencies": {
     "astro": "^5.0.0 || ^6.0.0",
     "tailwindcss": "^4.0.0",
@@ -53,13 +60,29 @@
     "@fontsource/ibm-plex-mono": "^5.0.0"
   },
   "devDependencies": {
-    "astro": "^6.0.0"
+    "astro": "^6.0.0",
+    "typescript": "^5.9.3"
   },
   "peerDependenciesMeta": {
-    "@astro-minimax/ai": { "optional": true },
-    "satori": { "optional": true },
-    "@resvg/resvg-js": { "optional": true },
-    "@fontsource/ibm-plex-mono": { "optional": true },
-    "@pagefind/default-ui": { "optional": true }
-  }
+    "@astro-minimax/ai": {
+      "optional": true
+    },
+    "satori": {
+      "optional": true
+    },
+    "@resvg/resvg-js": {
+      "optional": true
+    },
+    "@fontsource/ibm-plex-mono": {
+      "optional": true
+    },
+    "@pagefind/default-ui": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
 }

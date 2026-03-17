@@ -1,13 +1,38 @@
 {
   "name": "astro-minimax-monorepo",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
+  "description": "A minimalist, fast, and modern Astro blog theme with AI-powered features, multi-channel notifications, and rich visualizations.",
+  "author": "Souloss",
+  "license": "MIT",
+  "keywords": [
+    "monorepo",
+    "astro",
+    "blog",
+    "theme",
+    "tailwindcss",
+    "ai",
+    "rag",
+    "cloudflare-pages"
+  ],
+  "homepage": "https://github.com/souloss/astro-minimax#readme",
+  "bugs": {
+    "url": "https://github.com/souloss/astro-minimax/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/souloss/astro-minimax"
+  },
   "scripts": {
     "dev": "pnpm --filter astro-minimax-blog dev",
-    "build": "pnpm --filter @astro-minimax/ai build && pnpm --filter astro-minimax-blog build",
+    "build": "pnpm -r build",
     "preview": "pnpm --filter astro-minimax-blog preview",
+    "lint": "pnpm -r lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "clean": "pnpm -r clean",
+    "postinstall": "pnpm --filter @astro-minimax/notify build && pnpm --filter @astro-minimax/ai build"
   },
   "pnpm": {
     "overrides": {
@@ -19,5 +44,10 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "^5.9.3"
-  }
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
 }
