@@ -20,8 +20,8 @@ interface Command {
 const commands: Command[] = [
   { name: "init", description: "Create a new blog project", run: initCommand },
   { name: "post", description: "Manage blog posts", run: postCommand },
-  { name: "ai", description: "AI-powered content processing", run: aiCommand },
-  { name: "profile", description: "Author profile management", run: profileCommand },
+  { name: "ai", description: "AI content processing (process, seo, summary, eval)", run: aiCommand },
+  { name: "profile", description: "Author profile (build, context, voice, report)", run: profileCommand },
   { name: "data", description: "Data status and management", run: dataCommand },
 ];
 
@@ -35,8 +35,8 @@ Usage:
 Commands:
   init <project>    Create a new blog project
   post              Manage blog posts (new, list, stats)
-  ai                AI content processing (process, seo, summary)
-  profile           Author profile (build, context, voice)
+  ai                AI content processing (process, seo, summary, eval)
+  profile           Author profile (build, context, voice, report)
   data              Data management (status, clear)
 
 Run "astro-minimax <command> --help" for detailed usage.
