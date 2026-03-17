@@ -14,5 +14,5 @@
     "sourceMap": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "template"]
+  "exclude": ["node_modules", "dist", "template", "src/tools/generate-og.ts"]
 }
