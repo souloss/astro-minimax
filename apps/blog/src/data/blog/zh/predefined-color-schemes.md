@@ -142,7 +142,7 @@ html[data-theme="dark"] {
 
 ### Astro Deep Purple (astro-minimax 3 新深色主题)
 
-![astro-minimax v3 new theme](https://github.com/souloss/astro-minimax/assets/53733092/c8b5d7e1-a3bc-4852-a5ad-4abf7b3cec79)
+<!-- 此配色方案的预览请参考在线演示站 -->
 
 ```css
 html[data-theme="dark"] {
@@ -154,9 +154,9 @@ html[data-theme="dark"] {
 }
 ```
 
-### astro-minimax v4 特别版 (astro-minimax 4 新深色主题)
+### 特别版深色主题
 
-![astro-minimax v4 new theme](https://github.com/souloss/astro-minimax/assets/53733092/66eb74dc-7a0e-4f2e-982d-25f5c443b25a)
+<!-- 此配色方案的预览请参考在线演示站 -->
 
 ```css
 html[data-theme="dark"] {

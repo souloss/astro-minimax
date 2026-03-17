@@ -25,7 +25,7 @@ You can get around this by having a `hooks` directory and manually copy them to 
 
 As this project uses npm, we are able to make use of a package called [Husky](https://typicode.github.io/husky/) (this is already installed in astro-minimax) to automatically install the hooks for us.
 
-> Update! In astro-minimax [v4.3.0](https://github.com/souloss/astro-minimax/releases/tag/v4.3.0), the pre-commit hook has been removed in favor of GitHub Actions. However, you can easily [install Husky](https://typicode.github.io/husky/get-started.html) yourself.
+> astro-minimax does not include pre-commit hooks by default. GitHub Actions are recommended for automation. For local hooks, you can [install Husky](https://typicode.github.io/husky/get-started.html) yourself.
 
 ## The Hook
 
@@ -131,7 +131,7 @@ We could use the `a` variable to switch inside the loop and either update the `m
 
 ## Populating the frontmatter
 
-If your IDE supports snippets then there is the option to create a custom snippet to populate the frontmatter.[In astro-minimax v4 will come with one for VSCode by default.](https://github.com/souloss/astro-minimax/pull/206)
+If your IDE supports snippets, you can create a custom snippet to populate frontmatter. Alternatively, use the CLI command `astro-minimax post new "Title"` to auto-create posts with proper frontmatter.
 
 <video autoplay muted="muted" controls plays-inline="true" class="border border-skin-line">
   <source src="https://github.com/souloss/astro-minimax/assets/17761689/e13babbc-2d78-405d-8758-ca31915e41b0" type="video/mp4">

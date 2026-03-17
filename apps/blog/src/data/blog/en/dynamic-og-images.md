@@ -10,10 +10,10 @@ category: 教程/博客
 tags:
   - docs
   - release
-description: New feature in astro-minimax v1.4.0, introducing dynamic OG image generation for blog posts.
+description: Built-in dynamic OG image generation using Satori, automatically creating social share images at build time.
 ---
 
-New feature in astro-minimax v1.4.0, introducing dynamic OG image generation for blog posts.
+astro-minimax includes built-in dynamic OG image generation. Articles without a specified `ogImage` get one auto-generated at build time.
 
 ## Table of contents
 
@@ -31,7 +31,7 @@ astro-minimax already provided a way to add an OG image to a blog post. The auth
 
 Generating a dynamic OG image for each post allows the author to avoid specifying an OG image for every single blog post. Besides, this will prevent the fallback OG image from being identical to all blog posts.
 
-In astro-minimax v1.4.0, Vercel's [Satori](https://github.com/vercel/satori) package is used for dynamic OG image generation.
+astro-minimax uses Vercel's [Satori](https://github.com/vercel/satori) package for dynamic OG image generation.
 
 Dynamic OG images will be generated at build time for blog posts that
 

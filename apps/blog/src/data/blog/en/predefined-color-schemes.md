@@ -145,7 +145,7 @@ html[data-theme="dark"] {
 
 ### Astro Deep Purple (New dark theme in astro-minimax 3)
 
-![astro-minimax v3 new theme](https://github.com/souloss/astro-minimax/assets/53733092/c8b5d7e1-a3bc-4852-a5ad-4abf7b3cec79)
+<!-- See the online demo site for a preview of this color scheme -->
 
 ```css
 html[data-theme="dark"] {
@@ -157,9 +157,9 @@ html[data-theme="dark"] {
 }
 ```
 
-### astro-minimax v4 Special (New dark theme in astro-minimax 4)
+### Special Dark Theme
 
-![astro-minimax v4 new theme](https://github.com/souloss/astro-minimax/assets/53733092/66eb74dc-7a0e-4f2e-982d-25f5c443b25a)
+<!-- See the online demo site for a preview of this color scheme -->
 
 ```css
 html[data-theme="dark"] {

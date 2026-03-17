@@ -409,7 +409,7 @@ GitHub-style alerts provide visually distinct callouts for different types of in
 > This can reduce build times by up to 60% on large sites.
 
 > [!WARNING]
-> **Breaking Change in v5.0:** The `content` directory has been renamed to `data`. Update your imports:
+> **Note:** Blog content lives in `src/data/blog/` (not `src/content/`). Import like this:
 >
 > ```diff
 > - import { getCollection } from 'astro:content';

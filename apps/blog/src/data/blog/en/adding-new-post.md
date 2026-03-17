@@ -36,9 +36,7 @@ Here are some rules/recommendations, tips & ticks for creating new posts in astr
 
 To write a new blog post, create a markdown file inside the `src/data/blog/` directory.
 
-> Prior to astro-minimax v5.1.0, all blog posts had to be in `src/data/blog/`, meaning you couldn't organize them into subdirectories.
-
-Starting from astro-minimax v5.1.0, you can now organize blog posts into subdirectories, making it easier to manage your content.
+astro-minimax supports organizing blog posts into subdirectories for easier content management.
 
 For example, if you want to group posts under `2025`, you can place them in `src/data/blog/2025/`. This also affects the post URL, so `src/data/blog/2025/example-post.md` will be available at `/posts/2025/example-post`.
 
@@ -159,7 +157,7 @@ This rule is not mandatory, but highly recommended for visual, accessibility and
 
 ## Syntax Highlighting
 
-astro-minimax uses [Shiki](https://shiki.style/) as the default syntax highlighting. Starting from astro-minimax v5.4, [@shikijs/transformers](https://shiki.style/packages/transformers) is used to enhance better fenced code blocks. If you don't want to use it, you can simply remove it like this
+astro-minimax uses [Shiki](https://shiki.style/) for syntax highlighting, enhanced with [@shikijs/transformers](https://shiki.style/packages/transformers) for better fenced code blocks. If you don't want to use it, you can remove it from `astro.config.ts` like this
 
 ```bash
 pnpm remove @shikijs/transformers
@@ -255,4 +253,4 @@ My recommendation for image compression sites.
 
 The default OG image will be placed if a post does not specify the OG image. Though not required, OG image related to the post should be specify in the frontmatter. The recommended size for OG image is **_1200 X 640_** px.
 
-> Since astro-minimax v1.4.0, OG images will be generated automatically if not specified. Check out [the announcement](/en/posts/dynamic-og-images/).
+> If `ogImage` is not specified in frontmatter, astro-minimax auto-generates it at build time. See [Dynamic OG Images](/en/posts/dynamic-og-images/).
