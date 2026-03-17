@@ -32,7 +32,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "pnpm -r clean",
-    "postinstall": "pnpm --filter @astro-minimax/notify build && pnpm --filter @astro-minimax/ai build"
+    "postinstall": "pnpm --filter @astro-minimax/notify build && pnpm --filter @astro-minimax/ai build && pnpm --filter @astro-minimax/cli build"
   },
   "pnpm": {
     "overrides": {

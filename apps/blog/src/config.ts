@@ -106,9 +106,9 @@ export const SITE: SiteConfig = {
   },
 
   get lightAndDarkMode() {
-    return this.features.darkMode;
+    return this.features?.darkMode;
   },
   get showArchives() {
-    return this.features.archives;
+    return this.features?.archives;
   },
 };
