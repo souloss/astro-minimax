@@ -51,6 +51,43 @@ const MAX_HISTORY_MESSAGES = 20;
 const MAX_INPUT_LENGTH = 500;
 const REQUEST_TIMEOUT_MS = 45_000;
 
+function sendNotification(args: {
+  env: ChatHandlerOptions['env'];
+  messages: UIMessage[];
+  responseText: string;
+  relatedArticles: Array<{ title: string; url?: string }>;
+  model?: ModelInfo;
+  usage?: TokenUsage;
+  timing: PhaseTiming;
+  cacheKey?: string | null;
+  waitUntil?: (promise: Promise<unknown>) => void;
+}): void {
+  const { env, messages, responseText, relatedArticles, model, usage, timing, cacheKey, waitUntil } = args;
+  
+  const sessionId = cacheKey || `dev-${Date.now().toString(36)}`;
+  const notifyArticles: ArticleRef[] = relatedArticles.slice(0, 5).map(a => ({
+    title: a.title,
+    url: a.url,
+  }));
+  
+  const notifyPromise = notifyAiChat({
+    env,
+    sessionId,
+    messages,
+    aiResponse: responseText,
+    referencedArticles: notifyArticles,
+    model,
+    usage,
+    timing,
+  });
+  
+  if (waitUntil) {
+    waitUntil(notifyPromise);
+  } else {
+    void notifyPromise;
+  }
+}
+
 // ── Message Helpers ───────────────────────────────────────────
 
 function getMessageText(message: UIMessage): string {
@@ -119,7 +156,7 @@ function buildArticleContextPrompt(context: ChatContext): string {
 // ── Main Handler ──────────────────────────────────────────────
 
 export async function handleChatRequest(options: ChatHandlerOptions): Promise<Response> {
-  const { env, request: req } = options;
+  const { env, request: req, waitUntil } = options;
 
   if (req.method === 'OPTIONS') return corsPreflightResponse();
   if (req.method !== 'POST') return errors.methodNotAllowed('zh');
@@ -152,7 +189,7 @@ export async function handleChatRequest(options: ChatHandlerOptions): Promise<Re
   const requestTimer = setTimeout(() => requestAbort.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    return await runPipeline({ env, messages, latestText, context, req, requestAbort, lang });
+    return await runPipeline({ env, messages, latestText, context, req, requestAbort, lang, waitUntil });
   } catch (err) {
     if (requestAbort.signal.aborted) return errors.timeout(lang);
     console.error('[chat-handler] Unexpected error:', err);
@@ -172,6 +209,7 @@ interface PipelineArgs {
   req: Request;
   requestAbort: AbortController;
   lang: string;
+  waitUntil?: (promise: Promise<unknown>) => void;
 }
 
 interface TimingTracker {
@@ -183,7 +221,7 @@ interface TimingTracker {
 }
 
 async function runPipeline(args: PipelineArgs): Promise<Response> {
-  const { env, messages, latestText, context, req, lang } = args;
+  const { env, messages, latestText, context, req, lang, waitUntil } = args;
   const timing: TimingTracker = { start: Date.now() };
 
   const cache = createCacheAdapter(env);
@@ -218,6 +256,17 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
       if (cachedResponse) {
         globalCacheHit = true;
         globalCacheType = publicQuestion.type;
+
+        const notifyTiming: PhaseTiming = { total: Date.now() - timing.start };
+        
+        sendNotification({
+          env,
+          messages,
+          responseText: cachedResponse.response,
+          relatedArticles: cachedResponse.articles,
+          timing: notifyTiming,
+          waitUntil,
+        });
 
         const stream = createUIMessageStream({
           execute: async ({ writer }) => {
@@ -855,22 +904,16 @@ writer.write({
           apiHost: (env.AI_BASE_URL as string) || undefined,
         } : undefined;
 
-        const notifyArticles: ArticleRef[] = relatedArticles.slice(0, 5).map(a => ({
-          title: a.title,
-          url: (a as { url?: string }).url,
-        }));
-
-        const sessionId = cacheKey || `dev-${Date.now().toString(36)}`;
-
-        void notifyAiChat({
+        sendNotification({
           env,
-          sessionId,
           messages,
-          aiResponse: responseText,
-          referencedArticles: notifyArticles,
+          responseText,
+          relatedArticles,
           model: notifyModel,
           usage: tokenUsage,
           timing: notifyTiming,
+          cacheKey,
+          waitUntil,
         });
       }
     },

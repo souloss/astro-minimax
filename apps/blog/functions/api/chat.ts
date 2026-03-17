@@ -16,5 +16,9 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     { summaries: aiSummaries, authorContext: authorContextJson, voiceProfile },
     context.env,
   );
-  return handleChatRequest({ env: context.env, request: context.request });
+  return handleChatRequest({ 
+    env: context.env, 
+    request: context.request,
+    waitUntil: context.waitUntil,
+  });
 };

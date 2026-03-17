@@ -37,6 +37,7 @@ export interface ChatHandlerEnv extends ProviderManagerEnv, CacheEnv {
 export interface ChatHandlerOptions {
   env: ChatHandlerEnv;
   request: Request;
+  waitUntil?: (promise: Promise<unknown>) => void;
 }
 
 // ── Status Metadata ───────────────────────────────────────────
