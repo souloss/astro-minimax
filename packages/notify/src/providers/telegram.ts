@@ -4,24 +4,6 @@ export interface TelegramProvider {
   send(template: TelegramTemplate): Promise<SendResult>;
 }
 
-let proxyConfigured = false;
-
-async function configureProxy(): Promise<void> {
-  if (proxyConfigured) return;
-  
-  const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy;
-  
-  if (proxyUrl) {
-    try {
-      const { setGlobalDispatcher, ProxyAgent } = await import('undici');
-      setGlobalDispatcher(new ProxyAgent(proxyUrl));
-      proxyConfigured = true;
-    } catch {
-      // ProxyAgent not available, continue without proxy
-    }
-  }
-}
-
 export function createTelegramProvider(
   config: TelegramConfig,
   logger?: Logger
@@ -33,7 +15,9 @@ export function createTelegramProvider(
       const start = Date.now();
       
       try {
-        await configureProxy();
+        // Note: Proxy configuration is not supported in Cloudflare Edge Runtime.
+        // If you need proxy support, consider using a dedicated proxy service
+        // or running the notification service in a Node.js environment.
         
         const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
         

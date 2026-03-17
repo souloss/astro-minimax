@@ -4,24 +4,6 @@ export interface EmailProvider {
   send(template: EmailTemplate): Promise<SendResult>;
 }
 
-let proxyConfigured = false;
-
-async function configureProxy(): Promise<void> {
-  if (proxyConfigured) return;
-  
-  const proxyUrl = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy;
-  
-  if (proxyUrl) {
-    try {
-      const { setGlobalDispatcher, ProxyAgent } = await import('undici');
-      setGlobalDispatcher(new ProxyAgent(proxyUrl));
-      proxyConfigured = true;
-    } catch {
-      // ProxyAgent not available, continue without proxy
-    }
-  }
-}
-
 export function createEmailProvider(
   config: EmailConfig,
   logger?: Logger
@@ -42,8 +24,6 @@ export function createEmailProvider(
       }
 
       try {
-        await configureProxy();
-        
         const response = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
