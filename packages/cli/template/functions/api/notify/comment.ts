@@ -60,9 +60,10 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
   const { data } = payload;
   const siteUrl = env.SITE_URL || 'https://your-blog.pages.dev';
   
-  const postUrl = data.url.startsWith('http') 
-    ? data.url 
-    : `${siteUrl}${data.url}`;
+  const urlPath = data.url || '';
+  const postUrl = urlPath.startsWith('http') 
+    ? urlPath 
+    : `${siteUrl}${urlPath}`;
 
   const notifier = createNotifier({
     telegram: env.NOTIFY_TELEGRAM_BOT_TOKEN && env.NOTIFY_TELEGRAM_CHAT_ID ? {
