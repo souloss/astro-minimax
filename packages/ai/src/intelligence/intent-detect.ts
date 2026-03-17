@@ -47,6 +47,21 @@ export function classifyIntent(query: string): IntentCategory {
  * Re-ranks articles by intent relevance.
  * Boosts articles whose title/categories/keyPoints match the detected intent.
  */
+function countKeywordHits(text: string | undefined, keywords: string[]): number {
+  if (!text) return 0;
+  const lower = text.toLowerCase();
+  return keywords.reduce((hits, kw) => hits + (lower.includes(kw.toLowerCase()) ? 1 : 0), 0);
+}
+
+function isRecent(dateTime?: number): boolean {
+  if (!dateTime || !Number.isFinite(dateTime)) return false;
+  return Date.now() - dateTime <= 365 * 24 * 60 * 60 * 1000;
+}
+
+/**
+ * Re-ranks articles by intent relevance with weighted multi-dimension scoring.
+ * Scoring: title(+3) / categories(+2) / summary(+2) / keyPoints(+1) / recency(+1)
+ */
 export function rankArticlesByIntent(
   query: string,
   articles: ArticleContext[],
@@ -57,27 +72,20 @@ export function rankArticlesByIntent(
   const keywords = INTENT_KEYWORDS[intent];
   if (!keywords.length) return articles;
 
-  const scored = articles.map(article => {
-    let boost = 0;
-    const searchableText = [
-      article.title,
-      ...article.keyPoints,
-      ...(article.categories ?? []),
-      article.summary ?? '',
-    ].join(' ').toLowerCase();
+  const scored = articles.map((article, index) => {
+    const titleHit = countKeywordHits(article.title, keywords) > 0 ? 3 : 0;
+    const categoryHit = (article.categories ?? []).some(c => countKeywordHits(c, keywords) > 0) ? 2 : 0;
+    const summaryHit = countKeywordHits(article.summary, keywords) > 0 ? 2 : 0;
+    const keyPointHit = article.keyPoints.some(kp => countKeywordHits(kp, keywords) > 0) ? 1 : 0;
+    const recentHit = isRecent(article.dateTime) ? 1 : 0;
 
-    for (const kw of keywords) {
-      if (searchableText.includes(kw.toLowerCase())) boost += 2;
-    }
-
-    if (article.title.toLowerCase().includes(query.toLowerCase().slice(0, 10))) {
-      boost += 3;
-    }
-
-    return { article, boost };
+    return { article, index, score: titleHit + categoryHit + summaryHit + keyPointHit + recentHit };
   });
 
-  scored.sort((a, b) => b.boost - a.boost);
+  const maxScore = Math.max(...scored.map(s => s.score), 0);
+  if (maxScore === 0) return articles;
+
+  scored.sort((a, b) => b.score - a.score || a.index - b.index);
   return scored.map(s => s.article);
 }
 
