@@ -8,7 +8,8 @@ const templateDir = join(__dirname, "template");
 
 const projectName = process.argv[2];
 if (!projectName) {
-  console.error("Usage: create-astro-minimax <project-name>");
+  console.error("Usage: astro-minimax <project-name>");
+  console.error("       npx @astro-minimax/cli <project-name>");
   process.exit(1);
 }
 
@@ -27,8 +28,9 @@ const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
 pkg.name = basename(targetDir);
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 
-console.log(`\n  Created "${projectName}" successfully!\n`);
+console.log(`\n  ✅ Created "${projectName}" successfully!\n`);
 console.log("  Next steps:\n");
 console.log(`    cd ${projectName}`);
 console.log("    pnpm install");
 console.log("    pnpm dev\n");
+console.log("  Docs: https://github.com/souloss/astro-minimax\n");

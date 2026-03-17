@@ -1,8 +1,8 @@
 {
-  "name": "create-astro-minimax",
+  "name": "@astro-minimax/cli",
   "version": "0.5.0",
   "type": "module",
-  "description": "Create a new astro-minimax blog project — a minimalist, fast, and modern Astro blog theme with AI-powered features.",
+  "description": "CLI tool to create a new astro-minimax blog project — a minimalist, fast, and modern Astro blog theme with AI-powered features.",
   "author": "Souloss",
   "license": "MIT",
   "keywords": [
@@ -20,9 +20,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/souloss/astro-minimax",
-    "directory": "packages/create-astro-minimax"
+    "directory": "packages/cli"
   },
-  "bin": "./index.js",
+  "bin": {
+    "astro-minimax": "./index.js"
+  },
   "files": [
     "index.js",
     "template/"

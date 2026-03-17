@@ -28,7 +28,7 @@ astro-minimax/
 │   ├── core/           # Theme: layouts, components, pages, styles
 │   ├── ai/             # AI: RAG pipeline, providers, chat UI
 │   ├── viz/            # Visualization: Mermaid, Markmap, etc.
-│   └── create-astro-minimax/  # Scaffolding CLI
+│   └── cli/            # Scaffolding CLI
 └── docs/               # Architecture documentation
 ```
 
@@ -55,6 +55,7 @@ pnpm run dev
 ```
 
 This runs `wrangler pages dev -- astro dev`, which:
+
 - Starts the Astro dev server
 - Proxies `/api/*` to Cloudflare Pages Functions in `functions/`
 - Loads `.env` variables into the function environment
@@ -63,6 +64,7 @@ This runs `wrangler pages dev -- astro dev`, which:
 ### 3. Test AI Chat
 
 Open the blog and click the AI chat button (floating action button).
+
 - With valid `AI_BASE_URL` + `AI_API_KEY`: Live AI responses
 - Without credentials: Mock mode with predefined responses
 
@@ -118,6 +120,7 @@ npx wrangler pages deploy dist --project-name=astro-minimax
 ```
 
 Set environment variables in the Cloudflare Dashboard:
+
 - `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`
 - `SITE_AUTHOR`, `SITE_URL`
 

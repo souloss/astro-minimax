@@ -1,18 +1,18 @@
-# create-astro-minimax
+# @astro-minimax/cli
 
-Scaffold a new blog project using the astro-minimax theme.
+CLI tool to scaffold a new blog project using the astro-minimax theme.
 
 ## Usage
 
 ```bash
-# npm
-npm create astro-minimax my-blog
+# npx (recommended)
+npx @astro-minimax/cli my-blog
 
 # pnpm
-pnpm create astro-minimax my-blog
+pnpm dlx @astro-minimax/cli my-blog
 
 # yarn
-yarn create astro-minimax my-blog
+yarn dlx @astro-minimax/cli my-blog
 ```
 
 ## Generated Structure
@@ -39,6 +39,7 @@ No `src/pages/` directory — all routes are injected by `@astro-minimax/core`.
 ## After Scaffolding
 
 1. **Install dependencies:**
+
    ```bash
    cd my-blog && pnpm install
    ```
@@ -48,6 +49,7 @@ No `src/pages/` directory — all routes are injected by `@astro-minimax/core`.
    - Configure features (tags, categories, series, etc.)
 
 3. **Start development:**
+
    ```bash
    pnpm dev
    ```
@@ -58,26 +60,26 @@ No `src/pages/` directory — all routes are injected by `@astro-minimax/core`.
 
 ### Built-in Features
 
-| Feature | Description | Default |
-|---------|-------------|---------|
-| Tags | Tag-based article filtering | Enabled |
-| Categories | Category-based navigation | Enabled |
-| Series | Article series grouping | Enabled |
-| Archives | Time-based article archive | Enabled |
-| Search | Full-text search (Pagefind) | Enabled |
-| Dark Mode | Light/dark theme toggle | Enabled |
+| Feature    | Description                 | Default |
+| ---------- | --------------------------- | ------- |
+| Tags       | Tag-based article filtering | Enabled |
+| Categories | Category-based navigation   | Enabled |
+| Series     | Article series grouping     | Enabled |
+| Archives   | Time-based article archive  | Enabled |
+| Search     | Full-text search (Pagefind) | Enabled |
+| Dark Mode  | Light/dark theme toggle     | Enabled |
 
 ### Content Enhancements
 
-| Feature | Syntax | Description |
-|---------|--------|-------------|
-| Mermaid | ` ```mermaid ` | Flowcharts, sequence diagrams, pie charts |
-| Markmap | ` ```markmap ` | Interactive mind maps |
-| Math | `$...$` or `$$...$$` | KaTeX math equations |
-| Code | ` ```language ` | Shiki syntax highlighting |
-| Emoji | `:emoji_name:` | Emoji shortcodes |
-| Alerts | `> [!NOTE]` | GitHub-style alerts |
-| Tables | Markdown tables | Styled responsive tables |
+| Feature | Syntax               | Description                               |
+| ------- | -------------------- | ----------------------------------------- |
+| Mermaid | ` ```mermaid `       | Flowcharts, sequence diagrams, pie charts |
+| Markmap | ` ```markmap `       | Interactive mind maps                     |
+| Math    | `$...$` or `$$...$$` | KaTeX math equations                      |
+| Code    | ` ```language `      | Shiki syntax highlighting                 |
+| Emoji   | `:emoji_name:`       | Emoji shortcodes                          |
+| Alerts  | `> [!NOTE]`          | GitHub-style alerts                       |
+| Tables  | Markdown tables      | Styled responsive tables                  |
 
 ## Customization
 
@@ -155,8 +157,8 @@ The AI widget will appear as a floating button on your blog.
 
 ## Optional Packages
 
-| Package | Purpose |
-|---------|---------|
+| Package             | Purpose                  |
+| ------------------- | ------------------------ |
 | `@astro-minimax/ai` | AI chat assistant widget |
 
 ## Related Articles

@@ -1,25 +1,21 @@
 {
-  // 从文件资源管理器中隐藏（可选）
   "files.exclude": {
-    "**/create-astro-minimax/template/**": true,
-    "**/create-astro-minimax/templates/**": true
+    "**/cli/template/**": true,
+    "**/cli/templates/**": true
   },
-  
-  // 关键：让 TypeScript/JS 语言服务忽略这些目录
+
   "typescript.exclude": {
-    "**/create-astro-minimax/template/**": true,
-    "**/create-astro-minimax/templates/**": true
+    "**/cli/template/**": true,
+    "**/cli/templates/**": true
   },
-  
-  // 对 JavaScript 同样生效
+
   "javascript.exclude": {
-    "**/create-astro-minimax/template/**": true,
-    "**/create-astro-minimax/templates/**": true
+    "**/cli/template/**": true,
+    "**/cli/templates/**": true
   },
-  
-  // 排除搜索和智能提示
+
   "search.exclude": {
-    "**/create-astro-minimax/template/**": true,
-    "**/create-astro-minimax/templates/**": true
+    "**/cli/template/**": true,
+    "**/cli/templates/**": true
   }
 }
