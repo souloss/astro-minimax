@@ -2,17 +2,22 @@
 import { createNotifier } from '@astro-minimax/notify';
 
 interface WalineComment {
-  objectId?: string;
+  objectId?: string | number;
   url?: string;
   nick?: string;
   mail?: string;
   link?: string;
   comment?: string;
+  rawComment?: string;
   ip?: string;
   ua?: string;
   insertedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
   status?: string;
   type?: string;
+  user_id?: number;
+  rid?: string | number;
 }
 
 interface FunctionEnv {
@@ -59,7 +64,7 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
       : `${siteUrl}${urlPath}`;
 
     const author = getStringValue(commentData.nick) || '匿名用户';
-    const content = getStringValue(commentData.comment) || '';
+    const content = getStringValue(commentData.rawComment) || getStringValue(commentData.comment) || '';
     const postTitle = extractPostTitle(urlPath);
 
     console.log('[notify/comment] Processing:', { urlPath, author, postTitle });
@@ -116,13 +121,24 @@ function parseWalinePayload(raw: unknown): { commentData: WalineComment | null; 
 
   const data = raw as Record<string, unknown>;
 
-  if (data.type && (data.type === 'new_comment' || data.type === 'new_reply')) {
+  // Waline format: { type: 'new_comment', data: { comment: {...} } }
+  if (data.type === 'new_comment' || data.type === 'new_reply') {
+    const dataObj = data.data as Record<string, unknown> | undefined;
+    // Check if data contains a 'comment' field (Waline's nested structure)
+    if (dataObj && dataObj.comment && typeof dataObj.comment === 'object') {
+      return { 
+        commentData: dataObj.comment as WalineComment, 
+        eventType: data.type as string 
+      };
+    }
+    // Fallback: data is the comment object directly
     return { 
-      commentData: data.data as WalineComment, 
+      commentData: dataObj as WalineComment, 
       eventType: data.type as string 
     };
   }
 
+  // Direct comment object format
   if (data.url || data.nick || data.comment || data.mail) {
     const type = data.rid ? 'new_reply' : 'new_comment';
     return { 
