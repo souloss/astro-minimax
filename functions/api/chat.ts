@@ -1,9 +1,9 @@
 /// <reference types="@cloudflare/workers-types" />
 import { handleChatRequest, initializeMetadata } from '@astro-minimax/ai/server';
 import type { ChatHandlerEnv } from '@astro-minimax/ai/server';
-import aiSummaries from '../../datas/ai-summaries.json';
-import authorContextJson from '../../datas/author-context.json';
-import voiceProfile from '../../datas/voice-profile.json';
+import aiSummaries from '../../apps/blog/datas/ai-summaries.json';
+import authorContextJson from '../../apps/blog/datas/author-context.json';
+import voiceProfile from '../../apps/blog/datas/voice-profile.json';
 
 interface FunctionEnv extends ChatHandlerEnv {
   CACHE_KV: KVNamespace;

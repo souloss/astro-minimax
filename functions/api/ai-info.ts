@@ -2,9 +2,9 @@
 import { ProviderManager, hasAnyProviderConfigured, DEFAULT_WORKERS_BINDING_NAME } from '@astro-minimax/ai';
 import { initializeMetadata } from '@astro-minimax/ai/server';
 import type { ChatHandlerEnv } from '@astro-minimax/ai/server';
-import aiSummaries from '../../datas/ai-summaries.json';
-import authorContextJson from '../../datas/author-context.json';
-import voiceProfile from '../../datas/voice-profile.json';
+import aiSummaries from '../../apps/blog/datas/ai-summaries.json';
+import authorContextJson from '../../apps/blog/datas/author-context.json';
+import voiceProfile from '../../apps/blog/datas/voice-profile.json';
 
 interface FunctionEnv extends ChatHandlerEnv {
   [key: string]: unknown;
