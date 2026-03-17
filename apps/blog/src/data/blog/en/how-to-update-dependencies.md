@@ -12,7 +12,25 @@ tags:
 description: How to update project dependencies and astro-minimax template.
 ---
 
-Updating the dependencies of a project can be tedious. However, neglecting to update project dependencies is not a good idea either 😬. In this post, I will share how I usually update my projects, focusing on astro-minimax as an example. Nonetheless, these steps can be applied to other js/node projects as well.
+Updating dependencies can be tedious, but neglecting them is worse. Here's how to keep your astro-minimax blog up to date.
+
+## Quick Update (Recommended)
+
+If you're using astro-minimax via CLI or NPM packages:
+
+```bash
+pnpm update @astro-minimax/core @astro-minimax/viz @astro-minimax/ai @astro-minimax/cli
+```
+
+For latest major versions (may contain breaking changes):
+
+```bash
+pnpm update @astro-minimax/core@latest @astro-minimax/viz@latest @astro-minimax/ai@latest @astro-minimax/cli@latest
+```
+
+---
+
+The following sections apply to **GitHub Template** users and general dependency management.
 
 ![Forrest Gump Fake Quote](@/assets/images/forrest-gump-quote.png)
 
@@ -62,7 +80,7 @@ The thing is, you might already have updated the template according to your flav
 
 ### Files and Directories to keep in mind
 
-In most cases, the files and directories you might not want to override (as you've likely updated those files) are `src/content/blog/`, `src/config.ts`, `src/pages/about.md`, and other assets & styles like `public/` and `src/styles/base.css`.
+In most cases, the files and directories you might not want to override (as you've likely customized them) are `src/data/blog/` (blog content), `src/config.ts` (site configuration), `src/constants.ts` (social links), `datas/` (AI-generated data), and custom assets in `public/`.
 
 If you’re someone who only updates the bare minimum of the template, it should be okay to replace everything with the latest astro-minimax except the above files and directories. It’s like pure Android OS and other vendor-specific OSes like OneUI. The less you modify the base, the less you have to update.
 

@@ -11,7 +11,25 @@ tags:
 description: 如何更新项目依赖和 astro-minimax 模板。
 ---
 
-更新项目依赖可能是一件繁琐的事情。然而，忽视更新项目依赖也不是一个好主意 😬。在这篇文章中，我将分享我通常如何更新项目，以 astro-minimax 为例。不过，这些步骤同样适用于其他 js/node 项目。
+更新项目依赖可能是一件繁琐的事情。然而，忽视更新项目依赖也不是一个好主意。在这篇文章中，我将分享如何更新 astro-minimax 博客的依赖。
+
+## 快速更新（推荐）
+
+如果你通过 CLI 或 NPM 包集成方式使用 astro-minimax，只需：
+
+```bash
+pnpm update @astro-minimax/core @astro-minimax/viz @astro-minimax/ai @astro-minimax/cli
+```
+
+如果想更新到最新主版本（可能有破坏性变更）：
+
+```bash
+pnpm update @astro-minimax/core@latest @astro-minimax/viz@latest @astro-minimax/ai@latest @astro-minimax/cli@latest
+```
+
+---
+
+以下内容适用于 **GitHub Template** 方式使用的用户，以及需要更新其他依赖的场景。
 
 ![Forrest Gump Fake Quote](@/assets/images/forrest-gump-quote.png)
 
@@ -61,7 +79,7 @@ ncu -i
 
 ### 需要留意的文件和目录
 
-在大多数情况下，你可能不想覆盖的文件和目录（因为你可能已经更新了这些文件）是 `src/content/blog/`、`src/config.ts`、`src/pages/about.md`，以及其他资源和样式文件，如 `public/` 和 `src/styles/base.css`。
+在大多数情况下，你可能不想覆盖的文件和目录（因为你可能已经修改了这些文件）是 `src/data/blog/`（博客内容）、`src/config.ts`（站点配置）、`src/constants.ts`（社交链接）、`datas/`（AI 生成数据），以及 `public/` 中的自定义资源。
 
 如果你只是对模板做了最少的修改，除了上述文件和目录外，用最新的 astro-minimax 替换所有内容应该没问题。这就像纯 Android OS 和其他厂商特定的操作系统（如 OneUI）一样。你对基础修改得越少，需要更新的就越少。
 
