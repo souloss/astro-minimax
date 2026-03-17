@@ -37,7 +37,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "astro check",
-    "clean": "rm -rf dist .astro node_modules/.cache"
+    "clean": "rm -rf dist .astro node_modules/.cache",
+    "cli": "node ../../packages/cli/dist/index.js"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^2.0.35",
