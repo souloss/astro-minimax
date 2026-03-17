@@ -15,6 +15,45 @@ draft: false
 
 构建个人技术博客看似简单，实际涉及 10+ 个技术决策。本文穷举式地梳理 2026 年博客生态的每个能力域，帮你做出知情的选择。
 
+```markmap
+# 2026 博客生态
+## 框架
+### Astro
+### Hugo
+### Next.js
+### Hexo
+## 内容管理
+### Markdown (Git)
+### Headless CMS
+### WordPress
+## 搜索
+### Pagefind
+### Algolia DocSearch
+### RAG (AI)
+## 评论
+### Waline
+### Giscus
+### Disqus
+## AI 集成
+### 聊天 (RAG)
+### 摘要生成
+### SEO 优化
+### 翻译
+## 统计分析
+### Umami
+### Plausible
+### Cloudflare
+## 通知
+### Telegram
+### Email
+### Webhook
+## 部署
+### Cloudflare Pages
+### Vercel
+### GitHub Pages
+### Docker
+```
+
 ## Table of contents
 
 ## 一、框架选型
@@ -223,6 +262,35 @@ Markdown 文件 → 构建器解析 frontmatter → 模板引擎渲染 → HTML/
 | **RSS Feed** | 内容分发 |
 | **社交分享** | Twitter/X、微信、LinkedIn |
 | **Newsletter** | 邮件订阅（Resend、Mailchimp） |
+
+## 选型决策流程
+
+```mermaid
+flowchart TD
+    Start[想搭建技术博客] --> Q1{需要 AI 功能?}
+    Q1 -->|是| Q2{需要 Edge Runtime?}
+    Q1 -->|否| Q3{偏好的语言?}
+
+    Q2 -->|是| CF[Astro + Cloudflare Pages]
+    Q2 -->|否| OpenAI[Astro/Next.js + 自选部署]
+
+    Q3 -->|TypeScript| Q4{需要 SSR?}
+    Q3 -->|Go| Hugo[Hugo + GitHub Pages]
+    Q3 -->|不写代码| WP[WordPress]
+
+    Q4 -->|是| Next[Next.js + Vercel]
+    Q4 -->|否| Astro[Astro + 任意部署]
+
+    CF --> Done[开始写作!]
+    OpenAI --> Done
+    Hugo --> Done
+    WP --> Done
+    Next --> Done
+    Astro --> Done
+
+    style CF fill:#f97316,color:#fff
+    style Done fill:#22c55e,color:#fff
+```
 
 ## 快速决策清单
 

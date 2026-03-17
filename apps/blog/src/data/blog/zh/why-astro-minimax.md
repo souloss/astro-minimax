@@ -146,6 +146,28 @@ load(id) {
 - 无法推荐你的具体文章
 
 astro-minimax 的 RAG 方案：
+
+```mermaid
+sequenceDiagram
+    participant U as 用户
+    participant C as 聊天 UI
+    participant S as 搜索引擎
+    participant L as LLM
+    participant M as Mock
+
+    U->>C: 提问
+    C->>S: TF-IDF 检索
+    S-->>C: 相关文章 (Top-K)
+    C->>L: Prompt (问题 + 文章上下文)
+    alt LLM 可用
+        L-->>C: 流式回答
+    else LLM 不可用
+        C->>M: Mock 降级
+        M-->>C: 预设推荐
+    end
+    C-->>U: 展示回答 + 文章链接
+```
+
 1. **构建时**：CLI 工具生成文章摘要、关键要点（`astro-minimax ai process`）
 2. **运行时**：用户提问 → TF-IDF 搜索相关文章 → 拼接为 Prompt 上下文 → LLM 生成回答
 3. **结果**：AI 的回答总是基于你博客的真实内容，并附上文章链接
