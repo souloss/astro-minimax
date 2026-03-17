@@ -1,6 +1,6 @@
 {
   "name": "create-astro-minimax",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "type": "module",
   "description": "Create a new astro-minimax blog project — a minimalist, fast, and modern Astro blog theme with AI-powered features.",
   "author": "Souloss",

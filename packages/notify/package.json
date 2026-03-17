@@ -1,6 +1,6 @@
 {
   "name": "@astro-minimax/notify",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "type": "module",
   "description": "Multi-channel notification package for astro-minimax blogs — supports Telegram, Email (Resend), and more.",
   "author": "Souloss",
@@ -43,7 +43,9 @@
     "prepublishOnly": "pnpm run clean && pnpm run build"
   },
   "dependencies": {
-    "grammy": "^1.41.1",
+    "grammy": "^1.41.1"
+  },
+  "optionalDependencies": {
     "undici": "^6.0.0"
   },
   "peerDependencies": {
