@@ -59,6 +59,53 @@ function mergeTemplates(
   };
 }
 
+// Singleton instance and its config hash for caching
+let notifierInstance: Notifier | null = null;
+let lastConfigHash: string | null = null;
+
+/**
+ * Computes a simple hash of the notify config for singleton caching.
+ * Only includes fields that affect provider creation.
+ */
+function computeConfigHash(config: NotifyConfig): string {
+  const parts: string[] = [];
+  if (config.telegram) {
+    parts.push(`telegram:${config.telegram.botToken}:${config.telegram.chatId}`);
+  }
+  if (config.webhook) {
+    parts.push(`webhook:${config.webhook.url}`);
+  }
+  if (config.email) {
+    parts.push(`email:${config.email.provider}:${config.email.apiKey}:${config.email.from}:${config.email.to}`);
+  }
+  return parts.join('|');
+}
+
+/**
+ * Returns a cached notifier instance if the config matches the previous one.
+ * Creates a new instance only when the config changes.
+ * This optimization avoids recreating provider instances on every request.
+ */
+export function getNotifier(config: NotifyConfig): Notifier {
+  const hash = computeConfigHash(config);
+  
+  if (notifierInstance && hash === lastConfigHash) {
+    return notifierInstance;
+  }
+  
+  notifierInstance = createNotifier(config);
+  lastConfigHash = hash;
+  return notifierInstance;
+}
+
+/**
+ * Resets the singleton instance (useful for testing).
+ */
+export function resetNotifier(): void {
+  notifierInstance = null;
+  lastConfigHash = null;
+}
+
 export function createNotifier(config: NotifyConfig): Notifier {
   const logger = config.logger ?? new DefaultLogger();
   const templates = mergeTemplates(config.templates);

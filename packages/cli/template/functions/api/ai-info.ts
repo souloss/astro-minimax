@@ -1,5 +1,5 @@
 /// <reference types="@cloudflare/workers-types" />
-import { ProviderManager, hasAnyProviderConfigured, DEFAULT_WORKERS_BINDING_NAME } from '@astro-minimax/ai';
+import { getProviderManager, hasAnyProviderConfigured, DEFAULT_WORKERS_BINDING_NAME } from '@astro-minimax/ai';
 import { initializeMetadata } from '@astro-minimax/ai/server';
 import type { ChatHandlerEnv } from '@astro-minimax/ai/server';
 import aiSummaries from '../../datas/ai-summaries.json';
@@ -17,7 +17,7 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
     env,
   );
 
-  const manager = new ProviderManager(env, { enableMockFallback: true });
+  const manager = getProviderManager(env, { enableMockFallback: true });
   const providerStatus = manager.getProviderStatus();
   const bindingName = (env.AI_BINDING_NAME as string) || DEFAULT_WORKERS_BINDING_NAME;
 

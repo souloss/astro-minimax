@@ -29,7 +29,7 @@ import {
   getAuthorContext,
   getVoiceProfile,
   mergeResults,
-  ProviderManager,
+  getProviderManager,
   createCacheAdapter,
   detectPublicQuestion,
   getGlobalSearchCache,
@@ -227,7 +227,7 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
   const cache = createCacheAdapter(env);
   const responseCacheConfig = getResponseCacheConfig(env);
 
-  const manager = new ProviderManager(env, {
+  const manager = getProviderManager(env, {
     enableMockFallback: true,
     unhealthyThreshold: 3,
     healthRecoveryTTL: 60_000,

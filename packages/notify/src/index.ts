@@ -1,4 +1,4 @@
-export { createNotifier } from './notify.js';
+export { createNotifier, getNotifier, resetNotifier } from './notify.js';
 export type {
   NotifyConfig,
   NotifyEvent,

@@ -1,17 +1,16 @@
 {
   "name": "@astro-minimax/cli",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "type": "module",
-  "description": "CLI tool to create a new astro-minimax blog project — a minimalist, fast, and modern Astro blog theme with AI-powered features.",
+  "description": "CLI tool for astro-minimax blog — create blogs, manage content, and process data with AI.",
   "author": "Souloss",
   "license": "MIT",
   "keywords": [
     "astro",
-    "scaffold",
     "cli",
-    "template",
-    "blog-starter",
-    "create-app"
+    "blog",
+    "scaffold",
+    "ai"
   ],
   "homepage": "https://github.com/souloss/astro-minimax#readme",
   "bugs": {
@@ -23,17 +22,23 @@
     "directory": "packages/cli"
   },
   "bin": {
-    "astro-minimax": "./index.js"
+    "astro-minimax": "./dist/index.js"
   },
   "files": [
-    "index.js",
+    "dist/",
     "template/"
   ],
-  "sideEffects": false,
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "undici": "^7.24.1"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "astro": "^5.0.0",
     "typescript": "^5.9.3"
   },

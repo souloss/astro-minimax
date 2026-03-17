@@ -1,5 +1,5 @@
 /// <reference types="@cloudflare/workers-types" />
-import { createNotifier } from '@astro-minimax/notify';
+import { getNotifier } from '@astro-minimax/notify';
 
 interface WalineComment {
   objectId?: string | number;
@@ -69,7 +69,7 @@ export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
 
     console.log('[notify/comment] Processing:', { urlPath, author, postTitle });
 
-    const notifier = createNotifier({
+    const notifier = getNotifier({
       telegram: env.NOTIFY_TELEGRAM_BOT_TOKEN && env.NOTIFY_TELEGRAM_CHAT_ID ? {
         botToken: env.NOTIFY_TELEGRAM_BOT_TOKEN,
         chatId: env.NOTIFY_TELEGRAM_CHAT_ID,
