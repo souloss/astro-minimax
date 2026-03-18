@@ -105,26 +105,23 @@ const structuredData = pubDatetime
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <!-- PWA manifest loaded asynchronously to avoid render blocking -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- PWA manifest + SW: only loaded if files exist (checked at runtime) -->
     <script is:inline>
-      // Defer manifest registration using requestIdleCallback
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => {
-          const link = document.createElement('link');
-          link.rel = 'manifest';
-          link.href = '/manifest.json';
-          document.head.appendChild(link);
-        });
-      } else {
-        // Fallback for browsers without requestIdleCallback
-        setTimeout(() => {
-          const link = document.createElement('link');
-          link.rel = 'manifest';
-          link.href = '/manifest.json';
-          document.head.appendChild(link);
-        }, 100);
-      }
+      (function() {
+        function loadManifest() {
+          fetch('/manifest.json', { method: 'HEAD' }).then(function(r) {
+            if (r.ok) {
+              var link = document.createElement('link');
+              link.rel = 'manifest';
+              link.href = '/manifest.json';
+              document.head.appendChild(link);
+            }
+          }).catch(function() {});
+        }
+        if ('requestIdleCallback' in window) requestIdleCallback(loadManifest);
+        else setTimeout(loadManifest, 100);
+      })();
     </script>
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
@@ -444,7 +441,9 @@ const structuredData = pubDatetime
     </script>
     <script is:inline>
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/sw.js").catch(function () {});
+        fetch("/sw.js", { method: "HEAD" }).then(function(r) {
+          if (r.ok) navigator.serviceWorker.register("/sw.js");
+        }).catch(function() {});
       }
     </script>
   </body>

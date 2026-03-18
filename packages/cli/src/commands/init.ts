@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = fileURLToPath(new URL("..", import.meta.url));
 const templateDir = join(__dirname, "..", "template");
+const pwaDir = join(__dirname, "..", "template-pwa");
 
 export function initCommand(args: string[]): void {
   if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
@@ -11,10 +12,13 @@ export function initCommand(args: string[]): void {
 Create a new astro-minimax blog project
 
 Usage:
-  astro-minimax init <project-name>
+  astro-minimax init <project-name> [options]
 
 Arguments:
   <project-name>    Directory name for the new blog
+
+Options:
+  --pwa             Include PWA support (service worker, manifest.json)
 
 Description:
   Creates a new blog with all necessary configuration files,
@@ -22,12 +26,14 @@ Description:
 
 Examples:
   astro-minimax init my-blog
+  astro-minimax init my-blog --pwa
   astro-minimax init ./blogs/tech-blog
 `);
     return;
   }
 
-  const projectName = args[0];
+  const enablePwa = args.includes("--pwa");
+  const projectName = args.find(a => !a.startsWith("--"))!;
   const targetDir = resolve(process.cwd(), projectName);
 
   if (existsSync(targetDir)) {
@@ -37,6 +43,11 @@ Examples:
 
   mkdirSync(targetDir, { recursive: true });
   cpSync(templateDir, targetDir, { recursive: true });
+
+  if (enablePwa && existsSync(pwaDir)) {
+    cpSync(pwaDir, targetDir, { recursive: true });
+    console.log("  📦 PWA support enabled (sw.js + manifest.json)\n");
+  }
 
   const pkgPath = join(targetDir, "package.json");
   const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));

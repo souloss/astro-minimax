@@ -109,6 +109,10 @@ export const SITE: SiteConfig = {
     apiEndpoint: "/api/chat",
   },
 
+  get lightAndDarkMode() {
+    return this.features?.darkMode;
+  },
+
   get showArchives() {
     return this.features?.archives ?? true;
   },

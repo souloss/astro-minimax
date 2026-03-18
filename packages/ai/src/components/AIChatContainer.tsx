@@ -1,7 +1,8 @@
+/** @jsxImportSource preact */
 import { useState, useCallback } from 'preact/hooks';
-import { ChatPanel } from './ChatPanel.js';
-import type { AIChatConfig } from './ChatPanel.js';
-import type { ArticleChatContext } from '../server/types.js';
+import { ChatPanel } from './ChatPanel.tsx';
+import type { AIChatConfig } from './ChatPanel.tsx';
+import type { ArticleChatContext } from '../server/types.ts';
 
 interface Props {
   config: AIChatConfig;

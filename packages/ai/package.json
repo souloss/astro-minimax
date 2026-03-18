@@ -1,6 +1,6 @@
 {
   "name": "@astro-minimax/ai",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "type": "module",
   "description": "Vendor-agnostic AI integration package with full RAG pipeline for astro-minimax blogs — supports OpenAI, Cloudflare AI, and custom providers.",
   "author": "Souloss",
@@ -76,12 +76,15 @@
   "files": [
     "dist/",
     "src/components/",
+    "src/providers/mock.ts",
+    "src/server/types.ts",
+    "src/utils/i18n.ts",
     "src/styles/",
     "README.md"
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/server/dev-server.js",
     "build:watch": "tsc -p tsconfig.build.json --watch",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",

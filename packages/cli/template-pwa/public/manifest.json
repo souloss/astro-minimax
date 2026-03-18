@@ -1,0 +1,19 @@
+{
+  "name": "My Blog",
+  "short_name": "Blog",
+  "description": "A blog powered by astro-minimax.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f3eb",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["blog"],
+  "lang": "zh-Hans",
+  "dir": "ltr"
+}

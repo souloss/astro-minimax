@@ -1,11 +1,12 @@
+/** @jsxImportSource preact */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import type { UIMessage } from 'ai';
-import { getMockResponse, createMockStream } from '../providers/mock.js';
-import type { ArticleChatContext, ChatStatusData } from '../server/types.js';
-import { isChatStatusData } from '../server/types.js';
-import { t, getLang } from '../utils/i18n.js';
+import { getMockResponse, createMockStream } from '../providers/mock.ts';
+import type { ArticleChatContext, ChatStatusData } from '../server/types.ts';
+import { isChatStatusData } from '../server/types.ts';
+import { t, getLang } from '../utils/i18n.ts';
 
 export interface AIChatConfig {
   enabled?: boolean;
