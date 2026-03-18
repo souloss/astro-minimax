@@ -1,14 +1,23 @@
 """
-astro-minimax v0.7.2 E2E Browser Test
+astro-minimax E2E Browser Test
 Uses Playwright to simulate real user interactions.
+
+Env vars:
+  E2E_BASE_URL      - Dev server URL (default: http://localhost:4321)
+  E2E_AI_API_URL    - AI API URL (default: http://localhost:8787)
+  E2E_ARTICLE_SLUG  - Article slug for detail test (default: complete-setup-guide)
 """
 
 import json
 import time
 from playwright.sync_api import sync_playwright, expect
 
-BASE_URL = "http://localhost:4332"
-AI_API_URL = "http://localhost:8787"
+# Use env for port when running alongside other dev servers
+import os
+BASE_URL = os.environ.get("E2E_BASE_URL", "http://localhost:4321")
+AI_API_URL = os.environ.get("E2E_AI_API_URL", "http://localhost:8787")
+# Article slug: apps/blog uses complete-setup-guide, CLI template uses hello-world
+ARTICLE_SLUG = os.environ.get("E2E_ARTICLE_SLUG", "complete-setup-guide")
 RESULTS = []
 
 
@@ -43,7 +52,7 @@ def test_homepage(page):
 
 def test_article_detail(page):
     print("\n📝 Article Detail Tests")
-    page.goto(f"{BASE_URL}/zh/posts/hello-world/")
+    page.goto(f"{BASE_URL}/zh/posts/{ARTICLE_SLUG}/")
     page.wait_for_load_state("networkidle")
 
     # Check article title
@@ -124,8 +133,12 @@ def test_ai_chat_widget(page):
     print("\n🤖 AI Chat Widget Tests")
     page.goto(f"{BASE_URL}/zh/")
     page.wait_for_load_state("networkidle")
-    # Wait extra for Preact client:only hydration
-    time.sleep(3)
+    # Wait for Preact client:only island to hydrate and set __aiChatToggle
+    try:
+        page.wait_for_function("typeof window.__aiChatToggle === 'function'", timeout=10000)
+    except Exception:
+        pass
+    time.sleep(1)
 
     # Check FAB button exists
     fab = page.locator("#ai-chat-toggle-fab")
@@ -134,15 +147,20 @@ def test_ai_chat_widget(page):
     if fab.count() > 0:
         # Click to open chat
         fab.click()
-        time.sleep(2)
+        # Wait for panel and input to hydrate (Preact client:only)
+        try:
+            page.wait_for_selector("#ai-chat-input, textarea", timeout=8000)
+        except Exception:
+            pass
+        time.sleep(1)
 
         # Check chat panel appeared (broader selectors for Preact components)
-        chat_panel = page.locator("#ai-chat-panel, [class*='chat'], [class*='Chat'], astro-island")
+        chat_panel = page.locator("#ai-chat-panel, [data-ai-chat-panel], [class*='chat'], [class*='Chat'], astro-island")
         is_visible = chat_panel.count() > 0
         record("Chat panel opens on click", "PASS" if is_visible else "WARN", f"{chat_panel.count()} panels found")
 
-        # Look for chat input (Preact renders textarea)
-        chat_input = page.locator("textarea, input[placeholder*='问题'], input[placeholder*='输入'], input[type='text']")
+        # Look for chat input (Preact: textarea or #ai-chat-input; core fallback: input#ai-chat-input)
+        chat_input = page.locator("#ai-chat-input, textarea, input[type='text']")
         record("Chat input field", "PASS" if chat_input.count() > 0 else "WARN", f"{chat_input.count()} inputs")
 
         # Check for quick prompts or welcome message
@@ -155,7 +173,12 @@ def test_ai_chat_interaction(page):
     print("\n💬 AI Chat Interaction Tests")
     page.goto(f"{BASE_URL}/zh/")
     page.wait_for_load_state("networkidle")
-    time.sleep(3)
+    # Wait for Preact island to hydrate
+    try:
+        page.wait_for_function("typeof window.__aiChatToggle === 'function'", timeout=10000)
+    except Exception:
+        pass
+    time.sleep(1)
 
     fab = page.locator("#ai-chat-toggle-fab")
     if fab.count() == 0:
@@ -163,12 +186,15 @@ def test_ai_chat_interaction(page):
         return
 
     fab.click()
-    time.sleep(2)
+    # Wait for Preact hydration of chat input
+    try:
+        page.wait_for_selector("#ai-chat-input, textarea", timeout=8000)
+    except Exception:
+        pass
+    time.sleep(1)
 
-    # Try to find and fill the chat input
-    chat_input = page.locator("textarea").first
-    if not chat_input.is_visible():
-        chat_input = page.locator("input[type='text']").last
+    # Try to find and fill the chat input (Preact: textarea; core: input#ai-chat-input)
+    chat_input = page.locator("#ai-chat-input, textarea, input[type='text']").first
 
     try:
         if chat_input.is_visible():
