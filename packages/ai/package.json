@@ -57,6 +57,10 @@
       "types": "./dist/data/index.d.ts",
       "import": "./dist/data/index.js"
     },
+    "./fact-registry": {
+      "types": "./dist/fact-registry/index.d.ts",
+      "import": "./dist/fact-registry/index.js"
+    },
     "./stream": {
       "types": "./dist/stream/index.d.ts",
       "import": "./dist/stream/index.js"

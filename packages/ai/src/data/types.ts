@@ -54,4 +54,5 @@ export interface LoadedMetadata {
   summaries: AISummariesFile | null;
   authorContext: AuthorContextFile | null;
   voiceProfile: VoiceProfile | null;
+  factRegistry: import('../fact-registry/types.js').FactRegistryFile | null;
 }

@@ -31,6 +31,9 @@ export * from './prompt/index.js';
 // Build-time metadata loading
 export * from './data/index.js';
 
+// Fact Registry: verified facts for hallucination reduction
+export * from './fact-registry/index.js';
+
 // Stream utilities
 export * from './stream/index.js';
 

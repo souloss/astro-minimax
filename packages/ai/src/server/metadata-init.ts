@@ -23,6 +23,7 @@ export function initializeMetadata(config: MetadataConfig, env?: ChatHandlerEnv)
     summaries: config.summaries as Parameters<typeof preloadMetadata>[0]['summaries'],
     authorContext: config.authorContext as Parameters<typeof preloadMetadata>[0]['authorContext'],
     voiceProfile: config.voiceProfile as Parameters<typeof preloadMetadata>[0]['voiceProfile'],
+    factRegistry: (config.factRegistry ?? null) as Parameters<typeof preloadMetadata>[0]['factRegistry'],
   });
 
   const authorCtx = getAuthorContext();

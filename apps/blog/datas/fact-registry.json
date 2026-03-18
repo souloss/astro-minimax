@@ -1,0 +1,354 @@
+{
+  "$schema": "fact-registry-v1",
+  "generatedAt": "2026-03-18T14:18:54.441Z",
+  "version": 1,
+  "facts": [
+    {
+      "id": "author-name",
+      "category": "author",
+      "statement": "博客作者名为 Souloss",
+      "evidence": "author-context.json → profile.name",
+      "source": "explicit",
+      "confidence": 1,
+      "tags": [
+        "作者",
+        "名字",
+        "author",
+        "name",
+        "souloss"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "author-name-en",
+      "category": "author",
+      "statement": "The blog author is Souloss",
+      "evidence": "author-context.json → profile.name",
+      "source": "explicit",
+      "confidence": 1,
+      "tags": [
+        "author",
+        "name",
+        "souloss"
+      ],
+      "lang": "en"
+    },
+    {
+      "id": "author-site",
+      "category": "author",
+      "statement": "博客网址为 https://demo-astro-minimax.souloss.cn/",
+      "evidence": "author-context.json → profile.siteUrl",
+      "source": "explicit",
+      "confidence": 1,
+      "tags": [
+        "网址",
+        "URL",
+        "site",
+        "url",
+        "博客"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "blog-total-posts",
+      "category": "blog",
+      "statement": "博客共有 24 篇文章（中文 12 篇，英文 12 篇）",
+      "evidence": "author-context.json → stableFacts.contentFootprint",
+      "source": "derived",
+      "confidence": 1,
+      "tags": [
+        "文章数",
+        "总数",
+        "统计",
+        "多少",
+        "数量",
+        "posts",
+        "count",
+        "total",
+        "how many"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "blog-total-posts-en",
+      "category": "blog",
+      "statement": "The blog has 24 posts (12 in Chinese, 12 in English)",
+      "evidence": "author-context.json → stableFacts.contentFootprint",
+      "source": "derived",
+      "confidence": 1,
+      "tags": [
+        "posts",
+        "count",
+        "total",
+        "how many",
+        "statistics"
+      ],
+      "lang": "en"
+    },
+    {
+      "id": "blog-categories",
+      "category": "blog",
+      "statement": "博客的主要分类包括：教程/配置、教程/博客、教程/工程化、Blog/Tutorial、教程/前端",
+      "evidence": "author-context.json → stableFacts.focusAreas",
+      "source": "derived",
+      "confidence": 0.95,
+      "tags": [
+        "分类",
+        "类别",
+        "领域",
+        "方向",
+        "category",
+        "area",
+        "focus",
+        "教程/配置",
+        "教程/博客",
+        "教程/工程化",
+        "blog/tutorial",
+        "教程/前端"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "blog-top-tags",
+      "category": "blog",
+      "statement": "博客最常用的标签有：docs、configuration、FAQ、color-schemes、notification、telegram、email、deployment、features、release",
+      "evidence": "author-context.json → stableFacts.topTags",
+      "source": "derived",
+      "confidence": 0.9,
+      "tags": [
+        "标签",
+        "tag",
+        "topic",
+        "主题",
+        "docs",
+        "configuration",
+        "faq",
+        "color-schemes",
+        "notification",
+        "telegram",
+        "email",
+        "deployment",
+        "features",
+        "release"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "blog-recurring-topics",
+      "category": "blog",
+      "statement": "博客反复讨论的技术话题包括：astro-minimax、docs、to、blog、Astro、theme、posts、in",
+      "evidence": "author-context.json → stableFacts.recurringTopics",
+      "source": "aggregated",
+      "confidence": 0.85,
+      "tags": [
+        "话题",
+        "主题",
+        "讨论",
+        "topic",
+        "recurring",
+        "astro-minimax",
+        "docs",
+        "to",
+        "blog",
+        "astro",
+        "theme",
+        "posts",
+        "in"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "blog-date-range",
+      "category": "blog",
+      "statement": "博客的文章时间跨度从 2022-09-23 到 2026-03-17",
+      "evidence": "earliest: How to configure astro-minimax theme (2022-09-23), latest: \"博客通知系统配置指南\" (2026-03-17)",
+      "source": "derived",
+      "confidence": 1,
+      "tags": [
+        "时间",
+        "日期",
+        "最早",
+        "最新",
+        "date",
+        "range",
+        "when"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "blog-lang-dist",
+      "category": "blog",
+      "statement": "博客文章的语言分布：英文 12 篇，中文 12 篇",
+      "evidence": "author-context.json → posts[].lang aggregation",
+      "source": "derived",
+      "confidence": 1,
+      "tags": [
+        "语言",
+        "中文",
+        "英文",
+        "language",
+        "chinese",
+        "english"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "content-category-dist",
+      "category": "content",
+      "statement": "按分类统计：教程/配置(6篇)、教程/博客(5篇)、教程/工程化(4篇)、Blog/Tutorial(3篇)、教程/前端(2篇)、Tutorial/Configuration(1篇)、Blog/Deployment(1篇)、教程/部署(1篇)、Blog/Configuration(1篇)",
+      "evidence": "author-context.json → posts[].category aggregation",
+      "source": "derived",
+      "confidence": 1,
+      "tags": [
+        "分类",
+        "统计",
+        "category",
+        "distribution"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "content-flagship",
+      "category": "content",
+      "statement": "最新的代表性文章：《\"Blog Notification System Configuration Guide\"》(2026-03-17)、《\"博客通知系统配置指南\"》(2026-03-17)、《\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"》(2026-03-14)、《\"astro-minimax Feature Overview\"》(2026-03-14)、《\"部署指南：多平台部署 astro-minimax\"》(2026-03-14)",
+      "evidence": "author-context.json → stableFacts.flagshipPosts",
+      "source": "derived",
+      "confidence": 0.95,
+      "tags": [
+        "最新",
+        "代表",
+        "推荐",
+        "latest",
+        "recent",
+        "flagship"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "tech-stack",
+      "category": "tech",
+      "statement": "博客使用的技术栈包括：Astro 6.0.0、Preact、Tailwind CSS、AI 对话（RAG）",
+      "evidence": "package.json → dependencies + devDependencies",
+      "source": "explicit",
+      "confidence": 1,
+      "tags": [
+        "技术栈",
+        "技术",
+        "框架",
+        "工具",
+        "tech",
+        "stack",
+        "framework",
+        "astro",
+        "preact",
+        "tailwindcss",
+        "tailwind",
+        "ai",
+        "rag",
+        "llm"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "tech-stack-en",
+      "category": "tech",
+      "statement": "The blog is built with: Astro 6.0.0, Preact, Tailwind CSS, AI 对话（RAG）",
+      "evidence": "package.json → dependencies + devDependencies",
+      "source": "explicit",
+      "confidence": 1,
+      "tags": [
+        "tech",
+        "stack",
+        "framework",
+        "built with",
+        "astro",
+        "preact",
+        "tailwindcss",
+        "tailwind",
+        "ai",
+        "rag",
+        "llm"
+      ],
+      "lang": "en"
+    },
+    {
+      "id": "content-ai-tags",
+      "category": "content",
+      "statement": "AI 分析得出的高频主题标签：astro-minimax、Astro、CSS、Markdown、SEO、Git、GitHub Template、LaTeX、npm、配色方案、配置、博客、Husky、自动化、NPM包集成",
+      "evidence": "ai-summaries.json → 18 articles aggregated tags",
+      "source": "aggregated",
+      "confidence": 0.85,
+      "tags": [
+        "标签",
+        "主题",
+        "AI",
+        "tag",
+        "topic",
+        "astro-minimax",
+        "astro",
+        "css",
+        "markdown",
+        "seo",
+        "git",
+        "github template",
+        "latex",
+        "npm",
+        "配色方案",
+        "配置",
+        "博客",
+        "husky",
+        "自动化",
+        "npm包集成"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "content-recurring-kp",
+      "category": "content",
+      "statement": "在多篇文章中反复出现的要点：更新项目依赖的重要性；为新文件添加创建日期；修改astro配置允许空日期",
+      "evidence": "ai-summaries.json → keyPoints cross-article aggregation",
+      "source": "aggregated",
+      "confidence": 0.8,
+      "tags": [
+        "要点",
+        "核心",
+        "反复",
+        "key point",
+        "recurring"
+      ],
+      "lang": "zh"
+    },
+    {
+      "id": "content-tech-mentions",
+      "category": "content",
+      "statement": "文章中高频提及的技术/话题（按标签统计）：docs(31次)、configuration(8次)、deployment(6次)、vercel(4次)、neon(4次)",
+      "evidence": "35 markdown files → frontmatter.tags aggregation",
+      "source": "aggregated",
+      "confidence": 0.9,
+      "tags": [
+        "技术",
+        "提及",
+        "频率",
+        "tech",
+        "mention",
+        "docs",
+        "configuration",
+        "deployment",
+        "vercel",
+        "neon"
+      ],
+      "lang": "zh"
+    }
+  ],
+  "stats": {
+    "total": 17,
+    "byCategory": {
+      "author": 3,
+      "blog": 7,
+      "content": 5,
+      "project": 0,
+      "tech": 2
+    },
+    "avgConfidence": 0.953
+  }
+}

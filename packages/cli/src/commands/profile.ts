@@ -15,15 +15,17 @@ Usage:
   astro-minimax profile <subcommand>
 
 Subcommands:
-  build             Build complete author profile (context + voice + report)
+  build             Build complete author profile (context + voice + facts + report)
   context           Build author context from posts
   voice             Build writing style profile
+  facts             Build fact registry for AI accuracy
   report            Generate author profile report
 
 Description:
   Generates author-related data for AI-powered features:
   - Author context: Writing patterns, topics, expertise
   - Voice profile: Style characteristics for AI responses
+  - Fact registry: Verified facts to reduce AI hallucination
   - Profile report: Structured author profile for About page
 
   These profiles help the AI chat feature respond in a style
@@ -33,6 +35,7 @@ Examples:
   astro-minimax profile build
   astro-minimax profile context
   astro-minimax profile voice
+  astro-minimax profile facts
   astro-minimax profile report
 `);
     return;
@@ -52,17 +55,19 @@ Examples:
     build: [
       "build-author-context.js",
       "build-voice-profile.js",
+      "build-fact-registry.js",
       "generate-author-profile.js",
     ],
     context: "build-author-context.js",
     voice: "build-voice-profile.js",
+    facts: "build-fact-registry.js",
     report: "generate-author-profile.js",
   };
 
   const scripts = scriptMap[subcommand];
   if (!scripts) {
     console.error(`Unknown subcommand: ${subcommand}`);
-    console.error("Available: build, context, voice, report");
+    console.error("Available: build, context, voice, facts, report");
     process.exit(1);
   }
 

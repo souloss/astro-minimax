@@ -1,4 +1,6 @@
 import type { AISummariesFile, AuthorContextFile, VoiceProfile, LoadedMetadata, ArticleSummaryData } from './types.js';
+import type { FactRegistryFile } from '../fact-registry/types.js';
+import { loadFactRegistry as loadFactRegistryCache } from '../fact-registry/registry.js';
 
 // Lazy-loaded, memory-cached metadata
 let cachedMetadata: LoadedMetadata | null = null;
@@ -9,14 +11,19 @@ let cachedMetadata: LoadedMetadata | null = null;
  *
  * Example (in functions/lib/ai.ts):
  *   import summaries from '../../datas/ai-summaries.json' with { type: 'json' };
- *   preloadMetadata({ summaries, authorContext, voiceProfile });
+ *   preloadMetadata({ summaries, authorContext, voiceProfile, factRegistry });
  */
 export function preloadMetadata(data: Partial<LoadedMetadata>): void {
   cachedMetadata = {
     summaries: data.summaries ?? null,
     authorContext: data.authorContext ?? null,
     voiceProfile: data.voiceProfile ?? null,
+    factRegistry: data.factRegistry ?? null,
   };
+
+  if (cachedMetadata.factRegistry) {
+    loadFactRegistryCache(cachedMetadata.factRegistry);
+  }
 }
 
 /**
@@ -30,7 +37,7 @@ export function clearMetadataCache(): void {
  * Returns the cached metadata. Must call preloadMetadata() first.
  */
 export function getMetadata(): LoadedMetadata {
-  return cachedMetadata ?? { summaries: null, authorContext: null, voiceProfile: null };
+  return cachedMetadata ?? { summaries: null, authorContext: null, voiceProfile: null, factRegistry: null };
 }
 
 /**

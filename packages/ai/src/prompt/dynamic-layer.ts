@@ -27,11 +27,11 @@ const LABELS = {
  * Built fresh on every chat request.
  */
 export function buildDynamicLayer(config: DynamicLayerConfig): string {
-  const { userQuery, articles, projects, evidenceSection } = config;
+  const { userQuery, articles, projects, evidenceSection, factSection } = config;
   const lang = getLang(config.lang) as keyof typeof LABELS;
   const l = LABELS[lang];
 
-  if (!articles.length && !projects.length) return '';
+  if (!articles.length && !projects.length && !factSection) return '';
 
   const lines: string[] = [];
   lines.push(`## ${l.relatedContent}`);
@@ -57,6 +57,11 @@ export function buildDynamicLayer(config: DynamicLayerConfig): string {
     for (const project of projects.slice(0, 4)) {
       lines.push(`- **[${project.name}](${project.url})**：${project.description.slice(0, 100)}`);
     }
+    lines.push('');
+  }
+
+  if (factSection) {
+    lines.push(factSection);
     lines.push('');
   }
 

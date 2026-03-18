@@ -15,3 +15,4 @@ export type {
   ArticleSummaryData,
   AuthorPost,
 } from './types.js';
+export type { FactRegistryFile } from '../fact-registry/types.js';

@@ -83,5 +83,6 @@ export interface MetadataConfig {
   summaries: unknown;
   authorContext: unknown;
   voiceProfile: unknown;
+  factRegistry?: unknown;
   siteUrl?: string;
 }

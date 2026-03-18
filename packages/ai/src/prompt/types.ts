@@ -20,6 +20,8 @@ export interface DynamicLayerConfig {
   articles: ArticleContext[];
   projects: ProjectContext[];
   evidenceSection?: string;
+  /** Pre-built verified-facts prompt section from Fact Registry */
+  factSection?: string;
   lang?: string;
 }
 

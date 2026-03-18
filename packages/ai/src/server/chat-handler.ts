@@ -42,6 +42,8 @@ import {
   setResponseCache,
   getResponseCacheConfig,
   rankArticlesByIntent,
+  matchFactsToQuery,
+  buildFactSection,
 } from '../index.js';
 import type { CachedAIResponse } from '../cache/response-cache.js';
 import type { PublicQuestionType } from '../index.js';
@@ -304,10 +306,12 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
 
           if (adapter) {
             const articlePrompt = buildArticleContextPrompt(context);
+            const matchedFacts = matchFactsToQuery(cachedSearch.query, lang);
+            const factPromptSection = buildFactSection(matchedFacts, lang);
             const systemPrompt = buildSystemPrompt({
               static: { authorName: (env.SITE_AUTHOR as string) || '博主', siteUrl: (env.SITE_URL as string) || '', lang },
               semiStatic: { authorContext: getAuthorContext(), voiceProfile: getVoiceProfile() },
-              dynamic: { userQuery: cachedSearch.query, articles: cachedSearch.articles, projects: cachedSearch.projects, evidenceSection: articlePrompt },
+              dynamic: { userQuery: cachedSearch.query, articles: cachedSearch.articles, projects: cachedSearch.projects, evidenceSection: articlePrompt, factSection: factPromptSection },
             });
 
             const llmResult = await streamLLMResponse({ writer: w, adapter, systemPrompt, messages, lang });
@@ -466,6 +470,11 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
     lang,
   });
 
+  // ── Fact Registry ───────────────────────────────────────────
+
+  const matchedFacts = matchFactsToQuery(latestText, lang);
+  const factPromptSection = buildFactSection(matchedFacts, lang);
+
   // ── Build System Prompt ─────────────────────────────────────
 
   const articlePrompt = buildArticleContextPrompt(context);
@@ -486,6 +495,7 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
       evidenceSection: articlePrompt
         ? `${evidenceSection}\n${articlePrompt}`
         : evidenceSection,
+      factSection: factPromptSection,
       lang,
     },
   });
