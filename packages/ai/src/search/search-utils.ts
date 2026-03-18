@@ -2,6 +2,9 @@
  * Text normalization and tokenization utilities for search.
  */
 
+import type { IDFMap } from './idf.js';
+import { getIDFWeight } from './idf.js';
+
 /**
  * Normalizes text for search: lowercase, remove punctuation, normalize whitespace.
  */
@@ -18,7 +21,6 @@ export function normalizeText(text: string): string {
  */
 export function tokenize(text: string): string[] {
   const normalized = normalizeText(text);
-  // Split on whitespace for multi-word queries
   const parts = normalized.split(/\s+/).filter(Boolean);
   return dedupeByContainment(parts);
 }
@@ -37,11 +39,28 @@ export function dedupeByContainment(terms: string[]): string[] {
   return kept;
 }
 
+/** Positional weight multipliers for each document field */
+const FIELD_WEIGHTS = {
+  title: 8,
+  keyPoints: 5,
+  categories: 4,
+  tags: 3,
+  excerpt: 3,
+  content: 1,
+} as const;
+
 /**
- * Computes a relevance score for a document against a set of query tokens.
- * Title matches score higher than content matches.
+ * Computes a relevance score for a document against query tokens.
+ *
+ * When an IDF map is provided, each token's contribution is weighted by its
+ * inverse document frequency — rare terms contribute more, common terms less.
+ * Falls back to uniform weighting when IDF is unavailable.
  */
-export function scoreDocument(tokens: string[], doc: { title: string; content: string; excerpt: string; keyPoints: string[]; categories: string[]; tags: string[] }): number {
+export function scoreDocument(
+  tokens: string[],
+  doc: { title: string; content: string; excerpt: string; keyPoints: string[]; categories: string[]; tags: string[] },
+  idfMap?: IDFMap | null,
+): number {
   if (!tokens.length) return 0;
 
   let score = 0;
@@ -54,17 +73,14 @@ export function scoreDocument(tokens: string[], doc: { title: string; content: s
 
   for (const token of tokens) {
     if (!token) continue;
-    // Title: highest weight
-    if (title.includes(token)) score += 8;
-    // KeyPoints: high weight
-    if (keyPointsText.includes(token)) score += 5;
-    // Categories/tags: medium weight
-    if (categoriesText.includes(token)) score += 4;
-    if (tagsText.includes(token)) score += 3;
-    // Excerpt: medium weight
-    if (excerpt.includes(token)) score += 3;
-    // Content sample: low weight
-    if (contentSample.includes(token)) score += 1;
+    const idf = getIDFWeight(idfMap ?? null, token);
+
+    if (title.includes(token)) score += FIELD_WEIGHTS.title * idf;
+    if (keyPointsText.includes(token)) score += FIELD_WEIGHTS.keyPoints * idf;
+    if (categoriesText.includes(token)) score += FIELD_WEIGHTS.categories * idf;
+    if (tagsText.includes(token)) score += FIELD_WEIGHTS.tags * idf;
+    if (excerpt.includes(token)) score += FIELD_WEIGHTS.excerpt * idf;
+    if (contentSample.includes(token)) score += FIELD_WEIGHTS.content * idf;
   }
 
   return score;

@@ -1,14 +1,25 @@
 import { normalizeText } from './search-utils.js';
+import { buildIDFMap, type IDFMap } from './idf.js';
 import type { SearchDocument, IndexedDocument } from './types.js';
 
+let cachedIDFMap: IDFMap | null = null;
+
 /**
- * Builds an in-memory inverted index from a list of documents.
+ * Builds an in-memory inverted index from a list of documents
+ * and computes IDF weights across the corpus.
  */
 export function buildSearchIndex(documents: SearchDocument[]): IndexedDocument[] {
-  return documents.map(doc => ({
+  const indexed = documents.map(doc => ({
     ...doc,
     tokens: buildDocumentTokens(doc),
   }));
+
+  cachedIDFMap = buildIDFMap(indexed);
+  return indexed;
+}
+
+export function getIDFMapForIndex(): IDFMap | null {
+  return cachedIDFMap;
 }
 
 function buildDocumentTokens(doc: SearchDocument): string[] {

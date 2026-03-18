@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-03-17T14:45:19.226Z",
+  "generatedAt": "2026-03-18T14:22:06.770Z",
   "siteUrl": "https://demo-astro-minimax.souloss.cn/",
   "sourceInfo": {
-    "totalPosts": 24,
-    "zhPosts": 12,
-    "enPosts": 12,
+    "totalPosts": 35,
+    "zhPosts": 18,
+    "enPosts": 17,
     "selectedPosts": 12
   },
   "profile": {
@@ -12,6 +12,182 @@
     "siteUrl": "https://demo-astro-minimax.souloss.cn/"
   },
   "posts": [
+    {
+      "title": "\"Configuring Environment Variables in Cloudflare Pages\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "categories": [
+        "Tutorial/Deployment"
+      ],
+      "tags": [
+        "docs",
+        "cloudflare",
+        "deployment",
+        "configuration"
+      ],
+      "summary": "This guide explains how to configure environment variables in Cloudflare Pages Dashboard for astro-…",
+      "keyPoints": [],
+      "url": "/en/posts/cloudflare-env-vars/"
+    },
+    {
+      "title": "\"Complete Setup Guide: From Zero to Production\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "categories": [
+        "Tutorial/Getting Started"
+      ],
+      "tags": [
+        "docs",
+        "tutorial",
+        "getting-started"
+      ],
+      "summary": "This guide walks you through building a complete blog from scratch with astro-minimax.\n\nOverview\n\nE…",
+      "keyPoints": [],
+      "url": "/en/posts/complete-setup-guide/"
+    },
+    {
+      "title": "\"Setup Umami Analytics: Free Vercel Deployment\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "categories": [
+        "Tutorial/Configuration"
+      ],
+      "tags": [
+        "docs",
+        "analytics",
+        "deployment",
+        "vercel",
+        "neon"
+      ],
+      "summary": "Umami is an open-source, privacy-friendly web analytics tool. Compared to Google Analytics, Umami d…",
+      "keyPoints": [],
+      "url": "/en/posts/setup-umami-analytics/"
+    },
+    {
+      "title": "\"Deploy Waline Comment System on Vercel\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "categories": [
+        "Tutorial/Configuration"
+      ],
+      "tags": [
+        "docs",
+        "waline",
+        "vercel",
+        "postgresql",
+        "neon"
+      ],
+      "summary": "Waline is a simple, safe comment system with Markdown support, email notifications, and multi-langu…",
+      "keyPoints": [],
+      "url": "/en/posts/setup-waline-on-vercel/"
+    },
+    {
+      "title": "\"Cloudflare Pages 环境变量配置指南\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "categories": [
+        "教程/部署"
+      ],
+      "tags": [
+        "docs",
+        "cloudflare",
+        "deployment",
+        "configuration"
+      ],
+      "summary": "astro-minimax 博客在 Cloudflare Pages 部署时，需要正确配置环境变量才能启用完整功能。本文详细介绍环境变量的作用、配置方法和最佳实践。\n\n概览\n\n环境变量在 Cloud…",
+      "keyPoints": [],
+      "url": "/zh/posts/cloudflare-env-vars/"
+    },
+    {
+      "title": "\"从零开始：完整博客搭建指南\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "categories": [
+        "教程/入门"
+      ],
+      "tags": [
+        "docs",
+        "tutorial",
+        "getting-started"
+      ],
+      "summary": "本指南将带你从零开始，完整搭建一个功能齐全的 astro-minimax 博客。\n\n概览\n\n预计时间：45-60 分钟\n\n前置准备\n\n在开始之前，请确保你有以下账号：\n\n| 账号       | 用…",
+      "keyPoints": [],
+      "url": "/zh/posts/complete-setup-guide/"
+    },
+    {
+      "title": "\"配置 Umami 网站统计：Vercel 免费部署方案\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "categories": [
+        "教程/配置"
+      ],
+      "tags": [
+        "docs",
+        "analytics",
+        "deployment",
+        "vercel",
+        "neon"
+      ],
+      "summary": "Umami 是一款开源、隐私友好的网站统计分析工具。相比 Google Analytics，Umami 不使用 Cookie、不跨站追踪用户、完全符合 GDPR 隐私法规。本文将介绍如何使用 Ver…",
+      "keyPoints": [],
+      "url": "/zh/posts/setup-umami-analytics/"
+    },
+    {
+      "title": "\"在 Vercel 部署 Waline 评论系统\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "categories": [
+        "教程/配置"
+      ],
+      "tags": [
+        "docs",
+        "waline",
+        "vercel",
+        "postgresql",
+        "neon"
+      ],
+      "summary": "Waline 是一款简洁、安全的评论系统，支持 Markdown、邮件通知、多语言等特性。本文将详细介绍如何在 Vercel 部署 Waline，使用 Vercel 自带的 Neon Postgre…",
+      "keyPoints": [],
+      "url": "/zh/posts/setup-waline-on-vercel/"
+    },
+    {
+      "title": "\"2026 Tech Blog Ecosystem: A Complete Guide to Building Your Own\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "categories": [
+        "Tutorial/Blog"
+      ],
+      "tags": [
+        "blog",
+        "guide",
+        "ecosystem",
+        "\"2026\""
+      ],
+      "summary": "Building a personal tech blog involves 10+ technical decisions. This guide exhaustively covers ever…",
+      "keyPoints": [],
+      "url": "/en/posts/2026-blog-ecosystem/"
+    },
+    {
+      "title": "\"AI Chat Configuration Guide\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "categories": [
+        "Tutorial/AI"
+      ],
+      "tags": [
+        "docs",
+        "ai",
+        "configuration"
+      ],
+      "summary": "astro-minimax includes a built-in AI chat assistant with multi-provider failover, RAG retrieval, st…",
+      "keyPoints": [],
+      "url": "/en/posts/ai-guide/"
+    },
+    {
+      "title": "\"CLI Tools Guide\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "categories": [
+        "Tutorial/Tools"
+      ],
+      "tags": [
+        "docs",
+        "cli",
+        "tools"
+      ],
+      "summary": "provides a comprehensive command-line toolkit for blog project management and AI content processing…",
+      "keyPoints": [],
+      "url": "/en/posts/cli-guide/"
+    },
     {
       "title": "\"Blog Notification System Configuration Guide\"",
       "date": "2026-03-17T00:00:00.000Z",
@@ -27,221 +203,34 @@
       "summary": "astro-minimax includes a built-in multi-channel notification system that automatically sends notifi…",
       "keyPoints": [],
       "url": "/en/posts/notification-guide/"
-    },
-    {
-      "title": "\"博客通知系统配置指南\"",
-      "date": "2026-03-17T00:00:00.000Z",
-      "categories": [
-        "教程/配置"
-      ],
-      "tags": [
-        "docs",
-        "notification",
-        "telegram",
-        "email"
-      ],
-      "summary": "astro-minimax 内置多渠道通知系统，可以在博客收到评论或用户进行 AI 对话时，自动发送通知到 Telegram、邮箱或自定义 Webhook。\n\nTable of contents\n\n…",
-      "keyPoints": [],
-      "url": "/zh/posts/notification-guide/"
-    },
-    {
-      "title": "\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"",
-      "date": "2026-03-14T00:00:00.000Z",
-      "categories": [
-        "Blog/Deployment"
-      ],
-      "tags": [
-        "docs",
-        "deployment"
-      ],
-      "summary": "This guide covers how to deploy your astro-minimax blog to various platforms. astro-minimax generat…",
-      "keyPoints": [],
-      "url": "/en/posts/deployment-guide/"
-    },
-    {
-      "title": "\"astro-minimax Feature Overview\"",
-      "date": "2026-03-14T00:00:00.000Z",
-      "categories": [
-        "Blog/Tutorial"
-      ],
-      "tags": [
-        "docs",
-        "features"
-      ],
-      "summary": "astro-minimax is a feature-rich Astro blog theme built with a modular architecture. This article pr…",
-      "keyPoints": [],
-      "url": "/en/posts/feature-overview/"
-    },
-    {
-      "title": "\"部署指南：多平台部署 astro-minimax\"",
-      "date": "2026-03-14T00:00:00.000Z",
-      "categories": [
-        "教程/部署"
-      ],
-      "tags": [
-        "docs",
-        "deployment"
-      ],
-      "summary": "本指南详细介绍如何将 astro-minimax 博客部署到各种平台。astro-minimax 生成静态站点，可以部署到几乎任何支持静态托管的服务。\n\nTable of contents\n\n前置准…",
-      "keyPoints": [],
-      "url": "/zh/posts/deployment-guide/"
-    },
-    {
-      "title": "\"astro-minimax 功能特性总览\"",
-      "date": "2026-03-14T00:00:00.000Z",
-      "categories": [
-        "教程/博客"
-      ],
-      "tags": [
-        "docs",
-        "features"
-      ],
-      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-min…",
-      "keyPoints": [],
-      "url": "/zh/posts/feature-overview/"
-    },
-    {
-      "title": "\"Getting Started: Two Integration Methods\"",
-      "date": "2026-03-12T00:00:00.000Z",
-      "categories": [
-        "Blog/Tutorial"
-      ],
-      "tags": [
-        "docs",
-        "configuration"
-      ],
-      "summary": "astro-minimax provides two integration methods for setting up a blog: GitHub Template for beginners and NPM Packages for content-system separation.",
-      "keyPoints": [
-        "astro-minimax two integration methods",
-        "GitHub Template for one-time setup",
-        "NPM Packages for content-system separation",
-        "Manual updates for GitHub Template",
-        "Automatic updates with NPM Packages",
-        "Consistent blog content directory structure"
-      ],
-      "url": "/en/posts/getting-started/"
-    },
-    {
-      "title": "\"快速开始：两种使用方式\"",
-      "date": "2026-03-12T00:00:00.000Z",
-      "categories": [
-        "教程/博客"
-      ],
-      "tags": [
-        "docs",
-        "configuration"
-      ],
-      "summary": "介绍astro-minimax的两种使用方式：GitHub模板和NPM包集成，适合不同场景。",
-      "keyPoints": [
-        "astro-minimax两种使用方式",
-        "GitHub Template适合一次性创建",
-        "NPM包集成适合内容与系统分离",
-        "手动合并上游更新",
-        "使用pnpm update持续获取更新"
-      ],
-      "url": "/zh/posts/getting-started/"
-    },
-    {
-      "title": "How to add LaTeX Equations in Astro blog posts",
-      "date": "2024-09-08T20:58:52.737Z",
-      "categories": [
-        "教程/前端"
-      ],
-      "tags": [
-        "docs"
-      ],
-      "summary": "Guide on integrating LaTeX equations into Astro blog posts using remark and rehype plugins.",
-      "keyPoints": [
-        "Install rehype-katex, remark-math, katex plugins",
-        "Update Astro config to use plugins",
-        "Import KaTeX CSS in main layout",
-        "Add katex text-color in typography CSS",
-        "Write inline and block LaTeX equations"
-      ],
-      "url": "/en/posts/how-to-add-latex-equations-in-blog-posts/"
-    },
-    {
-      "title": "如何在 Astro 博客文章中添加 LaTeX 公式",
-      "date": "2024-09-08T20:58:52.737Z",
-      "categories": [
-        "教程/前端"
-      ],
-      "tags": [
-        "docs"
-      ],
-      "summary": "介绍在Astro博客中添加LaTeX公式的方法，包括安装插件和配置Astro。",
-      "keyPoints": [
-        "Astro博客添加LaTeX公式支持",
-        "安装remark-math、rehype-katex、katex插件",
-        "配置Astro使用这些插件",
-        "导入KaTeX CSS样式",
-        "为katex设置文本颜色"
-      ],
-      "url": "/zh/posts/how-to-add-latex-equations-in-blog-posts/"
-    },
-    {
-      "title": "How to use Git Hooks to set Created and Modified Dates",
-      "date": "2024-01-03T20:40:08Z",
-      "categories": [
-        "教程/工程化"
-      ],
-      "tags": [
-        "docs",
-        "FAQ"
-      ],
-      "summary": "利用Git钩子自动化更新Astro-minimax主题中文章的创建和修改日期。",
-      "keyPoints": [
-        "Git Hooks自动化更新文章日期",
-        "使用Husky管理Git钩子",
-        "pre-commit钩子更新修改日期",
-        "为新文件添加创建日期",
-        "IDE代码片段填充frontmatter",
-        "修改Astro配置允许空日期"
-      ],
-      "url": "/en/posts/setting-dates-via-git-hooks/"
-    },
-    {
-      "title": "如何使用 Git 钩子设置创建和修改日期",
-      "date": "2024-01-03T20:40:08Z",
-      "categories": [
-        "教程/工程化"
-      ],
-      "tags": [
-        "docs",
-        "FAQ"
-      ],
-      "summary": "使用pre-commit Git钩子自动填充博客主题frontmatter中的创建和修改日期。",
-      "keyPoints": [
-        "使用Git钩子自动化日期更新",
-        "Husky包自动安装pre-commit钩子",
-        "为修改文件更新修改日期",
-        "为新文件添加创建日期",
-        "修改Astro配置允许空日期"
-      ],
-      "url": "/zh/posts/setting-dates-via-git-hooks/"
     }
   ],
   "topTags": [
     "docs",
     "configuration",
-    "FAQ",
-    "color-schemes",
-    "notification",
-    "telegram",
-    "email",
     "deployment",
-    "features",
-    "release"
+    "vercel",
+    "neon",
+    "cloudflare",
+    "tutorial",
+    "getting-started",
+    "analytics",
+    "waline",
+    "postgresql",
+    "comments",
+    "blog",
+    "guide",
+    "ecosystem"
   ],
   "topCategories": [
-    "教程/配置",
     "教程/博客",
-    "教程/工程化",
+    "教程/配置",
+    "Tutorial/Configuration",
     "Blog/Tutorial",
-    "教程/前端"
+    "教程/工程化"
   ],
   "contentStats": {
-    "totalPosts": 24,
+    "totalPosts": 35,
     "avgPostPerMonth": 1
   }
 }

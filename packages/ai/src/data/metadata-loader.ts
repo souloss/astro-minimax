@@ -1,6 +1,7 @@
 import type { AISummariesFile, AuthorContextFile, VoiceProfile, LoadedMetadata, ArticleSummaryData } from './types.js';
 import type { FactRegistryFile } from '../fact-registry/types.js';
 import { loadFactRegistry as loadFactRegistryCache } from '../fact-registry/registry.js';
+import { loadVectorIndex as loadVectorIndexCache } from '../search/vector-reranker.js';
 
 // Lazy-loaded, memory-cached metadata
 let cachedMetadata: LoadedMetadata | null = null;
@@ -19,10 +20,15 @@ export function preloadMetadata(data: Partial<LoadedMetadata>): void {
     authorContext: data.authorContext ?? null,
     voiceProfile: data.voiceProfile ?? null,
     factRegistry: data.factRegistry ?? null,
+    vectorIndex: data.vectorIndex ?? null,
   };
 
   if (cachedMetadata.factRegistry) {
     loadFactRegistryCache(cachedMetadata.factRegistry);
+  }
+
+  if (cachedMetadata.vectorIndex) {
+    loadVectorIndexCache(cachedMetadata.vectorIndex);
   }
 }
 
@@ -37,7 +43,7 @@ export function clearMetadataCache(): void {
  * Returns the cached metadata. Must call preloadMetadata() first.
  */
 export function getMetadata(): LoadedMetadata {
-  return cachedMetadata ?? { summaries: null, authorContext: null, voiceProfile: null, factRegistry: null };
+  return cachedMetadata ?? { summaries: null, authorContext: null, voiceProfile: null, factRegistry: null, vectorIndex: null };
 }
 
 /**

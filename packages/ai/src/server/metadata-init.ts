@@ -24,6 +24,7 @@ export function initializeMetadata(config: MetadataConfig, env?: ChatHandlerEnv)
     authorContext: config.authorContext as Parameters<typeof preloadMetadata>[0]['authorContext'],
     voiceProfile: config.voiceProfile as Parameters<typeof preloadMetadata>[0]['voiceProfile'],
     factRegistry: (config.factRegistry ?? null) as Parameters<typeof preloadMetadata>[0]['factRegistry'],
+    vectorIndex: (config.vectorIndex ?? null) as Parameters<typeof preloadMetadata>[0]['vectorIndex'],
   });
 
   const authorCtx = getAuthorContext();

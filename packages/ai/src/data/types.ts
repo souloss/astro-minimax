@@ -55,4 +55,5 @@ export interface LoadedMetadata {
   authorContext: AuthorContextFile | null;
   voiceProfile: VoiceProfile | null;
   factRegistry: import('../fact-registry/types.js').FactRegistryFile | null;
+  vectorIndex: import('../search/vector-reranker.js').VectorIndex | null;
 }

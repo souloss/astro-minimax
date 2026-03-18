@@ -1,5 +1,6 @@
 import { scoreDocument, filterLowRelevance, tokenize, pickAnchorTerms, normalizeText } from './search-utils.js';
-import { buildSearchIndex } from './search-index.js';
+import { buildSearchIndex, getIDFMapForIndex } from './search-index.js';
+import { hasVectorIndex, rerankWithVectors } from './vector-reranker.js';
 import type { SearchDocument, IndexedDocument, SearchResult, ArticleContext, ProjectContext } from './types.js';
 
 // Lazy-initialized, cached indexes
@@ -50,7 +51,7 @@ export function searchArticles(
     topScore >= DEEP_CONTENT_SCORE_THRESHOLD &&
     topScore > secondScore * 1.5;
 
-  return results.map((result, index) => {
+  let articles = results.map((result, index) => {
     const baseUrl = options.siteUrl ?? '';
     const url = result.url.startsWith('http') ? result.url : `${baseUrl}${result.url}`;
     const fullContent =
@@ -69,6 +70,13 @@ export function searchArticles(
       score: result.score,
     };
   });
+
+  // Optional: rerank using TF-IDF vector cosine similarity
+  if (hasVectorIndex() && articles.length > 1) {
+    articles = rerankWithVectors(query, articles);
+  }
+
+  return articles;
 }
 
 /**
@@ -113,8 +121,9 @@ export function mergeResults<T extends { url: string }>(primary: T[], secondary:
 // ---- Internals ----
 
 function scoreDocs(index: IndexedDocument[], tokens: string[], limit: number): SearchResult[] {
+  const idfMap = getIDFMapForIndex();
   return index
-    .map(doc => ({ ...doc, score: scoreDocument(tokens, doc) }))
+    .map(doc => ({ ...doc, score: scoreDocument(tokens, doc, idfMap) }))
     .filter(doc => doc.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit);

@@ -1,6 +1,6 @@
 {
   "$schema": "fact-registry-v1",
-  "generatedAt": "2026-03-18T14:18:54.441Z",
+  "generatedAt": "2026-03-18T14:22:00.826Z",
   "version": 1,
   "facts": [
     {
@@ -52,7 +52,7 @@
     {
       "id": "blog-total-posts",
       "category": "blog",
-      "statement": "博客共有 24 篇文章（中文 12 篇，英文 12 篇）",
+      "statement": "博客共有 35 篇文章（中文 18 篇，英文 17 篇）",
       "evidence": "author-context.json → stableFacts.contentFootprint",
       "source": "derived",
       "confidence": 1,
@@ -72,7 +72,7 @@
     {
       "id": "blog-total-posts-en",
       "category": "blog",
-      "statement": "The blog has 24 posts (12 in Chinese, 12 in English)",
+      "statement": "The blog has 35 posts (18 in Chinese, 17 in English)",
       "evidence": "author-context.json → stableFacts.contentFootprint",
       "source": "derived",
       "confidence": 1,
@@ -88,7 +88,7 @@
     {
       "id": "blog-categories",
       "category": "blog",
-      "statement": "博客的主要分类包括：教程/配置、教程/博客、教程/工程化、Blog/Tutorial、教程/前端",
+      "statement": "博客的主要分类包括：教程/博客、教程/配置、Tutorial/Configuration、Blog/Tutorial、教程/工程化",
       "evidence": "author-context.json → stableFacts.focusAreas",
       "source": "derived",
       "confidence": 0.95,
@@ -100,18 +100,18 @@
         "category",
         "area",
         "focus",
-        "教程/配置",
         "教程/博客",
-        "教程/工程化",
+        "教程/配置",
+        "tutorial/configuration",
         "blog/tutorial",
-        "教程/前端"
+        "教程/工程化"
       ],
       "lang": "zh"
     },
     {
       "id": "blog-top-tags",
       "category": "blog",
-      "statement": "博客最常用的标签有：docs、configuration、FAQ、color-schemes、notification、telegram、email、deployment、features、release",
+      "statement": "博客最常用的标签有：docs、configuration、deployment、vercel、neon、cloudflare、tutorial、getting-started、analytics、waline",
       "evidence": "author-context.json → stableFacts.topTags",
       "source": "derived",
       "confidence": 0.9,
@@ -122,21 +122,21 @@
         "主题",
         "docs",
         "configuration",
-        "faq",
-        "color-schemes",
-        "notification",
-        "telegram",
-        "email",
         "deployment",
-        "features",
-        "release"
+        "vercel",
+        "neon",
+        "cloudflare",
+        "tutorial",
+        "getting-started",
+        "analytics",
+        "waline"
       ],
       "lang": "zh"
     },
     {
       "id": "blog-recurring-topics",
       "category": "blog",
-      "statement": "博客反复讨论的技术话题包括：astro-minimax、docs、to、blog、Astro、theme、posts、in",
+      "statement": "博客反复讨论的技术话题包括：astro-minimax、docs、to、blog、AI、in、guide、Guide",
       "evidence": "author-context.json → stableFacts.recurringTopics",
       "source": "aggregated",
       "confidence": 0.85,
@@ -150,18 +150,18 @@
         "docs",
         "to",
         "blog",
-        "astro",
-        "theme",
-        "posts",
-        "in"
+        "ai",
+        "in",
+        "guide",
+        "guide"
       ],
       "lang": "zh"
     },
     {
       "id": "blog-date-range",
       "category": "blog",
-      "statement": "博客的文章时间跨度从 2022-09-23 到 2026-03-17",
-      "evidence": "earliest: How to configure astro-minimax theme (2022-09-23), latest: \"博客通知系统配置指南\" (2026-03-17)",
+      "statement": "博客的文章时间跨度从 2022-09-23 到 2026-03-18",
+      "evidence": "earliest: How to configure astro-minimax theme (2022-09-23), latest: \"在 Vercel 部署 Waline 评论系统\" (2026-03-18)",
       "source": "derived",
       "confidence": 1,
       "tags": [
@@ -178,7 +178,7 @@
     {
       "id": "blog-lang-dist",
       "category": "blog",
-      "statement": "博客文章的语言分布：英文 12 篇，中文 12 篇",
+      "statement": "博客文章的语言分布：中文 18 篇，英文 17 篇",
       "evidence": "author-context.json → posts[].lang aggregation",
       "source": "derived",
       "confidence": 1,
@@ -195,7 +195,7 @@
     {
       "id": "content-category-dist",
       "category": "content",
-      "statement": "按分类统计：教程/配置(6篇)、教程/博客(5篇)、教程/工程化(4篇)、Blog/Tutorial(3篇)、教程/前端(2篇)、Tutorial/Configuration(1篇)、Blog/Deployment(1篇)、教程/部署(1篇)、Blog/Configuration(1篇)",
+      "statement": "按分类统计：教程/博客(7篇)、教程/配置(4篇)、Tutorial/Configuration(3篇)、Blog/Tutorial(3篇)、教程/工程化(3篇)、教程/部署(2篇)、教程/前端(2篇)、Tutorial/Deployment(1篇)、Tutorial/Getting Started(1篇)、教程/入门(1篇)、Tutorial/Blog(1篇)、Tutorial/AI(1篇)、Tutorial/Tools(1篇)、教程/AI(1篇)、教程/工具(1篇)、Blog/Deployment(1篇)、Tutorial/Engineering(1篇)、Blog/Configuration(1篇)",
       "evidence": "author-context.json → posts[].category aggregation",
       "source": "derived",
       "confidence": 1,
@@ -210,7 +210,7 @@
     {
       "id": "content-flagship",
       "category": "content",
-      "statement": "最新的代表性文章：《\"Blog Notification System Configuration Guide\"》(2026-03-17)、《\"博客通知系统配置指南\"》(2026-03-17)、《\"Deployment Guide: Deploy astro-minimax to Multiple Platforms\"》(2026-03-14)、《\"astro-minimax Feature Overview\"》(2026-03-14)、《\"部署指南：多平台部署 astro-minimax\"》(2026-03-14)",
+      "statement": "最新的代表性文章：《\"Configuring Environment Variables in Cloudflare Pages\"》(2026-03-18)、《\"Complete Setup Guide: From Zero to Production\"》(2026-03-18)、《\"Setup Umami Analytics: Free Vercel Deployment\"》(2026-03-18)、《\"Deploy Waline Comment System on Vercel\"》(2026-03-18)、《\"Cloudflare Pages 环境变量配置指南\"》(2026-03-18)",
       "evidence": "author-context.json → stableFacts.flagshipPosts",
       "source": "derived",
       "confidence": 0.95,

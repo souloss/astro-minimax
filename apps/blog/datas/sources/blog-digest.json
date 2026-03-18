@@ -1,7 +1,174 @@
 {
-  "generatedAt": "2026-03-17T14:45:17.705Z",
-  "count": 24,
+  "generatedAt": "2026-03-18T14:21:49.217Z",
+  "count": 35,
   "posts": [
+    {
+      "id": "en/cloudflare-env-vars",
+      "title": "\"Configuring Environment Variables in Cloudflare Pages\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/Deployment",
+      "tags": [
+        "docs",
+        "cloudflare",
+        "deployment",
+        "configuration"
+      ],
+      "summary": "This guide explains how to configure environment variables in Cloudflare Pages Dashboard for astro-minimax. Proper environment variable configuration…",
+      "url": "/en/posts/cloudflare-env-vars/"
+    },
+    {
+      "id": "en/complete-setup-guide",
+      "title": "\"Complete Setup Guide: From Zero to Production\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/Getting Started",
+      "tags": [
+        "docs",
+        "tutorial",
+        "getting-started"
+      ],
+      "summary": "This guide walks you through building a complete blog from scratch with astro-minimax.\n\nOverview\n\nEstimated time: 45-60 minutes\n\nPrerequisites\n\nBefor…",
+      "url": "/en/posts/complete-setup-guide/"
+    },
+    {
+      "id": "en/setup-umami-analytics",
+      "title": "\"Setup Umami Analytics: Free Vercel Deployment\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/Configuration",
+      "tags": [
+        "docs",
+        "analytics",
+        "deployment",
+        "vercel",
+        "neon"
+      ],
+      "summary": "Umami is an open-source, privacy-friendly web analytics tool. Compared to Google Analytics, Umami doesn't use cookies, doesn't track users across sit…",
+      "url": "/en/posts/setup-umami-analytics/"
+    },
+    {
+      "id": "en/setup-waline-on-vercel",
+      "title": "\"Deploy Waline Comment System on Vercel\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/Configuration",
+      "tags": [
+        "docs",
+        "waline",
+        "vercel",
+        "postgresql",
+        "neon",
+        "comments"
+      ],
+      "summary": "Waline is a simple, safe comment system with Markdown support, email notifications, and multi-language features. This guide walks you through deployi…",
+      "url": "/en/posts/setup-waline-on-vercel/"
+    },
+    {
+      "id": "zh/cloudflare-env-vars",
+      "title": "\"Cloudflare Pages 环境变量配置指南\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/部署",
+      "tags": [
+        "docs",
+        "cloudflare",
+        "deployment",
+        "configuration"
+      ],
+      "summary": "astro-minimax 博客在 Cloudflare Pages 部署时，需要正确配置环境变量才能启用完整功能。本文详细介绍环境变量的作用、配置方法和最佳实践。\n\n概览\n\n环境变量在 Cloudflare Pages 中有两个作用时机：\n\n| 时机       | 说明            …",
+      "url": "/zh/posts/cloudflare-env-vars/"
+    },
+    {
+      "id": "zh/complete-setup-guide",
+      "title": "\"从零开始：完整博客搭建指南\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/入门",
+      "tags": [
+        "docs",
+        "tutorial",
+        "getting-started"
+      ],
+      "summary": "本指南将带你从零开始，完整搭建一个功能齐全的 astro-minimax 博客。\n\n概览\n\n预计时间：45-60 分钟\n\n前置准备\n\n在开始之前，请确保你有以下账号：\n\n| 账号       | 用途           | 注册地址                                …",
+      "url": "/zh/posts/complete-setup-guide/"
+    },
+    {
+      "id": "zh/setup-umami-analytics",
+      "title": "\"配置 Umami 网站统计：Vercel 免费部署方案\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/配置",
+      "tags": [
+        "docs",
+        "analytics",
+        "deployment",
+        "vercel",
+        "neon"
+      ],
+      "summary": "Umami 是一款开源、隐私友好的网站统计分析工具。相比 Google Analytics，Umami 不使用 Cookie、不跨站追踪用户、完全符合 GDPR 隐私法规。本文将介绍如何使用 Vercel + Neon PostgreSQL 免费部署 Umami 并与 astro-minimax …",
+      "url": "/zh/posts/setup-umami-analytics/"
+    },
+    {
+      "id": "zh/setup-waline-on-vercel",
+      "title": "\"在 Vercel 部署 Waline 评论系统\"",
+      "date": "2026-03-18T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/配置",
+      "tags": [
+        "docs",
+        "waline",
+        "vercel",
+        "postgresql",
+        "neon",
+        "comments"
+      ],
+      "summary": "Waline 是一款简洁、安全的评论系统，支持 Markdown、邮件通知、多语言等特性。本文将详细介绍如何在 Vercel 部署 Waline，使用 Vercel 自带的 Neon PostgreSQL 作为数据库，并与 astro-minimax 博客集成。\n\n架构概览\n\n整个系统由三部分组成…",
+      "url": "/zh/posts/setup-waline-on-vercel/"
+    },
+    {
+      "id": "en/2026-blog-ecosystem",
+      "title": "\"2026 Tech Blog Ecosystem: A Complete Guide to Building Your Own\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/Blog",
+      "tags": [
+        "blog",
+        "guide",
+        "ecosystem",
+        "\"2026\""
+      ],
+      "summary": "Building a personal tech blog involves 10+ technical decisions. This guide exhaustively covers every capability domain in the 2026 blog ecosystem to …",
+      "url": "/en/posts/2026-blog-ecosystem/"
+    },
+    {
+      "id": "en/ai-guide",
+      "title": "\"AI Chat Configuration Guide\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/AI",
+      "tags": [
+        "docs",
+        "ai",
+        "configuration"
+      ],
+      "summary": "astro-minimax includes a built-in AI chat assistant with multi-provider failover, RAG retrieval, streaming responses, and Mock fallback. This guide c…",
+      "url": "/en/posts/ai-guide/"
+    },
+    {
+      "id": "en/cli-guide",
+      "title": "\"CLI Tools Guide\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "en",
+      "category": "Tutorial/Tools",
+      "tags": [
+        "docs",
+        "cli",
+        "tools"
+      ],
+      "summary": "provides a comprehensive command-line toolkit for blog project management and AI content processing. This guide covers all available commands.\n\nInsta…",
+      "url": "/en/posts/cli-guide/"
+    },
     {
       "id": "en/notification-guide",
       "title": "\"Blog Notification System Configuration Guide\"",
@@ -18,6 +185,49 @@
       "url": "/en/posts/notification-guide/"
     },
     {
+      "id": "zh/2026-blog-ecosystem",
+      "title": "\"2026 年个人技术博客生态全览：从零构建你的博客系统\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/博客",
+      "tags": [
+        "blog",
+        "guide",
+        "ecosystem",
+        "\"2026\""
+      ],
+      "summary": "构建个人技术博客看似简单，实际涉及 10+ 个技术决策。本文穷举式地梳理 2026 年博客生态的每个能力域，帮你做出知情的选择。\n\n一、框架选型\n\n框架决定了博客的技术基础。2026 年的主流选择：\n\n静态站点生成器 (SSG)\n\n| 框架 | 语言 | 特点 | 适合人群 |\n|------|-…",
+      "url": "/zh/posts/2026-blog-ecosystem/"
+    },
+    {
+      "id": "zh/ai-guide",
+      "title": "\"AI 聊天功能配置指南\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/AI",
+      "tags": [
+        "docs",
+        "ai",
+        "configuration"
+      ],
+      "summary": "astro-minimax 内置 AI 聊天助手，支持多 Provider 自动故障转移、RAG 检索增强、流式响应和 Mock 降级。本文介绍完整的 AI 配置流程。\n\n概览\n\nAI 聊天系统由以下模块组成：\n\n| 模块 | 说明 |\n|------|------|\n|  | AI 核心包：RA…",
+      "url": "/zh/posts/ai-guide/"
+    },
+    {
+      "id": "zh/cli-guide",
+      "title": "\"CLI 工具使用指南\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/工具",
+      "tags": [
+        "docs",
+        "cli",
+        "tools"
+      ],
+      "summary": "提供一套完整的命令行工具，用于博客项目管理和 AI 内容处理。本文介绍所有可用命令及其用法。\n\n安装\n\nCLI 工具作为开发依赖自动安装：\n\n安装后可通过  命令使用，也可以通过  快捷脚本调用。\n\n创建新博客\n\n生成包含完整配置、示例文章和 AI 工具链的博客项目。\n\n文章管理\n\n创建文章\n\n自…",
+      "url": "/zh/posts/cli-guide/"
+    },
+    {
       "id": "zh/notification-guide",
       "title": "\"博客通知系统配置指南\"",
       "date": "2026-03-17T00:00:00.000Z",
@@ -29,8 +239,22 @@
         "telegram",
         "email"
       ],
-      "summary": "astro-minimax 内置多渠道通知系统，可以在博客收到评论或用户进行 AI 对话时，自动发送通知到 Telegram、邮箱或自定义 Webhook。\n\nTable of contents\n\n功能概览\n\n通知系统支持以下功能：\n\n| 功能     | 说明                  …",
+      "summary": "astro-minimax 内置多渠道通知系统，可以在博客收到评论或用户进行 AI 对话时，自动发送通知到 Telegram、邮箱或自定义 Webhook。\n\n功能概览\n\n通知系统支持以下功能：\n\n| 功能     | 说明                                  |\n|…",
       "url": "/zh/posts/notification-guide/"
+    },
+    {
+      "id": "zh/why-astro-minimax",
+      "title": "\"为什么选择 astro-minimax：设计决策与技术思考\"",
+      "date": "2026-03-17T00:00:00.000Z",
+      "lang": "zh",
+      "category": "教程/博客",
+      "tags": [
+        "docs",
+        "architecture",
+        "design"
+      ],
+      "summary": "astro-minimax 不只是又一个博客主题。它是对「如何构建一个现代技术博客」的系统性回答。本文记录每个关键决策背后的思考。\n\n为什么做这个项目\n\n问题\n\n2024-2025 年的博客生态面临几个核心矛盾：\n简单 vs 功能丰富 — 极简主题缺功能，功能丰富的主题又太臃肿\n开箱即用 vs 可…",
+      "url": "/zh/posts/why-astro-minimax/"
     },
     {
       "id": "en/deployment-guide",
@@ -68,7 +292,7 @@
         "docs",
         "deployment"
       ],
-      "summary": "本指南详细介绍如何将 astro-minimax 博客部署到各种平台。astro-minimax 生成静态站点，可以部署到几乎任何支持静态托管的服务。\n\nTable of contents\n\n前置准备\n\n在部署之前，确保你的博客能够在本地成功构建：\n\n构建产物位于  目录。\n\n> 如果构建失败，请…",
+      "summary": "本指南详细介绍如何将 astro-minimax 博客部署到各种平台。astro-minimax 生成静态站点，可以部署到几乎任何支持静态托管的服务。\n\n项目形式说明\n\nastro-minimax 支持两种项目形式，部署配置略有不同：\n\n| 项目形式     | 说明               …",
       "url": "/zh/posts/deployment-guide/"
     },
     {
@@ -81,12 +305,12 @@
         "docs",
         "features"
       ],
-      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\nTable of contents\n\n架构概览\n\nastro-minimax 由四个核心包组成：\n\n| 包                      | 说明     …",
+      "summary": "astro-minimax 是一个功能丰富的 Astro 博客主题，采用模块化架构设计。本文全面介绍所有功能特性及其使用方式。\n\n架构概览\n\nastro-minimax 由五个核心包组成，形成清晰的层次架构：\n\n| 包                      | 说明              …",
       "url": "/zh/posts/feature-overview/"
     },
     {
       "id": "en/getting-started",
-      "title": "\"Getting Started: Two Integration Methods\"",
+      "title": "\"Getting Started: Three Integration Methods\"",
       "date": "2026-03-12T00:00:00.000Z",
       "lang": "en",
       "category": "Blog/Tutorial",
@@ -99,7 +323,7 @@
     },
     {
       "id": "zh/getting-started",
-      "title": "\"快速开始：两种使用方式\"",
+      "title": "\"快速开始：三种使用方式\"",
       "date": "2026-03-12T00:00:00.000Z",
       "lang": "zh",
       "category": "教程/博客",
@@ -136,26 +360,28 @@
     },
     {
       "id": "en/setting-dates-via-git-hooks",
-      "title": "How to use Git Hooks to set Created and Modified Dates",
+      "title": "How to Use Git Hooks to Auto-Set Post Dates",
       "date": "2024-01-03T20:40:08Z",
       "lang": "en",
-      "category": "教程/工程化",
+      "category": "Tutorial/Engineering",
       "tags": [
         "docs",
-        "FAQ"
+        "git",
+        "automation"
       ],
       "summary": "利用Git钩子自动化更新Astro-minimax主题中文章的创建和修改日期。",
       "url": "/en/posts/setting-dates-via-git-hooks/"
     },
     {
       "id": "zh/setting-dates-via-git-hooks",
-      "title": "如何使用 Git 钩子设置创建和修改日期",
+      "title": "如何使用 Git 钩子自动设置文章日期",
       "date": "2024-01-03T20:40:08Z",
       "lang": "zh",
       "category": "教程/工程化",
       "tags": [
         "docs",
-        "FAQ"
+        "git",
+        "automation"
       ],
       "summary": "使用pre-commit Git钩子自动填充博客主题frontmatter中的创建和修改日期。",
       "url": "/zh/posts/setting-dates-via-git-hooks/"
@@ -209,56 +435,6 @@
       ],
       "summary": "astro-minimax v1.4.0 引入动态OG图片生成，提升社交媒体分享效果。",
       "url": "/zh/posts/dynamic-og-images/"
-    },
-    {
-      "id": "en/predefined-color-schemes",
-      "title": "Predefined color schemes",
-      "date": "2022-09-26T12:13:24Z",
-      "lang": "en",
-      "category": "教程/配置",
-      "tags": [
-        "color-schemes"
-      ],
-      "summary": "介绍为astro-minimax博客主题预定义的颜色方案，包括浅色和深色模式。",
-      "url": "/en/posts/predefined-color-schemes/"
-    },
-    {
-      "id": "zh/predefined-color-schemes",
-      "title": "预定义配色方案",
-      "date": "2022-09-26T12:13:24Z",
-      "lang": "zh",
-      "category": "教程/配置",
-      "tags": [
-        "color-schemes"
-      ],
-      "summary": "为astro-minimax博客主题设计预定义配色方案，提供浅色和深色配色方案的CSS配置。",
-      "url": "/zh/posts/predefined-color-schemes/"
-    },
-    {
-      "id": "en/customizing-astro-minimax-theme-color-schemes",
-      "title": "Customizing astro-minimax theme color schemes",
-      "date": "2022-09-25T15:20:35Z",
-      "lang": "en",
-      "category": "教程/配置",
-      "tags": [
-        "color-schemes",
-        "docs"
-      ],
-      "summary": "文章介绍了如何为astro-minimax主题启用/禁用和自定义网站的颜色方案。",
-      "url": "/en/posts/customizing-astro-minimax-theme-color-schemes/"
-    },
-    {
-      "id": "zh/customizing-astro-minimax-theme-color-schemes",
-      "title": "自定义 astro-minimax 主题配色方案",
-      "date": "2022-09-25T15:20:35Z",
-      "lang": "zh",
-      "category": "教程/配置",
-      "tags": [
-        "color-schemes",
-        "docs"
-      ],
-      "summary": "教程介绍如何在astro-minimax主题中启用/禁用明暗模式，并自定义网站配色方案。",
-      "url": "/zh/posts/customizing-astro-minimax-theme-color-schemes/"
     },
     {
       "id": "en/adding-new-post",
