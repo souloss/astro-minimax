@@ -18,8 +18,6 @@ export type TranslationKey =
   | "post.prev"
   | "post.next"
   | "post.share"
-  | "post.like"
-  | "post.bookmark"
   | "post.series"
   | "post.editPage"
   | "post.readingMode"
@@ -109,8 +107,6 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "post.prev": "Previous Post",
     "post.next": "Next Post",
     "post.share": "Share this post on:",
-    "post.like": "Like",
-    "post.bookmark": "Bookmark",
     "post.series": "Series",
     "post.editPage": "Edit page",
     "post.readingMode": "Reading Mode",
@@ -200,8 +196,6 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "post.prev": "上一篇",
     "post.next": "下一篇",
     "post.share": "分享到：",
-    "post.like": "喜欢",
-    "post.bookmark": "收藏",
     "post.series": "系列",
     "post.editPage": "编辑此页",
     "post.readingMode": "沉浸式阅读",
