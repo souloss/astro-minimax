@@ -776,7 +776,7 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
   };
 
   return (
-    <div ref={panelRef} data-ai-chat-panel
+    <div ref={panelRef} id="ai-chat-panel" data-ai-chat-panel
       class="fixed right-4 bottom-20 z-[90] flex w-[370px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl sm:right-6 sm:bottom-20"
       style={{ height: 'min(520px, calc(100vh - 7rem))' }}>
 
@@ -845,7 +845,7 @@ export function ChatPanel({ open, onClose, config, articleContext }: ChatPanelPr
       {/* Input Area */}
       <div class="shrink-0 border-t border-border px-3 pb-2.5 pt-2">
         <div class="flex items-end gap-1.5 rounded-xl border border-border bg-muted/30 px-2.5 py-1.5 transition-colors focus-within:border-accent/40 focus-within:bg-background">
-          <textarea ref={inputRef} rows={1} value={inputValue}
+          <textarea id="ai-chat-input" ref={inputRef} rows={1} value={inputValue}
             onInput={(e) => { setInputValue((e.target as HTMLTextAreaElement).value); autoResize(); }}
             onKeyDown={handleKeyDown} placeholder={placeholder} maxLength={500}
             class="min-w-0 flex-1 resize-none bg-transparent py-0.5 text-[13px] leading-snug text-foreground outline-none placeholder:text-foreground-soft"

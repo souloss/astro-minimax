@@ -4,6 +4,7 @@
  */
 declare module "virtual:astro-minimax/config" {
   export const SITE: {
+    aiEnabled?: boolean;
     ai?: { enabled?: boolean; mockMode?: boolean; apiEndpoint?: string; welcomeMessage?: string; placeholder?: string; lang?: string };
     lang?: string;
     [key: string]: unknown;
