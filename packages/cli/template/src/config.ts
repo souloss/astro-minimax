@@ -36,9 +36,9 @@ export const SITE: SiteConfig = {
       { key: "tags", enabled: true },
       { key: "categories", enabled: true },
       { key: "series", enabled: true },
-      { key: "projects", enabled: true },
+      { key: "projects", enabled: false },  // Matches features.projects
       { key: "about", enabled: true },
-      { key: "friends", enabled: true },
+      { key: "friends", enabled: false },   // Matches features.friends
       { key: "archives", enabled: true },
     ],
   },
@@ -111,5 +111,9 @@ export const SITE: SiteConfig = {
 
   get showArchives() {
     return this.features?.archives ?? true;
+  },
+
+  get aiEnabled() {
+    return (this.features?.ai ?? false) && (this.ai?.enabled ?? false);
   },
 };

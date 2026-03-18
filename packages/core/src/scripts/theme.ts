@@ -33,8 +33,6 @@ function setPreference(): void {
 function reflectPreference(): void {
   document.firstElementChild?.setAttribute("data-theme", themeValue);
 
-  document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
-
   const body = document.body;
   if (body) {
     const computedStyles = window.getComputedStyle(body);

@@ -111,4 +111,7 @@ export const SITE: SiteConfig = {
   get showArchives() {
     return this.features?.archives;
   },
+  get aiEnabled() {
+    return (this.features?.ai ?? false) && (this.ai?.enabled ?? false);
+  },
 };

@@ -35,3 +35,7 @@ pnpm-debug.log*
 # pagefind
 
 pagefind
+.cursorrules
+.cursor
+.opencode
+.sisyphus

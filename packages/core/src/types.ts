@@ -133,6 +133,7 @@ export interface SiteConfig {
 
   lightAndDarkMode?: boolean;
   showArchives?: boolean;
+  aiEnabled?: boolean;
 }
 
 export interface SocialLink {
