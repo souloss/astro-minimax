@@ -5,6 +5,7 @@ import type { ChatHandlerEnv } from '@astro-minimax/ai/server';
 import aiSummaries from '../../datas/ai-summaries.json';
 import authorContext from '../../datas/author-context.json';
 import voiceProfile from '../../datas/voice-profile.json';
+import factRegistry from '../../datas/fact-registry.json';
 
 interface FunctionEnv extends ChatHandlerEnv {
   [key: string]: unknown;
@@ -13,7 +14,7 @@ interface FunctionEnv extends ChatHandlerEnv {
 export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
   const env = context.env;
   initializeMetadata(
-    { summaries: aiSummaries, authorContext, voiceProfile },
+    { summaries: aiSummaries, authorContext, voiceProfile, factRegistry },
     env,
   );
 

@@ -33,10 +33,12 @@ export function preloadMetadata(data: Partial<LoadedMetadata>): void {
 }
 
 /**
- * Clears the metadata cache (useful for testing).
+ * Clears the metadata cache and all associated sub-caches (useful for testing).
  */
 export function clearMetadataCache(): void {
   cachedMetadata = null;
+  loadFactRegistryCache(null);
+  loadVectorIndexCache(null);
 }
 
 /**

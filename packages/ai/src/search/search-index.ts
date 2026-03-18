@@ -7,6 +7,9 @@ let cachedIDFMap: IDFMap | null = null;
 /**
  * Builds an in-memory inverted index from a list of documents
  * and computes IDF weights across the corpus.
+ *
+ * IDF map is only updated when the document set is non-empty,
+ * preventing an empty index (e.g. projects) from wiping article IDF.
  */
 export function buildSearchIndex(documents: SearchDocument[]): IndexedDocument[] {
   const indexed = documents.map(doc => ({
@@ -14,7 +17,9 @@ export function buildSearchIndex(documents: SearchDocument[]): IndexedDocument[]
     tokens: buildDocumentTokens(doc),
   }));
 
-  cachedIDFMap = buildIDFMap(indexed);
+  if (indexed.length > 0) {
+    cachedIDFMap = buildIDFMap(indexed);
+  }
   return indexed;
 }
 

@@ -390,15 +390,21 @@ async function buildTechStackFacts(): Promise<Fact[]> {
 
     // Check for AI-related deps
     if (allDeps["@astro-minimax/ai"]) {
-      techStack.push("AI 对话（RAG）");
       techTags.push("ai", "rag", "llm");
     }
 
     if (techStack.length > 0) {
+      const zhStack = allDeps["@astro-minimax/ai"]
+        ? [...techStack, "AI 对话（RAG）"]
+        : techStack;
+      const enStack = allDeps["@astro-minimax/ai"]
+        ? [...techStack, "AI Chat (RAG)"]
+        : techStack;
+
       facts.push({
         id: "tech-stack",
         category: "tech",
-        statement: `博客使用的技术栈包括：${techStack.join("、")}`,
+        statement: `博客使用的技术栈包括：${zhStack.join("、")}`,
         evidence: "package.json → dependencies + devDependencies",
         source: "explicit",
         confidence: 1.0,
@@ -412,7 +418,7 @@ async function buildTechStackFacts(): Promise<Fact[]> {
       facts.push({
         id: "tech-stack-en",
         category: "tech",
-        statement: `The blog is built with: ${techStack.join(", ")}`,
+        statement: `The blog is built with: ${enStack.join(", ")}`,
         evidence: "package.json → dependencies + devDependencies",
         source: "explicit",
         confidence: 1.0,
