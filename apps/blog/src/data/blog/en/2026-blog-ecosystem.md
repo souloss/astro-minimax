@@ -236,21 +236,21 @@ Building a personal tech blog involves 10+ technical decisions. This guide exhau
 
 ```mermaid
 flowchart TD
-    Start[Want to build a tech blog] --> Q1{Need AI features?}
-    Q1 -->|Yes| Q2{Need Edge Runtime?}
-    Q1 -->|No| Q3{Preferred language?}
+    Start["Want to build a tech blog"] --> Q1{"Need AI features?"}
+    Q1 -->|Yes| Q2{"Need Edge Runtime?"}
+    Q1 -->|No| Q3{"Preferred language?"}
 
-    Q2 -->|Yes| CF[Astro + Cloudflare Pages]
-    Q2 -->|No| OpenAI[Astro/Next.js + any host]
+    Q2 -->|Yes| CF["Astro + Cloudflare Pages"]
+    Q2 -->|No| OpenAI["Astro/Next.js + any host"]
 
-    Q3 -->|TypeScript| Q4{Need SSR?}
-    Q3 -->|Go| Hugo[Hugo + GitHub Pages]
-    Q3 -->|No code| WP[WordPress]
+    Q3 -->|TypeScript| Q4{"Need SSR?"}
+    Q3 -->|Go| Hugo["Hugo + GitHub Pages"]
+    Q3 -->|No code| WP["WordPress"]
 
-    Q4 -->|Yes| Next[Next.js + Vercel]
-    Q4 -->|No| Astro[Astro + any host]
+    Q4 -->|Yes| Next["Next.js + Vercel"]
+    Q4 -->|No| Astro["Astro + any host"]
 
-    CF --> Done[Start writing!]
+    CF --> Done["Start writing!"]
     OpenAI --> Done
     Hugo --> Done
     WP --> Done

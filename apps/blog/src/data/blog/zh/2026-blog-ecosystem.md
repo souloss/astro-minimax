@@ -351,21 +351,21 @@ Markdown 文件 → 构建器解析 frontmatter → 模板引擎渲染 → HTML/
 
 ```mermaid
 flowchart TD
-    Start[想搭建技术博客] --> Q1{需要 AI 功能?}
-    Q1 -->|是| Q2{需要 Edge Runtime?}
-    Q1 -->|否| Q3{偏好的语言?}
+    Start["想搭建技术博客"] --> Q1{"需要 AI 功能?"}
+    Q1 -->|是| Q2{"需要 Edge Runtime?"}
+    Q1 -->|否| Q3{"偏好的语言?"}
 
-    Q2 -->|是| CF[Astro + Cloudflare Pages]
-    Q2 -->|否| OpenAI[Astro/Next.js + 自选部署]
+    Q2 -->|是| CF["Astro + Cloudflare Pages"]
+    Q2 -->|否| OpenAI["Astro/Next.js + 自选部署"]
 
-    Q3 -->|TypeScript| Q4{需要 SSR?}
-    Q3 -->|Go| Hugo[Hugo + GitHub Pages]
-    Q3 -->|不写代码| WP[WordPress]
+    Q3 -->|TypeScript| Q4{"需要 SSR?"}
+    Q3 -->|Go| Hugo["Hugo + GitHub Pages"]
+    Q3 -->|不写代码| WP["WordPress"]
 
-    Q4 -->|是| Next[Next.js + Vercel]
-    Q4 -->|否| Astro[Astro + 任意部署]
+    Q4 -->|是| Next["Next.js + Vercel"]
+    Q4 -->|否| Astro["Astro + 任意部署"]
 
-    CF --> Done[开始写作!]
+    CF --> Done["开始写作!"]
     OpenAI --> Done
     Hugo --> Done
     WP --> Done
