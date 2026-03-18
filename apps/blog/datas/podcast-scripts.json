@@ -1,0 +1,207 @@
+{
+  "meta": {
+    "lastUpdated": "2026-03-18T05:05:59.088Z",
+    "totalProcessed": 1
+  },
+  "articles": {
+    "zh/getting-started": {
+      "slug": "zh/getting-started",
+      "title": "\"快速开始：三种使用方式\"",
+      "lang": "zh",
+      "speakers": [
+        {
+          "id": "host",
+          "name": "主持人",
+          "role": "host",
+          "voiceId": "alloy"
+        },
+        {
+          "id": "guest",
+          "name": "嘉宾",
+          "role": "guest",
+          "voiceId": "onyx"
+        }
+      ],
+      "segments": [
+        {
+          "speaker": "host",
+          "text": "欢迎收听本期节目，今天我们邀请到了 astro-minimax 的核心开发者，一起来聊聊这个项目的三种使用方式。"
+        },
+        {
+          "speaker": "guest",
+          "text": "大家好，很高兴能和大家分享 astro-minimax。这是一个功能强大的 Astro 博客框架，提供了三种灵活的使用方式。"
+        },
+        {
+          "speaker": "host",
+          "text": "首先，能否给我们快速概览一下这三种方式分别是什么？"
+        },
+        {
+          "speaker": "guest",
+          "text": "好的。astro-minimax 提供了 CLI 创建、GitHub Template 和 NPM 包集成三种方式，分别适合不同的使用场景。"
+        },
+        {
+          "speaker": "host",
+          "text": "这三种方式在更新维护上有什么不同吗？"
+        },
+        {
+          "speaker": "guest",
+          "text": "CLI 和 NPM 方式都可以通过 pnpm update 直接更新，而 GitHub Template 需要手动合并上游更新。"
+        },
+        {
+          "speaker": "host",
+          "text": "我们先看第一种 CLI 创建，这也是推荐的方式，对吧？"
+        },
+        {
+          "speaker": "guest",
+          "text": "没错。CLI 是最快上手的方式，适合想快速创建独立项目的用户，一步到位。"
+        },
+        {
+          "speaker": "host",
+          "text": "具体怎么操作呢？"
+        },
+        {
+          "speaker": "guest",
+          "text": "只需运行 npx @astro-minimax/cli init my-blog，然后 cd my-blog，执行 pnpm install 和 pnpm run dev 即可。"
+        },
+        {
+          "speaker": "guest",
+          "text": "生成的项目包含完整配置、示例文章和 AI 工具链。你可以编辑 src/config.ts 自定义站点信息，在 src/data/blog/ 下添加文章。"
+        },
+        {
+          "speaker": "host",
+          "text": "CLI 还提供了一些实用的管理命令？"
+        },
+        {
+          "speaker": "guest",
+          "text": "是的。比如 post new 创建文章，ai process 进行 AI 处理，profile build 构建作者画像，data status 查看数据状态。"
+        },
+        {
+          "speaker": "guest",
+          "text": "所有命令也支持 pnpm run 快捷方式，比如 pnpm run post:new -- \"标题\"。"
+        },
+        {
+          "speaker": "host",
+          "text": "接下来看看第二种方式，GitHub Template，这种方式适合什么场景？"
+        },
+        {
+          "speaker": "guest",
+          "text": "适合需要完全控制代码、想一次性创建并深度自定义的用户，灵活性最高。"
+        },
+        {
+          "speaker": "host",
+          "text": "能介绍一下项目结构吗？我看到这是 monorepo 结构。"
+        },
+        {
+          "speaker": "guest",
+          "text": "是的。你的博客站点在 apps/blog/ 目录下。packages/ 里有核心主题、可视化插件、AI 等独立包，架构很清晰。"
+        },
+        {
+          "speaker": "host",
+          "text": "配置站点需要修改哪些文件？"
+        },
+        {
+          "speaker": "guest",
+          "text": "主要编辑 apps/blog/src/config.ts，设置网站、作者、标题、描述、语言、时区，以及功能开关等。"
+        },
+        {
+          "speaker": "host",
+          "text": "如何添加博客内容？"
+        },
+        {
+          "speaker": "guest",
+          "text": "将 Markdown 或 MDX 文章放到 apps/blog/src/data/blog/zh/ 或 en/ 目录下，需要包含 frontmatter 元数据。"
+        },
+        {
+          "speaker": "guest",
+          "text": "frontmatter 包括 title、pubDatetime、description 和 tags 等字段。"
+        },
+        {
+          "speaker": "host",
+          "text": "开发和构建命令有什么特别注意的吗？"
+        },
+        {
+          "speaker": "guest",
+          "text": "所有命令都从项目根目录运行。使用 pnpm run dev、build、preview，构建输出在 apps/blog/dist。"
+        },
+        {
+          "speaker": "host",
+          "text": "部署到 Cloudflare Pages 需要注意哪些配置？"
+        },
+        {
+          "speaker": "guest",
+          "text": "构建命令填 pnpm run build，输出目录填 apps/blog/dist，然后连接 Git 仓库即可。"
+        },
+        {
+          "speaker": "host",
+          "text": "那如何获取上游更新呢？"
+        },
+        {
+          "speaker": "guest",
+          "text": "先添加 upstream 远程仓库，然后 fetch 并 merge upstream/main，解决冲突后提交就可以了。"
+        },
+        {
+          "speaker": "host",
+          "text": "第三种方式是 NPM 包集成，适合什么场景？"
+        },
+        {
+          "speaker": "guest",
+          "text": "适合已有 Astro 项目，希望将内容与主题系统分离，按需引入功能的用户。"
+        },
+        {
+          "speaker": "host",
+          "text": "具体需要安装哪些包？"
+        },
+        {
+          "speaker": "guest",
+          "text": "核心是 @astro-minimax/core，可视化插件 @astro-minimax/viz，AI 功能 @astro-minimax/ai，可以按需选择。"
+        },
+        {
+          "speaker": "host",
+          "text": "如何配置 Astro 来使用这些包？"
+        },
+        {
+          "speaker": "guest",
+          "text": "在 astro.config.ts 的 markdown 选项中引入主题的 remark 和 rehype 插件，比如 mermaid、阅读时间等。"
+        },
+        {
+          "speaker": "host",
+          "text": "如何在页面中使用主题提供的组件？"
+        },
+        {
+          "speaker": "guest",
+          "text": "直接导入使用，比如 import Layout from '@astro-minimax/core/layouts/Layout.astro'，像普通组件一样。"
+        },
+        {
+          "speaker": "host",
+          "text": "更新 NPM 包很方便吗？"
+        },
+        {
+          "speaker": "guest",
+          "text": "是的，运行 pnpm update @astro-minimax/core 等命令即可轻松更新到最新版本。"
+        },
+        {
+          "speaker": "host",
+          "text": "无论哪种方式，内容目录结构是一致的吗？"
+        },
+        {
+          "speaker": "guest",
+          "text": "是的。都在 src/data/blog/ 下，分 zh/ 和 en/ 目录。以 _ 开头的目录如 _examples/ 不参与 URL 生成。"
+        },
+        {
+          "speaker": "host",
+          "text": "今天详细介绍了三种方式，对于不同用户你会如何推荐？"
+        },
+        {
+          "speaker": "guest",
+          "text": "新手推荐 CLI 快速启动，需要深度定制选 Template，已有 Astro 项目就用 NPM 包集成，灵活选择。"
+        },
+        {
+          "speaker": "host",
+          "text": "非常感谢详细的分享。大家可以根据需求选择合适的方式开始。更多信息请参考官方文档，我们下期再见！"
+        }
+      ],
+      "generatedAt": "2026-03-18T05:05:59.088Z",
+      "contentHash": "f88c8f91"
+    }
+  }
+}

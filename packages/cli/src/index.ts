@@ -7,6 +7,7 @@ import { aiCommand } from "./commands/ai.js";
 import { profileCommand } from "./commands/profile.js";
 import { dataCommand } from "./commands/data.js";
 import { hooksCommand } from "./commands/hooks.js";
+import { podcastCommand } from "./commands/podcast.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -25,6 +26,7 @@ const commands: Command[] = [
   { name: "profile", description: "Author profile (build, context, voice, report)", run: profileCommand },
   { name: "data", description: "Data status and management", run: dataCommand },
   { name: "hooks", description: "Git hooks setup (install, uninstall)", run: hooksCommand },
+  { name: "podcast", description: "Generate AI podcasts from blog posts", run: podcastCommand },
 ];
 
 function printHelp(): void {
@@ -41,6 +43,7 @@ Commands:
   profile           Author profile (build, context, voice, report)
   data              Data management (status, clear)
   hooks             Git hooks setup (install, uninstall)
+  podcast           Generate AI podcasts from blog posts
 
 Run "astro-minimax <command> --help" for detailed usage.
 

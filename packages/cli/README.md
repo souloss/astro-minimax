@@ -150,6 +150,68 @@ Data management:
 | `status` | Show data file status |
 | `clear` | Clear generated cache |
 
+### `astro-minimax podcast <subcommand>`
+
+Generate AI podcasts from blog posts:
+
+| Subcommand | Description |
+| ---------- | ----------- |
+| `generate` | Generate podcasts from blog posts |
+| `list` | List generated podcasts |
+| `feed` | Generate podcast RSS feed |
+
+**Features:**
+- Converts blog posts to multi-speaker dialogue (host/guest format)
+- Uses OpenAI TTS for audio synthesis with natural Chinese voices
+- FFmpeg for audio concatenation
+- Automatic caching and skip list for failed items
+- RSS feed generation for podcast apps
+
+**Options for `generate`:**
+
+| Option | Description |
+| ------ | ----------- |
+| `--force` | Regenerate all (ignore cache) |
+| `--slug=<slug>` | Process only specified post |
+| `--task=<type>` | "script" (text only) or "audio" (full) |
+| `--dry-run` | Preview without generating |
+| `--lang=<zh\|en>` | Process only specified language |
+
+**Environment Variables:**
+
+```env
+AI_API_KEY=your-openai-api-key    # Required for script generation
+AI_BASE_URL=https://api.openai.com  # Optional, for custom endpoints
+AI_MODEL=gpt-4o-mini               # Optional, model for script generation
+```
+
+**Output:**
+- Scripts: `datas/podcast-scripts.json`
+- Audio: `public/podcasts/{lang}/{slug}.mp3`
+- RSS: `public/podcast.xml`
+
+**Examples:**
+
+```bash
+# Generate all podcasts
+astro-minimax podcast generate
+
+# Generate single article
+astro-minimax podcast generate --slug=zh/getting-started
+
+# Generate script only (no audio)
+astro-minimax podcast generate --task=script
+
+# Preview what would be generated
+astro-minimax podcast generate --dry-run
+
+# List generated podcasts
+astro-minimax podcast list
+
+# Generate RSS feed
+astro-minimax podcast feed
+```
+
 ## Customization
 
 - **Colors**: Override CSS custom properties in your own CSS file
