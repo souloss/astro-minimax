@@ -74,6 +74,7 @@
     "lodash.kebabcase": "^4.1.1",
     "mermaid": "^11.12.3",
     "preact": "^10.29.0",
+    "qrcode": "^1.5.4",
     "rehype-katex": "^7.0.1",
     "remark-emoji": "^5.0.2",
     "remark-github-alerts": "^0.1.1",

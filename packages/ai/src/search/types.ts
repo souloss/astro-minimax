@@ -29,12 +29,14 @@ export interface ArticleContext {
   categories: string[];
   dateTime: number;
   fullContent?: string;
+  score?: number;
 }
 
 export interface ProjectContext {
   name: string;
   url: string;
   description: string;
+  score?: number;
 }
 
 export interface CachedSearchContext {

@@ -66,6 +66,7 @@ export function searchArticles(
       categories: result.categories,
       dateTime: result.dateTime,
       fullContent,
+      score: result.score,
     };
   });
 }
@@ -90,6 +91,7 @@ export function searchProjects(
     name: r.title,
     url: r.url.startsWith('http') ? r.url : `${baseUrl}${r.url}`,
     description: r.excerpt || r.content.slice(0, 200),
+    score: r.score,
   }));
 }
 

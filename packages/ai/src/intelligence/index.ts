@@ -32,6 +32,15 @@ export {
 
 export type { AnswerMode } from './citation-guard.js';
 
+export {
+  createCitationAppenderTransform,
+  shouldAppendCitations,
+  selectCitations,
+  formatCitationBlock,
+} from './citation-appender.js';
+
+export type { CitationAppenderConfig } from './citation-appender.js';
+
 export type {
   QueryComplexity,
   KeywordExtractionResult,

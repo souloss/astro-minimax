@@ -6,9 +6,10 @@ interface Props {
   pubDatetime: Date;
   url?: string;
   lang?: string;
+  ogImageUrl?: string;
 }
 
-const { title, pubDatetime, url, lang = "zh" } = Astro.props;
+const { title, pubDatetime, url, lang = "zh", ogImageUrl } = Astro.props;
 const pageUrl = url || Astro.url.href;
 const copyrightConfig = SITE.copyright;
 const hasSponsor = SITE.sponsor?.enabled;
@@ -83,6 +84,33 @@ const hasSponsor = SITE.sponsor?.enabled;
         </svg>
         {lang === "zh" ? "复制链接" : "Copy link"}
       </button>
+      {
+        ogImageUrl && import.meta.env.PROD && (
+          <button
+            id="copy-og-btn"
+            data-og-url={ogImageUrl}
+            class="flex items-center gap-1 rounded-md border px-2 py-1 text-xs text-foreground-soft transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={lang === "zh" ? "复制分享图" : "Copy share image"}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+              <circle cx="9" cy="9" r="2"></circle>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+            </svg>
+            {lang === "zh" ? "复制分享图" : "Copy share image"}
+          </button>
+        )
+      }
       <a
         href={`https://x.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(title)}`}
         target="_blank"
@@ -139,14 +167,67 @@ const hasSponsor = SITE.sponsor?.enabled;
     document.querySelectorAll("#copy-link-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         navigator.clipboard.writeText(window.location.href);
-        const original = btn.textContent;
-        btn.textContent = "✓ Copied!";
+        const original = btn.innerHTML;
+        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>✓`;
         setTimeout(() => {
-          if (original) btn.textContent = original;
+          if (original) btn.innerHTML = original;
         }, 2000);
       });
     });
   }
-  initCopyLink();
-  document.addEventListener("astro:page-load", initCopyLink);
+
+  async function copyImageToClipboard(imageUrl: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const response = await fetch(imageUrl);
+      
+      if (!response.ok) {
+        return { success: false, error: 'Image not available (try after build)' };
+      }
+      
+      const blob = await response.blob();
+      
+      if (!blob.type.startsWith('image/')) {
+        return { success: false, error: 'Invalid image format' };
+      }
+
+      await navigator.clipboard.write([
+        new ClipboardItem({ [blob.type]: blob })
+      ]);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: 'Failed to copy image' };
+    }
+  }
+
+  function initCopyOgImage() {
+    document.querySelectorAll("#copy-og-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const ogUrl = btn.getAttribute('data-og-url');
+        if (!ogUrl) return;
+        
+        const original = btn.innerHTML;
+        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`;
+        
+        const result = await copyImageToClipboard(ogUrl);
+        
+        if (result.success) {
+          btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>✓`;
+        } else {
+          btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line><line x1="9" x2="15" y1="9" y2="15"></line></svg>`;
+        }
+        
+        setTimeout(() => {
+          if (original) btn.innerHTML = original;
+        }, 2000);
+      });
+    });
+  }
+
+  function init() {
+    initCopyLink();
+    initCopyOgImage();
+  }
+
+  init();
+  document.addEventListener("astro:page-load", init);
 </script>

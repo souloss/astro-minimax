@@ -1,217 +1,251 @@
 import satori from "satori";
-// import { html } from "satori-html";
+import QRCode from "qrcode";
 import { SITE } from "virtual:astro-minimax/config";
 import loadGoogleFonts from "../loadGoogleFont";
 
-// const markup = html`<div
-//       style={{
-//         background: "#fefbfb",
-//         width: "100%",
-//         height: "100%",
-//         display: "flex",
-//         alignItems: "center",
-//         justifyContent: "center",
-//       }}
-//     >
-//       <div
-//         style={{
-//           position: "absolute",
-//           top: "-1px",
-//           right: "-1px",
-//           border: "4px solid #000",
-//           background: "#ecebeb",
-//           opacity: "0.9",
-//           borderRadius: "4px",
-//           display: "flex",
-//           justifyContent: "center",
-//           margin: "2.5rem",
-//           width: "88%",
-//           height: "80%",
-//         }}
-//       />
+async function generateQRCode(data, size = 100) {
+  return await QRCode.toDataURL(data, {
+    width: size,
+    margin: 2,
+    errorCorrectionLevel: "H",
+    color: { dark: "#1e293b", light: "#ffffff" },
+  });
+}
 
-//       <div
-//         style={{
-//           border: "4px solid #000",
-//           background: "#fefbfb",
-//           borderRadius: "4px",
-//           display: "flex",
-//           justifyContent: "center",
-//           margin: "2rem",
-//           width: "88%",
-//           height: "80%",
-//         }}
-//       >
-//         <div
-//           style={{
-//             display: "flex",
-//             flexDirection: "column",
-//             justifyContent: "space-between",
-//             margin: "20px",
-//             width: "90%",
-//             height: "90%",
-//           }}
-//         >
-//           <p
-//             style={{
-//               fontSize: 72,
-//               fontWeight: "bold",
-//               maxHeight: "84%",
-//               overflow: "hidden",
-//             }}
-//           >
-//             {post.data.title}
-//           </p>
-//           <div
-//             style={{
-//               display: "flex",
-//               justifyContent: "space-between",
-//               width: "100%",
-//               marginBottom: "8px",
-//               fontSize: 28,
-//             }}
-//           >
-//             <span>
-//               by{" "}
-//               <span
-//                 style={{
-//                   color: "transparent",
-//                 }}
-//               >
-//                 "
-//               </span>
-//               <span style={{ overflow: "hidden", fontWeight: "bold" }}>
-//                 {post.data.author}
-//               </span>
-//             </span>
+export default async (post) => {
+  const { title, author, description, pubDatetime, category } = post.data;
+  const lang = post.id.startsWith("en/") ? "en" : "zh";
+  
+  const isEn = lang === "en";
+  
+  const labels = {
+    scanToRead: isEn ? "Scan to read full article" : "扫码阅读全文",
+    published: isEn ? "Published" : "发布于",
+  };
+  
+  const dateStr = pubDatetime
+    ? new Date(pubDatetime).toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
 
-//             <span style={{ overflow: "hidden", fontWeight: "bold" }}>
-//               {SITE.title}
-//             </span>
-//           </div>
-//         </div>
-//       </div>
-//     </div>`;
+  const postUrl = `${SITE.website}/${post.id}`;
+  const qrDataUrl = await generateQRCode(postUrl, 100);
+  const domain = SITE.website ? new URL(SITE.website).hostname : "blog.dev";
+  const displayUrl = `${domain}/${post.id}`;
 
-export default async post => {
   return satori(
     {
       type: "div",
       props: {
         style: {
-          background: "#fefbfb",
+          background: "#e2e8f0",
           width: "100%",
           height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          padding: "35px",
         },
         children: [
           {
             type: "div",
             props: {
               style: {
-                position: "absolute",
-                top: "-1px",
-                right: "-1px",
-                border: "4px solid #000",
-                background: "#ecebeb",
-                opacity: "0.9",
-                borderRadius: "4px",
+                width: "920px",
+                background: "#ffffff",
+                borderRadius: "16px",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+                overflow: "hidden",
                 display: "flex",
-                justifyContent: "center",
-                margin: "2.5rem",
-                width: "88%",
-                height: "80%",
+                flexDirection: "column",
               },
-            },
-          },
-          {
-            type: "div",
-            props: {
-              style: {
-                border: "4px solid #000",
-                background: "#fefbfb",
-                borderRadius: "4px",
-                display: "flex",
-                justifyContent: "center",
-                margin: "2rem",
-                width: "88%",
-                height: "80%",
-              },
-              children: {
-                type: "div",
-                props: {
-                  style: {
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    margin: "20px",
-                    width: "90%",
-                    height: "90%",
-                  },
-                  children: [
-                    {
-                      type: "p",
-                      props: {
-                        style: {
-                          fontSize: 72,
-                          fontWeight: "bold",
-                          maxHeight: "84%",
-                          overflow: "hidden",
-                        },
-                        children: post.data.title,
-                      },
+              children: [
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      padding: "32px 36px 24px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "16px",
                     },
-                    {
-                      type: "div",
-                      props: {
-                        style: {
-                          display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          marginBottom: "8px",
-                          fontSize: 28,
-                        },
-                        children: [
-                          {
-                            type: "span",
-                            props: {
-                              children: [
-                                "by ",
-                                {
+                    children: [
+                      {
+                        type: "div",
+                        props: {
+                          style: {
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "14px",
+                          },
+                          children: [
+                            {
+                              type: "div",
+                              props: {
+                                style: {
+                                  width: "42px",
+                                  height: "42px",
+                                  borderRadius: "10px",
+                                  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                },
+                                children: {
                                   type: "span",
                                   props: {
-                                    style: { color: "transparent" },
-                                    children: '"',
+                                    style: { color: "#fff", fontSize: "20px", fontWeight: 700 },
+                                    children: SITE.title?.charAt(0) || "B",
                                   },
                                 },
-                                {
-                                  type: "span",
+                              },
+                            },
+                            {
+                              type: "div",
+                              props: {
+                                style: { display: "flex", flexDirection: "column", gap: "2px" },
+                                children: [
+                                  {
+                                    type: "span",
+                                    props: {
+                                      style: { fontSize: "16px", fontWeight: 600, color: "#1e293b" },
+                                      children: SITE.title || "Blog",
+                                    },
+                                  },
+                                  {
+                                    type: "span",
+                                    props: {
+                                      style: { fontSize: "13px", color: "#64748b" },
+                                      children: author || SITE.author,
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            category
+                              ? {
+                                  type: "div",
                                   props: {
                                     style: {
-                                      overflow: "hidden",
-                                      fontWeight: "bold",
+                                      marginLeft: "auto",
+                                      background: "#f1f5f9",
+                                      padding: "5px 12px",
+                                      borderRadius: "6px",
+                                      fontSize: "13px",
+                                      color: "#475569",
                                     },
-                                    children: post.data.author,
+                                    children: category,
                                   },
-                                },
-                              ],
-                            },
-                          },
-                          {
-                            type: "span",
-                            props: {
-                              style: { overflow: "hidden", fontWeight: "bold" },
-                              children: SITE.title,
-                            },
-                          },
-                        ],
+                                }
+                              : null,
+                          ].filter(Boolean),
+                        },
                       },
-                    },
-                  ],
+                      {
+                        type: "h1",
+                        props: {
+                          style: {
+                            fontSize: 28,
+                            fontWeight: 700,
+                            color: "#0f172a",
+                            lineHeight: 1.4,
+                            margin: 0,
+                          },
+                          children: title,
+                        },
+                      },
+                      {
+                        type: "div",
+                        props: {
+                          style: {
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            fontSize: "14px",
+                            color: "#64748b",
+                          },
+                          children: dateStr ? [{ type: "span", props: { children: `${labels.published} ${dateStr}` } }] : [],
+                        },
+                      },
+                    ],
+                  },
                 },
-              },
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      padding: "0 36px 28px",
+                      display: "flex",
+                      flexDirection: "column",
+                    },
+                    children: [
+                      {
+                        type: "p",
+                        props: {
+                          style: {
+                            fontSize: "15px",
+                            color: "#475569",
+                            lineHeight: 1.7,
+                            margin: 0,
+                          },
+                          children:
+                            description && description.length > 100
+                              ? description.slice(0, 100) + "..."
+                              : description || "",
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      padding: "20px 36px",
+                      background: "#f8fafc",
+                      borderTop: "1px solid #e2e8f0",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    },
+                    children: [
+                      {
+                        type: "div",
+                        props: {
+                          style: { display: "flex", flexDirection: "column", gap: "4px" },
+                          children: [
+                            {
+                              type: "span",
+                              props: {
+                                style: { fontSize: "13px", color: "#94a3b8" },
+                                children: labels.scanToRead,
+                              },
+                            },
+                            {
+                              type: "span",
+                              props: {
+                                style: { fontSize: "14px", fontWeight: 500, color: "#3b82f6" },
+                                children: displayUrl,
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        type: "img",
+                        props: {
+                          src: qrDataUrl,
+                          width: 72,
+                          height: 72,
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
             },
           },
         ],
@@ -221,9 +255,7 @@ export default async post => {
       width: 1200,
       height: 630,
       embedFont: true,
-      fonts: await loadGoogleFonts(
-        post.data.title + post.data.author + SITE.title + "by"
-      ),
+      fonts: await loadGoogleFonts(title + (description || "") + author + SITE.title + dateStr),
     }
   );
 };

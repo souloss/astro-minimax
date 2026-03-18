@@ -33,6 +33,9 @@ import {
   createCacheAdapter,
   detectPublicQuestion,
   getGlobalSearchCache,
+  shouldAppendCitations,
+  formatCitationBlock,
+  selectCitations,
   setGlobalSearchCache,
   getGlobalCacheTTL,
   getResponseCache,
@@ -613,6 +616,19 @@ async function runPipeline(args: PipelineArgs): Promise<Response> {
 
           if (hasTextOutput && errors.length === 0) {
             adapter.recordSuccess();
+            
+            if (shouldAppendCitations(responseText, relatedArticles, relatedProjects)) {
+              const citations = selectCitations(relatedArticles, relatedProjects, 3, 5);
+              if (citations.length > 0) {
+                const citationBlock = formatCitationBlock(citations, lang);
+                const citationId = `citation-${Date.now()}`;
+                writer.write({ type: 'text-start', id: citationId } as never);
+                writer.write({ type: 'text-delta', id: citationId, delta: citationBlock } as never);
+                writer.write({ type: 'text-end', id: citationId } as never);
+                responseText += citationBlock;
+              }
+            }
+            
             writer.write({ type: 'finish', finishReason: 'stop' });
             streamSuccess = true;
 

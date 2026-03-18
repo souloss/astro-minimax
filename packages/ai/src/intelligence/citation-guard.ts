@@ -1,21 +1,27 @@
 import type { ArticleContext, ProjectContext } from '../search/types.js';
 import type { CitationGuardPreflight, CitationGuardAction } from './types.js';
+import {
+  PRIVACY_REFUSAL_TEMPLATES,
+  NO_ARTICLE_TEMPLATES,
+  ARTICLE_COUNT_TEMPLATES,
+  pickTemplate,
+  pickTemplateWithVars,
+} from './response-templates.js';
 
 export type AnswerMode = 'fact' | 'count' | 'list' | 'opinion' | 'recommendation' | 'unknown' | 'general';
 
 interface PrivacyPattern {
   regex: RegExp;
-  zh: string;
-  en: string;
+  key: string;
 }
 
 const PRIVACY_PATTERNS: PrivacyPattern[] = [
-  { regex: /(住址|地址|住在哪|address|where.*live)/iu, zh: '具体住址是私人信息，未在博客中公开。', en: 'Address is private and not disclosed on the blog.' },
-  { regex: /(收入|工资|薪资|salary|income|earn)/iu, zh: '收入信息未在博客中公开。', en: 'Income information is not disclosed on the blog.' },
-  { regex: /(家人|妻子|丈夫|孩子|父母|family|wife|husband|children|parent)/iu, zh: '家人信息未在博客中公开。', en: 'Family information is not disclosed on the blog.' },
-  { regex: /(电话|手机号|phone|mobile)/iu, zh: '联系电话未在博客中公开。', en: 'Phone number is not disclosed on the blog.' },
-  { regex: /(身份证|id\s*card|passport)/iu, zh: '身份证件信息未在博客中公开。', en: 'ID information is not disclosed on the blog.' },
-  { regex: /(年龄|多大了|几岁|how old|age)/iu, zh: '年龄信息未在博客中公开。', en: 'Age information is not disclosed on the blog.' },
+  { regex: /(住址|地址|住在哪|address|where.*live)/iu, key: 'address' },
+  { regex: /(收入|工资|薪资|salary|income|earn)/iu, key: 'income' },
+  { regex: /(家人|妻子|丈夫|孩子|父母|family|wife|husband|children|parent)/iu, key: 'family' },
+  { regex: /(电话|手机号|phone|mobile)/iu, key: 'phone' },
+  { regex: /(身份证|id\s*card|passport)/iu, key: 'id' },
+  { regex: /(年龄|多大了|几岁|how old|age)/iu, key: 'age' },
 ];
 
 /**
@@ -40,8 +46,10 @@ export function resolveAnswerMode(query: string): AnswerMode {
 function checkPrivacyRefusal(query: string, lang: string): CitationGuardPreflight | null {
   for (const pattern of PRIVACY_PATTERNS) {
     if (pattern.regex.test(query)) {
+      const templates = PRIVACY_REFUSAL_TEMPLATES[pattern.key];
+      const text = templates ? pickTemplate(templates, lang) : '';
       return {
-        text: lang === 'en' ? pattern.en : pattern.zh,
+        text,
         actions: ['preflight_reject'],
       };
     }
@@ -69,18 +77,14 @@ export function getCitationGuardPreflight(params: {
   if (/有几篇|有多少篇|文章数量|总共.*文章|how many.*article/u.test(q)) {
     const total = articles.length;
     if (total > 0) {
-      const text = lang === 'en'
-        ? `Based on my search, I found ${total} related articles.`
-        : `根据我检索到的信息，当前共找到 ${total} 篇相关文章。`;
+      const text = pickTemplateWithVars(ARTICLE_COUNT_TEMPLATES, lang, { count: total });
       return { text, actions: ['preflight_reject'] };
     }
   }
 
   if (/有没有|是否有|有.*文章|写过.*吗|is there|any.*article/u.test(q)) {
     if (articles.length === 0 && projects.length === 0) {
-      const text = lang === 'en'
-        ? 'No articles directly related to this topic were found. Try different keywords or ask another question.'
-        : '根据博客内容搜索，目前没有找到与这个主题直接相关的文章。你可以尝试用其他关键词搜索，或者问我其他问题。';
+      const text = pickTemplate(NO_ARTICLE_TEMPLATES, lang);
       return { text, actions: ['preflight_reject'] };
     }
   }

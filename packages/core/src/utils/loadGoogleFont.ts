@@ -1,11 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-async function loadLocalFont(
-  weight: number,
-  style: string
-): Promise<ArrayBuffer> {
-  const filename = `ibm-plex-mono-latin-${weight}-${style}.woff`;
+async function loadLocalFont(filename: string): Promise<ArrayBuffer> {
   const fontPath = join(process.cwd(), "public", "fonts", filename);
   const buffer = await readFile(fontPath);
   return buffer.buffer.slice(
@@ -15,24 +11,41 @@ async function loadLocalFont(
 }
 
 async function loadGoogleFonts(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _text: string
+  text: string
 ): Promise<
   Array<{ name: string; data: ArrayBuffer; weight: number; style: string }>
 > {
+  const hasChinese = /[\u4e00-\u9fff\u3400-\u4dbf]/.test(text);
+
+  if (hasChinese) {
+    const fontsConfig = [
+      { name: "Noto Sans SC", weight: 400, style: "normal", file: "noto-sans-sc-400-normal.woff" },
+      { name: "Noto Sans SC", weight: 700, style: "normal", file: "noto-sans-sc-700-normal.woff" },
+    ];
+
+    return Promise.all(
+      fontsConfig.map(async ({ name, weight, style, file }) => ({
+        name,
+        data: await loadLocalFont(file),
+        weight,
+        style,
+      }))
+    );
+  }
+
   const fontsConfig = [
-    { name: "IBM Plex Mono", weight: 400, style: "normal" },
-    { name: "IBM Plex Mono", weight: 700, style: "normal" },
+    { name: "IBM Plex Mono", weight: 400, style: "normal", file: "ibm-plex-mono-latin-400-normal.woff" },
+    { name: "IBM Plex Mono", weight: 700, style: "normal", file: "ibm-plex-mono-latin-700-normal.woff" },
   ];
 
-  const fonts = await Promise.all(
-    fontsConfig.map(async ({ name, weight, style }) => {
-      const data = await loadLocalFont(weight, style);
-      return { name, data, weight, style };
-    })
+  return Promise.all(
+    fontsConfig.map(async ({ name, weight, style, file }) => ({
+      name,
+      data: await loadLocalFont(file),
+      weight,
+      style,
+    }))
   );
-
-  return fonts;
 }
 
 export default loadGoogleFonts;

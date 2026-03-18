@@ -47,17 +47,17 @@
     "clean": "rm -rf node_modules/.cache"
   },
   "peerDependencies": {
-    "astro": "^5.0.0 || ^6.0.0",
-    "tailwindcss": "^4.0.0",
-    "@tailwindcss/typography": "^0.5.0",
     "@astrojs/rss": "^4.0.0",
+    "@fontsource/ibm-plex-mono": "^5.0.0",
     "@pagefind/default-ui": "^1.0.0",
-    "satori": "^0.18.0",
-    "dayjs": "^1.11.0",
-    "slugify": "^1.6.0",
-    "lodash.kebabcase": "^4.1.0",
     "@resvg/resvg-js": "^2.6.0",
-    "@fontsource/ibm-plex-mono": "^5.0.0"
+    "@tailwindcss/typography": "^0.5.0",
+    "astro": "^5.0.0 || ^6.0.0",
+    "dayjs": "^1.11.0",
+    "lodash.kebabcase": "^4.1.0",
+    "satori": "^0.18.0",
+    "slugify": "^1.6.0",
+    "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
     "astro": "^6.0.0",
@@ -84,5 +84,8 @@
     "node": ">=22.12.0",
     "pnpm": ">=9.0.0"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@9.15.0",
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
 }
