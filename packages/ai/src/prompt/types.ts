@@ -12,6 +12,7 @@ export interface StaticLayerConfig {
 export interface SemiStaticLayerConfig {
   authorContext: AuthorContextFile | null;
   voiceProfile: VoiceProfile | null;
+  lang?: string;
 }
 
 export interface DynamicLayerConfig {

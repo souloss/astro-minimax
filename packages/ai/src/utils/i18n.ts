@@ -65,7 +65,12 @@ export type AITranslationKey =
   | "ai.prompt.section.sourceLayers"
   | "ai.prompt.section.privacy"
   | "ai.prompt.section.answerModes"
-  | "ai.prompt.section.preOutputChecks";
+  | "ai.prompt.section.preOutputChecks"
+  // Semi-static layer labels
+  | "ai.semiStatic.blogOverview"
+  | "ai.semiStatic.totalPosts"
+  | "ai.semiStatic.mainCategories"
+  | "ai.semiStatic.latestArticles";
 
 const translations: Record<string, Record<AITranslationKey, string>> = {
   en: {
@@ -130,6 +135,10 @@ const translations: Record<string, Record<AITranslationKey, string>> = {
     "ai.prompt.section.privacy": "Privacy Protection",
     "ai.prompt.section.answerModes": "Answer Mode Guide (follow detected mode)",
     "ai.prompt.section.preOutputChecks": "Pre-Output Checks (execute mentally, do not output steps)",
+    "ai.semiStatic.blogOverview": "Blog Overview",
+    "ai.semiStatic.totalPosts": "{count} posts total",
+    "ai.semiStatic.mainCategories": "Main categories: {categories}",
+    "ai.semiStatic.latestArticles": "Latest Posts",
   },
   zh: {
     // Reasoning UI
@@ -193,6 +202,10 @@ const translations: Record<string, Record<AITranslationKey, string>> = {
     "ai.prompt.section.privacy": "隐私保护",
     "ai.prompt.section.answerModes": "回答模式指导（按检测到的模式执行）",
     "ai.prompt.section.preOutputChecks": "输出前检查（在心里执行，不输出步骤）",
+    "ai.semiStatic.blogOverview": "博客概况",
+    "ai.semiStatic.totalPosts": "共有 {count} 篇文章",
+    "ai.semiStatic.mainCategories": "主要分类：{categories}",
+    "ai.semiStatic.latestArticles": "最新文章",
   },
 };
 

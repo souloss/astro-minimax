@@ -46,8 +46,9 @@ const PROMPTS: Record<string, PromptContent> = {
       'L1 原始博客内容：「相关文章」中的标题、摘要、要点、正文节选（最高优先级）',
       'L2 策划数据：作者简介、项目列表、博客概况',
       'L3 结构化事实：标签统计、分类聚合等推导数据',
+      'L4 外部验证来源：官方文档、GitHub 仓库、权威外部来源（需标注引用）',
       'L5 语言风格：仅影响表达方式，不作为事实依据',
-      '当不同来源冲突时，L1 > L2 > L3 > L5',
+      '当不同来源冲突时，L1 > L2 > L3 > L4 > L5',
       'L1 内容必须来自「相关文章」部分，禁止凭空编造',
     ],
     privacyProtection: [
@@ -101,8 +102,9 @@ const PROMPTS: Record<string, PromptContent> = {
       'L1 Blog content: titles, summaries, key points, excerpts from "Related Articles" (highest priority)',
       'L2 Curated data: author bio, project list, blog overview',
       'L3 Structured facts: tag statistics, category aggregations, derived data',
+      'L4 External verification: official docs, GitHub repos, authoritative sources (cite when used)',
       'L5 Voice style: affects expression only, not to be used as factual evidence',
-      'When sources conflict: L1 > L2 > L3 > L5',
+      'When sources conflict: L1 > L2 > L3 > L4 > L5',
       'L1 content must come from the "Related Articles" section; never fabricate',
     ],
     privacyProtection: [

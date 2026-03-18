@@ -1,33 +1,30 @@
 import type { SemiStaticLayerConfig } from './types.js';
+import { t, getLang } from '../utils/i18n.js';
 
-/**
- * Semi-static layer: blog metadata loaded at build/startup time.
- * This changes when the blog is rebuilt, not per-request.
- */
 export function buildSemiStaticLayer(config: SemiStaticLayerConfig): string {
-  const { authorContext } = config;
+  const { authorContext, lang: configLang } = config;
   if (!authorContext) return '';
 
+  const lang = getLang(configLang);
   const lines: string[] = [];
   const { posts } = authorContext;
 
   if (!posts.length) return '';
 
-  // Blog overview
   const totalPosts = posts.length;
   const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
   const recentPosts = posts
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 10);
 
-  lines.push('## 博客概况');
-  lines.push(`- 共有 ${totalPosts} 篇文章`);
+  lines.push('## ' + t('ai.semiStatic.blogOverview', lang));
+  lines.push('- ' + t('ai.semiStatic.totalPosts', lang, { count: totalPosts }));
   if (categories.length) {
-    lines.push(`- 主要分类：${categories.slice(0, 8).join('、')}`);
+    lines.push('- ' + t('ai.semiStatic.mainCategories', lang, { categories: categories.slice(0, 8).join(lang === 'zh' ? '、' : ', ') }));
   }
 
   lines.push('');
-  lines.push('## 最新文章');
+  lines.push('## ' + t('ai.semiStatic.latestArticles', lang));
   for (const post of recentPosts) {
     const date = post.date ? new Date(post.date).toISOString().slice(0, 10) : '';
     const summary = post.summary ? ` — ${post.summary.slice(0, 60)}` : '';
