@@ -35,6 +35,8 @@ interface EvalCase {
   forbiddenClaims: string[];
   mustHaveLinks?: boolean;
   lang: string;
+  mustHitSourceIds?: string[];
+  mustHitSourceCount?: number;
 }
 
 interface GoldSet {
@@ -272,6 +274,43 @@ function checkAnswerMode(response: string, answerMode: string): CheckResult {
   }
 }
 
+function checkSourceHit(
+  response: string,
+  mustHitSourceIds?: string[],
+  mustHitSourceCount?: number,
+): CheckResult {
+  if (!mustHitSourceIds?.length && mustHitSourceCount === undefined) {
+    return { name: "source_hit", passed: true, detail: "No source requirements" };
+  }
+
+  const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const links = [...response.matchAll(linkPattern)].map((m) => m[2]);
+
+  const hitSources = mustHitSourceIds?.filter((id) =>
+    links.some((link) => link.includes(id))
+  ) ?? [];
+
+  const minRequired = mustHitSourceCount ?? mustHitSourceIds?.length ?? 0;
+  const passed = hitSources.length >= minRequired;
+
+  return {
+    name: "source_hit",
+    passed,
+    detail: passed
+      ? `Hit ${hitSources.length}/${mustHitSourceIds?.length ?? 0} required sources`
+      : `Missing sources: ${mustHitSourceIds?.filter((id) => !hitSources.includes(id)).join(", ")}`,
+  };
+}
+
+const CHECK_WEIGHTS: Record<string, number> = {
+  not_empty: 1,
+  topic_coverage: 3,
+  forbidden_claims: 5,
+  has_links: 2,
+  answer_mode: 3,
+  source_hit: 4,
+};
+
 function evaluateResponse(evalCase: EvalCase, response: string): CheckResult[] {
   return [
     checkNotEmpty(response),
@@ -279,6 +318,7 @@ function evaluateResponse(evalCase: EvalCase, response: string): CheckResult[] {
     checkForbiddenClaims(response, evalCase.forbiddenClaims),
     checkHasLinks(response, evalCase.mustHaveLinks),
     checkAnswerMode(response, evalCase.answerMode),
+    checkSourceHit(response, evalCase.mustHitSourceIds, evalCase.mustHitSourceCount),
   ];
 }
 
@@ -336,9 +376,13 @@ async function main() {
       totalLatency += latency;
 
       const checks = evaluateResponse(evalCase, response);
-      const passedChecks = checks.filter((c) => c.passed).length;
-      const score = passedChecks;
-      const maxScore = checks.length;
+      const score = checks.reduce((total, check) => {
+        const weight = CHECK_WEIGHTS[check.name] ?? 1;
+        return total + (check.passed ? weight : 0);
+      }, 0);
+      const maxScore = checks.reduce((total, check) => {
+        return total + (CHECK_WEIGHTS[check.name] ?? 1);
+      }, 0);
       const allPassed = checks.every((c) => c.passed);
 
       if (allPassed) passedCount++;
@@ -381,7 +425,7 @@ async function main() {
         question: evalCase.question,
         passed: false,
         score: 0,
-        maxScore: 5,
+        maxScore: 18,
         response: "",
         latency: 0,
         checks: [],
