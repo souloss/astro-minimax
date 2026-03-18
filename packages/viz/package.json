@@ -1,6 +1,6 @@
 {
   "name": "@astro-minimax/viz",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "type": "module",
   "description": "Visualization plugin package for astro-minimax — Mermaid, Markmap, Rough.js, Excalidraw, Asciinema and more.",
   "author": "Souloss",
