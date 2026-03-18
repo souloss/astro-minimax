@@ -1,6 +1,7 @@
 import type { AstroIntegration } from "astro";
 import { remarkMermaidCodeblock } from "./plugins/remark-mermaid-codeblock";
 import { remarkMarkmapCodeblock } from "./plugins/remark-markmap-codeblock";
+import { rehypeMermaidProcessed } from "./plugins/rehype-mermaid-processed";
 
 export interface VizConfig {
   mermaid?: boolean;
@@ -14,17 +15,24 @@ export default function minimaxViz(config: VizConfig = {}): AstroIntegration {
       "astro:config:setup": ({ updateConfig }) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const remarkPlugins: any[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const rehypePlugins: any[] = [];
 
         if (config.mermaid !== false) {
           remarkPlugins.push(remarkMermaidCodeblock);
+          rehypePlugins.push(rehypeMermaidProcessed);
         }
 
         if (config.markmap !== false) {
           remarkPlugins.push(remarkMarkmapCodeblock);
         }
 
-        if (remarkPlugins.length > 0) {
-          updateConfig({ markdown: { remarkPlugins } });
+        updateConfig({
+          markdown: { remarkPlugins },
+        });
+        
+        if (rehypePlugins.length > 0) {
+          updateConfig({ markdown: { rehypePlugins } });
         }
       },
     },

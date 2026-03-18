@@ -95,8 +95,11 @@ const uniqueId = `mermaid-${randomUUID()}`;
   }
 
   let renderCounter = 0;
+  let isInitialized = false;
 
   function initMermaid(isDark: boolean) {
+    if (isInitialized) return;
+    isInitialized = true;
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "loose",
@@ -114,8 +117,6 @@ const uniqueId = `mermaid-${randomUUID()}`;
 
     const code = JSON.parse(codeScript.textContent || '""');
     if (!code) return;
-
-    initMermaid(isDark);
 
     try {
       renderCounter++;
@@ -149,8 +150,6 @@ const uniqueId = `mermaid-${randomUUID()}`;
     wrapper.appendChild(codeScript);
     pre.parentNode?.replaceChild(wrapper, pre);
 
-    initMermaid(isDark);
-
     try {
       renderCounter++;
       const svgId = `${uniqueId}-svg-${renderCounter}`;
@@ -163,6 +162,7 @@ const uniqueId = `mermaid-${randomUUID()}`;
 
   async function renderAllVisible() {
     const isDark = getIsDark();
+    initMermaid(isDark);
 
     const observer = new IntersectionObserver(
       (entries, obs) => {
@@ -195,7 +195,6 @@ const uniqueId = `mermaid-${randomUUID()}`;
 
   async function reRenderAll() {
     const isDark = getIsDark();
-    initMermaid(isDark);
 
     const wrappers = document.querySelectorAll<HTMLElement>(".mermaid-wrapper");
     for (const wrapper of wrappers) {
