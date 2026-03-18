@@ -64,13 +64,16 @@
 
   let scriptsLoading = false;
   let scriptsLoaded = false;
+  const LOAD_TIMEOUT_MS = 3000;
 
   async function loadMarkmapScripts(): Promise<boolean> {
     if (scriptsLoaded) return true;
     if (scriptsLoading) {
       return new Promise((resolve) => {
+        const startTime = Date.now();
         const check = () => {
           if (scriptsLoaded) resolve(true);
+          else if (Date.now() - startTime > LOAD_TIMEOUT_MS) resolve(false);
           else setTimeout(check, 50);
         };
         check();
@@ -86,15 +89,23 @@
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to load markmap scripts:', error);
+      scriptsLoading = false;
       return false;
     }
   }
 
   function isMarkmapLoaded(): boolean {
-    return typeof (window as { markmap?: unknown }).markmap !== 'undefined';
+    const markmapLib = (window as { markmap?: { Markmap?: unknown; Toolbar?: unknown; deriveOptions?: unknown } }).markmap;
+    return typeof markmapLib !== 'undefined' 
+      && typeof markmapLib.Markmap === 'function'
+      && typeof markmapLib.Toolbar === 'function'
+      && typeof markmapLib.deriveOptions === 'function';
   }
 
-  async function renderMarkmapContainer(container: HTMLElement) {
+  const MAX_RENDER_RETRIES = 5;
+  const RENDER_RETRY_DELAY_MS = 100;
+
+  async function renderMarkmapContainer(container: HTMLElement, retryCount = 0): Promise<void> {
     if (container.dataset.rendered === 'true') return;
     
     const rootScript = container.querySelector<HTMLScriptElement>('script[type="application/json"]');
@@ -108,8 +119,13 @@
       }
     }
 
+    // After load attempt, check again with retry limit
     if (!isMarkmapLoaded()) {
-      setTimeout(() => renderMarkmapContainer(container), 100);
+      if (retryCount >= MAX_RENDER_RETRIES) {
+        container.innerHTML = '<p class="markmap-error">Markmap library not ready after maximum retries</p>';
+        return;
+      }
+      setTimeout(() => renderMarkmapContainer(container, retryCount + 1), RENDER_RETRY_DELAY_MS);
       return;
     }
 
@@ -177,7 +193,29 @@
     }
   }
 
+  let markmapObserver: IntersectionObserver | null = null;
+
+  function ensureObserver(): IntersectionObserver {
+    if (markmapObserver) return markmapObserver;
+    
+    markmapObserver = new IntersectionObserver(
+      (entries, obs) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            obs.unobserve(entry.target);
+            renderMarkmapContainer(entry.target as HTMLElement);
+          }
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    
+    return markmapObserver;
+  }
+
   function renderAllMarkmaps() {
+    const observer = ensureObserver();
+    
     document.querySelectorAll<HTMLElement>('.markmap-wrap').forEach(container => {
       const svg = container.querySelector('svg');
       if (svg && svg.children.length > 0) {
@@ -185,17 +223,6 @@
         return;
       }
       
-      const observer = new IntersectionObserver(
-        (entries, obs) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              obs.unobserve(entry.target);
-              renderMarkmapContainer(entry.target as HTMLElement);
-            }
-          }
-        },
-        { rootMargin: '200px' }
-      );
       observer.observe(container);
     });
   }
