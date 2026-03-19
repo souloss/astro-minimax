@@ -1,6 +1,6 @@
 {
   "name": "@astro-minimax/ai",
-  "version": "0.7.5",
+  "version": "0.8.0",
   "type": "module",
   "description": "Vendor-agnostic AI integration package with full RAG pipeline for astro-minimax blogs — supports OpenAI, Cloudflare AI, and custom providers.",
   "author": "Souloss",
@@ -69,23 +69,28 @@
       "types": "./dist/server/index.d.ts",
       "import": "./dist/server/index.js"
     },
-    "./components/*": "./src/components/*",
+    "./components/ChatPanel": {
+      "types": "./dist/components/ChatPanel.d.ts",
+      "import": "./dist/components/ChatPanel.js"
+    },
+    "./components/AIChatContainer": {
+      "types": "./dist/components/AIChatContainer.d.ts",
+      "import": "./dist/components/AIChatContainer.js"
+    },
+    "./components/AIChatWidget.astro": "./dist/components/AIChatWidget.astro",
     "./styles/source.css": "./src/styles/source.css",
     "./package.json": "./package.json"
   },
   "files": [
     "dist/",
-    "src/components/",
-    "src/providers/mock.ts",
-    "src/server/types.ts",
-    "src/utils/i18n.ts",
     "src/styles/",
     "README.md"
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && chmod +x dist/server/dev-server.js",
-    "build:watch": "tsc -p tsconfig.build.json --watch",
+    "build": "node scripts/build.mjs",
+    "build:watch": "node scripts/build.mjs --watch",
+    "build:components": "node scripts/build-components.mjs",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm run clean && pnpm run build"
@@ -115,6 +120,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
     "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
     "typescript": "^5.9.3"
   },
   "engines": {

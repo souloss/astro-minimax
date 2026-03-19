@@ -59,8 +59,11 @@ export default defineConfig({
       shareLinks: SHARE_LINKS,
       friends: FRIENDS,
       blogPath: "src/data/blog",
+      viz: { mermaid: true, markmap: true },
     }),
-    preact({ compat: true }),
+    preact({
+      compat: true,
+    }),
     sitemap({
       filter: page => SITE.showArchives || !page.endsWith("/archives"),
     }),
@@ -110,6 +113,12 @@ export default defineConfig({
           changeOrigin: true,
         },
       },
+      warmup: {
+        clientFiles: [
+          "./src/components/**/*.astro",
+          "./src/layouts/**/*.astro",
+        ],
+      },
     },
     resolve: {
       alias: {
@@ -120,8 +129,19 @@ export default defineConfig({
       },
       dedupe: ["preact", "preact/hooks", "preact/compat", "preact/debug", "preact/devtools", "react", "react-dom"],
     },
+    // Pre-bundle dependencies to speed up development and ensure consistency.
+    //
+    // WHY: By explicitly including these packages in optimizeDeps, Vite pre-bundles
+    // them on startup. This prevents lazy-loading race conditions where modules
+    // might load from different copies during dev. Particularly important for
+    // @ai-sdk/react which uses hooks that must resolve consistently.
+    //
+    // NOTE: Local workspace packages (@astro-minimax/*) are excluded from optimization
+    // because they're linked via workspace protocol and should be loaded fresh on changes.
+    // Excluding them also ensures JSX transformation uses Preact's jsx-runtime correctly.
     optimizeDeps: {
-      exclude: ["@resvg/resvg-js"],
+      noDiscovery: true,
+      exclude: ["@resvg/resvg-js", "@astro-minimax/ai", "@astro-minimax/core"],
       include: [
         "preact",
         "preact/hooks",
@@ -132,8 +152,9 @@ export default defineConfig({
         "preact/jsx-dev-runtime",
         "@ai-sdk/react",
         "ai",
-        "@astro-minimax/ai",
-        "@astro-minimax/core",
+        "mermaid",
+        "markmap-lib",
+        "katex",
       ],
     },
     ssr: {
