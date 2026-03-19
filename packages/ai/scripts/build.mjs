@@ -186,7 +186,8 @@ async function buildPackage() {
   // Generate type declarations with tsc
   console.log('\n[3/3] Generating type declarations...');
   try {
-    execSync('pnpm exec tsc -p tsconfig.types.json', {
+    // Use npx to ensure tsc is found in local node_modules
+    execSync('npx tsc -p tsconfig.types.json', {
       cwd: packageRoot,
       stdio: 'inherit'
     });
