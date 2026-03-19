@@ -6,6 +6,7 @@ settings:
 
 overrides:
   '@astrojs/rss': ^4.0.17
+  preact: ^10.29.0
 
 importers:
 
@@ -44,9 +45,6 @@ importers:
       '@astro-minimax/notify':
         specifier: workspace:*
         version: link:../../packages/notify
-      '@astro-minimax/viz':
-        specifier: workspace:*
-        version: link:../../packages/viz
       '@astrojs/mdx':
         specifier: ^5.0.0
         version: 5.0.0(astro@6.0.4(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
@@ -83,6 +81,9 @@ importers:
       lodash.kebabcase:
         specifier: ^4.1.1
         version: 4.1.1
+      markmap-lib:
+        specifier: ^0.18.11
+        version: 0.18.12(markmap-common@0.18.9)
       mermaid:
         specifier: ^11.12.3
         version: 11.12.3
@@ -172,13 +173,13 @@ importers:
         specifier: ^3.0.0
         version: 3.0.118(react@19.2.4)(zod@4.3.6)
       '@astro-minimax/notify':
-        specifier: workspace:*
-        version: link:../notify
+        specifier: ^0.7.5
+        version: 0.7.5(resend@3.5.0(react-dom@18.3.1(react@19.2.4))(react@19.2.4))
       ai:
         specifier: ^6.0.116
         version: 6.0.116(zod@4.3.6)
       preact:
-        specifier: ^10.0.0
+        specifier: ^10.29.0
         version: 10.29.0
       workers-ai-provider:
         specifier: ^3.1.2
@@ -237,21 +238,36 @@ importers:
       dayjs:
         specifier: ^1.11.0
         version: 1.11.19
+      hast:
+        specifier: ^1.0.0
+        version: 1.0.0
       lodash.kebabcase:
         specifier: ^4.1.0
         version: 4.1.1
+      markmap-lib:
+        specifier: ^0.18.11
+        version: 0.18.12(markmap-common@0.18.9)
+      mdast:
+        specifier: ^3.0.0
+        version: 3.0.0
+      mermaid:
+        specifier: ^11.0.0
+        version: 11.12.3
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
       satori:
-        specifier: ^0.18.0
-        version: 0.18.4
+        specifier: ^0.25.0
+        version: 0.25.0
       slugify:
         specifier: ^1.6.0
         version: 1.6.6
       tailwindcss:
         specifier: ^4.0.0
         version: 4.2.1
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.1.0
     devDependencies:
       astro:
         specifier: ^6.0.0
@@ -279,31 +295,6 @@ importers:
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/viz:
-    dependencies:
-      astro:
-        specifier: ^5.0.0 || ^6.0.0
-        version: 6.0.4(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.31.1)(rollup@4.59.0)(stylus@0.64.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      markmap-lib:
-        specifier: ^0.18.11
-        version: 0.18.12(markmap-common@0.18.9)
-      markmap-view:
-        specifier: ^0.18.10
-        version: 0.18.12(markmap-common@0.18.9)
-      mermaid:
-        specifier: ^11.0.0
-        version: 11.12.3
-      remark-markmap:
-        specifier: ^1.1.5
-        version: 1.1.5
-      unist-util-visit:
-        specifier: ^5.0.0
-        version: 5.1.0
-    devDependencies:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -343,6 +334,15 @@ packages:
 
   '@antfu/install-pkg@1.1.0':
     resolution: {integrity: sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==}
+
+  '@astro-minimax/notify@0.7.5':
+    resolution: {integrity: sha512-AlA272XYqgC9ckq5UtqfWfh9CvxUshIFJsxZwkTpicrq3M/YHLu0dfXy540sATuUxXvSHR5OKN1pjAdozvC04Q==}
+    engines: {node: '>=22.12.0', pnpm: '>=9.0.0'}
+    peerDependencies:
+      resend: ^3.0.0
+    peerDependenciesMeta:
+      resend:
+        optional: true
 
   '@astrojs/check@0.9.7':
     resolution: {integrity: sha512-dA7U5/OFg8/xaMUb2vUOOJuuJXnMpHy6F0BM8ZhL7WT5OkTBwJ0GoW38n4fC4CXt+lT9mLWL0y8Pa74tFByBpQ==}
@@ -390,7 +390,7 @@ packages:
     resolution: {integrity: sha512-KJBLQtKxmx/MnNMqDNFFp2N6o430eyx90uaLKJS4IzUnR0fOgekyGOPjE+3deuetIS+7uNcp1kALpLPG21/tFQ==}
     engines: {node: ^20.19.1 || >=22.12.0}
     peerDependencies:
-      preact: ^10.6.5
+      preact: ^10.29.0
 
   '@astrojs/prism@3.3.0':
     resolution: {integrity: sha512-q8VwfU/fDZNoDOf+r7jUnMC2//H2l0TuQ6FkGJL8vD8nw/q5KiL3DS1KKBI3QhI9UQhpJ5dc7AtqfbXWuOgLCQ==}
@@ -1259,7 +1259,7 @@ packages:
   '@preact/signals@2.8.2':
     resolution: {integrity: sha512-gym5yoa64c+0w2kL7zRAAjY548qzWXbbuOfjsK9F1nWrEqooDwyWnih5SNdonjhQSp27zUqYh7UrxIRnkCyFCA==}
     peerDependencies:
-      preact: '>= 10.25.0 || >=11.0.0-0'
+      preact: ^10.29.0
 
   '@prefresh/babel-plugin@0.5.3':
     resolution: {integrity: sha512-57LX2SHs4BX2s1IwCjNzTE2OJeEepRCNf1VTEpbNcUyHfMO68eeOWGDIt4ob9aYlW6PEWZ1SuwNikuoIXANDtQ==}
@@ -1267,7 +1267,7 @@ packages:
   '@prefresh/core@1.5.9':
     resolution: {integrity: sha512-IKBKCPaz34OFVC+adiQ2qaTF5qdztO2/4ZPf4KsRTgjKosWqxVXmEbxCiUydYZRY8GVie+DQlKzQr9gt6HQ+EQ==}
     peerDependencies:
-      preact: ^10.0.0 || ^11.0.0-0
+      preact: ^10.29.0
 
   '@prefresh/utils@1.2.1':
     resolution: {integrity: sha512-vq/sIuN5nYfYzvyayXI4C2QkprfNaHUQ9ZX+3xLD8nL3rWyzpxOm1+K7RtMbhd+66QcaISViK7amjnheQ/4WZw==}
@@ -1275,7 +1275,7 @@ packages:
   '@prefresh/vite@2.4.12':
     resolution: {integrity: sha512-FY1fzXpUjiuosznMV0YM7XAOPZjB5FIdWS0W24+XnlxYkt9hNAwwsiKYn+cuTEoMtD/ZVazS5QVssBr9YhpCQA==}
     peerDependencies:
-      preact: ^10.4.0 || ^11.0.0-0
+      preact: ^10.29.0
       vite: '>=2.0.0'
 
   '@react-email/render@0.0.16':
@@ -2919,6 +2919,10 @@ packages:
   hast-util-whitespace@3.0.0:
     resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
 
+  hast@1.0.0:
+    resolution: {integrity: sha512-vFUqlRV5C+xqP76Wwq2SrM0kipnmpxJm7OfvVXpB35Fp+Fn4MV+ozr+JZr5qFvyR1q/U+Foim2x+3P+x9S1PLA==}
+    deprecated: Renamed to rehype
+
   hastscript@9.0.1:
     resolution: {integrity: sha512-g7df9rMFX/SPi34tyGCyUBREQoKkapwdY/T04Qn9TDWfHhAYt4/I0gMVirzK5wEzeUqIjEB+LXC/ypb7Aqno5w==}
 
@@ -3373,6 +3377,10 @@ packages:
   mdast-util-to-string@4.0.0:
     resolution: {integrity: sha512-0H44vDimn51F0YwvxSJSm0eCDOJTRlmN0R1yBh4HLj9wiV1Dn0QoXGbvFAWj2hSItVTlCmBF1hqKlIyUBVFLPg==}
 
+  mdast@3.0.0:
+    resolution: {integrity: sha512-xySmf8g4fPKMeC07jXGz971EkLbWAJ83s4US2Tj9lEdnZ142UP5grN73H1Xd3HzrdbU5o9GYYP/y8F9ZSwLE9g==}
+    deprecated: '`mdast` was renamed to `remark`'
+
   mdn-data@2.0.28:
     resolution: {integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==}
 
@@ -3762,7 +3770,7 @@ packages:
   preact-render-to-string@6.6.6:
     resolution: {integrity: sha512-EfqZJytnjJldV+YaaqhthU2oXsEf5e+6rDv957p+zxAvNfFLQOPfvBOTncscQ+akzu6Wrl7s3Pa0LjUQmWJsGQ==}
     peerDependencies:
-      preact: '>=10 || >= 11.0.0-0'
+      preact: ^10.29.0
 
   preact@10.29.0:
     resolution: {integrity: sha512-wSAGyk2bYR1c7t3SZ3jHcM6xy0lcBcDel6lODcs9ME6Th++Dx2KU+6D3HD8wMMKGA8Wpw7OMd3/4RGzYRpzwRg==}
@@ -4036,10 +4044,6 @@ packages:
 
   sass-formatter@0.7.9:
     resolution: {integrity: sha512-CWZ8XiSim+fJVG0cFLStwDvft1VI7uvXdCNJYXhDvowiv+DsbD1nXLiQ4zrE5UBvj5DWZJ93cwN0NX5PMsr1Pw==}
-
-  satori@0.18.4:
-    resolution: {integrity: sha512-HanEzgXHlX3fzpGgxPoR3qI7FDpc/B+uE/KplzA6BkZGlWMaH98B/1Amq+OBF1pYPlGNzAXPYNHlrEVBvRBnHQ==}
-    engines: {node: '>=16'}
 
   satori@0.25.0:
     resolution: {integrity: sha512-utINfLxrYrmSnLvxFT4ZwgwWa8KOjrz7ans32V5wItgHVmzESl/9i33nE38uG0miycab8hUqQtDlOpqrIpB/iw==}
@@ -4897,6 +4901,16 @@ snapshots:
     dependencies:
       package-manager-detector: 1.6.0
       tinyexec: 1.0.2
+
+  '@astro-minimax/notify@0.7.5(resend@3.5.0(react-dom@18.3.1(react@19.2.4))(react@19.2.4))':
+    dependencies:
+      grammy: 1.41.1
+    optionalDependencies:
+      resend: 3.5.0(react-dom@18.3.1(react@19.2.4))(react@19.2.4)
+      undici: 6.23.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
 
   '@astrojs/check@0.9.7(prettier-plugin-astro@0.14.1)(prettier@3.8.1)(typescript@5.9.3)':
     dependencies:
@@ -7777,6 +7791,8 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
 
+  hast@1.0.0: {}
+
   hastscript@9.0.1:
     dependencies:
       '@types/hast': 3.0.4
@@ -8305,6 +8321,8 @@ snapshots:
   mdast-util-to-string@4.0.0:
     dependencies:
       '@types/mdast': 4.0.4
+
+  mdast@3.0.0: {}
 
   mdn-data@2.0.28: {}
 
@@ -9215,20 +9233,6 @@ snapshots:
   sass-formatter@0.7.9:
     dependencies:
       suf-log: 2.5.3
-
-  satori@0.18.4:
-    dependencies:
-      '@shuding/opentype.js': 1.4.0-beta.0
-      css-background-parser: 0.1.0
-      css-box-shadow: 1.0.0-3
-      css-gradient-parser: 0.0.17
-      css-to-react-native: 3.2.0
-      emoji-regex-xs: 2.0.1
-      escape-html: 1.0.3
-      linebreak: 1.1.0
-      parse-css-color: 0.2.1
-      postcss-value-parser: 4.2.0
-      yoga-layout: 3.2.1
 
   satori@0.25.0:
     dependencies:

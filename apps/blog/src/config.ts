@@ -30,11 +30,9 @@ export const SITE: SiteConfig = {
     friends: true,
     projects: true,
     search: true,
-    darkMode: true,
-    ai: true,
-    waline: true,
-    sponsor: true,
   },
+
+  darkMode: true,
 
   nav: {
     items: [
@@ -105,13 +103,7 @@ export const SITE: SiteConfig = {
     licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
   },
 
-  get lightAndDarkMode() {
-    return this.features?.darkMode;
-  },
   get showArchives() {
     return this.features?.archives;
-  },
-  get aiEnabled() {
-    return (this.features?.ai ?? false) && (this.ai?.enabled ?? false);
   },
 };

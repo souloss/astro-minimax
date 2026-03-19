@@ -5,6 +5,10 @@ import { getPostLang } from "../utils/getPostsByLang";
 import getSortedPosts from "../utils/getSortedPosts";
 import { SITE } from "virtual:astro-minimax/config";
 
+function toPubDate(modDatetime: Date | string | null | undefined, pubDatetime: Date | string): Date {
+  return modDatetime ? new Date(modDatetime) : new Date(pubDatetime);
+}
+
 export async function GET() {
   const posts = await getCollection("blog");
   const sortedPosts = getSortedPosts(posts);
@@ -16,7 +20,7 @@ export async function GET() {
       link: getLocalizedPostPath(getPostLang(post), post.id),
       title: post.data.title,
       description: post.data.description,
-      pubDate: new Date(post.data.modDatetime ?? post.data.pubDatetime),
+      pubDate: toPubDate(post.data.modDatetime, post.data.pubDatetime),
     })),
   });
 }

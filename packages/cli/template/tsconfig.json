@@ -6,6 +6,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "types": ["@cloudflare/workers-types"]
   }
 }

@@ -19,13 +19,13 @@ Updating dependencies can be tedious, but neglecting them is worse. Here's how t
 If you're using astro-minimax via CLI or NPM packages:
 
 ```bash
-pnpm update @astro-minimax/core @astro-minimax/viz @astro-minimax/ai @astro-minimax/cli
+pnpm update @astro-minimax/core @astro-minimax/ai @astro-minimax/cli
 ```
 
 For latest major versions (may contain breaking changes):
 
 ```bash
-pnpm update @astro-minimax/core@latest @astro-minimax/viz@latest @astro-minimax/ai@latest @astro-minimax/cli@latest
+pnpm update @astro-minimax/core@latest @astro-minimax/ai@latest @astro-minimax/cli@latest
 ```
 
 ---

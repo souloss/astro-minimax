@@ -1,9 +1,27 @@
 import { fileURLToPath } from "node:url";
-import { createRequire } from "node:module";
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { AstroIntegration } from "astro";
 import type { SiteConfig, SocialLink, FriendLink } from "./types";
+import { remarkMermaidCodeblock } from "./plugins/viz/remark-mermaid-codeblock";
+import { remarkMarkmapCodeblock } from "./plugins/viz/remark-markmap-codeblock";
+import { rehypeMermaidProcessed } from "./plugins/viz/rehype-mermaid-processed";
+
+const VIRTUAL_MODULE_IDS = new Set([
+  "virtual:astro-minimax/config",
+  "virtual:astro-minimax/constants",
+  "virtual:astro-minimax/user-data",
+  "virtual:astro-minimax/styles",
+  "virtual:astro-minimax/ai-widget",
+  "virtual:astro-minimax/ai-summaries",
+  "virtual:astro-minimax/viz-mermaid-init",
+  "virtual:astro-minimax/viz-markmap-init",
+]);
+
+export interface VizConfig {
+  mermaid?: boolean;
+  markmap?: boolean;
+}
 
 export interface MinimaxUserConfig {
   site: SiteConfig | Record<string, unknown>;
@@ -11,6 +29,7 @@ export interface MinimaxUserConfig {
   shareLinks?: readonly SocialLink[] | SocialLink[];
   friends?: readonly FriendLink[] | FriendLink[];
   blogPath?: string;
+  viz?: VizConfig;
 }
 
 export default function minimax(
@@ -23,20 +42,33 @@ export default function minimax(
     hooks: {
       "astro:config:setup": ({ injectRoute, updateConfig, config }) => {
         const projectRoot = fileURLToPath(config.root);
-        
+        // Get source directory for Tailwind @source directive
+        const srcDir = fileURLToPath(config.srcDir);
+
         // Check if packages are installed by looking in the project's node_modules
         // NOT using require.resolve which can find monorepo sibling packages
         const installedPkgs = new Set<string>();
-        for (const pkg of ["@astro-minimax/viz", "@astro-minimax/ai"]) {
+        for (const pkg of ["@astro-minimax/ai"]) {
           const pkgPath = resolve(projectRoot, "node_modules", pkg, "package.json");
           if (existsSync(pkgPath)) {
             installedPkgs.add(pkg);
           }
         }
 
+        const vizConfig = userConfig.viz ?? { mermaid: true, markmap: true };
+        const remarkPlugins: unknown[] = [];
+        const rehypePlugins: unknown[] = [];
+        if (vizConfig.mermaid !== false) {
+          remarkPlugins.push(remarkMermaidCodeblock);
+          rehypePlugins.push(rehypeMermaidProcessed);
+        }
+        if (vizConfig.markmap !== false) {
+          remarkPlugins.push(remarkMarkmapCodeblock);
+        }
+
         const cssLines: string[] = [
           '@import "tailwindcss";',
-          '@source "../src";',
+          `@source "${srcDir}";`,
           '@import "@astro-minimax/core/styles/source.css";',
         ];
 
@@ -52,22 +84,16 @@ export default function minimax(
         writeFileSync(entryPath, cssLines.join("\n") + "\n");
 
         updateConfig({
+          markdown: {
+            remarkPlugins,
+            rehypePlugins,
+          },
           vite: {
             plugins: [
               {
                 name: "astro-minimax-virtual-modules",
                 resolveId(id: string) {
-                  const virtuals = [
-                    "virtual:astro-minimax/config",
-                    "virtual:astro-minimax/constants",
-                    "virtual:astro-minimax/user-data",
-                    "virtual:astro-minimax/styles",
-                    "virtual:astro-minimax/ai-widget",
-                    "virtual:astro-minimax/ai-summaries",
-                    "virtual:astro-minimax/viz-mermaid-init",
-                    "virtual:astro-minimax/viz-markmap-init",
-                  ];
-                  if (virtuals.includes(id)) {
+                  if (VIRTUAL_MODULE_IDS.has(id)) {
                     if (id === "virtual:astro-minimax/styles") return entryPath;
                     return "\0" + id;
                   }
@@ -89,23 +115,22 @@ export default function minimax(
                     return `export const FRIENDS = ${JSON.stringify(userConfig.friends ?? [])};`;
                   }
                   if (id === "\0virtual:astro-minimax/viz-mermaid-init") {
-                    if (installedPkgs.has("@astro-minimax/viz")) {
-                      return `export { default } from "@astro-minimax/viz/components/MermaidInit.astro";`;
+                    if (vizConfig.mermaid !== false) {
+                      return `export { default } from "@astro-minimax/core/components/viz/MermaidInit.astro";`;
                     }
-                    return `const MermaidInit = () => null;\nMermaidInit.isAstroComponentFactory = true;\nexport default MermaidInit;`;
+                    return `export { default } from "@astro-minimax/core/components/Empty.astro";`;
                   }
                   if (id === "\0virtual:astro-minimax/viz-markmap-init") {
-                    if (installedPkgs.has("@astro-minimax/viz")) {
-                      return `export { default } from "@astro-minimax/viz/components/MarkmapInit.astro";`;
+                    if (vizConfig.markmap !== false) {
+                      return `export { default } from "@astro-minimax/core/components/viz/MarkmapInit.astro";`;
                     }
-                    return `const MarkmapInit = () => null;\nMarkmapInit.isAstroComponentFactory = true;\nexport default MarkmapInit;`;
+                    return `export { default } from "@astro-minimax/core/components/Empty.astro";`;
                   }
                   if (id === "\0virtual:astro-minimax/ai-widget") {
                     if (installedPkgs.has("@astro-minimax/ai")) {
                       return `export { default } from "@astro-minimax/ai/components/AIChatWidget.astro";`;
                     }
-                    // Return an empty Astro component that renders nothing
-                    return `export default function AIChatWidget() { return null; }\nAIChatWidget.isAstroComponentFactory = true;`;
+                    return `export { default } from "@astro-minimax/core/components/Empty.astro";`;
                   }
                   if (id === "\0virtual:astro-minimax/ai-summaries") {
                     const summariesPath = resolve(projectRoot, "datas", "ai-summaries.json");
@@ -267,6 +292,10 @@ declare module "virtual:astro-minimax/viz-mermaid-init" {
 declare module "virtual:astro-minimax/viz-markmap-init" {
   const MarkmapInit: import("astro").AstroComponentFactory;
   export default MarkmapInit;
+}
+declare module "virtual:astro-minimax/ai-summaries" {
+  const summaries: { meta: Record<string, unknown>; articles: Record<string, unknown> };
+  export default summaries;
 }`,
         });
       },

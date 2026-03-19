@@ -6,6 +6,10 @@ import { getPostsByLang } from "../../utils/getPostsByLang";
 import getSortedPosts from "../../utils/getSortedPosts";
 import { SITE } from "virtual:astro-minimax/config";
 
+function toPubDate(modDatetime: Date | string | null | undefined, pubDatetime: Date | string): Date {
+  return modDatetime ? new Date(modDatetime) : new Date(pubDatetime);
+}
+
 export const getStaticPaths = (() => [
   { params: { lang: "zh" } },
   { params: { lang: "en" } },
@@ -27,7 +31,7 @@ export async function GET({ params }: { params: { lang: string } }) {
       link: getLocalizedPostPath(lang, post.id),
       title: post.data.title,
       description: post.data.description,
-      pubDate: new Date(post.data.modDatetime ?? post.data.pubDatetime),
+      pubDate: toPubDate(post.data.modDatetime, post.data.pubDatetime),
     })),
   });
 }

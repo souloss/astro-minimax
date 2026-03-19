@@ -1,4 +1,4 @@
-import { generateText } from 'ai';
+import { generateText, type LanguageModel } from 'ai';
 import type { ArticleContext, ProjectContext } from '../search/types.js';
 import type { EvidenceAnalysisResult, QueryComplexity } from './types.js';
 
@@ -52,8 +52,7 @@ ${evidenceSummary}
 
   try {
     const result = await generateText({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      model: (provider as any).chatModel(model),
+      model: provider.chatModel(model) as LanguageModel,
       prompt,
       maxOutputTokens,
       temperature: 0.1,

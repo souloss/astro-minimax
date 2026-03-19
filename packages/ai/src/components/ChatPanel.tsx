@@ -1,4 +1,3 @@
-/** @jsxImportSource preact */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';

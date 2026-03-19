@@ -18,13 +18,13 @@ description: 如何更新项目依赖和 astro-minimax 模板。
 如果你通过 CLI 或 NPM 包集成方式使用 astro-minimax，只需：
 
 ```bash
-pnpm update @astro-minimax/core @astro-minimax/viz @astro-minimax/ai @astro-minimax/cli
+pnpm update @astro-minimax/core @astro-minimax/ai @astro-minimax/cli
 ```
 
 如果想更新到最新主版本（可能有破坏性变更）：
 
 ```bash
-pnpm update @astro-minimax/core@latest @astro-minimax/viz@latest @astro-minimax/ai@latest @astro-minimax/cli@latest
+pnpm update @astro-minimax/core@latest @astro-minimax/ai@latest @astro-minimax/cli@latest
 ```
 
 ---

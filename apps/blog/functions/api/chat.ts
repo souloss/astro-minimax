@@ -7,8 +7,11 @@ import voiceProfile from '../../datas/voice-profile.json';
 import factRegistry from '../../datas/fact-registry.json';
 
 // Optional: TF-IDF vector index for enhanced search reranking
+// The vector index is created by `astro-minimax ai process` command
+// Using dynamic import in try/catch since the file may not exist yet
 let vectorIndex: unknown = null;
-try { vectorIndex = (await import('../../src/data/vectors/index.json')).default; } catch { /* not available */ }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+try { vectorIndex = (await import('../../src/data/vectors/index.json' as any)).default; } catch { /* not available */ }
 
 interface FunctionEnv extends ChatHandlerEnv {
   CACHE_KV?: KVNamespace;

@@ -24,9 +24,8 @@ astro-minimax/
 │   ├── datas/          # AI-generated metadata (do not edit manually)
 │   └── functions/      # Cloudflare Pages Functions (thin adapters)
 ├── packages/
-│   ├── core/           # Theme: layouts, components, pages, styles
+│   ├── core/           # Theme: layouts, components, pages, styles, visualizations
 │   ├── ai/             # AI: RAG pipeline, providers, chat UI
-│   ├── viz/            # Visualization: Mermaid, Markmap, etc.
 │   ├── notify/         # Multi-channel notifications (Telegram, Webhook, Email)
 │   └── cli/            # CLI tools + scaffolding (AI processing, profile, eval)
 └── docs/               # Architecture documentation

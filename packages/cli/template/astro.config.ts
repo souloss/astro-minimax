@@ -1,7 +1,6 @@
 import { defineConfig, envField } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import minimax from "@astro-minimax/core";
-import minimaxViz from "@astro-minimax/viz";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
@@ -31,6 +30,7 @@ import { SITE } from "./src/config";
 import { SOCIALS, SHARE_LINKS } from "./src/constants";
 import { FRIENDS } from "./src/data/friends";
 
+// Shiki transformers require type casting since they use a different type system
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const asTransformer = (t: any) => t;
 
@@ -60,7 +60,6 @@ export default defineConfig({
       friends: FRIENDS,
       blogPath: "src/data/blog",
     }),
-    minimaxViz({ mermaid: true, markmap: true }),
     preact({ compat: true }),
     sitemap({
       filter: page => SITE.showArchives || !page.endsWith("/archives"),
@@ -97,10 +96,13 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [tailwindcss() as never],
+    plugins: [
+      tailwindcss() as never,
+    ],
     server: {
       fs: {
-        strict: false,
+        strict: true,
+        allow: ["./src", "./.astro"],
       },
       proxy: {
         "/api": {
@@ -111,7 +113,7 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        "@/": new URL("./src/", import.meta.url).pathname,
+        "@/" : new URL("./src/", import.meta.url).pathname,
         "react": "preact/compat",
         "react-dom": "preact/compat",
         "react/jsx-runtime": "preact/jsx-runtime",
@@ -132,7 +134,6 @@ export default defineConfig({
         "ai",
         "@astro-minimax/ai",
         "@astro-minimax/core",
-        "@astro-minimax/viz",
       ],
     },
     ssr: {
@@ -140,7 +141,6 @@ export default defineConfig({
       noExternal: [
         "@astro-minimax/ai",
         "@astro-minimax/core",
-        "@astro-minimax/viz",
         "@ai-sdk/react",
         "ai",
       ],

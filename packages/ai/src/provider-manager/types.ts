@@ -249,6 +249,7 @@ export interface ProviderAdapter {
   recordFailure(error: Error): void;
 
   getProvider(): { chatModel: (model: string) => unknown };
+  chatModel(model?: string): unknown;
 
   dispose?(): void;
 }

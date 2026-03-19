@@ -51,11 +51,9 @@ export const SITE = {
     friends: true,
     projects: true,
     search: true,
-    darkMode: true,
-    ai: false,
-    waline: false,
-    sponsor: false,
   },
+
+  darkMode: true,
 };
 ```
 
@@ -108,10 +106,54 @@ features: {
   friends: true,     // 友链页面
   projects: true,    // 项目展示页面
   search: true,      // 全文搜索（Pagefind）
-  darkMode: true,    // 明暗主题切换
-  ai: true,          // AI 聊天助手
-  waline: true,      // Waline 评论系统
-  sponsor: true,     // 赞助打赏功能
+},
+```
+
+### 深色模式
+
+```js
+darkMode: true,    // 明暗主题切换
+```
+
+关闭深色模式将隐藏 UI 中的主题切换按钮。
+
+### AI 聊天
+
+AI 聊天由 `SITE.ai.enabled` 控制。先启用 `@astro-minimax/ai` 包，然后配置：
+
+```js
+ai: {
+  enabled: true,
+  mockMode: true,
+  apiEndpoint: "/api/chat",
+  model: "@cf/zai-org/glm-4.7-flash",
+},
+```
+
+### Waline 评论
+
+Waline 评论由 `SITE.waline.enabled` 控制：
+
+```js
+waline: {
+  enabled: true,
+  serverURL: "https://your-waline-server.vercel.app/",
+  // ...
+},
+```
+
+### 赞助打赏
+
+赞助打赏由 `SITE.sponsor.enabled` 控制：
+
+```js
+sponsor: {
+  enabled: true,
+  methods: [
+    { name: "微信支付", icon: "wechat", image: "/images/wechat-pay.svg" },
+    { name: "支付宝", icon: "alipay", image: "/images/alipay.svg" },
+  ],
+  sponsors: [],
 },
 ```
 
@@ -357,7 +399,7 @@ ai: {
 
 | 选项 | 说明 |
 |------|------|
-| `enabled` | 是否启用 AI 聊天（需同时在 `features.ai` 中启用） |
+| `enabled` | 是否启用 AI 聊天（设置为 `true`） |
 | `mockMode` | Mock 模式下返回预设回复，不调用真实 API，适合开发调试 |
 | `apiEndpoint` | API 端点地址。使用 Cloudflare Pages Functions 时为 `/api/chat` |
 | `model` | 使用的模型 ID。默认使用 Cloudflare Workers AI 的 GLM-4.7 Flash |
@@ -385,7 +427,7 @@ sponsor: {
 
 | 选项 | 说明 |
 |------|------|
-| `enabled` | 是否启用赞助功能（需同时在 `features.sponsor` 中启用） |
+| `enabled` | 是否启用赞助功能 |
 | `methods` | 支付方式列表：`name`（名称）、`icon`（图标标识）、`image`（收款码图片路径） |
 | `sponsors` | 赞助者列表：`name`、`amount`（金额）、`date`（日期）、`platform`（平台，可选） |
 

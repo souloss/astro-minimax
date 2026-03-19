@@ -37,16 +37,16 @@ const enabled = SITE.waline?.enabled;
       <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
       
       <script is:inline type="module" define:vars={{ 
-        serverURL: SITE.waline.serverURL, 
-        emoji: SITE.waline.emoji, 
-        lang: SITE.waline.lang, 
-        reaction: SITE.waline.reaction, 
-        pageview: SITE.waline.pageview,
-        login: SITE.waline.login,
-        wordLimit: SITE.waline.wordLimit,
-        imageUploader: SITE.waline.imageUploader,
-        requiredMeta: SITE.waline.requiredMeta,
-        copyright: SITE.waline.copyright
+        serverURL: SITE.waline?.serverURL ?? '', 
+        emoji: SITE.waline?.emoji ?? [], 
+        lang: SITE.waline?.lang ?? 'en',
+        reaction: SITE.waline?.reaction ?? false, 
+        pageview: SITE.waline?.pageview ?? false,
+        login: SITE.waline?.login ?? 'enable',
+        wordLimit: SITE.waline?.wordLimit ?? [0, 0],
+        imageUploader: SITE.waline?.imageUploader ?? false,
+        requiredMeta: SITE.waline?.requiredMeta ?? [],
+        copyright: SITE.waline?.copyright ?? true
       }}>
         import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
         
@@ -139,6 +139,17 @@ const enabled = SITE.waline?.enabled;
         // Handle View Transitions (if using ClientRouter)
         document.addEventListener('astro:page-load', loadWaline);
         
+        // Suppress Waline AbortError (external service unavailability)
+        const suppressWalineErrors = (event: ErrorEvent) => {
+          if (event.message?.includes('AbortError') && 
+              (event.filename?.includes('waline') || event.message?.includes('waline'))) {
+            event.preventDefault();
+            return true;
+          }
+          return false;
+        };
+        window.addEventListener('error', suppressWalineErrors);
+        
         // Cleanup before page swap to prevent AbortError
         document.addEventListener('astro:before-swap', () => {
           if (walineInstance) {
@@ -151,6 +162,7 @@ const enabled = SITE.waline?.enabled;
             }
             walineInstance = null;
           }
+          window.removeEventListener('error', suppressWalineErrors);
         });
       </script>
       

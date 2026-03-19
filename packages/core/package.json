@@ -54,8 +54,11 @@
     "@tailwindcss/typography": "^0.5.0",
     "astro": "^5.0.0 || ^6.0.0",
     "dayjs": "^1.11.0",
+    "hast": "^1.0.0",
+    "mermaid": "^11.0.0",
     "lodash.kebabcase": "^4.1.0",
-    "satori": "^0.18.0",
+    "mdast": "^3.0.0",
+    "satori": "^0.25.0",
     "slugify": "^1.6.0",
     "tailwindcss": "^4.0.0"
   },
@@ -78,6 +81,9 @@
     },
     "@pagefind/default-ui": {
       "optional": true
+    },
+    "mermaid": {
+      "optional": true
     }
   },
   "engines": {
@@ -86,6 +92,8 @@
   },
   "packageManager": "pnpm@9.15.0",
   "dependencies": {
-    "qrcode": "^1.5.4"
+    "markmap-lib": "^0.18.11",
+    "qrcode": "^1.5.4",
+    "unist-util-visit": "^5.0.0"
   }
 }

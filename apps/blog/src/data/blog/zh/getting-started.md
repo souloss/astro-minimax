@@ -88,8 +88,7 @@ your-blog/
 ├── pnpm-workspace.yaml       # Workspace 配置
 ├── package.json               # 根级：统一命令入口
 ├── packages/
-│   ├── core/                  # 核心主题包（布局、组件、样式）
-│   ├── viz/                   # 可视化插件包（Mermaid、Markmap 等）
+│   ├── core/                  # 核心主题包（布局、组件、样式、可视化）
 │   ├── ai/                    # AI 集成包
 │   ├── notify/                # 通知系统包
 │   └── cli/                   # CLI 工具包
@@ -198,7 +197,7 @@ git merge upstream/main
 
 ## 方式三：NPM 包集成
 
-适合希望将内容与主题系统分离的用户。主题核心、可视化插件和 AI 功能作为独立 npm 包发布。
+适合希望将内容与主题系统分离的用户。主题核心和 AI 功能作为独立 npm 包发布，可视化组件已内置于核心包中。
 
 ### 1. 创建 Astro 项目
 
@@ -210,11 +209,8 @@ cd my-blog
 ### 2. 安装主题包
 
 ```bash
-# 核心主题（布局、组件、样式）
+# 核心主题（布局、组件、样式、可视化 Mermaid/Markmap）
 pnpm add @astro-minimax/core
-
-# 可视化插件（Mermaid、Markmap、Rough.js 等，可选）
-pnpm add @astro-minimax/viz
 
 # AI 聊天集成（可选）
 pnpm add @astro-minimax/ai
@@ -222,19 +218,22 @@ pnpm add @astro-minimax/ai
 
 ### 3. 配置 Astro
 
-在 `astro.config.ts` 中引入主题的插件：
+在 `astro.config.ts` 中使用主题集成：
 
 ```typescript
 import { defineConfig } from 'astro/config';
-import { remarkMermaidCodeblock } from '@astro-minimax/viz/plugins';
-import { remarkReadingTime } from '@astro-minimax/core/plugins/remark-reading-time';
-import { rehypeExternalLinks } from '@astro-minimax/core/plugins/rehype-external-links';
+import minimax from '@astro-minimax/core';
+import preact from '@astrojs/preact';
 
 export default defineConfig({
-  markdown: {
-    remarkPlugins: [remarkMermaidCodeblock, remarkReadingTime],
-    rehypePlugins: [rehypeExternalLinks],
-  },
+  integrations: [
+    minimax({
+      site: SITE,
+      socials: SOCIALS,
+      viz: { mermaid: true, markmap: true },
+    }),
+    preact({ compat: true }),
+  ],
 });
 ```
 
@@ -260,7 +259,7 @@ import Card from '@astro-minimax/core/components/ui/Card.astro';
 ### 5. 更新
 
 ```bash
-pnpm update @astro-minimax/core @astro-minimax/viz @astro-minimax/ai
+pnpm update @astro-minimax/core @astro-minimax/ai
 ```
 
 ---

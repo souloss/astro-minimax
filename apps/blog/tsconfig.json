@@ -12,7 +12,6 @@
       "@astro-minimax/core/utils/*": ["../../packages/core/src/utils/*"],
       "@astro-minimax/core/plugins/*": ["../../packages/core/src/plugins/*"],
       "@astro-minimax/core/types": ["../../packages/core/src/types.ts"],
-      "@astro-minimax/viz/components/*": ["../../packages/viz/src/components/*"],
       "@/*": ["./src/*"]
     },
     "jsx": "react-jsx",

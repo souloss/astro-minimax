@@ -384,7 +384,7 @@ After deployment, verify these features:
 
 ### AI Not Responding
 
-1. Check AI feature is enabled (`features.ai: true`)
+1. Check AI feature is enabled (`ai.enabled: true`)
 2. Check AI binding in `wrangler.toml`
 3. Run `pnpm run ai:process` to generate data
 

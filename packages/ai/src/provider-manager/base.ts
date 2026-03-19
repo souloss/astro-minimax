@@ -46,6 +46,10 @@ export abstract class BaseProviderAdapter implements ProviderAdapter {
 
   abstract getProvider(): { chatModel: (model: string) => unknown };
 
+  chatModel(model?: string): unknown {
+    return this.getProvider().chatModel(model ?? this.model);
+  }
+
   getHealth(): ProviderHealth {
     return { ...this.health };
   }

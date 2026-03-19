@@ -23,11 +23,11 @@ export const SITE: SiteConfig = {
     series: true,
     archives: true,
     search: true,
-    darkMode: true,
     friends: false,
     projects: false,
-    ai: false,
   },
+
+  darkMode: true,
 
   nav: {
     items: [
@@ -109,15 +109,7 @@ export const SITE: SiteConfig = {
     apiEndpoint: "/api/chat",
   },
 
-  get lightAndDarkMode() {
-    return this.features?.darkMode;
-  },
-
   get showArchives() {
     return this.features?.archives ?? true;
-  },
-
-  get aiEnabled() {
-    return (this.features?.ai ?? false) && (this.ai?.enabled ?? false);
   },
 };

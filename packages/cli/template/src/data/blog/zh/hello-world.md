@@ -4,6 +4,7 @@ description: "这是我的第一篇博客文章，由 astro-minimax 主题驱动
 pubDatetime: 2026-01-01T00:00:00.000Z
 tags:
   - 入门
+category: 教程/入门
 ---
 
 ## 欢迎来到我的博客

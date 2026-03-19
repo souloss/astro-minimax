@@ -9,6 +9,7 @@
  */
 
 import { randomUUID } from "node:crypto";
+import { Transformer } from "markmap-lib";
 
 interface Props {
   /** Markdown content for the mindmap */
@@ -22,18 +23,17 @@ interface Props {
 const { content, id, options = {} } = Astro.props;
 const uniqueId = id || `markmap-${randomUUID()}`;
 
-// remark-markmap expects JSON scripts with root and options
-// We need to transform markdown to tree structure first
-// For simplicity, we output the markdown and let the client-side handle it
+// Transform markdown to mindmap tree structure
+const transformer = new Transformer();
+const { root } = transformer.transform(content);
 ---
 
 <div class="markmap-wrap" id={uniqueId}>
-  <script is:inline type="application/json" class="markmap-root" set:html={JSON.stringify(content)} />
-  <script is:inline type="application/json" class="markmap-options" set:html={JSON.stringify(options)} />
+  <script is:inline type="application/json" set:html={JSON.stringify(root)} />
+  <script is:inline type="application/json" set:html={JSON.stringify(options)} />
 </div>
 
 <style is:global>
-  /* Markmap wrapper styles - matching remark-markmap */
   .markmap-wrap {
     position: relative;
     height: max-content;
@@ -62,7 +62,6 @@ const uniqueId = id || `markmap-${randomUUID()}`;
     height: 100% !important;
   }
 
-  /* Toolbar positioning */
   .mm-toolbar {
     position: absolute;
     right: 0.5em;

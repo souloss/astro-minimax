@@ -384,7 +384,7 @@ Cloudflare Pages 会自动识别并启用 Workers AI。
 
 ### AI 不响应
 
-1. 检查 AI 功能是否启用（`features.ai: true`）
+1. 检查 AI 功能是否启用（`ai.enabled: true`）
 2. 检查 `wrangler.toml` 中的 AI binding
 3. 运行 `pnpm run ai:process` 生成数据
 

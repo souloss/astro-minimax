@@ -1,4 +1,4 @@
-import { generateText } from 'ai';
+import { generateText, type LanguageModel } from 'ai';
 import { tokenize } from '../search/search-utils.js';
 import type { KeywordExtractionResult, QueryComplexity } from './types.js';
 
@@ -68,8 +68,7 @@ ${conversationText}
 
   try {
     const result = await generateText({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      model: (provider as any).chatModel(model),
+      model: provider.chatModel(model) as LanguageModel,
       prompt,
       maxOutputTokens: 100,
       temperature: 0,

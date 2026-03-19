@@ -88,8 +88,7 @@ your-blog/
 ├── pnpm-workspace.yaml       # Workspace config
 ├── package.json               # Root: unified command entry
 ├── packages/
-│   ├── core/                  # Core theme (layouts, components, styles)
-│   ├── viz/                   # Visualization plugins (Mermaid, Markmap, etc.)
+│   ├── core/                  # Core theme (layouts, components, styles, visualizations)
 │   ├── ai/                    # AI integration
 │   ├── notify/                # Notification system
 │   └── cli/                   # CLI tools
@@ -198,7 +197,7 @@ git merge upstream/main
 
 ## Method 3: NPM Package Integration
 
-For users who want to separate content from the theme system. The core theme, visualization plugins, and AI features are published as independent npm packages.
+For users who want to separate content from the theme system. The core theme and AI features are published as independent npm packages, with visualization components built into core.
 
 ### 1. Create Astro Project
 
@@ -210,11 +209,8 @@ cd my-blog
 ### 2. Install Theme Packages
 
 ```bash
-# Core theme (layouts, components, styles)
+# Core theme (layouts, components, styles, Mermaid/Markmap viz)
 pnpm add @astro-minimax/core
-
-# Visualization plugins (Mermaid, Markmap, Rough.js, etc. — optional)
-pnpm add @astro-minimax/viz
 
 # AI chat integration (optional)
 pnpm add @astro-minimax/ai
@@ -222,19 +218,20 @@ pnpm add @astro-minimax/ai
 
 ### 3. Configure Astro
 
-Import theme plugins in `astro.config.ts`:
-
 ```typescript
 import { defineConfig } from 'astro/config';
-import { remarkMermaidCodeblock } from '@astro-minimax/viz/plugins';
-import { remarkReadingTime } from '@astro-minimax/core/plugins/remark-reading-time';
-import { rehypeExternalLinks } from '@astro-minimax/core/plugins/rehype-external-links';
+import minimax from '@astro-minimax/core';
+import preact from '@astrojs/preact';
 
 export default defineConfig({
-  markdown: {
-    remarkPlugins: [remarkMermaidCodeblock, remarkReadingTime],
-    rehypePlugins: [rehypeExternalLinks],
-  },
+  integrations: [
+    minimax({
+      site: SITE,
+      socials: SOCIALS,
+      viz: { mermaid: true, markmap: true },
+    }),
+    preact({ compat: true }),
+  ],
 });
 ```
 
@@ -260,7 +257,7 @@ import Card from '@astro-minimax/core/components/ui/Card.astro';
 ### 5. Update
 
 ```bash
-pnpm update @astro-minimax/core @astro-minimax/viz @astro-minimax/ai
+pnpm update @astro-minimax/core @astro-minimax/ai
 ```
 
 ---

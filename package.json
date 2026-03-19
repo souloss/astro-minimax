@@ -26,18 +26,22 @@
   },
   "scripts": {
     "dev": "pnpm --filter astro-minimax-blog dev",
+    "dev:safe": "node scripts/dev-wrapper.js",
     "build": "pnpm -r build",
     "preview": "pnpm --filter astro-minimax-blog preview",
     "lint": "pnpm -r lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "pnpm -r clean",
+    "kill:dev": "node scripts/kill-dev.js",
+    "kill:dev:bash": "bash scripts/kill-dev.sh",
     "postinstall": "pnpm --filter @astro-minimax/notify build && pnpm --filter @astro-minimax/ai build && pnpm --filter @astro-minimax/cli build",
     "prepare": "husky"
   },
   "pnpm": {
     "overrides": {
-      "@astrojs/rss": "^4.0.17"
+      "@astrojs/rss": "^4.0.17",
+      "preact": "^10.29.0"
     }
   },
   "devDependencies": {

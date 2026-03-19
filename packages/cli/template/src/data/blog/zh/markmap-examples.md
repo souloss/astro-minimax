@@ -5,6 +5,7 @@ pubDatetime: 2024-01-03T00:00:00.000Z
 tags:
   - 教程
   - Markmap
+category: 教程/工具
 ---
 
 ## 什么是 Markmap?

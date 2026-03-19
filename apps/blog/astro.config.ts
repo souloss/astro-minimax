@@ -1,7 +1,6 @@
 import { defineConfig, envField } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import minimax from "@astro-minimax/core";
-import minimaxViz from "@astro-minimax/viz";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
@@ -31,6 +30,7 @@ import { SITE } from "./src/config";
 import { SOCIALS, SHARE_LINKS } from "./src/constants";
 import { FRIENDS } from "./src/data/friends";
 
+// Shiki transformers require type casting since they use a different type system
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const asTransformer = (t: any) => t;
 
@@ -59,9 +59,20 @@ export default defineConfig({
       shareLinks: SHARE_LINKS,
       friends: FRIENDS,
       blogPath: "src/data/blog",
+      viz: { mermaid: true, markmap: true },
     }),
-    minimaxViz({ mermaid: true, markmap: true }),
-    preact({ compat: true }),
+    // Preact integration with React compatibility mode.
+    // 
+    // WHY: @ai-sdk/react (used by AI chat) is a React library that uses React hooks.
+    // Preact's compat layer shims React to work with Preact's smaller runtime (3kb vs 40kb).
+    // This lets us use @ai-sdk/react without shipping full React to the browser.
+    //
+    // NO include/exclude needed: Astro Preact integration only has ONE JSX framework
+    // (Preact) in this project, so it automatically handles all .tsx/.jsx files.
+    // The old include/exclude patterns were redundant and could break @ai-sdk/react imports.
+    preact({
+      compat: true,
+    }),
     sitemap({
       filter: page => SITE.showArchives || !page.endsWith("/archives"),
     }),
@@ -80,6 +91,7 @@ export default defineConfig({
       remarkGithubAlerts,
       remarkEmoji,
       remarkReadingTime,
+      // remarkAddZoomable needs options parameter cast
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [remarkAddZoomable as any, { className: "zoomable" }],
     ],
@@ -100,11 +112,11 @@ export default defineConfig({
     plugins: [
       tailwindcss() as never,
       {
-        name: "astro-minimax-preact-singleton",
+        name: "astro-minimax-media-resolver",
         enforce: "pre" as const,
         async resolveId(source, importer, options) {
           if (source.startsWith("@/components/media")) {
-            const vizDir = new URL("../../packages/viz/src/components", import.meta.url).pathname;
+            const vizDir = new URL("../../packages/core/src/components/viz", import.meta.url).pathname;
             return this.resolve(source.replace("@/components/media", vizDir), importer, { ...options, skipSelf: true });
           }
         },
@@ -114,7 +126,6 @@ export default defineConfig({
       fs: {
         strict: true,
         allow: [
-          // Allow serving files from workspace packages
           new URL("../../packages", import.meta.url).pathname,
           new URL("../../node_modules", import.meta.url).pathname,
           "./src",
@@ -127,20 +138,48 @@ export default defineConfig({
           changeOrigin: true,
         },
       },
+      warmup: {
+        clientFiles: [
+          "./src/components/**/*.astro",
+          "./src/layouts/**/*.astro",
+        ],
+      },
     },
     resolve: {
       alias: {
-        "@/components/media": new URL("../../packages/viz/src/components", import.meta.url).pathname,
+        "@/components/media": new URL("../../packages/core/src/components/viz", import.meta.url).pathname,
+        // Base path alias for src/ directory
         "@/" : new URL("./src/", import.meta.url).pathname,
+        // React compatibility: redirect React imports to Preact compat layer.
+        // 
+        // WHY: @ai-sdk/react imports from 'react' and 'react-dom'.
+        // We alias these to preact/compat so the React hooks (@ai-sdk/react uses
+        // useState, useEffect, etc.) work with Preact instead of full React.
+        // This is the standard pattern for using React libraries with Preact.
         "react": "preact/compat",
         "react-dom": "preact/compat",
         "react/jsx-runtime": "preact/jsx-runtime",
       },
-      // Ensure single Preact instance to fix __H undefined hydration error with @ai-sdk/react
+      // Dedupe: ensure only ONE copy of Preact and its variants is loaded.
+      // 
+      // WHY: When multiple packages depend on different versions or copies of Preact,
+      // the hooks module (__H) can become undefined. This prevents multiple Preact
+      // instances by forcing all imports to use the same resolved module.
+      // The __H error (hooks undefined) occurs when Preact loads inconsistently.
       dedupe: ["preact", "preact/hooks", "preact/compat", "preact/debug", "preact/devtools", "react", "react-dom"],
     },
+    // Pre-bundle dependencies to speed up development and ensure consistency.
+    // 
+    // WHY: By explicitly including these packages in optimizeDeps, Vite pre-bundles
+    // them on startup. This prevents lazy-loading race conditions where modules
+    // might load from different copies during dev. Particularly important for
+    // @ai-sdk/react which uses hooks that must resolve consistently.
+    // 
+    // NOTE: Local workspace packages (@astro-minimax/*) are excluded from optimization
+    // because they're linked via workspace protocol and should be loaded fresh on changes.
     optimizeDeps: {
-      exclude: ["@resvg/resvg-js"],
+      noDiscovery: true,
+      exclude: ["@resvg/resvg-js", "@astro-minimax/ai", "@astro-minimax/core"],
       include: [
         "preact",
         "preact/hooks",
@@ -151,23 +190,32 @@ export default defineConfig({
         "preact/jsx-dev-runtime",
         "@ai-sdk/react",
         "ai",
-        "@astro-minimax/ai",
-        "@astro-minimax/core",
-        "@astro-minimax/viz",
+        "mermaid",
+        "markmap-lib",
+        "katex",
+        "dayjs",
+        "lodash.kebabcase",
+        "slugify",
       ],
     },
+    // SSR configuration for Cloudflare Pages deployment.
+    // 
+    // WHY: @resvg/resvg-js and sharp are native modules that don't work in
+    // Cloudflare's V8 runtime. Marking them as external means they're not
+    // bundled and are expected to be available in the deployment environment.
+    // noExternal lists packages that should be bundled despite being typically external.
     ssr: {
       external: ["@resvg/resvg-js", "sharp"],
       noExternal: [
         "@astro-minimax/ai",
         "@astro-minimax/core",
-        "@astro-minimax/viz",
         "@ai-sdk/react",
         "ai",
       ],
     },
     build: {
       rollupOptions: {
+        // Mark native modules and platform-specific builds as external
         external: [/@resvg\/resvg-js/, /@resvg\/resvg-js-linux-.*/, /\.node$/],
       },
       cssMinify: true,
@@ -175,11 +223,13 @@ export default defineConfig({
       sourcemap: false,
       reportCompressedSize: true,
     },
+    // Environment-specific build configuration for client-side rendering
     environments: {
       client: {
         build: {
           rollupOptions: {
             output: {
+              // Consistent chunk naming for better caching
               chunkFileNames: "assets/[name]-[hash].js",
               entryFileNames: "assets/[name]-[hash].js",
               assetFileNames: "assets/[name]-[hash].[ext]",

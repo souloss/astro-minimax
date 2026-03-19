@@ -13,7 +13,7 @@ astro-minimax is a minimal, modern, and modular Astro blog theme. Built on a min
 ## Design Philosophy
 
 - **Minimal First** — Clean design, content-focused
-- **Modular & Pluggable** — Five independent packages, compose what you need
+- **Modular & Pluggable** — Four independent packages, compose what you need
 - **Modern** — Astro v6, Tailwind v4, strict TypeScript, AI SDK v6
 - **Content-System Separation** — Flexible integration via CLI / NPM packages / GitHub Template
 
@@ -70,8 +70,7 @@ cd my-blog && pnpm install && pnpm run dev
 ### Method 3: NPM Packages
 
 ```bash
-pnpm add @astro-minimax/core
-pnpm add @astro-minimax/viz     # optional, visualization plugins
+pnpm add @astro-minimax/core    # Core theme (includes visualizations)
 pnpm add @astro-minimax/ai      # optional, AI chat
 pnpm add -D @astro-minimax/cli  # recommended, CLI tools
 ```
@@ -83,8 +82,7 @@ See [Getting Started](apps/blog/src/data/blog/en/getting-started.md) for details
 ```bash
 astro-minimax/
 ├── packages/
-│   ├── core/      # @astro-minimax/core — Core theme (layouts, components, styles, routing, plugins)
-│   ├── viz/       # @astro-minimax/viz — Visualization plugins (Mermaid, Markmap, etc.)
+│   ├── core/      # @astro-minimax/core — Core theme (layouts, components, styles, routing, plugins, visualizations)
 │   ├── ai/        # @astro-minimax/ai — AI integration (RAG, multi-provider, streaming)
 │   ├── notify/    # @astro-minimax/notify — Multi-channel notifications
 │   └── cli/       # @astro-minimax/cli — CLI toolchain (scaffolding, processing, evaluation)
@@ -136,8 +134,7 @@ Shortcut scripts are also available: `pnpm run ai:process`, `pnpm run profile:bu
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [`@astro-minimax/core`](packages/core/) | 0.5.0 | Core theme: layouts, components, styles, route injection, virtual module system |
-| [`@astro-minimax/viz`](packages/viz/) | 0.5.0 | Visualization plugins: Mermaid, Markmap, Rough.js, Excalidraw, Asciinema |
+| [`@astro-minimax/core`](packages/core/) | 0.5.0 | Core theme: layouts, components, styles, route injection, virtual modules, visualizations |
 | [`@astro-minimax/ai`](packages/ai/) | 0.5.0 | AI integration: multi-provider failover, RAG, source priority, privacy protection |
 | [`@astro-minimax/notify`](packages/notify/) | 0.5.0 | Notifications: Telegram Bot, Email (Resend), Webhook |
 | [`@astro-minimax/cli`](packages/cli/) | 0.6.0 | CLI tools: scaffolding, AI processing, profile building, quality evaluation |

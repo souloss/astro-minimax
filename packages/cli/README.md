@@ -20,10 +20,10 @@ yarn dlx @astro-minimax/cli my-blog
 ```
 my-blog/
 ├── astro.config.ts      # Astro + minimax integration config
-├── package.json         # Dependencies (core, viz, tailwind, etc.)
+├── package.json         # Dependencies (core, tailwind, etc.)
 ├── tsconfig.json        # TypeScript configuration
 ├── public/
-│   └── favicon.svg
+│   └── favicon.ico
 └── src/
     ├── config.ts        # SITE configuration object
     ├── constants.ts     # Social links and share links

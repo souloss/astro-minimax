@@ -84,7 +84,6 @@ The integration provides these virtual modules (auto-typed via `injectTypes`):
    @import "tailwindcss";
    @source "../src";
    @import "@astro-minimax/core/styles/source.css";
-   @import "@astro-minimax/viz/styles/source.css";  /* if installed */
    @import "@astro-minimax/ai/styles/source.css";   /* if installed */
    @import "@astro-minimax/core/styles/theme.css";
    ```

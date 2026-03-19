@@ -21,7 +21,6 @@ astro-minimax includes a built-in AI chat assistant with multi-provider failover
 In `src/config.ts`:
 
 ```typescript
-features: { ai: true },
 ai: {
   enabled: true,
   mockMode: false,

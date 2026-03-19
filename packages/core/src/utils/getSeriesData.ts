@@ -11,6 +11,10 @@ export interface SeriesInfo {
   latestDate: Date;
 }
 
+function toPostDate(modDatetime: Date | string | null | undefined, pubDatetime: Date | string): Date {
+  return modDatetime ? new Date(modDatetime) : new Date(pubDatetime);
+}
+
 function slugifySeries(name: string): string {
   return slugifyStr(name);
 }
@@ -34,7 +38,7 @@ export function getSeriesFromPosts(
         (a, b) => (a.data.series?.order ?? 0) - (b.data.series?.order ?? 0)
       );
       const latestDate = sorted.reduce((latest, p) => {
-        const d = new Date(p.data.modDatetime ?? p.data.pubDatetime);
+        const d = toPostDate(p.data.modDatetime, p.data.pubDatetime);
         return d > latest ? d : latest;
       }, new Date(0));
 

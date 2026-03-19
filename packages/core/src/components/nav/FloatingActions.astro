@@ -5,7 +5,7 @@ import IconSunHigh from "../../assets/icons/IconSunHigh.svg";
 import { SITE } from "virtual:astro-minimax/config";
 import { t } from "../../utils/i18n.js";
 
-const aiEnabled = SITE.aiEnabled ?? false;
+const aiEnabled = SITE.ai?.enabled ?? false;
 const lang = SITE.lang;
 ---
 
@@ -100,7 +100,7 @@ const lang = SITE.lang;
 
   <!-- Theme Toggle -->
   {
-    SITE.lightAndDarkMode && (
+    SITE.darkMode && (
       <button
         id="theme-btn"
         class="fab-btn group relative size-11 rounded-full border border-border bg-background/90 shadow-md backdrop-blur-sm hover:shadow-lg"

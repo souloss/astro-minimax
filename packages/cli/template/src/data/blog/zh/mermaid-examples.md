@@ -5,6 +5,7 @@ pubDatetime: 2024-01-02T00:00:00.000Z
 tags:
   - 教程
   - Mermaid
+category: 教程/工具
 ---
 
 ## 流程图

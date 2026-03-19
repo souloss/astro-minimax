@@ -15,12 +15,11 @@ astro-minimax is a feature-rich Astro blog theme built with a modular architectu
 
 ## Architecture Overview
 
-astro-minimax consists of five core packages:
+astro-minimax consists of four core packages:
 
 | Package                 | Description                                                                    | Required    |
 | ----------------------- | ------------------------------------------------------------------------------ | ----------- |
-| `@astro-minimax/core`   | Core theme: layouts, components, styles, utilities, plugins                    | Yes         |
-| `@astro-minimax/viz`    | Visualization plugins: Mermaid, Markmap, Rough.js, Excalidraw, Asciinema, etc. | Optional    |
+| `@astro-minimax/core`   | Core theme: layouts, components, styles, visualizations (Mermaid/Markmap etc.)  | Yes         |
 | `@astro-minimax/ai`     | AI integration: multi-provider chat, RAG retrieval, streaming                  | Optional    |
 | `@astro-minimax/notify` | Notification system: Telegram, Email, Webhook multi-channel notifications      | Optional    |
 | `@astro-minimax/cli`    | CLI tools: blog scaffolding, AI processing, profile building, quality eval     | Recommended |
@@ -101,7 +100,7 @@ Post metadata is defined via frontmatter:
 ---
 title: Post Title
 pubDatetime: 2026-03-14T10:00:00Z
-modDatetime: 2026-03-17T20:43:59Z
+modDatetime: 2026-03-19T19:43:28Z
 author: Souloss
 description: Post description
 tags: [astro, tutorial]
@@ -167,7 +166,7 @@ Three theme modes supported:
 - **Dark mode** — Dark background, light text
 - **System** — Automatically matches OS preference
 
-Theme switching uses View Transitions animation for smooth transitions. Controlled by `features.darkMode`.
+Theme switching uses View Transitions animation for smooth transitions. Controlled by `darkMode`.
 
 ### Custom Color Schemes
 
@@ -205,7 +204,7 @@ Mobile-first responsive design throughout:
 
 ## Visualization Components
 
-The `@astro-minimax/viz` package provides rich visualization components.
+The `@astro-minimax/core` package provides rich visualization components.
 
 ### Mermaid Diagrams
 
@@ -244,7 +243,7 @@ Supports zoom, pan, and expand/collapse interactions.
 Use hand-drawn style SVG shapes in MDX:
 
 ```mdx
-import RoughDrawing from '@astro-minimax/viz/components/RoughDrawing.astro';
+import RoughDrawing from '@astro-minimax/core/components/viz/RoughDrawing.astro';
 
 <RoughDrawing shapes={[
   { type: "rectangle", x: 10, y: 10, width: 200, height: 100 }
@@ -256,7 +255,7 @@ import RoughDrawing from '@astro-minimax/viz/components/RoughDrawing.astro';
 Embed Excalidraw whiteboard-style diagrams:
 
 ```mdx
-import ExcalidrawEmbed from '@astro-minimax/viz/components/ExcalidrawEmbed.astro';
+import ExcalidrawEmbed from '@astro-minimax/core/components/viz/ExcalidrawEmbed.astro';
 
 <ExcalidrawEmbed src="/drawings/architecture.excalidraw" />
 ```
@@ -268,7 +267,7 @@ Automatically adapts to light/dark themes.
 Embed terminal recording playback:
 
 ```mdx
-import AsciinemaPlayer from '@astro-minimax/viz/components/AsciinemaPlayer.astro';
+import AsciinemaPlayer from '@astro-minimax/core/components/viz/AsciinemaPlayer.astro';
 
 <AsciinemaPlayer src="/casts/demo.cast" cols={120} rows={30} />
 ```
@@ -315,9 +314,6 @@ The AI chat appears as a floating widget in the bottom-right corner. Click to op
 Enable in `src/config.ts`:
 
 ```js
-features: {
-  ai: true,
-},
 ai: {
   enabled: true,
   mockMode: false,       // Set to false for production
@@ -482,11 +478,8 @@ features: {
   friends: true,     // Friends page
   projects: true,    // Projects showcase
   search: true,      // Full-text search
-  darkMode: true,    // Light/dark theme
-  ai: true,          // AI chat
-  waline: true,      // Comment system
-  sponsor: true,     // Sponsorship
 },
+darkMode: true,     // Light/dark theme
 ```
 
 ## CLI Tools

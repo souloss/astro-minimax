@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { lang = "zh" } = Astro.props;
-const aiEnabled = SITE.aiEnabled ?? false;
+const aiEnabled = SITE.ai?.enabled ?? false;
 const aiConfig = {
   apiEndpoint: SITE.ai?.apiEndpoint || "",
   apiKey: SITE.ai?.apiKey || "",

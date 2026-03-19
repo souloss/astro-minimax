@@ -2,7 +2,7 @@
 const CACHE_VERSION = "v1";
 const CACHE_NAME = `astro-blog-${CACHE_VERSION}`;
 const OFFLINE_URL = "/404";
-const PRECACHE_URLS = ["/", "/favicon.svg"];
+const PRECACHE_URLS = ["/", "/favicon.ico"];
 
 self.addEventListener("install", event => {
   event.waitUntil(

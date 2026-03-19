@@ -1,0 +1,187 @@
+---
+/**
+ * Markmap 初始化脚本
+ * 使用 CDN 加载 markmap 库并渲染思维导图
+ */
+---
+
+<script is:inline>
+  // CDN 脚本（按依赖顺序）
+  const CDN_SCRIPTS = [
+    'https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js',
+    'https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js',
+    'https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js',
+  ];
+  const CDN_STYLE = 'https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css';
+
+  let loading = false;
+  let loaded = false;
+
+  // 加载单个脚本
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      // 检查是否已加载
+      if (document.querySelector(`script[src="${src}"]`)) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.head.appendChild(script);
+    });
+  }
+
+  // 加载样式
+  function loadStyle() {
+    if (document.querySelector(`link[href="${CDN_STYLE}"]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = CDN_STYLE;
+    document.head.appendChild(link);
+  }
+
+  // 按顺序加载所有脚本
+  async function loadAssets() {
+    if (loaded) return true;
+    if (loading) {
+      // 等待加载完成
+      await new Promise(resolve => {
+        const check = () => loaded ? resolve() : setTimeout(check, 50);
+        check();
+      });
+      return true;
+    }
+
+    loading = true;
+    try {
+      for (const src of CDN_SCRIPTS) {
+        await loadScript(src);
+      }
+      loadStyle();
+      loaded = true;
+      return true;
+    } catch (error) {
+      console.error('Markmap load error:', error);
+      loading = false;
+      return false;
+    }
+  }
+
+  // 渲染单个容器
+  async function render(container) {
+    if (container.dataset.rendered) return;
+
+    const jsonScript = container.querySelector('script[type="application/json"]');
+    if (!jsonScript) return;
+
+    const success = await loadAssets();
+    if (!success || !window.markmap) {
+      container.innerHTML = '<p style="color:red;padding:1rem">Failed to load markmap</p>';
+      return;
+    }
+
+    try {
+      const { Markmap, deriveOptions, Toolbar } = window.markmap;
+      const root = JSON.parse(jsonScript.textContent || '{}');
+      const optionsEl = container.querySelectorAll('script[type="application/json"]')[1];
+      const options = optionsEl ? JSON.parse(optionsEl.textContent || '{}') : {};
+
+      // 创建 SVG
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.style.width = '100%';
+      svg.style.height = '400px';
+      container.innerHTML = '';
+      container.appendChild(svg);
+
+      // 创建 markmap
+      const mm = Markmap.create(svg, deriveOptions(options), root);
+
+      // 添加工具栏
+      if (Toolbar) {
+        const toolbar = Toolbar.create(mm);
+        toolbar.setBrand(false);
+        toolbar.register({
+          id: 'fullscreen',
+          title: 'Fullscreen',
+          content: Toolbar.icon('M4 9v-4h4v2h-2v2zM4 11v4h4v-2h-2v-2zM16 9v-4h-4v2h2v2zM16 11v4h-4v-2h2v-2z'),
+          onClick: () => document.fullscreenElement ? document.exitFullscreen() : container.requestFullscreen()
+        });
+        toolbar.setItems([...toolbar.items, 'fullscreen']);
+        container.appendChild(toolbar.el);
+      }
+
+      // 调整高度
+      const resize = () => {
+        const h = Math.max(mm.state.rect.y2 || 300, 200);
+        svg.style.height = h + 'px';
+        mm.fit();
+      };
+      new ResizeObserver(resize).observe(container);
+      setTimeout(resize, 100);
+
+      container.dataset.rendered = 'true';
+    } catch (error) {
+      console.error('Markmap render error:', error);
+    }
+  }
+
+  // 渲染所有容器
+  function renderAll() {
+    document.querySelectorAll('.markmap-wrap').forEach(el => {
+      if (el.dataset.rendered) return;
+      // 使用 IntersectionObserver 懒加载
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            obs.unobserve(entry.target);
+            render(entry.target);
+          }
+        });
+      }, { rootMargin: '200px' });
+      observer.observe(el);
+    });
+  }
+
+  // 主题切换
+  function updateTheme(isDark) {
+    document.documentElement.classList.toggle('markmap-dark', isDark);
+  }
+
+  window.addEventListener('themechange', e => updateTheme(e.detail.isDark));
+
+  // 初始化
+  function init() {
+    updateTheme(document.documentElement.dataset.theme === 'dark');
+    renderAll();
+  }
+
+  document.readyState === 'loading' 
+    ? document.addEventListener('DOMContentLoaded', init) 
+    : init();
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style is:global>
+  .markmap-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  .markmap-wrap.fullscreen { background: #fff; }
+  :global(html[data-theme="dark"]) .markmap-wrap { border-color: var(--border, #374151); }
+  :global(html.markmap-dark) .markmap-wrap.fullscreen { background: #1a1a1a; }
+  .markmap-wrap > svg { width: 100%; margin: 0; padding: 0; }
+  .markmap-wrap.fullscreen > svg { height: 100% !important; }
+  .mm-toolbar { position: absolute; right: 0.5em; bottom: 0.5em; }
+  :global(html.markmap-dark) .markmap {
+    --markmap-text-color: var(--foreground, #eee);
+    --markmap-code-bg: var(--muted, #1a1b26);
+    --markmap-circle-open-bg: var(--card, #444);
+  }
+</style>

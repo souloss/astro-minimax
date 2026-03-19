@@ -21,10 +21,6 @@ export interface FeaturesConfig {
   friends?: boolean;
   projects?: boolean;
   search?: boolean;
-  darkMode?: boolean;
-  ai?: boolean;
-  waline?: boolean;
-  sponsor?: boolean;
 }
 
 export interface UmamiConfig {
@@ -53,11 +49,13 @@ export interface AiConfig {
   enabled?: boolean;
   mockMode?: boolean;
   apiEndpoint?: string;
+  apiKey?: string;
   model?: string;
   maxTokens?: number;
   systemPrompt?: string;
   welcomeMessage?: string;
   placeholder?: string;
+  vectorSearch?: boolean;
 }
 
 export interface SponsorMethod {
@@ -122,6 +120,7 @@ export interface SiteConfig {
   timezone?: string;
   blogPath?: string;
   features?: FeaturesConfig;
+  darkMode?: boolean;
   nav?: { items: NavItem[] };
   projects?: ProjectConfig[];
   umami?: UmamiConfig;
@@ -130,10 +129,8 @@ export interface SiteConfig {
   sponsor?: SponsorConfig;
   copyright?: CopyrightConfig;
   search?: SearchConfig;
-
-  lightAndDarkMode?: boolean;
+  
   showArchives?: boolean;
-  aiEnabled?: boolean;
 }
 
 export interface SocialLink {

@@ -52,11 +52,9 @@ export const SITE = {
     friends: true,
     projects: true,
     search: true,
-    darkMode: true,
-    ai: false,
-    waline: false,
-    sponsor: false,
   },
+
+  darkMode: true,
 };
 ```
 
@@ -109,10 +107,54 @@ features: {
   friends: true,     // Friends page
   projects: true,    // Projects showcase page
   search: true,      // Full-text search (Pagefind)
-  darkMode: true,    // Light/dark theme toggle
-  ai: true,          // AI chat assistant
-  waline: true,      // Waline comment system
-  sponsor: true,     // Sponsorship/donation feature
+},
+```
+
+### Dark Mode
+
+```js
+darkMode: true,    // Light/dark theme toggle
+```
+
+Disabling dark mode will hide the theme toggle button in the UI.
+
+### AI Chat
+
+AI chat is controlled by `SITE.ai.enabled`. Enable the `@astro-minimax/ai` package first, then configure:
+
+```js
+ai: {
+  enabled: true,
+  mockMode: true,
+  apiEndpoint: "/api/chat",
+  model: "@cf/zai-org/glm-4.7-flash",
+},
+```
+
+### Waline Comments
+
+Waline comments are controlled by `SITE.waline.enabled`:
+
+```js
+waline: {
+  enabled: true,
+  serverURL: "https://your-waline-server.vercel.app/",
+  // ...
+},
+```
+
+### Sponsorship
+
+Sponsorship is controlled by `SITE.sponsor.enabled`:
+
+```js
+sponsor: {
+  enabled: true,
+  methods: [
+    { name: "WeChat Pay", icon: "wechat", image: "/images/wechat-pay.svg" },
+    { name: "Alipay", icon: "alipay", image: "/images/alipay.svg" },
+  ],
+  sponsors: [],
 },
 ```
 
@@ -358,7 +400,7 @@ ai: {
 
 | Option | Description |
 |--------|-------------|
-| `enabled` | Enable AI chat (also requires `features.ai` to be `true`) |
+| `enabled` | Enable AI chat (set to `true`) |
 | `mockMode` | Returns preset responses without calling a real API, useful for development |
 | `apiEndpoint` | API endpoint URL. Use `/api/chat` for Cloudflare Pages Functions |
 | `model` | Model ID. Defaults to Cloudflare Workers AI GLM-4.7 Flash |
@@ -386,7 +428,7 @@ sponsor: {
 
 | Option | Description |
 |--------|-------------|
-| `enabled` | Enable sponsorship (also requires `features.sponsor` to be `true`) |
+| `enabled` | Enable sponsorship |
 | `methods` | Payment methods: `name`, `icon` (identifier), `image` (QR code image path) |
 | `sponsors` | Sponsors list: `name`, `amount`, `date`, `platform` (optional) |
 
