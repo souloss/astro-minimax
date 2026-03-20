@@ -2,6 +2,7 @@ import satori from "satori";
 import QRCode from "qrcode";
 import { SITE } from "virtual:astro-minimax/config";
 import loadGoogleFonts from "../loadGoogleFont";
+import { getPostSlug } from "../getPath";
 
 async function generateQRCode(data, size = 100) {
   return await QRCode.toDataURL(data, {
@@ -15,6 +16,7 @@ async function generateQRCode(data, size = 100) {
 export default async (post) => {
   const { title, author, description, pubDatetime, category } = post.data;
   const lang = post.id.startsWith("en/") ? "en" : "zh";
+  const slug = getPostSlug(post.id);
   
   const isEn = lang === "en";
   
@@ -31,10 +33,10 @@ export default async (post) => {
       })
     : "";
 
-  const postUrl = `${SITE.website}/${post.id}`;
+  const postUrl = `${SITE.website}/${lang}/posts/${slug}`;
   const qrDataUrl = await generateQRCode(postUrl, 100);
   const domain = SITE.website ? new URL(SITE.website).hostname : "blog.dev";
-  const displayUrl = `${domain}/${post.id}`;
+  const displayUrl = `${domain}/${lang}/posts/${slug}`;
 
   return satori(
     {

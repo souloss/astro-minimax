@@ -74,10 +74,12 @@
 
   let renderCounter = 0;
   let isInitialized = false;
+  let currentTheme: boolean | null = null;
 
   function initMermaid(isDark: boolean) {
-    if (isInitialized) return;
+    if (isInitialized && currentTheme === isDark) return;
     isInitialized = true;
+    currentTheme = isDark;
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "loose",
@@ -173,6 +175,7 @@
 
   async function reRenderAll() {
     const isDark = getIsDark();
+    initMermaid(isDark);
 
     const wrappers = document.querySelectorAll<HTMLElement>(".mermaid-wrapper");
     for (const wrapper of wrappers) {
