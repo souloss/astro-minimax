@@ -94,11 +94,11 @@ const lang = (Astro.params.lang ?? "zh") as "zh" | "en";
       </div>
       <div class="flex items-center gap-2 text-sm text-muted">
         <span class="rounded-lg bg-accent/10 px-2.5 py-1 font-medium text-accent">
-          {page.data.length} {lang === "zh" ? "篇文章" : "posts"}
+          {page.data.length} {t("unit.posts", lang)}
         </span>
         {page.lastPage > 1 && (
           <span class="opacity-60">
-            {lang === "zh" ? `第 ${page.currentPage} / ${page.lastPage} 页` : `Page ${page.currentPage} of ${page.lastPage}`}
+            {t("archives.page", lang).replace("{current}", String(page.currentPage)).replace("{total}", String(page.lastPage))}
           </span>
         )}
       </div>

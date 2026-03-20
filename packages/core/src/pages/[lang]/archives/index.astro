@@ -194,7 +194,7 @@ function getPostData(post: typeof langPosts[0]) {
                                   </a>
                                   <p class="mt-0.5 line-clamp-1 text-xs text-foreground-soft">{p.description}</p>
                                   <div class="mt-1 flex items-center gap-2 text-xs text-muted">
-                                    <span>{p.readingMinutes} {lang === "zh" ? "分钟" : "min"}</span>
+                                    <span>{p.readingMinutes} {t("archives.readingTime", lang)}</span>
                                     {p.tags && p.tags.length > 0 && (
                                       <div class="flex gap-1">
                                         {p.tags.slice(0, 2).map(tag => (

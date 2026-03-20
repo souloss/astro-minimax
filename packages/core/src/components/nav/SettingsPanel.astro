@@ -1,55 +1,56 @@
 ---
 import { SITE } from "virtual:astro-minimax/config";
+import { t } from "../../utils/i18n";
 
 const lang = SITE.lang;
-const isZh = lang === 'zh';
 
 const labels = {
-  title: isZh ? '偏好设置' : 'Preferences',
-  close: isZh ? '关闭' : 'Close',
-  
-  // Tabs
-  tabTheme: isZh ? '主题' : 'Theme',
-  tabAppearance: isZh ? '外观' : 'Appearance',
-  tabLayout: isZh ? '布局' : 'Layout',
-  tabGeneral: isZh ? '通用' : 'General',
-  
-  // Theme tab
-  colorScheme: isZh ? '色彩主题' : 'Color Scheme',
-  borderRadius: isZh ? '圆角大小' : 'Border Radius',
-  
-  // Appearance tab  
-  fontSize: isZh ? '全局字体大小' : 'Global Font Size',
-  fontSizeDesc: isZh ? '调整网站整体字体大小' : 'Adjust overall font size',
-  
-  // Layout tab
-  postsLayout: isZh ? '文章布局' : 'Posts Layout',
-  card1Col: isZh ? '单列卡片' : 'Card 1-Col',
-  card2Col: isZh ? '双列卡片' : 'Card 2-Col',
-  card3Col: isZh ? '三列卡片' : 'Card 3-Col',
-  list: isZh ? '列表' : 'List',
-  compact: isZh ? '紧凑' : 'Compact',
-  widgets: isZh ? '小部件' : 'Widgets',
-  showBackToTop: isZh ? '返回顶部按钮' : 'Back to Top Button',
-  showThemeToggle: isZh ? '主题切换按钮' : 'Theme Toggle Button',
-  showReadingTime: isZh ? '阅读时间显示' : 'Reading Time Display',
-  showStickyBackToTop: isZh ? '文章页返回顶部' : 'Article Back to Top',
-  showStickyBackToTopDesc: isZh ? '文章阅读时顶部导航栏的返回顶部按钮' : 'Back to top button in sticky header while reading',
-  
-  // General tab
-  animations: isZh ? '动画效果' : 'Animations',
-  animationsDesc: isZh ? '页面过渡和交互动画' : 'Page transitions and interactions',
-  cardHover: isZh ? '卡片悬停效果' : 'Card Hover Effect',
-  cardHoverDesc: isZh ? '悬停时抬升和阴影效果' : 'Lift and shadow on hover',
-  smoothScroll: isZh ? '平滑滚动' : 'Smooth Scrolling',
-  
-  // Other
-  reset: isZh ? '恢复默认设置' : 'Reset to Defaults',
-  small: isZh ? '小' : 'S',
-  medium: isZh ? '中' : 'M',
-  large: isZh ? '大' : 'L',
-  xl: isZh ? '超大' : 'XL',
+  title: t("settings.title", lang),
+  close: t("settings.close", lang),
+  tabTheme: t("settings.tabTheme", lang),
+  tabAppearance: t("settings.tabAppearance", lang),
+  tabLayout: t("settings.tabLayout", lang),
+  tabGeneral: t("settings.tabGeneral", lang),
+  colorScheme: t("settings.colorScheme", lang),
+  borderRadius: t("settings.borderRadius", lang),
+  fontSize: t("settings.fontSize", lang),
+  fontSizeDesc: t("settings.fontSizeDesc", lang),
+  postsLayout: t("settings.postsLayout", lang),
+  widgets: t("settings.widgets", lang),
+  showBackToTop: t("settings.showBackToTop", lang),
+  showThemeToggle: t("settings.showThemeToggle", lang),
+  showReadingTime: t("settings.showReadingTime", lang),
+  showStickyBackToTop: t("settings.showStickyBackToTop", lang),
+  showStickyBackToTopDesc: t("settings.showStickyBackToTopDesc", lang),
+  animations: t("settings.animations", lang),
+  animationsDesc: t("settings.animationsDesc", lang),
+  cardHover: t("settings.cardHover", lang),
+  cardHoverDesc: t("settings.cardHoverDesc", lang),
+  smoothScroll: t("settings.smoothScroll", lang),
+  reset: t("settings.reset", lang),
+  small: t("settings.small", lang),
+  medium: t("settings.medium", lang),
+  large: t("settings.large", lang),
+  xl: t("settings.xl", lang),
+  gridCards: t("settings.gridCards", lang),
+  magazine: t("settings.magazine", lang),
+  list: t("settings.list", lang),
+  compact: t("settings.compact", lang),
+  timeline: t("settings.timeline", lang),
+  gridCardsDesc: "Standard grid layout",
+  magazineDesc: "Large magazine cards",
+  listDesc: "Horizontal list",
+  compactDesc: "Single-line compact",
+  timelineDesc: "Timeline view",
 };
+
+const layoutModes = [
+  { id: 'grid', name: labels.gridCards, icon: 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z', desc: labels.gridCardsDesc },
+  { id: 'mag', name: labels.magazine, icon: 'M3 3h18v18H3z', desc: labels.magazineDesc },
+  { id: 'list', name: labels.list, icon: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', desc: labels.listDesc },
+  { id: 'compact', name: labels.compact, icon: 'M3 6h18M3 10h18M3 14h18M3 18h18', desc: labels.compactDesc },
+  { id: 'timeline', name: labels.timeline, icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', desc: labels.timelineDesc },
+];
 ---
 
 <div id="settings-panel" class="fixed right-5 bottom-24 z-50 hidden">
@@ -186,7 +187,7 @@ const labels = {
   </div>
 </div>
 
-<script define:vars={{ labels, isZh }}>
+<script define:vars={{ labels, layoutModes }}>
   const STORAGE_KEY = 'astro-minimax-settings';
   
   const defaultSettings = {
@@ -214,14 +215,6 @@ const labels = {
     { id: 'emerald', name: 'Forest', accent: '#059669', accentSoft: '#34d399', gradient: 'linear-gradient(135deg, #059669 0%, #047857 100%)' },
     { id: 'indigo', name: 'Indigo', accent: '#4f46e5', accentSoft: '#818cf8', gradient: 'linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)' },
     { id: 'slate', name: 'Neutral', accent: '#475569', accentSoft: '#94a3b8', gradient: 'linear-gradient(135deg, #475569 0%, #334155 100%)' },
-  ];
-
-  const layoutModes = [
-    { id: 'grid', name: isZh ? '网格卡片' : 'Grid Cards', icon: 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z', desc: isZh ? '标准网格布局' : 'Standard grid layout' },
-    { id: 'mag', name: isZh ? '杂志' : 'Magazine', icon: 'M3 3h18v18H3z', desc: isZh ? '大卡片杂志风格' : 'Large magazine cards' },
-    { id: 'list', name: isZh ? '列表' : 'List', icon: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', desc: isZh ? '水平分割列表' : 'Horizontal list' },
-    { id: 'compact', name: isZh ? '紧凑' : 'Compact', icon: 'M3 6h18M3 10h18M3 14h18M3 18h18', desc: isZh ? '单行紧凑布局' : 'Single-line compact' },
-    { id: 'timeline', name: isZh ? '时间线' : 'Timeline', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', desc: isZh ? '时间轴视图' : 'Timeline view' },
   ];
 
   const radiusValues = { sm: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem' };

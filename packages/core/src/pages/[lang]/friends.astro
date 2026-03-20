@@ -8,6 +8,8 @@ import { FRIENDS } from "virtual:astro-minimax/user-data";
 import { SITE } from "virtual:astro-minimax/config";
 import { t } from "../../utils/i18n";
 
+import { t } from "../../utils/i18n";
+
 export const getStaticPaths = (async () => {
   return [{ params: { lang: "zh" } }, { params: { lang: "en" } }];
 }) satisfies GetStaticPaths;
@@ -34,7 +36,7 @@ const totalFriends = FRIENDS.length;
           <path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
         <span class="font-medium text-foreground">{totalFriends}</span>
-        <span>{lang === "zh" ? "位好友" : "friends"}</span>
+        <span>{t("friends.count", lang)}</span>
       </div>
     </div>
 
@@ -103,7 +105,7 @@ const totalFriends = FRIENDS.length;
             </svg>
           </div>
           <p class="mt-4 text-muted">
-            {lang === "zh" ? "暂无友链" : "No friends yet"}
+            {t("friends.noFriends", lang)}
           </p>
         </div>
       )

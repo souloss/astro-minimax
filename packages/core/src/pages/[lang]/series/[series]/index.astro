@@ -81,11 +81,11 @@ const totalStr = String(seriesInfo.totalPosts).padStart(2, "0");
         <div class="sd-header__stats">
           <span class="sd-header__stat">
             <span class="font-mono font-bold">{totalStr}</span>
-            <span>{lang === "zh" ? "篇文章" : "articles"}</span>
+            <span>{t("series.articlesShort", lang)}</span>
           </span>
           <span class="sd-header__stat">
             <span class="sd-header__read-count font-mono font-bold" data-series-slug={seriesInfo.slug}>00</span>
-            <span>{lang === "zh" ? "已读" : "read"}</span>
+            <span>{t("series.read", lang)}</span>
           </span>
         </div>
 
@@ -163,7 +163,7 @@ const totalStr = String(seriesInfo.totalPosts).padStart(2, "0");
 
                 {/* Read indicator */}
                 <span class="sd-timeline__read-badge" data-read-badge={postId}>
-                  {lang === "zh" ? "✓ 已读" : "✓ Read"}
+                  ✓ {t("series.read", lang)}
                 </span>
               </a>
             </div>

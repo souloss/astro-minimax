@@ -59,10 +59,14 @@ const postsJson = JSON.stringify(postsData);
 const data = JSON.parse(postsJson);
 const isZh = lang === 'zh';
 
+const i18n = {
+  minutes: isZh ? '分钟' : 'min',
+};
+
 function sd(d) { const m = d.match(/(\d+)\s*年\s*(\d+)\s*月\s*(\d+)\s*日/); return m ? `${m[2]}月${m[3]}日` : d; }
 function catUrl(c) { return `/${lang}/categories/${encodeURIComponent(c)}/`; }
 function tagUrl(t) { return `/${lang}/tags/${encodeURIComponent(t)}/`; }
-function min(m) { return isZh ? m + '分钟' : m + ' min'; }
+function min(m) { return m + ' ' + i18n.minutes; }
 
 function render(mode) {
   const el = document.querySelector('[data-posts-grid]');

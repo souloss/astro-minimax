@@ -86,7 +86,60 @@ export type TranslationKey =
   | "ai.thinking"
   | "ai.error.api"
   | "ai.error.noResponse"
-  | "ai.error.connection";
+  | "ai.error.connection"
+  | "settings.title"
+  | "settings.close"
+  | "settings.tabTheme"
+  | "settings.tabAppearance"
+  | "settings.tabLayout"
+  | "settings.tabGeneral"
+  | "settings.colorScheme"
+  | "settings.borderRadius"
+  | "settings.fontSize"
+  | "settings.fontSizeDesc"
+  | "settings.postsLayout"
+  | "settings.widgets"
+  | "settings.showBackToTop"
+  | "settings.showThemeToggle"
+  | "settings.showReadingTime"
+  | "settings.showStickyBackToTop"
+  | "settings.showStickyBackToTopDesc"
+  | "settings.animations"
+  | "settings.animationsDesc"
+  | "settings.cardHover"
+  | "settings.cardHoverDesc"
+  | "settings.smoothScroll"
+  | "settings.reset"
+  | "settings.small"
+  | "settings.medium"
+  | "settings.large"
+  | "settings.xl"
+  | "settings.gridCards"
+  | "settings.magazine"
+  | "settings.list"
+  | "settings.compact"
+  | "settings.timeline"
+  | "categories.count"
+  | "categories.posts"
+  | "categories.subcategories"
+  | "categories.more"
+  | "series.count"
+  | "series.totalPosts"
+  | "series.articlesShort"
+  | "series.moreArticles"
+  | "series.read"
+  | "friends.count"
+  | "friends.noFriends"
+  | "archives.readingTime"
+  | "archives.page"
+  | "unit.minutes"
+  | "unit.articles"
+  | "unit.posts"
+  | "unit.friends"
+  | "unit.series"
+  | "unit.categories"
+  | "unit.subcategories"
+  | "unit.more";
 
 const translations: Record<string, Record<TranslationKey, string>> = {
   en: {
@@ -177,6 +230,59 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "ai.error.api": "API Error: {status}",
     "ai.error.noResponse": "No response received",
     "ai.error.connection": "Connection failed: {error}",
+    "settings.title": "Preferences",
+    "settings.close": "Close",
+    "settings.tabTheme": "Theme",
+    "settings.tabAppearance": "Appearance",
+    "settings.tabLayout": "Layout",
+    "settings.tabGeneral": "General",
+    "settings.colorScheme": "Color Scheme",
+    "settings.borderRadius": "Border Radius",
+    "settings.fontSize": "Global Font Size",
+    "settings.fontSizeDesc": "Adjust overall font size",
+    "settings.postsLayout": "Posts Layout",
+    "settings.widgets": "Widgets",
+    "settings.showBackToTop": "Back to Top Button",
+    "settings.showThemeToggle": "Theme Toggle Button",
+    "settings.showReadingTime": "Reading Time Display",
+    "settings.showStickyBackToTop": "Article Back to Top",
+    "settings.showStickyBackToTopDesc": "Back to top button in sticky header while reading",
+    "settings.animations": "Animations",
+    "settings.animationsDesc": "Page transitions and interactions",
+    "settings.cardHover": "Card Hover Effect",
+    "settings.cardHoverDesc": "Lift and shadow on hover",
+    "settings.smoothScroll": "Smooth Scrolling",
+    "settings.reset": "Reset to Defaults",
+    "settings.small": "S",
+    "settings.medium": "M",
+    "settings.large": "L",
+    "settings.xl": "XL",
+    "settings.gridCards": "Grid Cards",
+    "settings.magazine": "Magazine",
+    "settings.list": "List",
+    "settings.compact": "Compact",
+    "settings.timeline": "Timeline",
+    "categories.count": "categories",
+    "categories.posts": "posts",
+    "categories.subcategories": "subcategories",
+    "categories.more": "more",
+    "series.count": "series",
+    "series.totalPosts": "posts",
+    "series.articlesShort": "articles",
+    "series.moreArticles": "more",
+    "series.read": "read",
+    "friends.count": "friends",
+    "friends.noFriends": "No friends yet",
+    "archives.readingTime": "min",
+    "archives.page": "Page {current} of {total}",
+    "unit.minutes": "min",
+    "unit.articles": "articles",
+    "unit.posts": "posts",
+    "unit.friends": "friends",
+    "unit.series": "series",
+    "unit.categories": "categories",
+    "unit.subcategories": "subcategories",
+    "unit.more": "more",
   },
   zh: {
     "nav.home": "首页",
@@ -266,6 +372,59 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "ai.error.api": "API 错误: {status}",
     "ai.error.noResponse": "未收到回复",
     "ai.error.connection": "连接失败: {error}",
+    "settings.title": "偏好设置",
+    "settings.close": "关闭",
+    "settings.tabTheme": "主题",
+    "settings.tabAppearance": "外观",
+    "settings.tabLayout": "布局",
+    "settings.tabGeneral": "通用",
+    "settings.colorScheme": "色彩主题",
+    "settings.borderRadius": "圆角大小",
+    "settings.fontSize": "全局字体大小",
+    "settings.fontSizeDesc": "调整网站整体字体大小",
+    "settings.postsLayout": "文章布局",
+    "settings.widgets": "小部件",
+    "settings.showBackToTop": "返回顶部按钮",
+    "settings.showThemeToggle": "主题切换按钮",
+    "settings.showReadingTime": "阅读时间显示",
+    "settings.showStickyBackToTop": "文章页返回顶部",
+    "settings.showStickyBackToTopDesc": "文章阅读时顶部导航栏的返回顶部按钮",
+    "settings.animations": "动画效果",
+    "settings.animationsDesc": "页面过渡和交互动画",
+    "settings.cardHover": "卡片悬停效果",
+    "settings.cardHoverDesc": "悬停时抬升和阴影效果",
+    "settings.smoothScroll": "平滑滚动",
+    "settings.reset": "恢复默认设置",
+    "settings.small": "小",
+    "settings.medium": "中",
+    "settings.large": "大",
+    "settings.xl": "超大",
+    "settings.gridCards": "网格卡片",
+    "settings.magazine": "杂志",
+    "settings.list": "列表",
+    "settings.compact": "紧凑",
+    "settings.timeline": "时间线",
+    "categories.count": "个分类",
+    "categories.posts": "篇文章",
+    "categories.subcategories": "个子分类",
+    "categories.more": "更多",
+    "series.count": "个系列",
+    "series.totalPosts": "篇文章",
+    "series.articlesShort": "篇文章",
+    "series.moreArticles": "篇更多",
+    "series.read": "已读",
+    "friends.count": "位好友",
+    "friends.noFriends": "暂无友链",
+    "archives.readingTime": "分钟",
+    "archives.page": "第 {current} / {total} 页",
+    "unit.minutes": "分钟",
+    "unit.articles": "篇文章",
+    "unit.posts": "篇文章",
+    "unit.friends": "位好友",
+    "unit.series": "个系列",
+    "unit.categories": "个分类",
+    "unit.subcategories": "个子分类",
+    "unit.more": "更多",
   },
 };
 
