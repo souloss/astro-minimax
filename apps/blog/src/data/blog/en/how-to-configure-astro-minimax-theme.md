@@ -521,4 +521,4 @@ The `--font-app` variable is used throughout the theme via the `font-app` Tailwi
 
 ## Conclusion
 
-This is the full specification of how to customize this theme. For customizing styles, please read [Customizing Color Schemes](/en/posts/customizing-astro-minimax-theme-color-schemes/). For a complete feature overview, see the [Feature Overview](/en/posts/feature-overview/).
+This is the full specification of how to customize this theme. For a complete feature overview, see the [Feature Overview](/en/posts/feature-overview/).

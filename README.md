@@ -134,10 +134,10 @@ astro-minimax data clear         # 清理生成的缓存
 
 | 包                                          | 版本  | 说明                                                        |
 | ------------------------------------------- | ----- | ----------------------------------------------------------- |
-| [`@astro-minimax/core`](packages/core/)     | 0.8.0 | 核心主题：布局、组件、样式、路由注入、虚拟模块、可视化      |
-| [`@astro-minimax/ai`](packages/ai/)         | 0.8.0 | AI 集成：多 Provider 故障转移、RAG 检索、来源分层、隐私保护 |
-| [`@astro-minimax/notify`](packages/notify/) | 0.8.0 | 通知系统：Telegram Bot、Email (Resend)、Webhook             |
-| [`@astro-minimax/cli`](packages/cli/)       | 0.8.0 | CLI 工具：博客创建、AI 处理、画像构建、质量评估             |
+| [`@astro-minimax/core`](packages/core/)     | 0.8.1 | 核心主题：布局、组件、样式、路由注入、虚拟模块、可视化      |
+| [`@astro-minimax/ai`](packages/ai/)         | 0.8.1 | AI 集成：多 Provider 故障转移、RAG 检索、来源分层、隐私保护 |
+| [`@astro-minimax/notify`](packages/notify/) | 0.8.1 | 通知系统：Telegram Bot、Email (Resend)、Webhook             |
+| [`@astro-minimax/cli`](packages/cli/)       | 0.8.1 | CLI 工具：博客创建、AI 处理、画像构建、质量评估             |
 
 ## 文档
 
@@ -147,7 +147,7 @@ astro-minimax data clear         # 清理生成的缓存
 - [添加文章](apps/blog/src/data/blog/zh/adding-new-post.md)
 - [部署指南](apps/blog/src/data/blog/zh/deployment-guide.md)
 - [通知系统](apps/blog/src/data/blog/zh/notification-guide.md)
-- [自定义配色](apps/blog/src/data/blog/zh/customizing-astro-minimax-theme-color-schemes.md)
+- [自定义配色](apps/blog/src/data/blog/zh/how-to-configure-astro-minimax-theme.md)
 - [动态 OG 图片](apps/blog/src/data/blog/zh/dynamic-og-images.md)
 
 ## 致谢

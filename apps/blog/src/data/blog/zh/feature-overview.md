@@ -128,7 +128,7 @@ series:
 ---
 title: 文章标题
 pubDatetime: 2026-03-14T10:00:00Z
-modDatetime: 2026-03-19T19:43:28Z
+modDatetime: 2026-03-20T01:46:35Z
 author: Souloss
 description: 文章描述
 tags: [astro, tutorial]
@@ -218,7 +218,7 @@ search: {
 }
 ```
 
-详见 [自定义配色方案](/zh/posts/customizing-astro-minimax-theme-color-schemes)。
+详见 [自定义配色方案](/zh/posts/how-to-configure-astro-minimax-theme)。
 
 ### 响应式设计
 
@@ -563,4 +563,4 @@ pnpm run ai:eval -- --url=https://your-blog.com  # 远程测试
 - [主题配置](/zh/posts/how-to-configure-astro-minimax-theme) — 完整配置参考
 - [添加文章](/zh/posts/adding-new-post) — 文章格式与 Frontmatter
 - [部署指南](/zh/posts/deployment-guide) — 多平台部署方案
-- [自定义配色](/zh/posts/customizing-astro-minimax-theme-color-schemes) — 主题颜色定制
+- [自定义配色](/zh/posts/how-to-configure-astro-minimax-theme) — 主题颜色定制

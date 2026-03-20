@@ -80,14 +80,14 @@ Open source: [souloss/astro-minimax](https://github.com/souloss/astro-minimax)`,
 
 配色方案可以在配置中自定义，目前提供多种预设：
 - [预定义配色方案](/zh/posts/predefined-color-schemes) — 查看所有可用配色
-- [自定义主题色](/zh/posts/customizing-astro-minimax-theme-color-schemes) — 创建你自己的配色
+- [主题配置指南](/zh/posts/how-to-configure-astro-minimax-theme) — 创建你自己的配色
 
 参考 [Tailwind CSS 调色板](https://tailwindcss.com/docs/customizing-colors) 获取灵感。`,
     en: `The blog supports light and dark themes — toggle with the bottom-right button or auto-detect system preference.
 
 Color schemes are customizable:
 - [Predefined Color Schemes](/en/posts/predefined-color-schemes) — See all available schemes
-- [Custom Theme Colors](/en/posts/customizing-astro-minimax-theme-color-schemes) — Create your own
+- [Theme Configuration Guide](/en/posts/how-to-configure-astro-minimax-theme) — Create your own
 
 Check [Tailwind CSS Color Palette](https://tailwindcss.com/docs/customizing-colors) for inspiration.`,
   },

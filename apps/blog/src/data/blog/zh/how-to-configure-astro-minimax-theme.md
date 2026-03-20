@@ -520,4 +520,4 @@ import { Font } from "astro:assets";
 
 ## 结语
 
-这是关于如何自定义此主题的完整说明。关于自定义样式，请阅读[自定义配色方案](/zh/posts/customizing-astro-minimax-theme-color-schemes/)。更多功能介绍请参考[功能特性总览](/zh/posts/feature-overview/)。
+这是关于如何自定义此主题的完整说明。更多功能介绍请参考[功能特性总览](/zh/posts/feature-overview/)。

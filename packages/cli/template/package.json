@@ -28,9 +28,9 @@
   "dependencies": {
     "@ai-sdk/openai-compatible": "^2.0.35",
     "@ai-sdk/react": "^3.0.118",
-    "@astro-minimax/ai": "^0.8.0",
-    "@astro-minimax/core": "^0.8.0",
-    "@astro-minimax/notify": "^0.8.0",
+    "@astro-minimax/ai": "^0.8.1",
+    "@astro-minimax/core": "^0.8.1",
+    "@astro-minimax/notify": "^0.8.1",
     "@astrojs/mdx": "^5.0.0",
     "@astrojs/preact": "^5.0.0",
     "@astrojs/rss": "^4.0.17",
@@ -57,7 +57,7 @@
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
-    "@astro-minimax/cli": "^0.8.0",
+    "@astro-minimax/cli": "^0.8.1",
     "@astrojs/check": "^0.9.7",
     "@cloudflare/workers-types": "^4.20260313.1",
     "@pagefind/default-ui": "^1.4.0",

@@ -100,7 +100,7 @@ Post metadata is defined via frontmatter:
 ---
 title: Post Title
 pubDatetime: 2026-03-14T10:00:00Z
-modDatetime: 2026-03-19T19:43:28Z
+modDatetime: 2026-03-20T01:46:35Z
 author: Souloss
 description: Post description
 tags: [astro, tutorial]
@@ -190,7 +190,7 @@ Customize the entire site's colors through CSS variables:
 }
 ```
 
-See [Customizing Color Schemes](/en/posts/customizing-astro-minimax-theme-color-schemes) for details.
+See [Customizing Color Schemes](/en/posts/how-to-configure-astro-minimax-theme) for details.
 
 ### Responsive Design
 
@@ -533,4 +533,4 @@ pnpm run ai:eval -- --url=https://your-blog.com   # Remote test
 - [Configure Theme](/en/posts/how-to-configure-astro-minimax-theme) — Full configuration reference
 - [Add Posts](/en/posts/adding-new-post) — Post format & Frontmatter
 - [Deployment Guide](/en/posts/deployment-guide) — Multi-platform deployment
-- [Customize Colors](/en/posts/customizing-astro-minimax-theme-color-schemes) — Theme color customization
+- [Customize Colors](/en/posts/how-to-configure-astro-minimax-theme) — Theme color customization

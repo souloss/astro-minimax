@@ -284,4 +284,4 @@ src/data/blog/
 - [Add Posts](/en/posts/adding-new-post) — Frontmatter format reference
 - [Feature Overview](/en/posts/feature-overview) — Complete feature guide
 - [Deployment Guide](/en/posts/deployment-guide) — Multi-platform deployment
-- [Customize Colors](/en/posts/customizing-astro-minimax-theme-color-schemes) — Theme color customization
+- [Customize Colors](/en/posts/how-to-configure-astro-minimax-theme) — Theme color customization

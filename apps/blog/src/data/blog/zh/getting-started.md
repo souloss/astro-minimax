@@ -286,4 +286,4 @@ src/data/blog/
 - [添加文章](/zh/posts/adding-new-post) — Frontmatter 格式说明
 - [功能特性](/zh/posts/feature-overview) — 完整功能介绍
 - [部署指南](/zh/posts/deployment-guide) — 多平台部署方案
-- [自定义配色](/zh/posts/customizing-astro-minimax-theme-color-schemes) — 主题颜色定制
+- [自定义配色](/zh/posts/how-to-configure-astro-minimax-theme) — 主题颜色定制
