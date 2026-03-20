@@ -86,29 +86,36 @@ const navItems = (SITE.nav?.items ?? [])
     </a>
 
     <nav id="nav-menu" class="flex items-center">
-      <ul class="hidden items-center gap-1 sm:flex">
+      {/* Desktop: Icon-only on sm, full on lg+ */}
+      <ul class="hidden items-center gap-0.5 sm:flex lg:gap-1">
         {
           navItems.map(({ href, label, icon: Icon }) => (
             <li>
               <a
                 href={href}
+                title={label}
                 class:list={[
-                  "flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium",
-                  "transition-all duration-200 ease-out",
+                  // Base styles
+                  "flex items-center rounded-xl py-2 transition-all duration-200 ease-out",
+                  // Icon-only on sm, with text on lg+
+                  "px-2.5 lg:px-3.5 lg:gap-2",
+                  // Colors
                   "text-foreground-soft hover:bg-accent/10 hover:text-accent",
+                  // Active state
                   { "bg-accent/15 text-accent font-semibold": isActive(href) },
                 ]}
               >
-                <Icon class="size-4 opacity-80" />
-                <span>{label}</span>
+                <Icon class="size-4 shrink-0 opacity-80" />
+                <span class="hidden text-sm font-medium lg:inline">{label}</span>
               </a>
             </li>
           ))
         }
-        <li class="ml-2 flex items-center gap-1 border-l border-border/60 pl-3">
+        {/* Language & Search - always visible */}
+        <li class="ml-1 flex items-center gap-0.5 border-l border-border/60 pl-2 lg:ml-2 lg:gap-1 lg:pl-3">
           <button
             id="lang-switch-btn"
-            class="rounded-xl px-3 py-2 text-xs font-bold tracking-wide
+            class="rounded-xl px-2 py-2 text-xs font-bold tracking-wide
                    text-muted transition-all duration-200 
                    hover:bg-accent/10 hover:text-accent"
             title="Switch language"
@@ -128,8 +135,7 @@ const navItems = (SITE.nav?.items ?? [])
             <a
               href={`/${lang}/search`}
               class:list={[
-                "flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium",
-                "transition-all duration-200 ease-out",
+                "rounded-xl p-2 transition-all duration-200 ease-out",
                 "text-foreground-soft hover:bg-accent/10 hover:text-accent",
                 { "bg-accent/15 text-accent": isActive(`/${lang}/search`) },
               ]}
