@@ -6,7 +6,6 @@ slug: how-to-update-dependencies
 featured: false
 draft: false
 category: Tutorial/Engineering
-ogImage: ../../../assets/images/forrest-gump-quote.png
 tags:
   - FAQ
 description: How to update project dependencies and astro-minimax template.

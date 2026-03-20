@@ -4,7 +4,6 @@ pubDatetime: 2026-03-20T00:00:00.000Z
 title: astro-minimax 0.8.0
 featured: true
 category: 发布说明
-ogImage: ../../../../assets/images/astro-minimax-v1.png
 tags:
   - release
 description: "astro-minimax 0.8.0: 基于 AstroPaper 二次开发的独立博客主题，集成 AI 聊天、Mermaid 图表、Waline 评论等独特功能。"

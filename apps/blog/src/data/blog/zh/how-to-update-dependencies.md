@@ -5,7 +5,6 @@ pubDatetime: 2026-03-20T00:00:00.000Z
 featured: false
 draft: false
 category: 教程/工程化
-ogImage: ../../../assets/images/forrest-gump-quote.png
 tags:
   - FAQ
 description: 如何更新项目依赖和 astro-minimax 模板。

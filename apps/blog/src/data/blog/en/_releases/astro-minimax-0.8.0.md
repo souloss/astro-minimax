@@ -4,7 +4,6 @@ pubDatetime: 2026-03-20T00:00:00.000Z
 title: astro-minimax 0.8.0
 featured: true
 category: Release Notes
-ogImage: ../../../../assets/images/astro-minimax-v1.png
 tags:
   - release
 description: "astro-minimax 0.8.0: An independent blog theme based on AstroPaper, featuring AI chat, Mermaid diagrams, Waline comments, and more."
