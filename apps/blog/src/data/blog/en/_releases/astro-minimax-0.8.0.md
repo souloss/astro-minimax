@@ -7,10 +7,10 @@ category: Release Notes
 ogImage: ../../../../assets/images/astro-minimax-v1.png
 tags:
   - release
-description: "astro-minimax 0.8.0: An independent blog theme based on AstroPaper, featuring AI chat, Mermaid diagrams, Waline comments, and more. Supports Astro v5/v6."
+description: "astro-minimax 0.8.0: An independent blog theme based on AstroPaper, featuring AI chat, Mermaid diagrams, Waline comments, and more."
 ---
 
-astro-minimax is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This project is built on top of [AstroPaper](https://github.com/satnaing/astro-paper) and has evolved through multiple versions into a fully-featured independent theme. Current version **0.8.0** supports Astro v5 and v6.
+astro-minimax is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This project is built on top of [AstroPaper](https://github.com/satnaing/astro-paper) and has evolved through multiple versions into a fully-featured independent theme. Current version **0.8.0** is built on Astro v6.
 
 ![astro-minimax](@/assets/images/astro-minimax-v1.png)
 
@@ -24,7 +24,7 @@ astro-minimax originated from deep customization and feature expansion of the As
 
 | Version | Astro | Key Features                                       |
 | ------- | ----- | -------------------------------------------------- |
-| v0.8.0  | v5/v6 | Full i18n support, AI integration, modern search   |
+| v0.8.0  | v6    | Full i18n support, AI integration, modern search   |
 | Early   | v2-v4 | Content Collections, View Transitions, type safety |
 
 ### 🎨 Unique Features
@@ -81,7 +81,7 @@ astro-minimax adds the following features on top of AstroPaper:
 
 **Core Framework**
 
-- [Astro v5/v6](https://astro.build/) - Modern static site generator (dual version support)
+- [Astro v6](https://astro.build/) - Modern static site generator
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 - [TailwindCSS v4](https://tailwindcss.com/) - Atomic CSS
 

@@ -79,7 +79,7 @@ Mindmaps excel at breaking down complex projects into manageable pieces. Here's 
 
 ## Phase 1: Foundation
 ### Project Setup
-#### Astro v5/v6 initialization
+#### Astro project initialization
 #### TypeScript configuration
 #### Tailwind CSS integration
 #### ESLint & Prettier

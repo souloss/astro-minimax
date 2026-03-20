@@ -62,7 +62,7 @@ if (initOgImage && typeof initOgImage === "object" && "src" in initOgImage) {
 // OG meta image: includes dynamic fallback for social sharing
 let ogImageUrl: string | undefined = bannerImageUrl;
 if (!ogImageUrl && SITE.dynamicOgImage) {
-  ogImageUrl = `/${lang}/posts/${getPostSlug(post.id)}/index.png`;
+  ogImageUrl = `/${lang}/posts/${getPostSlug(post.id)}.png`;
 }
 
 const ogImage = ogImageUrl
