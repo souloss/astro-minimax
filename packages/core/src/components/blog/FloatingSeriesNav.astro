@@ -1,0 +1,130 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import { getPostsByLang } from "../../utils/getPostsByLang";
+import { getSeriesByName } from "../../utils/getSeriesData";
+import { getLocalizedPostPath } from "../../utils/getPath";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  lang?: string;
+}
+
+const { post, lang = "zh" } = Astro.props;
+const series = post.data.series;
+
+if (!series) return;
+
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const langPosts = getPostsByLang(allPosts, lang);
+const seriesInfo = getSeriesByName(langPosts, series.name);
+
+if (!seriesInfo || seriesInfo.totalPosts < 2) return;
+
+const currentOrder = series.order;
+const seriesSlug = seriesInfo.slug;
+const progressPct = (currentOrder / seriesInfo.totalPosts) * 100;
+---
+
+<aside
+  class="floating-series-nav group/container fixed top-56 right-[calc(50%+28rem)] z-20 hidden xl:flex flex-col items-end gap-1"
+  aria-label="系列文章"
+  data-floating-series
+>
+  <div class="absolute -inset-4 z-[-1] min-w-[180px]"></div>
+
+  <div class="flex items-center gap-2 mb-2">
+    <a
+      href={`/${lang}/series/${encodeURIComponent(seriesSlug)}/`}
+      class="series-title text-xs font-medium text-foreground-soft hover:text-accent transition-colors whitespace-nowrap opacity-0 group-hover/container:opacity-100"
+    >
+      {series.name}
+    </a>
+    <div class="series-progress-indicator flex items-center gap-1">
+      <span class="text-[10px] font-mono text-muted">{currentOrder}/{seriesInfo.totalPosts}</span>
+    </div>
+  </div>
+
+  <nav class="series-nav-panel max-h-[60vh] overflow-y-auto pr-1">
+    <ul class="flex flex-col items-end gap-1">
+      {
+        seriesInfo.posts.map((p, idx) => {
+          const isCurrent = p.id === post.id;
+          const href = getLocalizedPostPath(lang, p.id, p.filePath);
+
+          return (
+            <li data-series-order={idx + 1} data-current={isCurrent ? "true" : undefined}>
+              <a
+                href={href}
+                class="series-item group/link relative flex items-center gap-2 min-h-[20px] transition-all duration-300"
+                aria-current={isCurrent ? "page" : undefined}
+              >
+                <span class="series-text text-xs text-muted-foreground whitespace-nowrap opacity-0 group-hover/container:opacity-100 group-hover/link:text-accent transition-all duration-300 translate-x-2 group-hover/container:translate-x-0">
+                  {p.data.title}
+                </span>
+                <span
+                  class="series-dot block h-1.5 w-1.5 rounded-full shrink-0 transition-all duration-300"
+                  class:list={[
+                    isCurrent 
+                      ? "bg-accent scale-125" 
+                      : "bg-muted group-hover/link:bg-accent/60",
+                  ]}
+                />
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+
+  <div class="series-track mt-2 w-full max-w-[80px] h-[2px] bg-muted/50 rounded-full overflow-hidden">
+    <div 
+      class="series-fill h-full bg-accent rounded-full transition-all duration-500"
+      style={`width: ${progressPct}%`}
+    />
+  </div>
+</aside>
+
+<style>
+  .floating-series-nav {
+    transition: opacity 0.3s ease;
+  }
+
+  .series-nav-panel {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .series-nav-panel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .series-item[data-current="true"] .series-text {
+    color: var(--accent);
+    font-weight: 500;
+    opacity: 1;
+    transform: translateX(0);
+  }
+</style>
+
+<script>
+  function initFloatingSeries() {
+    const container = document.querySelector("[data-floating-series]");
+    if (!container) return;
+
+    const items = container.querySelectorAll<HTMLAnchorElement>(".series-item");
+    
+    items.forEach(item => {
+      item.addEventListener("click", (e) => {
+        const href = item.getAttribute("href");
+        if (href) {
+          e.preventDefault();
+          window.location.href = href;
+        }
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initFloatingSeries);
+  initFloatingSeries();
+</script>

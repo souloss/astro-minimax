@@ -14,6 +14,7 @@ import IconChevronRight from "../assets/icons/IconChevronRight.svg";
 import { SITE } from "virtual:astro-minimax/config";
 import aiSummaries from "virtual:astro-minimax/ai-summaries";
 import FloatingTOC from "../components/blog/FloatingTOC.astro";
+import FloatingSeriesNav from "../components/blog/FloatingSeriesNav.astro";
 import InlineTOC from "../components/blog/InlineTOC.astro";
 import Comments from "../components/blog/Comments.astro";
 
@@ -330,6 +331,7 @@ const nextPost =
     </article>
     <slot name="post-scripts" />
     <FloatingTOC headings={headings} />
+    <FloatingSeriesNav post={post} lang={lang} />
 
     <hr class="my-8 border-dashed" />
 
@@ -345,7 +347,7 @@ const nextPost =
 
     <hr class="my-6 border-dashed" />
 
-    <div data-pagefind-ignore>
+    <div data-pagefind-ignore class="xl:hidden">
       <SeriesNav post={post} lang={lang} />
     </div>
 
