@@ -2,6 +2,7 @@
 title: "数学公式示例"
 description: "展示 KaTeX 数学公式渲染功能，支持行内公式和块级公式"
 pubDatetime: 2024-01-04T00:00:00.000Z
+author: "Your Name"
 tags:
   - 教程
   - 数学

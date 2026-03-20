@@ -2,6 +2,7 @@
 title: "Markmap 思维导图示例"
 description: "展示 Markmap 交互式思维导图功能"
 pubDatetime: 2024-01-03T00:00:00.000Z
+author: "Your Name"
 tags:
   - 教程
   - Markmap

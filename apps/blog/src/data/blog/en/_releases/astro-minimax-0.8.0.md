@@ -1,17 +1,16 @@
 ---
 author: Souloss
-pubDatetime: 2025-03-08T00:00:00.000Z
-title: astro-minimax 1.0
-slug: astro-minimax-v1
+pubDatetime: 2026-03-20T00:00:00.000Z
+title: astro-minimax 0.8.0
 featured: true
 category: Release Notes
 ogImage: ../../../../assets/images/astro-minimax-v1.png
 tags:
   - release
-description: "astro-minimax 1.0: The first release of an independent blog theme based on AstroPaper, featuring AI chat, Mermaid diagrams, Waline comments, and more."
+description: "astro-minimax 0.8.0: An independent blog theme based on AstroPaper, featuring AI chat, Mermaid diagrams, Waline comments, and more. Supports Astro v5/v6."
 ---
 
-astro-minimax is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This project is built on top of [AstroPaper](https://github.com/satnaing/astro-paper) and has evolved through multiple versions into a fully-featured independent theme.
+astro-minimax is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This project is built on top of [AstroPaper](https://github.com/satnaing/astro-paper) and has evolved through multiple versions into a fully-featured independent theme. Current version **0.8.0** supports Astro v5 and v6.
 
 ![astro-minimax](@/assets/images/astro-minimax-v1.png)
 
@@ -25,7 +24,7 @@ astro-minimax originated from deep customization and feature expansion of the As
 
 | Version | Astro | Key Features                                       |
 | ------- | ----- | -------------------------------------------------- |
-| v1.0    | v5    | Full i18n support, AI integration, modern search   |
+| v0.8.0  | v5/v6 | Full i18n support, AI integration, modern search   |
 | Early   | v2-v4 | Content Collections, View Transitions, type safety |
 
 ### 🎨 Unique Features
@@ -82,7 +81,7 @@ astro-minimax adds the following features on top of AstroPaper:
 
 **Core Framework**
 
-- [Astro v5](https://astro.build/) - Modern static site generator
+- [Astro v5/v6](https://astro.build/) - Modern static site generator (dual version support)
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 - [TailwindCSS v4](https://tailwindcss.com/) - Atomic CSS
 

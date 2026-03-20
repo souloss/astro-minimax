@@ -1,11 +1,11 @@
 ---
 title: How to update dependencies of astro-minimax
 author: Souloss
-pubDatetime: 2023-07-20T15:33:05.569Z
+pubDatetime: 2026-03-20T00:00:00.000Z
 slug: how-to-update-dependencies
 featured: false
 draft: false
-category: 教程/工程化
+category: Tutorial/Engineering
 ogImage: ../../../assets/images/forrest-gump-quote.png
 tags:
   - FAQ

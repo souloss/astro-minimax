@@ -2,6 +2,7 @@
 title: "GitHub Alerts 示例"
 description: "展示 GitHub 风格的提示框功能，支持多种类型"
 pubDatetime: 2024-01-06T00:00:00.000Z
+author: "Your Name"
 tags:
   - 教程
 category: 教程/功能

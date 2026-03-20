@@ -1,28 +1,45 @@
 ---
 title: "Mermaid 图表示例"
-description: "展示 Mermaid 流程图、时序图、饼图等多种图表功能"
+description: "展示 Mermaid 流程图、时序图、类图、状态图等 11 种图表类型"
 pubDatetime: 2024-01-02T00:00:00.000Z
+author: "Your Name"
 tags:
   - 教程
   - Mermaid
 category: 教程/工具
 ---
 
-## 流程图
+本文展示如何使用 ` ```mermaid ` 代码块语法创建各种 Mermaid 图表。
+
+---
+
+## 一、流程图 (Flowchart)
+
+### 1.1 基本流程图
 
 ```mermaid
-graph TD
-    A[开始] --> B{是否登录?}
-    B -->|是| C[进入主页]
-    B -->|否| D[跳转登录页]
-    D --> E[输入用户名密码]
-    E --> F{验证成功?}
-    F -->|是| C
-    F -->|否| G[显示错误]
-    G --> E
+flowchart TD
+    A[开始] --> B{条件判断}
+    B -->|是| C[执行操作A]
+    B -->|否| D[执行操作B]
+    C --> E[结束]
+    D --> E
 ```
 
-## 时序图
+### 1.2 横向流程图
+
+```mermaid
+flowchart LR
+    A[用户请求] --> B[负载均衡]
+    B --> C[服务器A]
+    B --> D[服务器B]
+    C --> E[(数据库)]
+    D --> E
+```
+
+---
+
+## 二、时序图 (Sequence Diagram)
 
 ```mermaid
 sequenceDiagram
@@ -39,18 +56,79 @@ sequenceDiagram
     前端-->>用户: 跳转到主页
 ```
 
-## 饼图
+---
+
+## 三、类图 (Class Diagram)
 
 ```mermaid
-pie showData
-    title 编程语言使用比例
-    "TypeScript" : 40
-    "Python" : 25
-    "Go" : 20
-    "Rust" : 15
+classDiagram
+    class Animal {
+        +String name
+        +int age
+        +makeSound()
+    }
+    class Dog {
+        +String breed
+        +bark()
+    }
+    class Cat {
+        +String color
+        +meow()
+    }
+    Animal <|-- Dog
+    Animal <|-- Cat
 ```
 
-## 甘特图
+---
+
+## 四、状态图 (State Diagram)
+
+```mermaid
+stateDiagram-v2
+    [*] --> 待处理
+    待处理 --> 处理中: 开始处理
+    处理中 --> 已完成: 处理成功
+    处理中 --> 已取消: 处理失败
+    已完成 --> [*]
+    已取消 --> [*]
+```
+
+---
+
+## 五、实体关系图 (ER Diagram)
+
+```mermaid
+erDiagram
+    USER ||--o{ ORDER : places
+    USER {
+        int id PK
+        string username
+        string email
+    }
+    ORDER ||--|{ ORDER_ITEM : contains
+    ORDER {
+        int id PK
+        int user_id FK
+        datetime order_date
+        string status
+    }
+    PRODUCT ||--o{ ORDER_ITEM : "included in"
+    PRODUCT {
+        int id PK
+        string name
+        float price
+    }
+    ORDER_ITEM {
+        int id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+    }
+```
+
+---
+
+## 六、甘特图 (Gantt Chart)
 
 ```mermaid
 gantt
@@ -67,17 +145,96 @@ gantt
     上线部署 :c2, after c1, 3d
 ```
 
-## 状态图
+---
+
+## 七、饼图 (Pie Chart)
 
 ```mermaid
-stateDiagram-v2
-    [*] --> 草稿
-    草稿 --> 待审核: 提交
-    待审核 --> 已发布: 审核通过
-    待审核 --> 草稿: 审核拒绝
-    已发布 --> 已下架: 下架
-    已下架 --> 已发布: 重新发布
-    已发布 --> [*]
+pie showData
+    title 编程语言使用占比
+    "TypeScript" : 35
+    "Python" : 25
+    "Go" : 20
+    "Rust" : 12
+    "Others" : 8
 ```
 
-更多 Mermaid 图表类型请参考 [Mermaid 官方文档](https://mermaid.js.org/)。
+---
+
+## 八、Git 图 (Git Graph)
+
+```mermaid
+gitGraph
+    commit id: "初始化项目"
+    commit id: "添加基础功能"
+    branch develop
+    checkout develop
+    commit id: "开发中"
+    commit id: "新功能A"
+    checkout main
+    merge develop id: "v1.0 发布" tag: "v1.0"
+    commit id: "后续优化"
+```
+
+---
+
+## 九、用户旅程图 (User Journey)
+
+```mermaid
+journey
+    title 用户购物体验旅程
+    section 浏览商品
+        打开首页: 5: 用户
+        搜索商品: 4: 用户
+    section 购买流程
+        加入购物车: 4: 用户
+        结算付款: 3: 用户, 系统
+    section 收货评价
+        确认收货: 5: 用户
+        评价商品: 4: 用户
+```
+
+---
+
+## 十、思维导图 (Mindmap)
+
+```mermaid
+mindmap
+  root((Web开发))
+    前端
+      HTML/CSS
+      JavaScript
+        TypeScript
+        框架
+          Vue
+          React
+    后端
+      Node.js
+      Python
+      Go
+    数据库
+      MySQL
+      MongoDB
+      Redis
+```
+
+---
+
+## 十一、样式定制
+
+```mermaid
+flowchart TD
+    A[开始] --> B[处理]
+    B --> C[结束]
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style C fill:#bfb,stroke:#333,stroke-width:2px
+```
+
+---
+
+## 参考资料
+
+- [Mermaid 官方文档](https://mermaid.js.org/)
+- [Mermaid Live Editor](https://mermaid.live/)

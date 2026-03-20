@@ -1,16 +1,16 @@
 ---
 author: Souloss
-pubDatetime: 2025-03-08T00:00:00.000Z
-title: astro-minimax 1.0
+pubDatetime: 2026-03-20T00:00:00.000Z
+title: astro-minimax 0.8.0
 featured: true
 category: 发布说明
 ogImage: ../../../../assets/images/astro-minimax-v1.png
 tags:
   - release
-description: "astro-minimax 1.0: 基于 AstroPaper 二次开发的独立博客主题首次发布，集成 AI 聊天、Mermaid 图表、Waline 评论等独特功能。"
+description: "astro-minimax 0.8.0: 基于 AstroPaper 二次开发的独立博客主题，集成 AI 聊天、Mermaid 图表、Waline 评论等独特功能。支持 Astro v5/v6。"
 ---
 
-astro-minimax 是一个极简、响应式、无障碍且对 SEO 友好的 Astro 博客主题。本项目基于 [AstroPaper](https://github.com/satnaing/astro-paper) 二次开发，经过多个版本的迭代，现已成为一个功能完善的独立主题。
+astro-minimax 是一个极简、响应式、无障碍且对 SEO 友好的 Astro 博客主题。本项目基于 [AstroPaper](https://github.com/satnaing/astro-paper) 二次开发，经过多个版本的迭代，现已成为一个功能完善的独立主题。当前版本 **0.8.0** 支持 Astro v5 和 v6。
 
 ![astro-minimax](@/assets/images/astro-minimax-v1.png)
 
@@ -73,7 +73,7 @@ astro-minimax 在 AstroPaper 基础上新增以下功能：
 
 **核心框架**
 
-- [Astro v5](https://astro.build/) - 现代化静态站点生成器
+- [Astro v5/v6](https://astro.build/) - 现代化静态站点生成器（双版本支持）
 - [TypeScript](https://www.typescriptlang.org/) - 类型安全
 - [TailwindCSS v4](https://tailwindcss.com/) - 原子化 CSS
 

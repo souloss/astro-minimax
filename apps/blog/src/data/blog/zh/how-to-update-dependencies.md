@@ -1,7 +1,7 @@
 ---
 title: 如何更新 astro-minimax 的依赖
 author: Souloss
-pubDatetime: 2023-07-20T15:33:05.569Z
+pubDatetime: 2026-03-20T00:00:00.000Z
 featured: false
 draft: false
 category: 教程/工程化

@@ -2,6 +2,7 @@
 title: "代码高亮示例"
 description: "展示 Shiki 代码高亮功能，支持多种编程语言和高级特性"
 pubDatetime: 2024-01-05T00:00:00.000Z
+author: "Your Name"
 tags:
   - 教程
   - 代码
