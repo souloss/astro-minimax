@@ -206,7 +206,8 @@ const nextPost =
           </svg>
         </button>
         <button
-          class="text-muted-foreground rounded-md p-2 hover:bg-muted/50 hover:text-accent"
+          id="sticky-back-to-top"
+          class="sticky-back-to-top-btn text-muted-foreground rounded-md p-2 hover:bg-muted/50 hover:text-accent"
           onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
           aria-label="Scroll to top"
         >
@@ -245,7 +246,7 @@ const nextPost =
     <div class="hidden">
       {category && <span data-pagefind-filter="category">{category}</span>}
       <span data-pagefind-filter="lang">{lang}</span>
-      {tags?.map(tag => <span data-pagefind-filter="tag">{tag}</span>)}
+      {tags?.map((tag: string) => <span data-pagefind-filter="tag">{tag}</span>)}
     </div>
 
     {/* Article Hero Section */}
@@ -306,9 +307,9 @@ const nextPost =
       </div>
 
       {/* Tags preview */}
-      {tags.length > 0 && (
+      {tags && tags.length > 0 && (
         <div class="mt-3 flex flex-wrap gap-2" data-pagefind-ignore>
-          {tags.map(tag => (
+          {tags.map((tag: string) => (
             <a
               href={`/${lang}/tags/${slugifyStr(tag)}/`}
               class="rounded-md bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground-soft transition-colors hover:bg-accent/10 hover:text-accent"
@@ -334,7 +335,7 @@ const nextPost =
 
     <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
       {
-        tags.map(tag => (
+        tags.map((tag: string) => (
           <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" lang={lang} />
         ))
       }
@@ -392,8 +393,30 @@ const nextPost =
     const header = document.getElementById("sticky-header");
     const progressBar = document.getElementById("progress-bar");
     const tocToggle = document.getElementById("sticky-toc-toggle");
+    const stickyBackToTopBtn = document.getElementById("sticky-back-to-top");
 
     if (!header || !progressBar) return;
+
+    function applyStickyBackToTopVisibility() {
+      const enabled = document.documentElement.getAttribute('data-sticky-backtotop') !== 'false';
+      if (header) {
+        if (enabled) {
+          header.style.removeProperty('display');
+        } else {
+          header.style.display = 'none';
+        }
+      }
+    }
+
+    applyStickyBackToTopVisibility();
+
+    const originalSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function(key, value) {
+      originalSetItem(key, value);
+      if (key === 'astro-minimax-settings') {
+        setTimeout(applyStickyBackToTopVisibility, 0);
+      }
+    };
 
     // Handle scroll
     document.addEventListener("scroll", () => {

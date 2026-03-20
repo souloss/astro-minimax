@@ -1,30 +1,35 @@
-/* ===== GitHub Alerts ===== */
 .markdown-alert {
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
-  border-left: 0.25em solid;
-  border-radius: 0.375rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border-left: 4px solid;
+  border-radius: 0.75rem;
+  backdrop-filter: blur(8px);
 }
 
 .markdown-alert-title {
   display: flex;
   align-items: center;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95em;
 }
 
 .markdown-alert-title::before {
   content: "";
   display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.5rem;
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.6rem;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
+.markdown-alert p:last-child {
+  margin-bottom: 0;
+}
+
 .markdown-alert-note {
-  background-color: rgba(9, 105, 218, 0.1);
+  background-color: rgba(9, 105, 218, 0.08);
   border-color: #0969da;
 }
 .markdown-alert-note .markdown-alert-title {
@@ -35,7 +40,7 @@
 }
 
 .markdown-alert-tip {
-  background-color: rgba(26, 127, 55, 0.1);
+  background-color: rgba(26, 127, 55, 0.08);
   border-color: #1a7f37;
 }
 .markdown-alert-tip .markdown-alert-title {
@@ -46,7 +51,7 @@
 }
 
 .markdown-alert-important {
-  background-color: rgba(130, 80, 223, 0.1);
+  background-color: rgba(130, 80, 223, 0.08);
   border-color: #8250df;
 }
 .markdown-alert-important .markdown-alert-title {
@@ -57,7 +62,7 @@
 }
 
 .markdown-alert-warning {
-  background-color: rgba(154, 103, 0, 0.1);
+  background-color: rgba(154, 103, 0, 0.08);
   border-color: #9a6700;
 }
 .markdown-alert-warning .markdown-alert-title {
@@ -68,7 +73,7 @@
 }
 
 .markdown-alert-caution {
-  background-color: rgba(207, 34, 46, 0.1);
+  background-color: rgba(207, 34, 46, 0.08);
   border-color: #cf222e;
 }
 .markdown-alert-caution .markdown-alert-title {
@@ -78,9 +83,8 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23cf222e' d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
 }
 
-/* ===== Dark Mode Alert Styles ===== */
 html[data-theme="dark"] .markdown-alert {
-  background-color: rgba(22, 27, 34, 0.95);
+  background-color: rgba(30, 35, 42, 0.9);
 }
 
 html[data-theme="dark"] .markdown-alert,
@@ -94,39 +98,39 @@ html[data-theme="dark"] .app-prose .markdown-alert p,
 html[data-theme="dark"] .app-prose .markdown-alert li,
 html[data-theme="dark"] .app-prose .markdown-alert span,
 html[data-theme="dark"] .app-prose .markdown-alert strong {
-  color: #f0f6fc !important;
+  color: #f5f5f7 !important;
 }
 
 html[data-theme="dark"] .markdown-alert-note {
-  background-color: rgba(9, 105, 218, 0.15);
+  background-color: rgba(9, 105, 218, 0.12);
   border-color: #58a6ff;
 }
 html[data-theme="dark"] .markdown-alert-note .markdown-alert-title {
   color: #58a6ff;
 }
 html[data-theme="dark"] .markdown-alert-tip {
-  background-color: rgba(26, 127, 55, 0.15);
+  background-color: rgba(26, 127, 55, 0.12);
   border-color: #3fb950;
 }
 html[data-theme="dark"] .markdown-alert-tip .markdown-alert-title {
   color: #3fb950;
 }
 html[data-theme="dark"] .markdown-alert-important {
-  background-color: rgba(130, 80, 223, 0.15);
+  background-color: rgba(130, 80, 223, 0.12);
   border-color: #a371f7;
 }
 html[data-theme="dark"] .markdown-alert-important .markdown-alert-title {
   color: #a371f7;
 }
 html[data-theme="dark"] .markdown-alert-warning {
-  background-color: rgba(154, 103, 0, 0.15);
+  background-color: rgba(154, 103, 0, 0.12);
   border-color: #d29922;
 }
 html[data-theme="dark"] .markdown-alert-warning .markdown-alert-title {
   color: #d29922;
 }
 html[data-theme="dark"] .markdown-alert-caution {
-  background-color: rgba(207, 34, 46, 0.15);
+  background-color: rgba(207, 34, 46, 0.12);
   border-color: #f85149;
 }
 html[data-theme="dark"] .markdown-alert-caution .markdown-alert-title {
@@ -139,16 +143,15 @@ html[data-theme="dark"] .markdown-alert a:hover {
   color: #79c0ff !important;
 }
 html[data-theme="dark"] .markdown-alert code {
-  background-color: rgba(110, 118, 129, 0.4) !important;
-  color: #f0f6fc !important;
+  background-color: rgba(110, 118, 129, 0.35) !important;
+  color: #f5f5f7 !important;
 }
 
-/* ===== KaTeX Dark Mode ===== */
 html[data-theme="dark"] .katex {
-  color: #f0f6fc;
+  color: #f5f5f7;
 }
 html[data-theme="dark"] .katex-display {
-  color: #f0f6fc;
+  color: #f5f5f7;
   margin: 1rem 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -161,13 +164,13 @@ html[data-theme="dark"] .katex .mclose,
 html[data-theme="dark"] .katex .mpunct,
 html[data-theme="dark"] .katex .minner,
 html[data-theme="dark"] .katex .mathnormal {
-  color: #f0f6fc;
+  color: #f5f5f7;
 }
 html[data-theme="dark"] .katex .frac-line,
 html[data-theme="dark"] .katex .overline-line,
 html[data-theme="dark"] .katex .underline-line,
 html[data-theme="dark"] .katex .sqrt-line {
-  border-color: #f0f6fc;
+  border-color: #f5f5f7;
 }
 html[data-theme="dark"] .katex .sqrt-sign,
 html[data-theme="dark"] .katex .msupsub,
@@ -176,34 +179,32 @@ html[data-theme="dark"] .katex .nulldelimiter,
 html[data-theme="dark"] .katex .col-align-c,
 html[data-theme="dark"] .katex .col-align-l,
 html[data-theme="dark"] .katex .col-align-r {
-  color: #f0f6fc;
+  color: #f5f5f7;
 }
 
-/* ===== kbd ===== */
 kbd {
-  padding: 0.125rem 0.375rem;
+  padding: 0.2rem 0.5rem;
   font-family: inherit;
-  font-size: 0.875em;
-  border-radius: 0.25rem;
-  border: 1px solid #d1d5db;
-  background-color: #f3f4f6;
-  box-shadow: 0 1px 0 #d1d5db;
+  font-size: 0.85em;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   white-space: nowrap;
 }
 html[data-theme="dark"] kbd {
-  background-color: rgba(110, 118, 129, 0.4);
-  color: #f0f6fc;
-  border-color: rgba(110, 118, 129, 0.6);
-  box-shadow: 0 1px 0 rgba(110, 118, 129, 0.5);
+  background-color: rgba(110, 118, 129, 0.3);
+  color: #f5f5f7;
+  border-color: rgba(110, 118, 129, 0.5);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 html[data-theme="dark"] .app-prose kbd {
-  background-color: rgba(110, 118, 129, 0.4) !important;
-  color: #f0f6fc !important;
-  border-color: rgba(110, 118, 129, 0.6) !important;
-  box-shadow: 0 1px 0 rgba(110, 118, 129, 0.5) !important;
+  background-color: rgba(110, 118, 129, 0.3) !important;
+  color: #f5f5f7 !important;
+  border-color: rgba(110, 118, 129, 0.5) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* ===== Lightbox ===== */
 #lightbox-overlay {
   position: fixed;
   inset: 0;
@@ -211,11 +212,11 @@ html[data-theme="dark"] .app-prose kbd {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.88);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
-  backdrop-filter: blur(4px);
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(8px);
 }
 #lightbox-overlay.active {
   opacity: 1;
@@ -225,28 +226,37 @@ html[data-theme="dark"] .app-prose kbd {
   max-width: 90vw;
   max-height: 90vh;
   object-fit: contain;
-  border-radius: 0.5rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  transform: scale(0.95);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1rem;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  transform: scale(0.92);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 #lightbox-overlay.active img {
   transform: scale(1);
 }
 .lightbox-close {
   position: absolute;
-  top: 1rem;
-  right: 1.5rem;
-  font-size: 2rem;
+  top: 1.5rem;
+  right: 2rem;
+  font-size: 2.5rem;
   color: #fff;
-  background: none;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
+  border-radius: 50%;
   cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s;
+  opacity: 0.8;
+  transition: all 0.2s ease;
   line-height: 1;
   z-index: 1;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
 }
 .lightbox-close:hover {
   opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
 }

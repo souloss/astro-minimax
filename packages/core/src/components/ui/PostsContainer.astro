@@ -1,0 +1,227 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { PostItemData } from "./PostItemBase.astro";
+
+type LayoutMode = "grid" | "mag" | "list" | "compact" | "timeline";
+
+interface Props {
+  posts: CollectionEntry<"blog">[];
+  lang: string;
+  layout?: LayoutMode;
+}
+
+const { posts, lang, layout = "mag" } = Astro.props;
+
+import dayjs from "dayjs";
+import utcPlugin from "dayjs/plugin/utc";
+import timezonePlugin from "dayjs/plugin/timezone";
+import { SITE } from "virtual:astro-minimax/config";
+import { slugifyStr } from "../../utils/slugify";
+import { getLocalizedPostPath } from "../../utils/getPath";
+import { getReadingTime } from "../../utils/getReadingTime";
+import type { ImageMetadata } from "astro";
+
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
+
+function getPostItemData(post: CollectionEntry<"blog">): PostItemData & { href: string } {
+  const { id, data, body, filePath } = post;
+  const { title, description, category, ogImage, tags, pubDatetime, modDatetime, timezone } = data;
+  const href = getLocalizedPostPath(lang, id, filePath);
+  const { minutes: readingMinutes } = getReadingTime(body ?? "");
+  
+  let coverSrc: string | undefined;
+  if (ogImage && typeof ogImage === "object" && "src" in ogImage) {
+    coverSrc = (ogImage as ImageMetadata).src;
+  } else if (typeof ogImage === "string" && ogImage.startsWith("http")) {
+    coverSrc = ogImage;
+  }
+  
+  const isModified = modDatetime && modDatetime > pubDatetime;
+  const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(timezone || SITE.timezone);
+  const dateStr = lang === "zh" ? datetime.format("YYYY 年 M 月 D 日") : datetime.format("MMM D, YYYY");
+  
+  return {
+    title, description, href, dateStr, dateIso: datetime.toISOString(),
+    category, tags: tags || [], readingMinutes, coverSrc,
+    langLabel: id.startsWith("en/") ? "English" : "中文",
+    viewTransitionName: slugifyStr(title.replaceAll(".", "-")),
+  };
+}
+
+const postsData = posts.map(p => getPostItemData(p));
+const postsJson = JSON.stringify(postsData);
+---
+
+<div class="posts-wrapper"><ul class="posts-list" data-posts-grid></ul></div>
+
+<script define:vars={{ postsJson, lang }}>
+const data = JSON.parse(postsJson);
+const isZh = lang === 'zh';
+
+function sd(d) { const m = d.match(/(\d+)\s*年\s*(\d+)\s*月\s*(\d+)\s*日/); return m ? `${m[2]}月${m[3]}日` : d; }
+function catUrl(c) { return `/${lang}/categories/${encodeURIComponent(c)}/`; }
+function tagUrl(t) { return `/${lang}/tags/${encodeURIComponent(t)}/`; }
+function min(m) { return isZh ? m + '分钟' : m + ' min'; }
+
+function render(mode) {
+  const el = document.querySelector('[data-posts-grid]');
+  if (!el) return;
+
+  const items = data.map((p, i) => {
+    const last = i === data.length - 1;
+    
+    // 网格布局：固定高度280px，等高等宽，标题/分类/标签可点击，封面图更突出
+    if (mode === 'grid') {
+      return `<li class="flex">
+        <article class="grid-card flex flex-col w-full rounded-xl border border-border bg-background shadow-sm transition-all duration-300 hover:border-accent/50 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden group">
+          ${p.coverSrc ? `
+            <div class="relative w-full h-44 overflow-hidden">
+              <img src="${p.coverSrc}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent"></div>
+            </div>
+          ` : `
+            <div class="w-full h-20 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent flex items-center justify-center">
+              <svg class="size-8 text-accent/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h10"/></svg>
+            </div>
+          `}
+          <div class="flex flex-col flex-1 p-4 min-h-0">
+            <a href="${p.href}" class="block"><h3 class="text-base font-bold text-foreground line-clamp-2 leading-snug hover:text-accent">${p.title}</h3></a>
+            <p class="mt-2 text-sm text-foreground-soft/80 line-clamp-2 leading-relaxed flex-1">${p.description}</p>
+            <div class="mt-3 flex items-center gap-2 text-xs text-muted">
+              <time class="truncate">${p.dateStr}</time><span class="text-border shrink-0">·</span>
+              <span class="shrink-0">${min(p.readingMinutes)}</span>
+              ${p.category ? `<span class="text-border shrink-0">·</span><a href="${catUrl(p.category)}" class="text-accent truncate hover:underline">${p.category}</a>` : ''}
+            </div>
+          </div>
+        </article></li>`;
+    }
+    
+    // 杂志布局：固定高度，等宽，标题/分类/标签可点击，封面图更突出
+    if (mode === 'mag') {
+      return `<li>
+        <article class="mag-card flex flex-col md:flex-row w-full rounded-2xl border border-border bg-background shadow-sm transition-all duration-300 hover:border-accent/50 hover:shadow-xl hover:-translate-y-0.5 overflow-hidden group">
+          ${p.coverSrc ? `
+            <div class="relative md:w-2/5 shrink-0 overflow-hidden">
+              <img src="${p.coverSrc}" class="w-full h-56 md:h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-background/30 md:bg-gradient-to-r md:from-transparent md:to-background/50"></div>
+            </div>
+          ` : `
+            <div class="md:w-1/4 shrink-0 h-32 md:h-auto bg-gradient-to-br from-accent/10 via-accent/5 to-transparent flex items-center justify-center">
+              <svg class="size-12 text-accent/25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h10"/></svg>
+            </div>
+          `}
+          <div class="flex-1 flex flex-col p-5 min-h-0">
+            <div class="flex items-center gap-2 text-xs text-muted mb-2">
+              <time class="font-medium truncate">${p.dateStr}</time>
+              ${p.category ? `<span class="text-border shrink-0">·</span><a href="${catUrl(p.category)}" class="text-accent font-medium truncate hover:underline">${p.category}</a>` : ''}
+              <span class="text-border shrink-0">·</span><span class="shrink-0">${min(p.readingMinutes)}</span>
+            </div>
+            <a href="${p.href}" class="block"><h3 class="text-xl font-bold text-foreground line-clamp-2 leading-tight hover:text-accent">${p.title}</h3></a>
+            <p class="mt-2 text-sm text-foreground-soft/80 line-clamp-3 leading-relaxed flex-1">${p.description}</p>
+            ${p.tags?.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${p.tags.slice(0,3).map(t => `<a href="${tagUrl(t)}" class="px-2 py-0.5 rounded text-xs border border-border/50 text-foreground-soft hover:text-accent hover:border-accent/50">${t}</a>`).join('')}</div>` : ''}
+          </div>
+        </article></li>`;
+    }
+    
+    // 列表布局：无悬停背景，分类/标签可点击
+    if (mode === 'list') {
+      return `<li class="border-b border-border">
+        <div class="flex items-start gap-4 py-3">
+          <div class="shrink-0 w-24 pt-0.5">
+            <time class="block text-xs text-muted">${p.dateStr}</time>
+            ${p.category ? `<a href="${catUrl(p.category)}" class="mt-0.5 block text-xs text-accent font-medium hover:underline">${p.category}</a>` : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <a href="${p.href}"><h3 class="text-sm font-bold text-foreground hover:text-accent line-clamp-1">${p.title}</h3></a>
+            <p class="mt-1 text-xs text-foreground-soft/80 line-clamp-1">${p.description}</p>
+            <div class="mt-1.5 flex flex-wrap items-center gap-2 text-xs">
+              <span class="text-muted">${min(p.readingMinutes)}</span>
+              ${p.tags?.length ? `<div class="flex flex-wrap gap-1">${p.tags.slice(0,2).map(t => `<a href="${tagUrl(t)}" class="px-1.5 py-0.5 rounded bg-muted/50 text-foreground-soft hover:text-accent">${t}</a>`).join('')}</div>` : ''}
+            </div>
+          </div>
+        </div>
+      </li>`;
+    }
+    
+    // 紧凑布局：单行，无悬停背景
+    if (mode === 'compact') {
+      return `<li class="border-b border-border">
+        <div class="flex items-center gap-3 py-2 px-1">
+          <a href="${p.href}" class="flex-1 min-w-0"><h3 class="text-sm font-medium text-foreground truncate hover:text-accent">${p.title}</h3></a>
+          <div class="flex items-center gap-2 text-xs text-muted shrink-0">
+            <time>${sd(p.dateStr)}</time><span class="text-border">·</span><span>${min(p.readingMinutes)}</span>
+          </div>
+        </div>
+      </li>`;
+    }
+    
+    // 时间线布局：重新设计，和谐美观，标题/分类/标签可点击
+    if (mode === 'timeline') {
+      return `<li class="timeline-item relative flex gap-4 ${last ? '' : 'pb-5'}">
+        <!-- 左侧时间轴 -->
+        <div class="timeline-axis flex flex-col items-center shrink-0" style="width: 3rem;">
+          <div class="timeline-dot size-3 rounded-full bg-accent shadow-sm shrink-0"></div>
+          <div class="timeline-line flex-1 w-0.5 bg-gradient-to-b from-accent/40 to-transparent mt-1"></div>
+        </div>
+        <!-- 右侧内容 -->
+        <div class="flex-1 min-w-0 pb-1">
+          <div class="timeline-meta flex items-center gap-2 mb-1.5">
+            <time class="text-xs font-medium text-muted">${p.dateStr}</time>
+            <span class="text-border">·</span>
+            ${p.category ? `<a href="${catUrl(p.category)}" class="text-xs text-accent font-medium hover:underline">${p.category}</a>` : '<span class="text-xs text-muted"></span>'}
+          </div>
+          <div class="timeline-card rounded-lg border border-border/60 bg-background/50 p-3 transition-all duration-200 hover:border-accent/40 hover:bg-background hover:shadow-sm">
+            <a href="${p.href}" class="block"><h3 class="text-sm font-bold text-foreground line-clamp-1 hover:text-accent">${p.title}</h3></a>
+            <p class="mt-1 text-xs text-foreground-soft/80 line-clamp-2">${p.description}</p>
+            <div class="mt-2 flex items-center gap-2 text-xs text-muted">
+              <span>${min(p.readingMinutes)}</span>
+              ${p.tags?.length ? `<span class="text-border">·</span><a href="${tagUrl(p.tags[0])}" class="text-foreground-soft hover:text-accent">${p.tags[0]}</a>` : ''}
+            </div>
+          </div>
+        </div>
+      </li>`;
+    }
+    
+    return '';
+  }).join('');
+
+  const cls = {
+    grid: 'grid grid-cols-1 md:grid-cols-2 gap-4 posts-list',
+    mag: 'flex flex-col gap-4 posts-list',
+    list: 'flex flex-col posts-list',
+    compact: 'flex flex-col posts-list',
+    timeline: 'flex flex-col posts-list'
+  }[mode] || 'flex flex-col gap-4 posts-list';
+
+  el.className = cls;
+  el.innerHTML = items;
+}
+
+function init() {
+  let m = 'mag';
+  try { const s = localStorage.getItem('astro-minimax-settings'); if (s) m = JSON.parse(s).layoutMode || 'mag'; } catch {}
+  render(m);
+}
+
+document.addEventListener('layout-change', e => render(e.detail.mode));
+document.addEventListener('astro:page-load', init);
+document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
+</script>
+
+<style>
+.posts-list { list-style: none; padding: 0; margin: 0; }
+.posts-wrapper { width: 100%; }
+
+/* 网格卡片固定高度 */
+.grid-card { height: 280px; }
+
+/* 杂志卡片固定高度 */
+.mag-card { min-height: 200px; }
+
+/* 时间线样式 */
+.timeline-item:last-child .timeline-line { display: none; }
+.timeline-dot { position: relative; z-index: 1; }
+.timeline-card { text-decoration: none; }
+.timeline-card:hover { text-decoration: none; }
+</style>

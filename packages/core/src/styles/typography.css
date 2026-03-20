@@ -1,11 +1,13 @@
 @plugin "@tailwindcss/typography";
 
 @layer base {
-  /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
     @apply prose;
+    
+    font-size: 1rem;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
 
-    /* 所有标题使用 foreground 颜色 */
     h1,
     h2,
     h3,
@@ -13,12 +15,13 @@
     h5,
     h6,
     th {
-      @apply mb-3 text-foreground;
+      @apply mb-4 text-foreground font-bold tracking-tight;
     }
-
-    h3 {
-      @apply italic;
-    }
+    
+    h1 { @apply text-2xl sm:text-3xl mt-8 mb-6; }
+    h2 { @apply text-xl sm:text-2xl mt-8 mb-5; }
+    h3 { @apply text-lg sm:text-xl mt-6 mb-4; }
+    h4 { @apply text-base sm:text-lg mt-5 mb-3; }
 
     p,
     strong,
@@ -31,7 +34,10 @@
     }
 
     a {
-      @apply wrap-break-word text-foreground underline decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      @apply text-accent font-medium underline decoration-accent/30 
+             decoration-dashed underline-offset-4 
+             transition-all duration-200
+             hover:decoration-accent hover:decoration-solid;
     }
 
     ul {
@@ -39,29 +45,31 @@
     }
 
     li {
-      @apply marker:text-accent;
+      @apply marker:text-accent/60;
     }
 
     hr {
-      @apply border-border;
+      @apply border-border my-8;
     }
 
     img {
-      @apply mx-auto border border-border;
+      @apply mx-auto rounded-2xl border border-border/50 shadow-lg;
     }
 
     figcaption {
-      @apply opacity-75;
+      @apply mt-2 text-center text-sm text-muted italic;
     }
 
     table {
+      @apply rounded-xl border border-border/50 overflow-hidden;
+      
       th,
       td {
-        @apply border border-border p-2;
+        @apply border border-border/50 p-3;
       }
 
       th {
-        @apply py-1.5;
+        @apply bg-muted/30 font-semibold;
       }
 
       code {
@@ -70,19 +78,28 @@
     }
 
     code {
-      @apply rounded bg-muted/75 p-1 wrap-break-word text-foreground before:content-none after:content-none;
+      @apply rounded-lg bg-muted/60 px-1.5 py-0.5 text-sm font-mono
+             border border-border/30
+             before:content-none after:content-none;
     }
 
-    .astro-code code {
-      @apply flex-[1_0_100%] bg-inherit p-0;
+    .astro-code {
+      @apply rounded-2xl border border-border/50 shadow-md;
+      
+      code {
+        @apply flex-[1_0_100%] bg-inherit p-0 border-0;
+      }
     }
 
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+      @apply border-l-4 border-accent/60 bg-accent/5 
+             rounded-r-xl px-4 py-2 my-4 italic
+             text-foreground-soft;
     }
 
     .heading-anchor {
-      @apply mr-1.5 text-accent/50 no-underline opacity-0 transition-opacity;
+      @apply ml-1.5 text-accent/40 no-underline opacity-0 
+             transition-opacity duration-200;
     }
 
     h1:hover .heading-anchor,
@@ -92,25 +109,61 @@
     h5:hover .heading-anchor,
     h6:hover .heading-anchor,
     .heading-anchor:focus {
-      @apply opacity-100;
+      @apply opacity-100 text-accent/70;
     }
 
     details {
-      @apply inline-block cursor-pointer text-foreground select-none [&_p]:hidden [&_ul]:my-0!;
+      @apply inline-block cursor-pointer text-foreground select-none 
+             rounded-xl border border-border/50 bg-surface/50
+             px-4 py-2 backdrop-blur-sm
+             [&_p]:hidden [&_ul]:my-0!;
     }
 
     summary {
-      @apply focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply font-medium transition-colors duration-200
+             focus-visible:no-underline focus-visible:outline-2 
+             focus-visible:outline-offset-2 focus-visible:outline-accent 
+             focus-visible:outline-dashed
+             hover:text-accent;
     }
 
     pre {
-      @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply focus-visible:border-transparent focus-visible:outline-2 
+             focus-visible:outline-accent focus-visible:outline-dashed;
+    }
+    
+    sup {
+      @apply text-xs text-muted;
+      
+      a {
+        @apply text-accent font-medium;
+      }
+    }
+    
+    sub {
+      @apply text-xs;
+    }
+    
+    abbr[title] {
+      @apply underline decoration-dotted decoration-muted/50
+             underline-offset-2 cursor-help;
+    }
+    
+    mark {
+      @apply bg-accent/20 text-foreground px-1 rounded;
+    }
+    
+    del {
+      @apply text-muted line-through;
+    }
+    
+    ins {
+      @apply text-accent bg-accent/10 px-1 rounded no-underline;
     }
   }
 
-  /* ===== Code Blocks & Syntax Highlighting ===== */
   .astro-code {
-    @apply bg-background text-(--shiki-light);
+    @apply bg-surface text-(--shiki-light);
   }
 
   .astro-code span {
@@ -118,32 +171,31 @@
   }
 
   html[data-theme="dark"] .astro-code {
-    @apply bg-background text-(--shiki-dark);
+    @apply bg-surface text-(--shiki-dark);
   }
 
   html[data-theme="dark"] .astro-code span {
     @apply text-(--shiki-dark);
   }
 
-  /* Shiki transformer styles: diff, highlight, word-highlight */
   .astro-code .line.diff.add {
-    @apply relative inline-block w-full bg-green-400/20;
+    @apply relative inline-block w-full bg-green-500/15;
   }
   .astro-code .line.diff.add::after {
     content: "+";
-    @apply absolute left-1 text-green-500;
+    @apply absolute left-3 text-green-500 font-bold;
   }
   .astro-code .line.diff.remove {
-    @apply relative inline-block w-full bg-red-500/20;
+    @apply relative inline-block w-full bg-red-500/15;
   }
   .astro-code .line.diff.remove::after {
     content: "-";
-    @apply absolute left-1 text-red-500;
+    @apply absolute left-3 text-red-500 font-bold;
   }
   .astro-code .line.highlighted {
-    @apply inline-block w-full bg-slate-400/20;
+    @apply inline-block w-full bg-accent/10;
   }
   .astro-code .highlighted-word {
-    @apply rounded-sm border border-border px-0.5 py-px;
+    @apply rounded-md border border-accent/30 bg-accent/10 px-1;
   }
 }

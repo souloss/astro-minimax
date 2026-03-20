@@ -48,7 +48,7 @@ const hrefMap: Record<string, string> = {
   archives: `${base}/archives`,
 };
 
-const navItems = SITE.nav.items
+const navItems = (SITE.nav?.items ?? [])
   .filter(i => i.enabled)
   .map(i => ({
     href: hrefMap[i.key] ?? `${base}/${i.key}`,
@@ -60,26 +60,32 @@ const navItems = SITE.nav.items
 <a
   id="skip-to-content"
   href="#main-content"
-  class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"
+  class="absolute start-16 -top-full z-50 rounded-xl bg-accent px-4 py-2 text-sm font-medium text-white 
+         backdrop-blur-lg transition-all duration-300 focus:top-4 focus:shadow-lg focus:shadow-accent/25"
 >
   Skip to content
 </a>
 
 <header
-  class="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md"
+  class="fixed top-0 left-0 right-0 z-40 w-full
+         border-b border-border/50 bg-surface/70 backdrop-blur-xl
+         transition-all duration-300 ease-out
+         supports-[backdrop-filter]:bg-surface/60"
 >
   <div
-    class="flex h-14 w-full items-center justify-between px-4 sm:px-6 lg:px-8"
+    class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8"
   >
     <a
       href={`/${lang}/`}
-      class="text-lg font-semibold tracking-tight text-foreground transition-colors hover:text-accent sm:text-xl"
+      class="text-lg font-bold tracking-tight text-foreground 
+             transition-all duration-200 
+             hover:text-accent hover:tracking-normal
+             sm:text-xl"
     >
-      {SITE.title}
+      <span class="text-gradient">{SITE.title}</span>
     </a>
 
     <nav id="nav-menu" class="flex items-center">
-      {/* Desktop Navigation */}
       <ul class="hidden items-center gap-1 sm:flex">
         {
           navItems.map(({ href, label, icon: Icon }) => (
@@ -87,21 +93,24 @@ const navItems = SITE.nav.items
               <a
                 href={href}
                 class:list={[
-                  "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-                  "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
-                  { "bg-muted/80 text-foreground": isActive(href) },
+                  "flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium",
+                  "transition-all duration-200 ease-out",
+                  "text-foreground-soft hover:bg-accent/10 hover:text-accent",
+                  { "bg-accent/15 text-accent font-semibold": isActive(href) },
                 ]}
               >
-                <Icon class="size-4" />
+                <Icon class="size-4 opacity-80" />
                 <span>{label}</span>
               </a>
             </li>
           ))
         }
-        <li class="ml-1 flex items-center gap-1 border-l border-border pl-2">
+        <li class="ml-2 flex items-center gap-1 border-l border-border/60 pl-3">
           <button
             id="lang-switch-btn"
-            class="text-muted-foreground rounded-md px-2 py-1.5 text-xs font-semibold transition-colors hover:bg-muted/60 hover:text-foreground"
+            class="rounded-xl px-3 py-2 text-xs font-bold tracking-wide
+                   text-muted transition-all duration-200 
+                   hover:bg-accent/10 hover:text-accent"
             title="Switch language"
             aria-label="Switch language"
           >
@@ -119,9 +128,10 @@ const navItems = SITE.nav.items
             <a
               href={`/${lang}/search`}
               class:list={[
-                "flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-                "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
-                { "bg-muted/80 text-foreground": isActive(`/${lang}/search`) },
+                "flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium",
+                "transition-all duration-200 ease-out",
+                "text-foreground-soft hover:bg-accent/10 hover:text-accent",
+                { "bg-accent/15 text-accent": isActive(`/${lang}/search`) },
               ]}
               title={t("nav.search", lang)}
               aria-label={t("nav.search", lang)}
@@ -132,10 +142,10 @@ const navItems = SITE.nav.items
         </li>
       </ul>
 
-      {/* Mobile Menu Button */}
       <button
         id="menu-btn"
-        class="focus-outline rounded-md p-2 sm:hidden"
+        class="rounded-xl p-2.5 transition-all duration-200 
+               hover:bg-accent/10 hover:text-accent sm:hidden"
         aria-label="Open Menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
@@ -146,36 +156,37 @@ const navItems = SITE.nav.items
     </nav>
   </div>
 
-  {/* Mobile Navigation Panel */}
   <div
     id="mobile-menu"
-    class="hidden border-t border-border bg-background sm:hidden"
+    class="hidden border-t border-border/50 bg-surface/95 backdrop-blur-xl sm:hidden"
   >
-    <ul class="flex flex-col gap-1 px-4 py-3">
+    <ul class="flex flex-col gap-1 p-4">
       {
         navItems.map(({ href, label, icon: Icon }) => (
           <li>
             <a
               href={href}
               class:list={[
-                "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
-                "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
-                { "bg-muted/80 text-foreground": isActive(href) },
+                "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium",
+                "transition-all duration-200 ease-out",
+                "text-foreground-soft hover:bg-accent/10 hover:text-accent",
+                { "bg-accent/15 text-accent font-semibold": isActive(href) },
               ]}
             >
-              <Icon class="size-5" />
+              <Icon class="size-5 opacity-80" />
               <span>{label}</span>
             </a>
           </li>
         ))
       }
-      <li class="mt-1 border-t border-border pt-2">
+      <li class="mt-2 border-t border-border/50 pt-3">
         <a
           href={`/${lang}/search`}
           class:list={[
-            "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
-            "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
-            { "bg-muted/80 text-foreground": isActive(`/${lang}/search`) },
+            "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium",
+            "transition-all duration-200 ease-out",
+            "text-foreground-soft hover:bg-accent/10 hover:text-accent",
+            { "bg-accent/15 text-accent": isActive(`/${lang}/search`) },
           ]}
         >
           <IconSearch class="size-5" />
@@ -185,11 +196,13 @@ const navItems = SITE.nav.items
       <li>
         <button
           id="lang-switch-btn-mobile"
-          class="text-muted-foreground flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-muted/60 hover:text-foreground"
+          class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium
+                 text-foreground-soft transition-all duration-200 
+                 hover:bg-accent/10 hover:text-accent"
           aria-label="Switch language"
         >
           <svg
-            class="size-5"
+            class="size-5 opacity-80"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -209,6 +222,8 @@ const navItems = SITE.nav.items
     </ul>
   </div>
 </header>
+
+<div class="h-14"></div>
 
 <script>
   function toggleNav() {

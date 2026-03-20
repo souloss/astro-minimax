@@ -17,19 +17,21 @@ const tagHref = lang ? `/${lang}/tags/${tag}/` : `/tags/${tag}/`;
     href={tagHref}
     transition:name={tag}
     class:list={[
-      "flex items-center gap-0.5",
-      "border-b-2 border-dashed border-foreground",
-      "hover:-mt-0.5 hover:border-accent hover:text-accent",
-      "focus-visible:border-none focus-visible:text-accent",
-      { "text-sm": size === "sm" },
-      { "text-lg": size === "lg" },
+      "inline-flex items-center gap-1.5 rounded-xl",
+      "border border-border/50 bg-muted/40",
+      "font-medium text-foreground-soft",
+      "transition-all duration-200 ease-out",
+      "hover:border-accent/30 hover:bg-accent/10 hover:text-accent",
+      "focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent",
+      { "px-3 py-1.5 text-sm": size === "sm" },
+      { "px-4 py-2 text-base": size === "lg" },
     ]}
   >
     <IconHash
       class:list={[
-        "opacity-80",
-        { "size-5": size === "lg" },
-        { "size-4": size === "sm" },
+        "opacity-60",
+        { "size-4": size === "lg" },
+        { "size-3.5": size === "sm" },
       ]}
     />
     {tagName}

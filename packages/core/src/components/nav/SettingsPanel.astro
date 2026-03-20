@@ -1,0 +1,637 @@
+---
+import { SITE } from "virtual:astro-minimax/config";
+
+const lang = SITE.lang;
+const isZh = lang === 'zh';
+
+const labels = {
+  title: isZh ? '偏好设置' : 'Preferences',
+  close: isZh ? '关闭' : 'Close',
+  
+  // Tabs
+  tabTheme: isZh ? '主题' : 'Theme',
+  tabAppearance: isZh ? '外观' : 'Appearance',
+  tabLayout: isZh ? '布局' : 'Layout',
+  tabGeneral: isZh ? '通用' : 'General',
+  
+  // Theme tab
+  colorScheme: isZh ? '色彩主题' : 'Color Scheme',
+  borderRadius: isZh ? '圆角大小' : 'Border Radius',
+  
+  // Appearance tab  
+  fontSize: isZh ? '全局字体大小' : 'Global Font Size',
+  fontSizeDesc: isZh ? '调整网站整体字体大小' : 'Adjust overall font size',
+  
+  // Layout tab
+  postsLayout: isZh ? '文章布局' : 'Posts Layout',
+  card1Col: isZh ? '单列卡片' : 'Card 1-Col',
+  card2Col: isZh ? '双列卡片' : 'Card 2-Col',
+  card3Col: isZh ? '三列卡片' : 'Card 3-Col',
+  list: isZh ? '列表' : 'List',
+  compact: isZh ? '紧凑' : 'Compact',
+  widgets: isZh ? '小部件' : 'Widgets',
+  showBackToTop: isZh ? '返回顶部按钮' : 'Back to Top Button',
+  showThemeToggle: isZh ? '主题切换按钮' : 'Theme Toggle Button',
+  showReadingTime: isZh ? '阅读时间显示' : 'Reading Time Display',
+  showStickyBackToTop: isZh ? '文章页返回顶部' : 'Article Back to Top',
+  showStickyBackToTopDesc: isZh ? '文章阅读时顶部导航栏的返回顶部按钮' : 'Back to top button in sticky header while reading',
+  
+  // General tab
+  animations: isZh ? '动画效果' : 'Animations',
+  animationsDesc: isZh ? '页面过渡和交互动画' : 'Page transitions and interactions',
+  cardHover: isZh ? '卡片悬停效果' : 'Card Hover Effect',
+  cardHoverDesc: isZh ? '悬停时抬升和阴影效果' : 'Lift and shadow on hover',
+  smoothScroll: isZh ? '平滑滚动' : 'Smooth Scrolling',
+  
+  // Other
+  reset: isZh ? '恢复默认设置' : 'Reset to Defaults',
+  small: isZh ? '小' : 'S',
+  medium: isZh ? '中' : 'M',
+  large: isZh ? '大' : 'L',
+  xl: isZh ? '超大' : 'XL',
+};
+---
+
+<div id="settings-panel" class="fixed right-5 bottom-24 z-50 hidden">
+  <div class="settings-panel-inner w-[340px] h-[480px] flex flex-col overflow-hidden rounded-2xl border border-border/30 bg-surface/98 backdrop-blur-xl shadow-2xl">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-border/30 px-4 py-3 shrink-0">
+      <h3 class="text-sm font-semibold text-foreground">{labels.title}</h3>
+      <button id="settings-close-btn" class="rounded-lg p-1 text-muted transition-colors hover:bg-muted/50 hover:text-foreground" aria-label={labels.close}>
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex border-b border-border/30 bg-muted/10 shrink-0">
+      <button data-tab="theme" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-accent border-b-2 border-accent transition-colors">{labels.tabTheme}</button>
+      <button data-tab="appearance" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors">{labels.tabAppearance}</button>
+      <button data-tab="layout" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors">{labels.tabLayout}</button>
+      <button data-tab="general" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors">{labels.tabGeneral}</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="overflow-y-auto flex-1">
+      <!-- Theme Tab -->
+      <div id="tab-theme" class="tab-content p-4 space-y-4">
+        <div>
+          <p class="mb-2 text-xs font-medium text-foreground-soft">{labels.colorScheme}</p>
+          <div class="grid grid-cols-8 gap-1.5" id="color-scheme-options"></div>
+        </div>
+        <div>
+          <p class="mb-2 text-xs font-medium text-foreground-soft">{labels.borderRadius}</p>
+          <div class="flex gap-2" id="radius-options">
+            <button data-radius="sm" data-radius-value="0.5rem" class="radius-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.small}</button>
+            <button data-radius="md" data-radius-value="0.75rem" class="radius-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.medium}</button>
+            <button data-radius="lg" data-radius-value="1rem" class="radius-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.large}</button>
+            <button data-radius="xl" data-radius-value="1.5rem" class="radius-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.xl}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appearance Tab -->
+      <div id="tab-appearance" class="tab-content hidden p-4">
+        <p class="mb-1 text-xs font-medium text-foreground-soft">{labels.fontSize}</p>
+        <p class="mb-3 text-xs text-muted">{labels.fontSizeDesc}</p>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-muted">A</span>
+          <input type="range" id="font-size-slider" min="0.85" max="1.25" step="0.05" value="1" class="flex-1 h-2 rounded-full appearance-none cursor-pointer" style="background: linear-gradient(to right, var(--accent) 0%, var(--accent) 50%, var(--muted) 50%, var(--muted) 100%)" />
+          <span class="text-base text-muted">A</span>
+        </div>
+        <div class="mt-2 flex justify-between">
+          <span class="text-xs text-muted">85%</span>
+          <span id="font-size-value" class="text-xs font-medium text-accent">100%</span>
+          <span class="text-xs text-muted">125%</span>
+        </div>
+      </div>
+
+      <!-- Layout Tab -->
+      <div id="tab-layout" class="tab-content hidden p-4 space-y-4">
+        <div>
+          <p class="mb-2 text-xs font-medium text-foreground-soft">{labels.postsLayout}</p>
+          <div class="flex flex-wrap gap-2" id="layout-mode-options"></div>
+        </div>
+        <div>
+          <p class="mb-2 text-xs font-medium text-foreground-soft">{labels.widgets}</p>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between py-1">
+              <span class="text-sm text-foreground-soft">{labels.showThemeToggle}</span>
+              <button id="widget-theme-toggle" role="switch" aria-checked="true" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--accent)">
+                <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(16px)"></span>
+              </button>
+            </div>
+            <div class="flex items-center justify-between py-1">
+              <span class="text-sm text-foreground-soft">{labels.showBackToTop}</span>
+              <button id="widget-backtotop-toggle" role="switch" aria-checked="true" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--accent)">
+                <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(16px)"></span>
+              </button>
+            </div>
+            <div class="flex items-center justify-between py-1">
+              <span class="text-sm text-foreground-soft">{labels.showReadingTime}</span>
+              <button id="widget-readingtime-toggle" role="switch" aria-checked="true" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--accent)">
+                <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(16px)"></span>
+              </button>
+            </div>
+            <div class="flex items-center justify-between py-1">
+              <div>
+                <p class="text-sm text-foreground-soft">{labels.showStickyBackToTop}</p>
+                <p class="text-xs text-muted">{labels.showStickyBackToTopDesc}</p>
+              </div>
+              <button id="widget-sticky-backtotop-toggle" role="switch" aria-checked="true" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--accent)">
+                <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(16px)"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- General Tab -->
+      <div id="tab-general" class="tab-content hidden p-4 space-y-3">
+        <div class="flex items-center justify-between py-1">
+          <div>
+            <p class="text-sm text-foreground-soft">{labels.animations}</p>
+            <p class="text-xs text-muted">{labels.animationsDesc}</p>
+          </div>
+          <button id="animation-toggle" role="switch" aria-checked="true" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--accent)">
+            <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(16px)"></span>
+          </button>
+        </div>
+        <div class="flex items-center justify-between py-1">
+          <div>
+            <p class="text-sm text-foreground-soft">{labels.cardHover}</p>
+            <p class="text-xs text-muted">{labels.cardHoverDesc}</p>
+          </div>
+          <button id="card-hover-toggle" role="switch" aria-checked="true" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--accent)">
+            <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(16px)"></span>
+          </button>
+        </div>
+        <div class="flex items-center justify-between py-1">
+          <p class="text-sm text-foreground-soft">{labels.smoothScroll}</p>
+          <button id="smooth-scroll-toggle" role="switch" aria-checked="true" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--accent)">
+            <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(16px)"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="border-t border-border/30 p-3 shrink-0">
+      <button id="settings-reset-btn" class="w-full rounded-xl bg-muted/30 px-3 py-2 text-xs font-medium text-foreground-soft transition-all hover:bg-muted/50 hover:text-foreground">
+        {labels.reset}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ labels, isZh }}>
+  const STORAGE_KEY = 'astro-minimax-settings';
+  
+  const defaultSettings = {
+    colorScheme: 'teal',
+    layoutMode: 'mag',
+    radius: 'lg',
+    fontSize: 1,
+    animations: true,
+    cardHover: true,
+    smoothScroll: true,
+    widgets: {
+      themeToggle: true,
+      backToTop: true,
+      readingTime: true,
+      stickyBackToTop: true,
+    },
+  };
+  
+  const colorSchemes = [
+    { id: 'teal', name: 'Teal', accent: '#0a9396', accentSoft: '#94d2bd', gradient: 'linear-gradient(135deg, #0a9396 0%, #005f73 100%)' },
+    { id: 'blue', name: 'Ocean Blue', accent: '#2563eb', accentSoft: '#60a5fa', gradient: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)' },
+    { id: 'purple', name: 'Midnight', accent: '#7c3aed', accentSoft: '#a78bfa', gradient: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)' },
+    { id: 'rose', name: 'Rose', accent: '#e11d48', accentSoft: '#fb7185', gradient: 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)' },
+    { id: 'amber', name: 'Sunset', accent: '#d97706', accentSoft: '#fbbf24', gradient: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)' },
+    { id: 'emerald', name: 'Forest', accent: '#059669', accentSoft: '#34d399', gradient: 'linear-gradient(135deg, #059669 0%, #047857 100%)' },
+    { id: 'indigo', name: 'Indigo', accent: '#4f46e5', accentSoft: '#818cf8', gradient: 'linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)' },
+    { id: 'slate', name: 'Neutral', accent: '#475569', accentSoft: '#94a3b8', gradient: 'linear-gradient(135deg, #475569 0%, #334155 100%)' },
+  ];
+
+  const layoutModes = [
+    { id: 'grid', name: isZh ? '网格卡片' : 'Grid Cards', icon: 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z', desc: isZh ? '标准网格布局' : 'Standard grid layout' },
+    { id: 'mag', name: isZh ? '杂志' : 'Magazine', icon: 'M3 3h18v18H3z', desc: isZh ? '大卡片杂志风格' : 'Large magazine cards' },
+    { id: 'list', name: isZh ? '列表' : 'List', icon: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', desc: isZh ? '水平分割列表' : 'Horizontal list' },
+    { id: 'compact', name: isZh ? '紧凑' : 'Compact', icon: 'M3 6h18M3 10h18M3 14h18M3 18h18', desc: isZh ? '单行紧凑布局' : 'Single-line compact' },
+    { id: 'timeline', name: isZh ? '时间线' : 'Timeline', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', desc: isZh ? '时间轴视图' : 'Timeline view' },
+  ];
+
+  const radiusValues = { sm: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem' };
+
+  function loadSettings() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? { ...defaultSettings, ...JSON.parse(stored) } : { ...defaultSettings };
+    } catch { return { ...defaultSettings }; }
+  }
+
+  function saveSettings(s) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {}
+  }
+
+  function applyColorScheme(schemeId) {
+    const scheme = colorSchemes.find(s => s.id === schemeId);
+    if (!scheme) return;
+    const root = document.documentElement;
+    
+    // Apply accent colors
+    root.style.setProperty('--accent', scheme.accent);
+    root.style.setProperty('--accent-soft', scheme.accent + '18');
+    root.style.setProperty('--accent-gradient-from', scheme.accent);
+    root.style.setProperty('--accent-gradient-to', scheme.accentSoft);
+    root.style.setProperty('--hero-gradient', scheme.gradient);
+    
+    // Update Tailwind color mapping for accent
+    root.style.setProperty('--color-accent', scheme.accent);
+    root.style.setProperty('--color-accent-soft', scheme.accent + '18');
+    
+    // Force style recalculation
+    void root.offsetHeight;
+    
+    root.setAttribute('data-color-scheme', schemeId);
+  }
+
+  function applyLayoutMode(mode) {
+    const root = document.documentElement;
+    root.setAttribute('data-layout', mode);
+    
+    // 找到所有文章列表容器
+    const containers = document.querySelectorAll('[data-posts-grid]');
+    containers.forEach(container => {
+      // 设置 data-layout 属性
+      container.setAttribute('data-layout', mode);
+    });
+    
+    // 直接触发布局渲染
+    document.dispatchEvent(new CustomEvent('layout-change', { detail: { mode } }));
+    
+    // 确保渲染函数被调用
+    if (window.__renderPostsLayout) {
+      window.__renderPostsLayout(mode);
+    }
+  }
+
+  function applyRadius(value) {
+    const root = document.documentElement;
+    root.style.setProperty('--card-radius', value);
+    
+    // 应用到所有使用圆角的元素
+    const cards = document.querySelectorAll('.rounded-3xl, .rounded-2xl, .rounded-xl, [class*="rounded-"]');
+    cards.forEach(card => {
+      if (card.closest('#settings-panel')) return; // 不影响设置面板本身
+      card.style.borderRadius = value;
+    });
+  }
+
+  function applyFontSize(size) {
+    document.documentElement.style.fontSize = `${size}rem`;
+    document.documentElement.style.setProperty('--font-size-scale', size);
+  }
+
+  function applyAnimations(enabled) {
+    const root = document.documentElement;
+    if (enabled) {
+      root.classList.remove('reduce-motion');
+      document.body.classList.remove('reduce-motion');
+    } else {
+      root.classList.add('reduce-motion');
+      document.body.classList.add('reduce-motion');
+    }
+  }
+
+  function applyCardHover(enabled) {
+    document.body.setAttribute('data-card-hover', String(enabled));
+    const root = document.documentElement;
+    if (enabled) {
+      root.classList.remove('no-card-hover');
+    } else {
+      root.classList.add('no-card-hover');
+    }
+  }
+
+  function applySmoothScroll(enabled) {
+    document.documentElement.classList.toggle('scroll-smooth', enabled);
+  }
+
+  function applyWidgets(settings) {
+    const themeToggleBtn = document.getElementById('theme-btn');
+    const backToTopBtn = document.getElementById('back-to-top-btn');
+    const readingTimeEls = document.querySelectorAll('.reading-time');
+    
+    if (themeToggleBtn) themeToggleBtn.style.display = settings.widgets.themeToggle ? '' : 'none';
+    if (backToTopBtn) backToTopBtn.style.display = settings.widgets.backToTop ? '' : 'none';
+    readingTimeEls.forEach(el => el.style.display = settings.widgets.readingTime ? '' : 'none');
+    
+    document.documentElement.setAttribute('data-sticky-backtotop', String(settings.widgets.stickyBackToTop));
+  }
+
+  function updateSwitch(btn, checked) {
+    btn.setAttribute('aria-checked', String(checked));
+    const knob = btn.querySelector('.toggle-knob');
+    if (knob) knob.style.transform = checked ? 'translateX(16px)' : 'translateX(0)';
+    btn.style.backgroundColor = checked ? 'var(--accent)' : 'var(--muted)';
+  }
+
+  function updateColorSchemeUI(schemeId) {
+    document.querySelectorAll('[data-color-scheme]').forEach(btn => {
+      const isActive = btn.dataset.colorScheme === schemeId;
+      btn.classList.toggle('border-accent', isActive);
+      btn.classList.toggle('ring-2', isActive);
+      btn.classList.toggle('ring-accent/30', isActive);
+      btn.classList.toggle('border-border/50', !isActive);
+      const icon = btn.querySelector('.check-icon');
+      if (icon) icon.classList.toggle('opacity-0', !isActive);
+    });
+  }
+
+  function updateLayoutModeUI(mode) {
+    document.querySelectorAll('[data-layout-mode]').forEach(btn => {
+      const isActive = btn.dataset.layoutMode === mode;
+      btn.classList.toggle('border-accent', isActive);
+      btn.classList.toggle('bg-accent/10', isActive);
+      btn.classList.toggle('text-accent', isActive);
+      btn.classList.toggle('border-border/50', !isActive);
+    });
+  }
+
+  function updateRadiusUI(radius) {
+    document.querySelectorAll('[data-radius]').forEach(btn => {
+      const isActive = btn.dataset.radius === radius;
+      btn.classList.toggle('border-accent', isActive);
+      btn.classList.toggle('bg-accent/10', isActive);
+      btn.classList.toggle('text-accent', isActive);
+      btn.classList.toggle('border-border/50', !isActive);
+    });
+  }
+
+  function updateFontSizeUI(size) {
+    const slider = document.getElementById('font-size-slider');
+    const valueEl = document.getElementById('font-size-value');
+    if (slider) {
+      slider.value = size;
+      const percent = ((size - 0.85) / (1.25 - 0.85)) * 100;
+      slider.style.background = `linear-gradient(to right, var(--accent) 0%, var(--accent) ${percent}%, var(--muted) ${percent}%, var(--muted) 100%)`;
+    }
+    if (valueEl) valueEl.textContent = `${Math.round(size * 100)}%`;
+  }
+
+  function switchTab(tabName) {
+    document.querySelectorAll('.settings-tab').forEach(tab => {
+      const isActive = tab.dataset.tab === tabName;
+      tab.classList.toggle('text-accent', isActive);
+      tab.classList.toggle('border-accent', isActive);
+      tab.classList.toggle('text-muted', !isActive);
+      tab.classList.toggle('border-transparent', !isActive);
+    });
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.toggle('hidden', content.id !== `tab-${tabName}`);
+    });
+  }
+
+  function renderUI() {
+    const colorContainer = document.getElementById('color-scheme-options');
+    const layoutContainer = document.getElementById('layout-mode-options');
+
+    if (colorContainer) {
+      colorContainer.innerHTML = colorSchemes.map(s => `
+        <button data-color-scheme="${s.id}" data-accent="${s.accent}" data-accent-soft="${s.accentSoft}" 
+                class="group relative aspect-square rounded-lg border border-border/50 transition-all hover:border-accent/50 hover:scale-105" 
+                title="${s.name}">
+          <div class="absolute inset-1 rounded-md" style="background: ${s.gradient}"></div>
+          <div class="check-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity">
+            <svg class="size-3.5 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    if (layoutContainer) {
+      layoutContainer.innerHTML = layoutModes.map(m => `
+        <button data-layout-mode="${m.id}" class="layout-btn flex flex-col items-center gap-1.5 rounded-xl border border-border/50 p-3 transition-all hover:border-accent/50 hover:bg-accent/5">
+          <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${m.icon}"></path></svg>
+          <span class="text-xs font-medium whitespace-nowrap">${m.name}</span>
+        </button>
+      `).join('');
+    }
+  }
+
+  function init() {
+    const panel = document.getElementById('settings-panel');
+    const closeBtn = document.getElementById('settings-close-btn');
+    const resetBtn = document.getElementById('settings-reset-btn');
+    const fontSizeSlider = document.getElementById('font-size-slider');
+    
+    const animationToggle = document.getElementById('animation-toggle');
+    const cardHoverToggle = document.getElementById('card-hover-toggle');
+    const smoothScrollToggle = document.getElementById('smooth-scroll-toggle');
+    const themeToggle = document.getElementById('widget-theme-toggle');
+    const backToTopToggle = document.getElementById('widget-backtotop-toggle');
+    const readingTimeToggle = document.getElementById('widget-readingtime-toggle');
+    const stickyBackToTopToggle = document.getElementById('widget-sticky-backtotop-toggle');
+
+    if (!panel) return;
+
+    renderUI();
+    const settings = loadSettings();
+
+    // Apply all settings
+    applyColorScheme(settings.colorScheme);
+    applyLayoutMode(settings.layoutMode);
+    applyRadius(radiusValues[settings.radius] || '1rem');
+    applyFontSize(settings.fontSize);
+    applyAnimations(settings.animations);
+    applyCardHover(settings.cardHover);
+    applySmoothScroll(settings.smoothScroll);
+    applyWidgets(settings);
+
+    // Update UI
+    updateColorSchemeUI(settings.colorScheme);
+    updateLayoutModeUI(settings.layoutMode);
+    updateRadiusUI(settings.radius);
+    updateFontSizeUI(settings.fontSize);
+    if (animationToggle) updateSwitch(animationToggle, settings.animations);
+    if (cardHoverToggle) updateSwitch(cardHoverToggle, settings.cardHover);
+    if (smoothScrollToggle) updateSwitch(smoothScrollToggle, settings.smoothScroll);
+    if (themeToggle) updateSwitch(themeToggle, settings.widgets.themeToggle);
+    if (backToTopToggle) updateSwitch(backToTopToggle, settings.widgets.backToTop);
+    if (readingTimeToggle) updateSwitch(readingTimeToggle, settings.widgets.readingTime);
+    if (stickyBackToTopToggle) updateSwitch(stickyBackToTopToggle, settings.widgets.stickyBackToTop);
+
+    // Tab switching
+    document.querySelectorAll('.settings-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+    });
+
+    // Color scheme handlers
+    document.getElementById('color-scheme-options')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-color-scheme]');
+      if (!btn) return;
+      const schemeId = btn.dataset.colorScheme;
+      const scheme = colorSchemes.find(s => s.id === schemeId);
+      if (!scheme) return;
+      
+      settings.colorScheme = schemeId;
+      saveSettings(settings);
+      applyColorScheme(schemeId);
+      updateColorSchemeUI(schemeId);
+    });
+
+    // Layout mode handlers
+    document.getElementById('layout-mode-options')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-layout-mode]');
+      if (!btn) return;
+      const mode = btn.dataset.layoutMode;
+      
+      settings.layoutMode = mode;
+      saveSettings(settings);
+      applyLayoutMode(mode);
+      updateLayoutModeUI(mode);
+    });
+
+    // Radius handlers
+    document.getElementById('radius-options')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-radius]');
+      if (!btn) return;
+      const r = btn.dataset.radius;
+      
+      settings.radius = r;
+      saveSettings(settings);
+      applyRadius(radiusValues[r]);
+      updateRadiusUI(r);
+    });
+
+    // Font size handler
+    fontSizeSlider?.addEventListener('input', (e) => {
+      const size = parseFloat(e.target.value);
+      settings.fontSize = size;
+      saveSettings(settings);
+      applyFontSize(size);
+      updateFontSizeUI(size);
+    });
+
+    // Toggle handlers
+    animationToggle?.addEventListener('click', () => {
+      settings.animations = !settings.animations;
+      saveSettings(settings);
+      applyAnimations(settings.animations);
+      updateSwitch(animationToggle, settings.animations);
+    });
+
+    cardHoverToggle?.addEventListener('click', () => {
+      settings.cardHover = !settings.cardHover;
+      saveSettings(settings);
+      applyCardHover(settings.cardHover);
+      updateSwitch(cardHoverToggle, settings.cardHover);
+    });
+
+    smoothScrollToggle?.addEventListener('click', () => {
+      settings.smoothScroll = !settings.smoothScroll;
+      saveSettings(settings);
+      applySmoothScroll(settings.smoothScroll);
+      updateSwitch(smoothScrollToggle, settings.smoothScroll);
+    });
+
+    themeToggle?.addEventListener('click', () => {
+      settings.widgets.themeToggle = !settings.widgets.themeToggle;
+      saveSettings(settings);
+      applyWidgets(settings);
+      updateSwitch(themeToggle, settings.widgets.themeToggle);
+    });
+
+    backToTopToggle?.addEventListener('click', () => {
+      settings.widgets.backToTop = !settings.widgets.backToTop;
+      saveSettings(settings);
+      applyWidgets(settings);
+      updateSwitch(backToTopToggle, settings.widgets.backToTop);
+    });
+
+    readingTimeToggle?.addEventListener('click', () => {
+      settings.widgets.readingTime = !settings.widgets.readingTime;
+      saveSettings(settings);
+      applyWidgets(settings);
+      updateSwitch(readingTimeToggle, settings.widgets.readingTime);
+    });
+
+    stickyBackToTopToggle?.addEventListener('click', () => {
+      settings.widgets.stickyBackToTop = !settings.widgets.stickyBackToTop;
+      saveSettings(settings);
+      applyWidgets(settings);
+      updateSwitch(stickyBackToTopToggle, settings.widgets.stickyBackToTop);
+    });
+
+    // Reset handler
+    resetBtn?.addEventListener('click', () => {
+      Object.assign(settings, JSON.parse(JSON.stringify(defaultSettings)));
+      saveSettings(settings);
+      
+      applyColorScheme(settings.colorScheme);
+      applyLayoutMode(settings.layoutMode);
+      applyRadius(radiusValues[settings.radius]);
+      applyFontSize(settings.fontSize);
+      applyAnimations(settings.animations);
+      applyCardHover(settings.cardHover);
+      applySmoothScroll(settings.smoothScroll);
+      applyWidgets(settings);
+
+      updateColorSchemeUI(settings.colorScheme);
+      updateLayoutModeUI(settings.layoutMode);
+      updateRadiusUI(settings.radius);
+      updateFontSizeUI(settings.fontSize);
+      if (animationToggle) updateSwitch(animationToggle, settings.animations);
+      if (cardHoverToggle) updateSwitch(cardHoverToggle, settings.cardHover);
+      if (smoothScrollToggle) updateSwitch(smoothScrollToggle, settings.smoothScroll);
+      if (themeToggle) updateSwitch(themeToggle, settings.widgets.themeToggle);
+      if (backToTopToggle) updateSwitch(backToTopToggle, settings.widgets.backToTop);
+      if (readingTimeToggle) updateSwitch(readingTimeToggle, settings.widgets.readingTime);
+      if (stickyBackToTopToggle) updateSwitch(stickyBackToTopToggle, settings.widgets.stickyBackToTop);
+    });
+
+    closeBtn?.addEventListener('click', () => panel.classList.add('hidden'));
+  }
+
+  window.__settingsPanel = {
+    toggle: () => {
+      const panel = document.getElementById('settings-panel');
+      if (panel) {
+        panel.classList.toggle('hidden');
+      }
+    },
+    getSettings: loadSettings,
+    applyColorScheme: applyColorScheme,
+    applyLayoutMode: applyLayoutMode
+  };
+
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>
+
+<style>
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+</style>

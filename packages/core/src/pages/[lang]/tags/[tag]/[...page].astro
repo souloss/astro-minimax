@@ -6,7 +6,7 @@ import Main from "../../../../layouts/Main.astro";
 import Layout from "../../../../layouts/Layout.astro";
 import Header from "../../../../components/nav/Header.astro";
 import Footer from "../../../../components/nav/Footer.astro";
-import Card from "../../../../components/ui/Card.astro";
+import PostsContainer from "../../../../components/ui/PostsContainer.astro";
 import Pagination from "../../../../components/nav/Pagination.astro";
 import getUniqueTags from "../../../../utils/getUniqueTags";
 import getPostsByTag from "../../../../utils/getPostsByTag";
@@ -46,9 +46,7 @@ const tag = Astro.params.tag ?? "";
     titleTransition={tag}
     pageDesc={t("main.tagDesc", lang).replace("{tag}", tagName)}
   >
-    <ul class="grid grid-cols-1 gap-5">
-      {page.data.map(post => <Card lang={lang} {...post} />)}
-    </ul>
+    <PostsContainer posts={page.data} lang={lang} />
   </Main>
 
   <Pagination page={page} lang={lang} />

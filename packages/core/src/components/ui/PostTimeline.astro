@@ -1,0 +1,80 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { slugifyStr } from "../../utils/slugify";
+import { getLocalizedPostPath } from "../../utils/getPath";
+import { getReadingTime } from "../../utils/getReadingTime";
+import { getAnimationDelay } from "./PostItemBase.astro";
+import dayjs from "dayjs";
+import utcPlugin from "dayjs/plugin/utc";
+import timezonePlugin from "dayjs/plugin/timezone";
+import { SITE } from "virtual:astro-minimax/config";
+
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  lang: string;
+  index: number;
+  isLast?: boolean;
+}
+
+const { post, lang, index, isLast = false } = Astro.props;
+const { id, data, body, filePath } = post;
+const { title, description, category, pubDatetime, modDatetime, timezone } = data;
+
+const href = getLocalizedPostPath(lang, id, filePath);
+const { minutes: readingMinutes } = getReadingTime(body ?? "");
+const animationDelay = getAnimationDelay(index);
+
+const isModified = modDatetime && modDatetime > pubDatetime;
+const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(timezone || SITE.timezone);
+const dateStr = lang === "zh"
+  ? datetime.format("YYYY 年 M 月 D 日")
+  : datetime.format("MMM D, YYYY");
+
+const viewTransitionName = slugifyStr(title.replaceAll(".", "-"));
+---
+
+<article
+  class:list={[
+    "relative pl-8",
+    isLast ? "pb-0" : "pb-6",
+  ]}
+  style={`animation-delay: ${Math.min(index * 60, 400)}ms`}
+>
+  <!-- Timeline vertical line (hidden for last item) -->
+  {!isLast && (
+    <div class="absolute left-0 top-3 bottom-0 w-px bg-border/40" />
+  )}
+
+  <!-- Timeline dot -->
+  <div class="absolute left-[-5px] top-3 size-2.5 rounded-full bg-background border-2 border-accent" />
+
+  <!-- Date label -->
+  <time class="mb-2 block text-xs font-medium text-muted" datetime={datetime.toISOString()}>
+    {dateStr}
+  </time>
+
+  <!-- Content card -->
+  <a
+    href={href}
+    class="group block rounded-xl border border-border/50 bg-background p-4 shadow-sm transition-all duration-200 hover:border-accent/30 hover:shadow-md"
+  >
+    <h3 class="text-base font-semibold text-foreground leading-snug group-hover:text-accent transition-colors">
+      {title}
+    </h3>
+    <p class="mt-1.5 line-clamp-2 text-sm text-foreground-soft">
+      {description}
+    </p>
+    <div class="mt-2.5 flex items-center gap-2 text-xs text-muted">
+      <span>{readingMinutes} min</span>
+      {category && (
+        <>
+          <span class="text-border-strong">·</span>
+          <span class="text-accent/80">{category}</span>
+        </>
+      )}
+    </div>
+  </a>
+</article>

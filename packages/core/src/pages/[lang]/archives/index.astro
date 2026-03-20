@@ -4,7 +4,7 @@ import Main from "../../../layouts/Main.astro";
 import Layout from "../../../layouts/Layout.astro";
 import Header from "../../../components/nav/Header.astro";
 import Footer from "../../../components/nav/Footer.astro";
-import Card from "../../../components/ui/Card.astro";
+import PostsContainer from "../../../components/ui/PostsContainer.astro";
 import getPostsByGroupCondition from "../../../utils/getPostsByGroupCondition";
 import getPostsByLang from "../../../utils/getPostsByLang";
 import { SITE } from "virtual:astro-minimax/config";
@@ -117,21 +117,18 @@ const yearCount = Object.keys(years).length;
                           </span>
                         </h3>
                       </div>
-                      <ul class="ml-6 grid grid-cols-1 gap-3 md:ml-4">
-                        {monthGroup
-                          .sort(
-                            (a, b) =>
-                              Math.floor(
-                                new Date(b.data.pubDatetime).getTime() / 1000
-                              ) -
-                              Math.floor(
-                                new Date(a.data.pubDatetime).getTime() / 1000
-                              )
-                          )
-                          .map(data => (
-                              <Card lang={lang} compact {...data} />
-                          ))}
-                      </ul>
+<ul class="ml-6 md:ml-4" data-posts-grid>
+                          <PostsContainer posts={monthGroup
+                            .sort(
+                              (a, b) =>
+                                Math.floor(
+                                  new Date(b.data.pubDatetime).getTime() / 1000
+                                ) -
+                                Math.floor(
+                                  new Date(a.data.pubDatetime).getTime() / 1000
+                                )
+                            )} lang={lang} />
+                        </ul>
                     </div>
                   ))}
               </div>
