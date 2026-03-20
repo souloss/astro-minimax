@@ -8,10 +8,22 @@ import factRegistry from '../../datas/fact-registry.json';
 
 // Optional: TF-IDF vector index for enhanced search reranking
 // The vector index is created by `astro-minimax ai process` command
-// Using dynamic import in try/catch since the file may not exist yet
+// Lazy-loaded on first request to avoid top-level await issues with Cloudflare Pages
 let vectorIndex: unknown = null;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-try { vectorIndex = (await import('../../src/data/vectors/index.json' as any)).default; } catch { /* not available */ }
+let vectorIndexLoaded = false;
+
+async function loadVectorIndex(): Promise<unknown> {
+  if (vectorIndexLoaded) return vectorIndex;
+  vectorIndexLoaded = true;
+  try {
+    // Dynamic import for optional file that may not exist
+    const module = await import('../../src/data/vectors/index.json');
+    vectorIndex = module.default;
+  } catch {
+    // File not available, keep vectorIndex as null
+  }
+  return vectorIndex;
+}
 
 interface FunctionEnv extends ChatHandlerEnv {
   CACHE_KV?: KVNamespace;
@@ -20,6 +32,8 @@ interface FunctionEnv extends ChatHandlerEnv {
 }
 
 export const onRequest: PagesFunction<FunctionEnv> = async (context) => {
+  await loadVectorIndex();
+  
   initializeMetadata(
     { summaries: aiSummaries, authorContext, voiceProfile, factRegistry, vectorIndex },
     context.env,
