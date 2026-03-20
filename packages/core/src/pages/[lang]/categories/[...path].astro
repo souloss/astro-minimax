@@ -85,6 +85,25 @@ const lang = (Astro.params.lang ?? "zh") as "zh" | "en";
     titleTransition={category}
     pageDesc={t("main.categoryDesc", lang).replace("{category}", category)}
   >
+    <!-- Category Badge -->
+    <div class="mb-6 flex items-center gap-3">
+      <div class="flex size-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+        </svg>
+      </div>
+      <div class="flex items-center gap-2 text-sm text-muted">
+        <span class="rounded-lg bg-accent/10 px-2.5 py-1 font-medium text-accent">
+          {page.data.length} {lang === "zh" ? "篇文章" : "posts"}
+        </span>
+        {page.lastPage > 1 && (
+          <span class="opacity-60">
+            {lang === "zh" ? `第 ${page.currentPage} / ${page.lastPage} 页` : `Page ${page.currentPage} of ${page.lastPage}`}
+          </span>
+        )}
+      </div>
+    </div>
+    
     <PostsContainer posts={page.data} lang={lang} />
   </Main>
 
