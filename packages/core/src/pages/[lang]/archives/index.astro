@@ -4,11 +4,19 @@ import Main from "../../../layouts/Main.astro";
 import Layout from "../../../layouts/Layout.astro";
 import Header from "../../../components/nav/Header.astro";
 import Footer from "../../../components/nav/Footer.astro";
-import PostsContainer from "../../../components/ui/PostsContainer.astro";
+import { slugifyStr } from "../../../utils/slugify";
+import { getLocalizedPostPath } from "../../../utils/getPath";
+import { getReadingTime } from "../../../utils/getReadingTime";
 import getPostsByGroupCondition from "../../../utils/getPostsByGroupCondition";
 import getPostsByLang from "../../../utils/getPostsByLang";
 import { SITE } from "virtual:astro-minimax/config";
 import { t } from "../../../utils/i18n";
+import dayjs from "dayjs";
+import utcPlugin from "dayjs/plugin/utc";
+import timezonePlugin from "dayjs/plugin/timezone";
+
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
 
 export async function getStaticPaths() {
   if (!SITE.showArchives) return [];
@@ -56,6 +64,19 @@ const years = getPostsByGroupCondition(langPosts, post =>
   post.data.pubDatetime.getFullYear()
 );
 const yearCount = Object.keys(years).length;
+
+function getPostData(post: typeof langPosts[0]) {
+  const { id, data, body, filePath } = post;
+  const { title, description, category, tags, pubDatetime, modDatetime, timezone } = data;
+  const href = getLocalizedPostPath(lang, id, filePath);
+  const { minutes: readingMinutes } = getReadingTime(body ?? "");
+  const isModified = modDatetime && modDatetime > pubDatetime;
+  const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(timezone || SITE.timezone);
+  const dateStr = lang === "zh"
+    ? datetime.format("M 月 D 日")
+    : datetime.format("MMM D");
+  return { title, description, href, dateStr, datetime, category, tags, readingMinutes };
+}
 ---
 
 <Layout lang={lang} title={`${t("nav.archives", lang)} | ${SITE.title}`}>
@@ -139,20 +160,53 @@ const yearCount = Object.keys(years).length;
                         </h3>
                       </div>
 
-                      {/* Posts */}
-                      <ul class="ml-6 md:ml-4" data-posts-grid>
-                        <PostsContainer
-                          posts={monthGroup.sort(
-                            (a, b) =>
-                              Math.floor(
-                                new Date(b.data.pubDatetime).getTime() / 1000
-                              ) -
-                              Math.floor(
-                                new Date(a.data.pubDatetime).getTime() / 1000
-                              )
-                          )}
-                          lang={lang}
-                        />
+                      {/* Posts - Server-side rendered */}
+                      <ul class="ml-6 space-y-1 md:ml-4">
+                        {monthGroup
+                          .sort((a, b) => 
+                            new Date(b.data.pubDatetime).getTime() - new Date(a.data.pubDatetime).getTime()
+                          )
+                          .map((post, idx) => {
+                            const p = getPostData(post);
+                            return (
+                              <li class="group flex items-start gap-4 rounded-lg p-2 transition-colors duration-200 hover:bg-accent/5">
+                                {/* Date */}
+                                <div class="w-20 shrink-0 text-right">
+                                  <time class="text-xs font-medium text-muted" datetime={p.datetime.toISOString()}>
+                                    {p.dateStr}
+                                  </time>
+                                  {p.category && (
+                                    <a href={`/${lang}/categories/${p.category}/`} class="mt-0.5 block truncate text-xs text-accent hover:underline">
+                                      {p.category}
+                                    </a>
+                                  )}
+                                </div>
+                                
+                                {/* Content */}
+                                <div class="min-w-0 flex-1">
+                                  <a href={p.href} class="block">
+                                    <h4 
+                                      class="text-sm font-semibold text-foreground transition-colors group-hover:text-accent"
+                                      style={{ viewTransitionName: slugifyStr(p.title.replaceAll(".", "-")) }}
+                                    >
+                                      {p.title}
+                                    </h4>
+                                  </a>
+                                  <p class="mt-0.5 line-clamp-1 text-xs text-foreground-soft">{p.description}</p>
+                                  <div class="mt-1 flex items-center gap-2 text-xs text-muted">
+                                    <span>{p.readingMinutes} {lang === "zh" ? "分钟" : "min"}</span>
+                                    {p.tags && p.tags.length > 0 && (
+                                      <div class="flex gap-1">
+                                        {p.tags.slice(0, 2).map(tag => (
+                                          <a href={`/${lang}/tags/${tag}/`} class="text-accent/70 hover:text-accent">#{tag}</a>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </li>
+                            );
+                          })}
                       </ul>
                     </div>
                   ))}
