@@ -34,47 +34,56 @@ const totalPosts = tags.reduce((acc, tag) => acc + tag.count, 0);
     pageDesc={t("main.allTags", lang)}
     data-lang={lang}
   >
-    <div class="text-muted-foreground mb-8 flex flex-wrap gap-4 text-sm">
+    <!-- Stats Overview -->
+    <div class="mb-8 flex items-center gap-6 text-sm text-muted">
       <div class="flex items-center gap-2">
+        <svg class="size-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+          <line x1="7" y1="7" x2="7.01" y2="7" />
+        </svg>
         <span class="font-medium text-foreground">{tags.length}</span>
         <span>{t("tags.tags", lang)}</span>
       </div>
       <div class="flex items-center gap-2">
+        <svg class="size-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+          <polyline points="14 2 14 8 20 8" />
+        </svg>
         <span class="font-medium text-foreground">{totalPosts}</span>
         <span>{t("tags.taggedPosts", lang)}</span>
       </div>
     </div>
 
-    <div
-      class="flex flex-wrap items-center justify-center gap-3 rounded-lg border border-border bg-muted/20 p-6"
-    >
-      {
-        tags.map(({ tag, tagName, count }) => (
-          <TagCloud
-            tag={tag}
-            tagName={tagName}
-            count={count}
-            maxCount={maxCount}
-            minCount={minCount}
-            lang={lang}
-          />
-        ))
-      }
-    </div>
+    <!-- Tag Cloud Container -->
+    <div class="card-animate overflow-hidden rounded-2xl border border-border/50 bg-card/60 backdrop-blur-md p-6 sm:p-8">
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        {
+          tags.map(({ tag, tagName, count }) => (
+            <TagCloud
+              tag={tag}
+              tagName={tagName}
+              count={count}
+              maxCount={maxCount}
+              minCount={minCount}
+              lang={lang}
+            />
+          ))
+        }
+      </div>
 
-    <div
-      class="text-muted-foreground mt-6 flex flex-wrap items-center justify-center gap-4 text-xs"
-    >
-      <span>{t("tags.sizeLegend", lang)}</span>
-      <div class="flex items-center gap-2">
-        <span class="text-xs">{t("tags.less", lang)}</span>
-        <div class="flex items-center gap-1">
-          <div class="h-2 w-2 rounded-full bg-foreground/40"></div>
-          <div class="h-3 w-3 rounded-full bg-foreground/60"></div>
-          <div class="h-4 w-4 rounded-full bg-foreground/80"></div>
-          <div class="h-5 w-5 rounded-full bg-foreground"></div>
+      <!-- Size Legend -->
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-4 border-t border-border/50 pt-6 text-xs text-muted">
+        <span>{t("tags.sizeLegend", lang)}</span>
+        <div class="flex items-center gap-2">
+          <span>{t("tags.less", lang)}</span>
+          <div class="flex items-center gap-1.5">
+            <div class="size-2 rounded-full bg-foreground/40"></div>
+            <div class="size-3 rounded-full bg-foreground/60"></div>
+            <div class="size-4 rounded-full bg-foreground/80"></div>
+            <div class="size-5 rounded-full bg-foreground"></div>
+          </div>
+          <span class="text-sm font-medium">{t("tags.more", lang)}</span>
         </div>
-        <span class="text-base font-medium">{t("tags.more", lang)}</span>
       </div>
     </div>
   </Main>

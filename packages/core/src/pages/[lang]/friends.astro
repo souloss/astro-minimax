@@ -13,6 +13,8 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { lang } = Astro.params as { lang: "zh" | "en" };
+
+const totalFriends = FRIENDS.length;
 ---
 
 <Layout lang={lang} title={`${t("friends.title", lang)} | ${SITE.title}`}>
@@ -22,36 +24,90 @@ const { lang } = Astro.params as { lang: "zh" | "en" };
     pageDesc={t("friends.desc", lang)}
     data-lang={lang}
   >
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- Stats Overview -->
+    <div class="mb-8 flex items-center gap-6 text-sm text-muted">
+      <div class="flex items-center gap-2">
+        <svg class="size-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        <span class="font-medium text-foreground">{totalFriends}</span>
+        <span>{lang === "zh" ? "位好友" : "friends"}</span>
+      </div>
+    </div>
+
+    <!-- Friends Grid -->
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {
-        FRIENDS.map(friend => (
-          <a
-            href={friend.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex gap-4 rounded-lg border border-border bg-background/50 p-4 transition-colors hover:border-accent hover:bg-muted/30"
-          >
-            {friend.avatar && (
-              <img
-                src={friend.avatar}
-                alt=""
-                class="size-12 shrink-0 rounded-full object-cover"
-                width="48"
-                height="48"
-              />
-            )}
-            <div class="min-w-0 flex-1">
-              <div class="font-semibold text-foreground">{friend.name}</div>
-              {friend.description && (
-                <div class="text-muted-foreground mt-1 line-clamp-2 text-sm">
-                  {friend.description}
+        FRIENDS.map((friend, index) => {
+          const delay = Math.min(index * 60, 400);
+          return (
+            <a
+              href={friend.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="card-animate group flex gap-4 rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md transition-all duration-300 ease-out hover:border-accent/25 hover:bg-card-hover hover:shadow-xl hover:shadow-shadow-elevated/10 hover:-translate-y-1"
+              style={`animation-delay: ${delay}ms`}
+            >
+              {friend.avatar ? (
+                <img
+                  src={friend.avatar}
+                  alt=""
+                  class="size-14 shrink-0 rounded-xl object-cover ring-2 ring-border/50 transition-all duration-300 group-hover:ring-accent/30"
+                  width="56"
+                  height="56"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="flex size-14 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors group-hover:bg-accent/15">
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
                 </div>
               )}
-            </div>
-          </a>
-        ))
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="truncate font-semibold text-foreground transition-colors group-hover:text-accent">
+                    {friend.name}
+                  </span>
+                  <svg class="size-4 shrink-0 text-muted opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                </div>
+                {friend.description && (
+                  <p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-foreground-soft">
+                    {friend.description}
+                  </p>
+                )}
+              </div>
+            </a>
+          );
+        })
       }
     </div>
+
+    {
+      FRIENDS.length === 0 && (
+        <div class="flex flex-col items-center justify-center py-16 text-center">
+          <div class="flex size-16 items-center justify-center rounded-2xl bg-muted/30">
+            <svg class="size-8 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <p class="mt-4 text-muted">
+            {lang === "zh" ? "暂无友链" : "No friends yet"}
+          </p>
+        </div>
+      )
+    }
   </Main>
   <Footer lang={lang} />
 </Layout>

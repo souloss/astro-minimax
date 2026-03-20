@@ -20,12 +20,12 @@ const getTagSize = (currentCount: number, max: number, min: number): string => {
   const normalized = (currentCount - min) / (max - min);
 
   // Map to size classes with more granular steps
-  if (normalized > 0.9) return "text-3xl font-bold";
-  if (normalized > 0.8) return "text-2xl font-semibold";
-  if (normalized > 0.7) return "text-xl font-semibold";
-  if (normalized > 0.6) return "text-lg font-medium";
-  if (normalized > 0.5) return "text-base font-medium";
-  if (normalized > 0.4) return "text-sm font-medium";
+  if (normalized > 0.9) return "text-2xl font-bold";
+  if (normalized > 0.8) return "text-xl font-semibold";
+  if (normalized > 0.7) return "text-lg font-semibold";
+  if (normalized > 0.6) return "text-base font-medium";
+  if (normalized > 0.5) return "text-sm font-medium";
+  if (normalized > 0.4) return "text-sm";
   if (normalized > 0.3) return "text-sm";
   if (normalized > 0.2) return "text-xs";
   return "text-xs";
@@ -55,15 +55,17 @@ const opacityClass = getTagOpacity(count, maxCount, minCount);
   href={`/${lang}/tags/${tag}/`}
   transition:name={tag}
   class:list={[
-    "inline-flex items-center gap-0.5 rounded-md px-2 py-1 transition-all duration-300",
-    "hover:scale-105 hover:bg-accent/10 hover:text-accent",
+    "inline-flex items-center gap-1 rounded-xl px-3 py-1.5",
+    "transition-all duration-200 ease-out",
+    "bg-muted/40 text-foreground-soft",
+    "hover:bg-accent/10 hover:text-accent hover:-translate-y-0.5",
     "focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed",
     sizeClass,
     opacityClass,
   ]}
   title={`${count} post${count > 1 ? "s" : ""}`}
 >
-  <IconHash class="size-4 opacity-70" />
+  <IconHash class="size-4 opacity-60" />
   <span>{tagName}</span>
-  <span class="text-xs opacity-60">({count})</span>
+  <span class="text-xs opacity-50">({count})</span>
 </a>
