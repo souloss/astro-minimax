@@ -9,12 +9,19 @@ const labels = {
   close: t("settings.close", lang),
   tabTheme: t("settings.tabTheme", lang),
   tabAppearance: t("settings.tabAppearance", lang),
+  tabReading: t("settings.tabReading", lang),
   tabLayout: t("settings.tabLayout", lang),
   tabGeneral: t("settings.tabGeneral", lang),
   colorScheme: t("settings.colorScheme", lang),
   borderRadius: t("settings.borderRadius", lang),
   fontSize: t("settings.fontSize", lang),
   fontSizeDesc: t("settings.fontSizeDesc", lang),
+  readingLineHeight: t("settings.readingLineHeight", lang),
+  readingWidth: t("settings.readingWidth", lang),
+  readingTheme: t("settings.readingTheme", lang),
+  readingFontFamily: t("settings.readingFontFamily", lang),
+  focusMode: t("settings.focusMode", lang),
+  focusModeDesc: t("settings.focusModeDesc", lang),
   postsLayout: t("settings.postsLayout", lang),
   widgets: t("settings.widgets", lang),
   showBackToTop: t("settings.showBackToTop", lang),
@@ -28,33 +35,51 @@ const labels = {
   cardHoverDesc: t("settings.cardHoverDesc", lang),
   smoothScroll: t("settings.smoothScroll", lang),
   reset: t("settings.reset", lang),
+  share: t("settings.share", lang),
+  shareCopied: t("settings.shareCopied", lang),
   small: t("settings.small", lang),
   medium: t("settings.medium", lang),
   large: t("settings.large", lang),
   xl: t("settings.xl", lang),
-  gridCards: t("settings.gridCards", lang),
-  magazine: t("settings.magazine", lang),
-  list: t("settings.list", lang),
+  narrow: t("settings.narrow", lang),
+  wide: t("settings.wide", lang),
+  comfortable: t("settings.comfortable", lang),
+  relaxed: t("settings.relaxed", lang),
   compact: t("settings.compact", lang),
-  timeline: t("settings.timeline", lang),
-  gridCardsDesc: "Standard grid layout",
-  magazineDesc: "Large magazine cards",
-  listDesc: "Horizontal list",
-  compactDesc: "Single-line compact",
-  timelineDesc: "Timeline view",
+  serif: t("settings.serif", lang),
+  sans: t("settings.sans", lang),
+  mono: t("settings.mono", lang),
+  system: t("settings.system", lang),
+  fontCode: t("settings.fontCode", lang),
+  fontLxgw: t("settings.fontLxgw", lang),
+  fontZcool: t("settings.fontZcool", lang),
+  fontReadable: t("settings.fontReadable", lang),
+  fontClassic: t("settings.fontClassic", lang),
+  readingThemeDefault: t("settings.readingThemeDefault", lang),
+  readingThemeEyecare: t("settings.readingThemeEyecare", lang),
+  readingThemeParchment: t("settings.readingThemeParchment", lang),
+  readingThemeNight: t("settings.readingThemeNight", lang),
+  readingThemeOled: t("settings.readingThemeOled", lang),
+  readingMode: t("settings.readingMode", lang),
+  readingModeDesc: t("settings.readingModeDesc", lang),
+  // 布局模式标签
+  layoutCard: "卡片",
+  layoutGrid: "网格",
+  layoutList: "列表",
+  layoutCardDesc: "标题优先，适合阅读",
+  layoutGridDesc: "三列网格，快速浏览",
+  layoutListDesc: "紧凑列表，适合归档",
 };
 
 const layoutModes = [
-  { id: 'grid', name: labels.gridCards, icon: 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z', desc: labels.gridCardsDesc },
-  { id: 'mag', name: labels.magazine, icon: 'M3 3h18v18H3z', desc: labels.magazineDesc },
-  { id: 'list', name: labels.list, icon: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', desc: labels.listDesc },
-  { id: 'compact', name: labels.compact, icon: 'M3 6h18M3 10h18M3 14h18M3 18h18', desc: labels.compactDesc },
-  { id: 'timeline', name: labels.timeline, icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', desc: labels.timelineDesc },
+  { id: 'card', name: labels.layoutCard, icon: 'M4 6h16M4 10h16M4 14h10M4 18h16', desc: labels.layoutCardDesc },
+  { id: 'grid', name: labels.layoutGrid, icon: 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z', desc: labels.layoutGridDesc },
+  { id: 'list', name: labels.layoutList, icon: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', desc: labels.layoutListDesc },
 ];
 ---
 
 <div id="settings-panel" class="fixed right-5 bottom-24 z-50 hidden">
-  <div class="settings-panel-inner w-[340px] h-[480px] flex flex-col overflow-hidden rounded-2xl border border-border/30 bg-surface/98 backdrop-blur-xl shadow-2xl">
+  <div class="settings-panel-inner w-[340px] h-[520px] flex flex-col overflow-hidden rounded-2xl border border-border/30 bg-surface/98 backdrop-blur-xl shadow-2xl">
     <!-- Header -->
     <div class="flex items-center justify-between border-b border-border/30 px-4 py-3 shrink-0">
       <h3 class="text-sm font-semibold text-foreground">{labels.title}</h3>
@@ -67,17 +92,17 @@ const layoutModes = [
     </div>
 
     <!-- Tabs -->
-    <div class="flex border-b border-border/30 bg-muted/10 shrink-0">
-      <button data-tab="theme" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-accent border-b-2 border-accent transition-colors">{labels.tabTheme}</button>
-      <button data-tab="appearance" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors">{labels.tabAppearance}</button>
-      <button data-tab="layout" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors">{labels.tabLayout}</button>
-      <button data-tab="general" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors">{labels.tabGeneral}</button>
+    <div class="flex border-b border-border/30 bg-muted/10 shrink-0 overflow-x-auto">
+      <button data-tab="appearance" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-accent border-b-2 border-accent transition-colors whitespace-nowrap">{labels.tabAppearance}</button>
+      <button data-tab="reading" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors whitespace-nowrap">{labels.tabReading}</button>
+      <button data-tab="layout" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors whitespace-nowrap">{labels.tabLayout}</button>
+      <button data-tab="general" class="settings-tab flex-1 px-3 py-2.5 text-xs font-medium text-muted border-b-2 border-transparent hover:text-foreground-soft transition-colors whitespace-nowrap">{labels.tabGeneral}</button>
     </div>
 
     <!-- Tab Content -->
     <div class="overflow-y-auto flex-1">
-      <!-- Theme Tab -->
-      <div id="tab-theme" class="tab-content p-4 space-y-4">
+      <!-- Appearance Tab (merged from theme + appearance) -->
+      <div id="tab-appearance" class="tab-content p-4 space-y-4">
         <div>
           <p class="mb-2 text-xs font-medium text-foreground-soft">{labels.colorScheme}</p>
           <div class="grid grid-cols-8 gap-1.5" id="color-scheme-options"></div>
@@ -91,21 +116,97 @@ const layoutModes = [
             <button data-radius="xl" data-radius-value="1.5rem" class="radius-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.xl}</button>
           </div>
         </div>
+        <div>
+          <p class="mb-1 text-xs font-medium text-foreground-soft">{labels.readingFontFamily}</p>
+          <div class="grid grid-cols-3 gap-2">
+            <button data-font-family="serif" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.serif}</button>
+            <button data-font-family="sans" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.sans}</button>
+            <button data-font-family="mono" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.mono}</button>
+            <button data-font-family="system" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.system}</button>
+            <button data-font-family="code" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.fontCode}</button>
+            <button data-font-family="lxgw" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.fontLxgw}</button>
+            <button data-font-family="zcool" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.fontZcool}</button>
+            <button data-font-family="readable" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.fontReadable}</button>
+            <button data-font-family="classic" class="font-family-btn flex items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.fontClassic}</button>
+          </div>
+        </div>
+        <div>
+          <p class="mb-1 text-xs font-medium text-foreground-soft">{labels.fontSize}</p>
+          <p class="mb-3 text-xs text-muted">{labels.fontSizeDesc}</p>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-muted">A</span>
+            <input type="range" id="font-size-slider" min="0.85" max="1.25" step="0.05" value="1" class="flex-1 h-2 rounded-full appearance-none cursor-pointer" style="background: linear-gradient(to right, var(--accent) 0%, var(--accent) 50%, var(--muted) 50%, var(--muted) 100%)" />
+            <span class="text-base text-muted">A</span>
+          </div>
+          <div class="mt-2 flex justify-between">
+            <span class="text-xs text-muted">85%</span>
+            <span id="font-size-value" class="text-xs font-medium text-accent">100%</span>
+            <span class="text-xs text-muted">125%</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Appearance Tab -->
-      <div id="tab-appearance" class="tab-content hidden p-4">
-        <p class="mb-1 text-xs font-medium text-foreground-soft">{labels.fontSize}</p>
-        <p class="mb-3 text-xs text-muted">{labels.fontSizeDesc}</p>
-        <div class="flex items-center gap-3">
-          <span class="text-xs text-muted">A</span>
-          <input type="range" id="font-size-slider" min="0.85" max="1.25" step="0.05" value="1" class="flex-1 h-2 rounded-full appearance-none cursor-pointer" style="background: linear-gradient(to right, var(--accent) 0%, var(--accent) 50%, var(--muted) 50%, var(--muted) 100%)" />
-          <span class="text-base text-muted">A</span>
+      <!-- Reading Tab -->
+      <div id="tab-reading" class="tab-content hidden p-4 space-y-4">
+        <!-- Reading Mode Master Toggle -->
+        <div class="flex items-center justify-between py-1 border-b border-border/30 pb-3 mb-2">
+          <div>
+            <p class="text-sm font-medium text-foreground">{labels.readingMode}</p>
+            <p class="text-xs text-muted">{labels.readingModeDesc}</p>
+          </div>
+          <button id="reading-mode-toggle" role="switch" aria-checked="false" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--muted)">
+            <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(0)"></span>
+          </button>
         </div>
-        <div class="mt-2 flex justify-between">
-          <span class="text-xs text-muted">85%</span>
-          <span id="font-size-value" class="text-xs font-medium text-accent">100%</span>
-          <span class="text-xs text-muted">125%</span>
+        <div>
+          <p class="mb-2 text-xs font-medium text-foreground-soft">{labels.readingTheme}</p>
+          <div class="grid grid-cols-5 gap-2" id="reading-theme-options">
+            <button data-reading-theme="default" class="reading-theme-btn flex flex-col items-center gap-1.5 rounded-lg border border-border/50 p-2 transition-all hover:border-accent/50">
+              <div class="h-5 w-5 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 border border-border/30"></div>
+              <span class="text-xs font-medium">{labels.readingThemeDefault}</span>
+            </button>
+            <button data-reading-theme="eyecare" class="reading-theme-btn flex flex-col items-center gap-1.5 rounded-lg border border-border/50 p-2 transition-all hover:border-accent/50">
+              <div class="h-5 w-5 rounded-full bg-gradient-to-br from-amber-50 to-orange-100 border border-amber-200/50"></div>
+              <span class="text-xs font-medium">{labels.readingThemeEyecare}</span>
+            </button>
+            <button data-reading-theme="parchment" class="reading-theme-btn flex flex-col items-center gap-1.5 rounded-lg border border-border/50 p-2 transition-all hover:border-accent/50">
+              <div class="h-5 w-5 rounded-full bg-gradient-to-br from-yellow-50 to-amber-100 border border-yellow-200/50"></div>
+              <span class="text-xs font-medium">{labels.readingThemeParchment}</span>
+            </button>
+            <button data-reading-theme="night" class="reading-theme-btn flex flex-col items-center gap-1.5 rounded-lg border border-border/50 p-2 transition-all hover:border-accent/50">
+              <div class="h-5 w-5 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600/50"></div>
+              <span class="text-xs font-medium">{labels.readingThemeNight}</span>
+            </button>
+            <button data-reading-theme="oled" class="reading-theme-btn flex flex-col items-center gap-1.5 rounded-lg border border-border/50 p-2 transition-all hover:border-accent/50">
+              <div class="h-5 w-5 rounded-full bg-black border border-slate-700"></div>
+              <span class="text-xs font-medium">{labels.readingThemeOled}</span>
+            </button>
+          </div>
+        </div>
+        <div>
+          <p class="mb-2 text-xs font-medium text-foreground-soft">{labels.readingLineHeight}</p>
+          <div class="flex gap-2">
+            <button data-line-height="compact" class="line-height-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.compact}</button>
+            <button data-line-height="comfortable" class="line-height-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.comfortable}</button>
+            <button data-line-height="relaxed" class="line-height-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.relaxed}</button>
+          </div>
+        </div>
+        <div>
+          <p class="mb-2 text-xs font-medium text-foreground-soft">{labels.readingWidth}</p>
+          <div class="flex gap-2">
+            <button data-reading-width="narrow" class="reading-width-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.narrow}</button>
+            <button data-reading-width="medium" class="reading-width-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.medium}</button>
+            <button data-reading-width="wide" class="reading-width-btn flex flex-1 items-center justify-center rounded-lg border border-border/50 px-3 py-2 text-xs font-medium transition-all hover:border-accent/50">{labels.wide}</button>
+          </div>
+        </div>
+        <div class="flex items-center justify-between py-1">
+          <div>
+            <p class="text-sm text-foreground-soft">{labels.focusMode}</p>
+            <p class="text-xs text-muted">{labels.focusModeDesc}</p>
+          </div>
+          <button id="focus-mode-toggle" role="switch" aria-checked="false" class="toggle-btn relative h-5 w-9 rounded-full transition-colors duration-200" style="background-color: var(--muted)">
+            <span class="toggle-knob absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200" style="transform: translateX(0)"></span>
+          </button>
         </div>
       </div>
 
@@ -179,7 +280,15 @@ const layoutModes = [
     </div>
 
     <!-- Footer -->
-    <div class="border-t border-border/30 p-3 shrink-0">
+    <div class="border-t border-border/30 p-3 shrink-0 space-y-2">
+      <button id="settings-share-btn" class="w-full rounded-xl bg-accent/10 px-3 py-2 text-xs font-medium text-accent transition-all hover:bg-accent/20 flex items-center justify-center gap-2">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+          <polyline points="16 6 12 2 8 6"></polyline>
+          <line x1="12" y1="2" x2="12" y2="15"></line>
+        </svg>
+        {labels.share}
+      </button>
       <button id="settings-reset-btn" class="w-full rounded-xl bg-muted/30 px-3 py-2 text-xs font-medium text-foreground-soft transition-all hover:bg-muted/50 hover:text-foreground">
         {labels.reset}
       </button>
@@ -187,12 +296,19 @@ const layoutModes = [
   </div>
 </div>
 
+<!-- Toast notification -->
+<div id="settings-toast" class="fixed bottom-32 right-5 z-[60] hidden">
+  <div class="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white shadow-lg">
+    {labels.shareCopied}
+  </div>
+</div>
+
 <script define:vars={{ labels, layoutModes }}>
   const STORAGE_KEY = 'astro-minimax-settings';
-  
+
   const defaultSettings = {
     colorScheme: 'teal',
-    layoutMode: 'mag',
+    layoutMode: 'card',
     radius: 'lg',
     fontSize: 1,
     animations: true,
@@ -204,17 +320,267 @@ const layoutModes = [
       readingTime: true,
       stickyBackToTop: true,
     },
+    reading: {
+      lineHeight: 'comfortable',
+      contentWidth: 'medium',
+      fontFamily: 'system',
+      focusMode: false,
+      readingMode: false,
+      theme: 'default',
+    },
   };
-  
-  const colorSchemes = [
-    { id: 'teal', name: 'Teal', accent: '#0a9396', accentSoft: '#94d2bd', gradient: 'linear-gradient(135deg, #0a9396 0%, #005f73 100%)' },
-    { id: 'blue', name: 'Ocean Blue', accent: '#2563eb', accentSoft: '#60a5fa', gradient: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)' },
-    { id: 'purple', name: 'Midnight', accent: '#7c3aed', accentSoft: '#a78bfa', gradient: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)' },
-    { id: 'rose', name: 'Rose', accent: '#e11d48', accentSoft: '#fb7185', gradient: 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)' },
-    { id: 'amber', name: 'Sunset', accent: '#d97706', accentSoft: '#fbbf24', gradient: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)' },
-    { id: 'emerald', name: 'Forest', accent: '#059669', accentSoft: '#34d399', gradient: 'linear-gradient(135deg, #059669 0%, #047857 100%)' },
-    { id: 'indigo', name: 'Indigo', accent: '#4f46e5', accentSoft: '#818cf8', gradient: 'linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)' },
-    { id: 'slate', name: 'Neutral', accent: '#475569', accentSoft: '#94a3b8', gradient: 'linear-gradient(135deg, #475569 0%, #334155 100%)' },
+
+  // Complete theme presets with light/dark variants
+  // Each preset defines all semantic colors for both modes
+  const themePresets = [
+    {
+      id: 'teal',
+      name: 'Teal',
+      nameZh: '青绿',
+      light: {
+        background: '#f5f5f7',
+        surface: 'rgba(255, 255, 255, 0.72)',
+        foreground: '#1d1d1f',
+        foregroundSoft: '#6e6e73',
+        muted: '#86868b',
+        accent: '#0a9396',
+        accentSoft: 'rgba(10, 147, 150, 0.12)',
+        border: 'rgba(0, 0, 0, 0.06)',
+        borderStrong: 'rgba(0, 0, 0, 0.12)',
+        card: 'rgba(255, 255, 255, 0.65)',
+        cardHover: 'rgba(255, 255, 255, 0.85)',
+      },
+      dark: {
+        background: '#0c0c0e',
+        surface: 'rgba(28, 28, 30, 0.78)',
+        foreground: '#f5f5f7',
+        foregroundSoft: '#a1a1a6',
+        muted: '#6e6e73',
+        accent: '#4fd1c5',
+        accentSoft: 'rgba(79, 209, 197, 0.15)',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: 'rgba(255, 255, 255, 0.15)',
+        card: 'rgba(44, 44, 46, 0.6)',
+        cardHover: 'rgba(58, 58, 60, 0.75)',
+      },
+    },
+    {
+      id: 'ocean',
+      name: 'Ocean',
+      nameZh: '深海',
+      light: {
+        background: '#f8fafc',
+        surface: 'rgba(255, 255, 255, 0.85)',
+        foreground: '#1e293b',
+        foregroundSoft: '#475569',
+        muted: '#64748b',
+        accent: '#0369a1',
+        accentSoft: 'rgba(3, 105, 161, 0.1)',
+        border: 'rgba(15, 23, 42, 0.08)',
+        borderStrong: 'rgba(15, 23, 42, 0.15)',
+        card: 'rgba(255, 255, 255, 0.7)',
+        cardHover: 'rgba(255, 255, 255, 0.9)',
+      },
+      dark: {
+        background: '#0f172a',
+        surface: 'rgba(30, 41, 59, 0.85)',
+        foreground: '#f1f5f9',
+        foregroundSoft: '#94a3b8',
+        muted: '#64748b',
+        accent: '#38bdf8',
+        accentSoft: 'rgba(56, 189, 248, 0.15)',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: 'rgba(255, 255, 255, 0.15)',
+        card: 'rgba(30, 41, 59, 0.7)',
+        cardHover: 'rgba(51, 65, 85, 0.85)',
+      },
+    },
+    {
+      id: 'rose',
+      name: 'Rose',
+      nameZh: '玫瑰',
+      light: {
+        background: '#fef7f7',
+        surface: 'rgba(255, 255, 255, 0.8)',
+        foreground: '#1f1f1f',
+        foregroundSoft: '#6b6b6b',
+        muted: '#9a9a9a',
+        accent: '#e11d48',
+        accentSoft: 'rgba(225, 29, 72, 0.1)',
+        border: 'rgba(0, 0, 0, 0.06)',
+        borderStrong: 'rgba(0, 0, 0, 0.12)',
+        card: 'rgba(255, 255, 255, 0.7)',
+        cardHover: 'rgba(255, 255, 255, 0.9)',
+      },
+      dark: {
+        background: '#1a0a0e',
+        surface: 'rgba(40, 20, 25, 0.85)',
+        foreground: '#fef2f2',
+        foregroundSoft: '#fca5a5',
+        muted: '#9a9a9a',
+        accent: '#fb7185',
+        accentSoft: 'rgba(251, 113, 133, 0.15)',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: 'rgba(255, 255, 255, 0.15)',
+        card: 'rgba(40, 20, 25, 0.7)',
+        cardHover: 'rgba(60, 30, 35, 0.85)',
+      },
+    },
+    {
+      id: 'forest',
+      name: 'Forest',
+      nameZh: '森林',
+      light: {
+        background: '#f0f5f0',
+        surface: 'rgba(255, 255, 255, 0.8)',
+        foreground: '#1a2e1a',
+        foregroundSoft: '#3d5c3d',
+        muted: '#6b8f6b',
+        accent: '#059669',
+        accentSoft: 'rgba(5, 150, 105, 0.1)',
+        border: 'rgba(0, 50, 0, 0.08)',
+        borderStrong: 'rgba(0, 50, 0, 0.15)',
+        card: 'rgba(255, 255, 255, 0.7)',
+        cardHover: 'rgba(255, 255, 255, 0.9)',
+      },
+      dark: {
+        background: '#0a140a',
+        surface: 'rgba(20, 40, 20, 0.85)',
+        foreground: '#e8f5e8',
+        foregroundSoft: '#86efac',
+        muted: '#6b8f6b',
+        accent: '#34d399',
+        accentSoft: 'rgba(52, 211, 153, 0.15)',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: 'rgba(255, 255, 255, 0.15)',
+        card: 'rgba(20, 40, 20, 0.7)',
+        cardHover: 'rgba(30, 60, 30, 0.85)',
+      },
+    },
+    {
+      id: 'midnight',
+      name: 'Midnight',
+      nameZh: '午夜',
+      light: {
+        background: '#f8f7fc',
+        surface: 'rgba(255, 255, 255, 0.8)',
+        foreground: '#1e1b2e',
+        foregroundSoft: '#4a4565',
+        muted: '#7c7599',
+        accent: '#7c3aed',
+        accentSoft: 'rgba(124, 58, 237, 0.1)',
+        border: 'rgba(30, 27, 46, 0.08)',
+        borderStrong: 'rgba(30, 27, 46, 0.15)',
+        card: 'rgba(255, 255, 255, 0.7)',
+        cardHover: 'rgba(255, 255, 255, 0.9)',
+      },
+      dark: {
+        background: '#0c0a14',
+        surface: 'rgba(25, 20, 40, 0.85)',
+        foreground: '#f3f0ff',
+        foregroundSoft: '#a78bfa',
+        muted: '#7c7599',
+        accent: '#a78bfa',
+        accentSoft: 'rgba(167, 139, 250, 0.15)',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: 'rgba(255, 255, 255, 0.15)',
+        card: 'rgba(25, 20, 40, 0.7)',
+        cardHover: 'rgba(40, 30, 60, 0.85)',
+      },
+    },
+    {
+      id: 'sunset',
+      name: 'Sunset',
+      nameZh: '日落',
+      light: {
+        background: '#fffbf5',
+        surface: 'rgba(255, 255, 255, 0.8)',
+        foreground: '#2d1f0f',
+        foregroundSoft: '#6b4d2d',
+        muted: '#9a7b5a',
+        accent: '#d97706',
+        accentSoft: 'rgba(217, 119, 6, 0.1)',
+        border: 'rgba(45, 31, 15, 0.08)',
+        borderStrong: 'rgba(45, 31, 15, 0.15)',
+        card: 'rgba(255, 255, 255, 0.7)',
+        cardHover: 'rgba(255, 255, 255, 0.9)',
+      },
+      dark: {
+        background: '#140d05',
+        surface: 'rgba(40, 28, 15, 0.85)',
+        foreground: '#fff7ed',
+        foregroundSoft: '#fbbf24',
+        muted: '#9a7b5a',
+        accent: '#fbbf24',
+        accentSoft: 'rgba(251, 191, 36, 0.15)',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: 'rgba(255, 255, 255, 0.15)',
+        card: 'rgba(40, 28, 15, 0.7)',
+        cardHover: 'rgba(60, 42, 22, 0.85)',
+      },
+    },
+    {
+      id: 'mono',
+      name: 'Mono',
+      nameZh: '极简',
+      light: {
+        background: '#ffffff',
+        surface: '#fafafa',
+        foreground: '#171717',
+        foregroundSoft: '#525252',
+        muted: '#737373',
+        accent: '#525252',
+        accentSoft: 'rgba(82, 82, 82, 0.1)',
+        border: 'rgba(0, 0, 0, 0.06)',
+        borderStrong: 'rgba(0, 0, 0, 0.12)',
+        card: 'rgba(250, 250, 250, 0.9)',
+        cardHover: 'rgba(245, 245, 245, 1)',
+      },
+      dark: {
+        background: '#0a0a0a',
+        surface: '#171717',
+        foreground: '#fafafa',
+        foregroundSoft: '#a3a3a3',
+        muted: '#737373',
+        accent: '#a3a3a3',
+        accentSoft: 'rgba(163, 163, 163, 0.15)',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: 'rgba(255, 255, 255, 0.15)',
+        card: 'rgba(30, 30, 30, 0.9)',
+        cardHover: 'rgba(40, 40, 40, 1)',
+      },
+    },
+    {
+      id: 'github',
+      name: 'GitHub',
+      nameZh: 'GitHub',
+      light: {
+        background: '#f6f8fa',
+        surface: '#ffffff',
+        foreground: '#24292f',
+        foregroundSoft: '#57606a',
+        muted: '#656d76',
+        accent: '#0969da',
+        accentSoft: 'rgba(9, 105, 218, 0.1)',
+        border: 'rgba(27, 31, 36, 0.15)',
+        borderStrong: 'rgba(27, 31, 36, 0.25)',
+        card: 'rgba(255, 255, 255, 0.95)',
+        cardHover: 'rgba(246, 248, 250, 1)',
+      },
+      dark: {
+        background: '#0d1117',
+        surface: '#161b22',
+        foreground: '#c9d1d9',
+        foregroundSoft: '#8b949e',
+        muted: '#8b949e',
+        accent: '#58a6ff',
+        accentSoft: 'rgba(88, 166, 255, 0.15)',
+        border: 'rgba(240, 246, 252, 0.1)',
+        borderStrong: 'rgba(240, 246, 252, 0.2)',
+        card: 'rgba(22, 27, 34, 0.95)',
+        cardHover: 'rgba(33, 38, 45, 1)',
+      },
+    },
   ];
 
   const radiusValues = { sm: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem' };
@@ -230,26 +596,59 @@ const layoutModes = [
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {}
   }
 
+  // Get current theme mode (light/dark)
+  function getThemeMode() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
+  // Apply complete theme preset with all semantic colors
   function applyColorScheme(schemeId) {
-    const scheme = colorSchemes.find(s => s.id === schemeId);
-    if (!scheme) return;
+    const preset = themePresets.find(p => p.id === schemeId);
+    if (!preset) return;
+    
     const root = document.documentElement;
+    const mode = getThemeMode();
+    const colors = preset[mode];
     
-    // Apply accent colors
-    root.style.setProperty('--accent', scheme.accent);
-    root.style.setProperty('--accent-soft', scheme.accent + '18');
-    root.style.setProperty('--accent-gradient-from', scheme.accent);
-    root.style.setProperty('--accent-gradient-to', scheme.accentSoft);
-    root.style.setProperty('--hero-gradient', scheme.gradient);
+    // Apply all semantic colors as CSS variables
+    root.style.setProperty('--background', colors.background);
+    root.style.setProperty('--surface', colors.surface);
+    root.style.setProperty('--foreground', colors.foreground);
+    root.style.setProperty('--foreground-soft', colors.foregroundSoft);
+    root.style.setProperty('--muted', colors.muted);
+    root.style.setProperty('--accent', colors.accent);
+    root.style.setProperty('--accent-soft', colors.accentSoft);
+    root.style.setProperty('--border', colors.border);
+    root.style.setProperty('--border-strong', colors.borderStrong);
+    root.style.setProperty('--card', colors.card);
+    root.style.setProperty('--card-hover', colors.cardHover);
     
-    // Update Tailwind color mapping for accent
-    root.style.setProperty('--color-accent', scheme.accent);
-    root.style.setProperty('--color-accent-soft', scheme.accent + '18');
+    // Update Tailwind color mappings
+    root.style.setProperty('--color-background', colors.background);
+    root.style.setProperty('--color-foreground', colors.foreground);
+    root.style.setProperty('--color-accent', colors.accent);
+    root.style.setProperty('--color-accent-soft', colors.accentSoft);
+    root.style.setProperty('--color-card', colors.card);
+    root.style.setProperty('--color-surface', colors.surface);
+    
+    // Generate gradient from accent color
+    const gradient = `linear-gradient(135deg, ${colors.accent} 0%, ${colors.accentSoft} 100%)`;
+    root.style.setProperty('--accent-gradient-from', colors.accent);
+    root.style.setProperty('--accent-gradient-to', colors.accentSoft);
+    root.style.setProperty('--hero-gradient', gradient);
     
     // Force style recalculation
     void root.offsetHeight;
     
     root.setAttribute('data-color-scheme', schemeId);
+  }
+
+  // Re-apply theme when light/dark mode changes
+  function handleThemeChange(settings) {
+    return () => {
+      // Re-apply current color scheme with new mode
+      applyColorScheme(settings.colorScheme);
+    };
   }
 
   function applyLayoutMode(mode) {
@@ -326,6 +725,177 @@ const layoutModes = [
     document.documentElement.setAttribute('data-sticky-backtotop', String(settings.widgets.stickyBackToTop));
   }
 
+  function applyReadingSettings(reading) {
+    const root = document.documentElement;
+    
+    const lineHeights = { compact: '1.6', comfortable: '1.8', relaxed: '2' };
+    const widths = { narrow: '65ch', medium: '72ch', wide: '80ch' };
+    const fonts = {
+      serif: '"Noto Serif SC", "Source Han Serif SC", Georgia, serif',
+      sans: '"Noto Sans SC", "Source Han Sans SC", -apple-system, sans-serif',
+      mono: '"JetBrains Mono", "Fira Code", "IBM Plex Mono", monospace',
+      system: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+      code: '"JetBrains Mono", "Fira Code", "Cascadia Code", "Source Code Pro", monospace',
+      lxgw: '"LXGW WenKai", "LXGW WenKai Mono", "Noto Serif SC", serif',
+      zcool: '"ZCOOL KuaiLe", "ZCOOL XiaoWei", "Ma Shan Zheng", cursive',
+      readable: '"Literata", "Source Serif Pro", "Noto Serif SC", Georgia, serif',
+      classic: '"Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif',
+    };
+    
+    root.style.setProperty('--reading-line-height', lineHeights[reading.lineHeight] || '1.8');
+    root.style.setProperty('--reading-width', widths[reading.contentWidth] || '72ch');
+    root.style.setProperty('--reading-font-family', fonts[reading.fontFamily] || fonts.system);
+    
+    root.classList.toggle('focus-mode', reading.focusMode);
+    root.classList.toggle('reading-mode', reading.readingMode);
+  }
+
+  function applyReadingTheme(themeId) {
+    const root = document.documentElement;
+    
+    // Reading theme definitions
+    const themes = {
+      default: {
+        // Follows system theme
+        light: {
+          background: '#f5f5f7',
+          surface: 'rgba(255, 255, 255, 0.72)',
+          foreground: '#1d1d1f',
+          muted: '#86868b',
+        },
+        dark: {
+          background: '#0c0c0e',
+          surface: 'rgba(28, 28, 30, 0.78)',
+          foreground: '#f5f5f7',
+          muted: '#6e6e73',
+        }
+      },
+      eyecare: {
+        // Warm tones, reduced blue light
+        light: {
+          background: '#faf6e9',
+          surface: 'rgba(255, 252, 240, 0.85)',
+          foreground: '#3d3d3d',
+          muted: '#7a7a6e',
+        },
+        dark: {
+          background: '#1a1814',
+          surface: 'rgba(38, 35, 28, 0.78)',
+          foreground: '#e8e4d9',
+          muted: '#8a8a7e',
+        }
+      },
+      parchment: {
+        // Classic yellow/beige paper look
+        light: {
+          background: '#f7f3e3',
+          surface: 'rgba(252, 248, 235, 0.85)',
+          foreground: '#2d2a20',
+          muted: '#7a7562',
+        },
+        dark: {
+          background: '#1e1c14',
+          surface: 'rgba(35, 32, 22, 0.78)',
+          foreground: '#e8e4c8',
+          muted: '#9a9580',
+        }
+      },
+      night: {
+        // Dark with lower contrast
+        light: {
+          background: '#e8e8ec',
+          surface: 'rgba(240, 240, 245, 0.85)',
+          foreground: '#2a2a30',
+          muted: '#6a6a72',
+        },
+        dark: {
+          background: '#121214',
+          surface: 'rgba(22, 22, 26, 0.78)',
+          foreground: '#d4d4d8',
+          muted: '#5a5a62',
+        }
+      },
+      oled: {
+        // Pure black for OLED screens
+        light: {
+          background: '#ffffff',
+          surface: 'rgba(255, 255, 255, 0.95)',
+          foreground: '#000000',
+          muted: '#666666',
+        },
+        dark: {
+          background: '#000000',
+          surface: 'rgba(12, 12, 12, 0.85)',
+          foreground: '#e5e5e5',
+          muted: '#555555',
+        }
+      }
+    };
+    
+    const theme = themes[themeId] || themes.default;
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    const colors = isDark ? theme.dark : theme.light;
+    
+    // Apply reading theme colors via CSS variables
+    root.style.setProperty('--reading-bg', colors.background);
+    root.style.setProperty('--reading-surface', colors.surface);
+    root.style.setProperty('--reading-fg', colors.foreground);
+    root.style.setProperty('--reading-muted', colors.muted);
+    
+    // Set data attribute for CSS targeting
+    root.setAttribute('data-reading-theme', themeId);
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('settings-toast');
+    if (toast) {
+      toast.querySelector('div').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2000);
+    }
+  }
+
+  function exportShareURL(settings) {
+    const defaults = defaultSettings;
+    const compressed = {};
+    
+    for (const key of ['theme', 'appearance', 'layout', 'reading', 'widgets', 'animations']) {
+      if (JSON.stringify(settings[key]) !== JSON.stringify(defaults[key])) {
+        compressed[key] = settings[key];
+      }
+    }
+    
+    if (Object.keys(compressed).length === 0) {
+      return window.location.origin + window.location.pathname;
+    }
+    
+    try {
+      const encoded = btoa(encodeURIComponent(JSON.stringify(compressed)));
+      const url = new URL(window.location.href);
+      url.hash = `#prefs=${encoded}`;
+      url.search = '';
+      return url.toString();
+    } catch {
+      return window.location.href;
+    }
+  }
+
+  async function copyShareURL(settings) {
+    const url = exportShareURL(settings);
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast(labels.shareCopied);
+    } catch {
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      showToast(labels.shareCopied);
+    }
+  }
+
   function updateSwitch(btn, checked) {
     btn.setAttribute('aria-checked', String(checked));
     const knob = btn.querySelector('.toggle-knob');
@@ -365,6 +935,16 @@ const layoutModes = [
     });
   }
 
+  function updateReadingThemeUI(themeId) {
+    document.querySelectorAll('[data-reading-theme]').forEach(btn => {
+      const isActive = btn.dataset.readingTheme === themeId;
+      btn.classList.toggle('border-accent', isActive);
+      btn.classList.toggle('bg-accent/10', isActive);
+      btn.classList.toggle('text-accent', isActive);
+      btn.classList.toggle('border-border/50', !isActive);
+    });
+  }
+
   function updateFontSizeUI(size) {
     const slider = document.getElementById('font-size-slider');
     const valueEl = document.getElementById('font-size-value');
@@ -394,16 +974,20 @@ const layoutModes = [
     const layoutContainer = document.getElementById('layout-mode-options');
 
     if (colorContainer) {
-      colorContainer.innerHTML = colorSchemes.map(s => `
-        <button data-color-scheme="${s.id}" data-accent="${s.accent}" data-accent-soft="${s.accentSoft}" 
-                class="group relative aspect-square rounded-lg border border-border/50 transition-all hover:border-accent/50 hover:scale-105" 
-                title="${s.name}">
-          <div class="absolute inset-1 rounded-md" style="background: ${s.gradient}"></div>
-          <div class="check-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity">
-            <svg class="size-3.5 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </div>
-        </button>
-      `).join('');
+      colorContainer.innerHTML = themePresets.map(p => {
+        // Generate gradient from accent colors
+        const gradient = `linear-gradient(135deg, ${p.light.accent} 0%, ${p.dark.accent} 100%)`;
+        return `
+          <button data-color-scheme="${p.id}" 
+                  class="group relative aspect-square rounded-lg border border-border/50 transition-all hover:border-accent/50 hover:scale-105" 
+                  title="${p.name}">
+            <div class="absolute inset-1 rounded-md" style="background: ${gradient}"></div>
+            <div class="check-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity">
+              <svg class="size-3.5 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+          </button>
+        `;
+      }).join('');
     }
 
     if (layoutContainer) {
@@ -435,6 +1019,13 @@ const layoutModes = [
     renderUI();
     const settings = loadSettings();
 
+    // Auto-disable reading mode when leaving article pages
+    const isArticlePage = !!document.querySelector('article#article');
+    if (!isArticlePage && settings.reading?.readingMode) {
+      settings.reading.readingMode = false;
+      saveSettings(settings);
+    }
+
     // Apply all settings
     applyColorScheme(settings.colorScheme);
     applyLayoutMode(settings.layoutMode);
@@ -444,12 +1035,15 @@ const layoutModes = [
     applyCardHover(settings.cardHover);
     applySmoothScroll(settings.smoothScroll);
     applyWidgets(settings);
+    applyReadingSettings(settings.reading || defaultSettings.reading);
+    applyReadingTheme(settings.reading?.theme || 'default');
 
     // Update UI
     updateColorSchemeUI(settings.colorScheme);
     updateLayoutModeUI(settings.layoutMode);
     updateRadiusUI(settings.radius);
     updateFontSizeUI(settings.fontSize);
+    updateReadingThemeUI(settings.reading?.theme || 'default');
     if (animationToggle) updateSwitch(animationToggle, settings.animations);
     if (cardHoverToggle) updateSwitch(cardHoverToggle, settings.cardHover);
     if (smoothScrollToggle) updateSwitch(smoothScrollToggle, settings.smoothScroll);
@@ -457,6 +1051,28 @@ const layoutModes = [
     if (backToTopToggle) updateSwitch(backToTopToggle, settings.widgets.backToTop);
     if (readingTimeToggle) updateSwitch(readingTimeToggle, settings.widgets.readingTime);
     if (stickyBackToTopToggle) updateSwitch(stickyBackToTopToggle, settings.widgets.stickyBackToTop);
+    
+    // Reading settings UI
+    const focusModeToggle = document.getElementById('focus-mode-toggle');
+    if (focusModeToggle) updateSwitch(focusModeToggle, settings.reading?.focusMode || false);
+    
+    const readingModeToggle = document.getElementById('reading-mode-toggle');
+    if (readingModeToggle) updateSwitch(readingModeToggle, settings.reading?.readingMode || false);
+    
+    // Update reading settings button states
+    const updateReadingBtnUI = (selector, dataKey, value) => {
+      document.querySelectorAll(selector).forEach(btn => {
+        const btnValue = btn.dataset[dataKey];
+        const isActive = btnValue === value;
+        btn.classList.toggle('border-accent', isActive);
+        btn.classList.toggle('bg-accent/10', isActive);
+        btn.classList.toggle('text-accent', isActive);
+        btn.classList.toggle('border-border/50', !isActive);
+      });
+    };
+    updateReadingBtnUI('.line-height-btn', 'lineHeight', settings.reading?.lineHeight || 'comfortable');
+    updateReadingBtnUI('.reading-width-btn', 'readingWidth', settings.reading?.contentWidth || 'medium');
+    updateReadingBtnUI('.font-family-btn', 'fontFamily', settings.reading?.fontFamily || 'system');
 
     // Tab switching
     document.querySelectorAll('.settings-tab').forEach(tab => {
@@ -468,8 +1084,8 @@ const layoutModes = [
       const btn = e.target.closest('[data-color-scheme]');
       if (!btn) return;
       const schemeId = btn.dataset.colorScheme;
-      const scheme = colorSchemes.find(s => s.id === schemeId);
-      if (!scheme) return;
+      const preset = themePresets.find(p => p.id === schemeId);
+      if (!preset) return;
       
       settings.colorScheme = schemeId;
       saveSettings(settings);
@@ -499,6 +1115,19 @@ const layoutModes = [
       saveSettings(settings);
       applyRadius(radiusValues[r]);
       updateRadiusUI(r);
+    });
+
+    // Reading theme handlers
+    document.getElementById('reading-theme-options')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-reading-theme]');
+      if (!btn) return;
+      const themeId = btn.dataset.readingTheme;
+      
+      if (!settings.reading) settings.reading = { ...defaultSettings.reading };
+      settings.reading.theme = themeId;
+      saveSettings(settings);
+      applyReadingTheme(themeId);
+      updateReadingThemeUI(themeId);
     });
 
     // Font size handler
@@ -573,11 +1202,14 @@ const layoutModes = [
       applyCardHover(settings.cardHover);
       applySmoothScroll(settings.smoothScroll);
       applyWidgets(settings);
+      applyReadingSettings(settings.reading);
+      applyReadingTheme(settings.reading.theme);
 
       updateColorSchemeUI(settings.colorScheme);
       updateLayoutModeUI(settings.layoutMode);
       updateRadiusUI(settings.radius);
       updateFontSizeUI(settings.fontSize);
+      updateReadingThemeUI(settings.reading.theme);
       if (animationToggle) updateSwitch(animationToggle, settings.animations);
       if (cardHoverToggle) updateSwitch(cardHoverToggle, settings.cardHover);
       if (smoothScrollToggle) updateSwitch(smoothScrollToggle, settings.smoothScroll);
@@ -585,9 +1217,56 @@ const layoutModes = [
       if (backToTopToggle) updateSwitch(backToTopToggle, settings.widgets.backToTop);
       if (readingTimeToggle) updateSwitch(readingTimeToggle, settings.widgets.readingTime);
       if (stickyBackToTopToggle) updateSwitch(stickyBackToTopToggle, settings.widgets.stickyBackToTop);
+      if (focusModeToggle) updateSwitch(focusModeToggle, settings.reading.focusMode);
+      
+      // Update reading buttons
+      updateReadingBtnUI('.line-height-btn', 'lineHeight', settings.reading.lineHeight);
+      updateReadingBtnUI('.reading-width-btn', 'readingWidth', settings.reading.contentWidth);
+      updateReadingBtnUI('.font-family-btn', 'fontFamily', settings.reading.fontFamily);
     });
 
+    // Reading settings handlers
+    const handleReadingBtn = (selector, settingKey, dataKey, updateFn) => {
+      document.querySelectorAll(selector).forEach(btn => {
+        btn.addEventListener('click', () => {
+          const value = btn.dataset[dataKey];
+          if (!settings.reading) settings.reading = { ...defaultSettings.reading };
+          settings.reading[settingKey] = value;
+          saveSettings(settings);
+          applyReadingSettings(settings.reading);
+          updateFn(selector, dataKey, value);
+        });
+      });
+    };
+
+    handleReadingBtn('.line-height-btn', 'lineHeight', 'lineHeight', updateReadingBtnUI);
+    handleReadingBtn('.reading-width-btn', 'contentWidth', 'readingWidth', updateReadingBtnUI);
+    handleReadingBtn('.font-family-btn', 'fontFamily', 'fontFamily', updateReadingBtnUI);
+
+    focusModeToggle?.addEventListener('click', () => {
+      if (!settings.reading) settings.reading = { ...defaultSettings.reading };
+      settings.reading.focusMode = !settings.reading.focusMode;
+      saveSettings(settings);
+      applyReadingSettings(settings.reading);
+      updateSwitch(focusModeToggle, settings.reading.focusMode);
+    });
+
+    readingModeToggle?.addEventListener('click', () => {
+      if (!settings.reading) settings.reading = { ...defaultSettings.reading };
+      settings.reading.readingMode = !settings.reading.readingMode;
+      saveSettings(settings);
+      applyReadingSettings(settings.reading);
+      updateSwitch(readingModeToggle, settings.reading.readingMode);
+    });
+
+    // Share button handler
+    const shareBtn = document.getElementById('settings-share-btn');
+    shareBtn?.addEventListener('click', () => copyShareURL(settings));
+
     closeBtn?.addEventListener('click', () => panel.classList.add('hidden'));
+    
+    // Listen for theme mode changes (light/dark) and re-apply color scheme
+    window.addEventListener('themechange', handleThemeChange(settings));
   }
 
   window.__settingsPanel = {
@@ -599,7 +1278,20 @@ const layoutModes = [
     },
     getSettings: loadSettings,
     applyColorScheme: applyColorScheme,
-    applyLayoutMode: applyLayoutMode
+    applyLayoutMode: applyLayoutMode,
+    applyReadingSettings: applyReadingSettings,
+    applyReadingTheme: applyReadingTheme,
+    toggleReadingMode: () => {
+      const settings = loadSettings();
+      if (!settings.reading) settings.reading = { ...defaultSettings.reading };
+      settings.reading.readingMode = !settings.reading.readingMode;
+      saveSettings(settings);
+      applyReadingSettings(settings.reading);
+      
+      // Update UI toggle if exists
+      const readingModeToggle = document.getElementById('reading-mode-toggle');
+      if (readingModeToggle) updateSwitch(readingModeToggle, settings.reading.readingMode);
+    },
   };
 
   init();

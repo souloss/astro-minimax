@@ -29,6 +29,9 @@ const blog = defineCollection({
           order: z.number(),
         })
         .optional(),
+      /** 封面图片：用于卡片和文章页展示 */
+      cover: image().or(z.string()).optional(),
+      /** OG 图片：用于社交媒体分享 */
       ogImage: image().or(z.string()).optional(),
       description: z.string(),
       canonicalURL: z.string().optional(),

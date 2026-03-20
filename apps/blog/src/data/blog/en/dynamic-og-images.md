@@ -15,6 +15,30 @@ description: Built-in dynamic OG image generation using Satori, automatically cr
 
 astro-minimax includes built-in dynamic OG image generation. Articles without a specified `ogImage` get one auto-generated at build time.
 
+## Cover vs OG Image
+
+astro-minimax distinguishes between two types of images for blog posts:
+
+| Field | Purpose | Usage |
+|-------|---------|-------|
+| **`cover`** | Cover image for display | Used in post cards on homepage, article list pages, and as banner in article detail page |
+| **`ogImage`** | Social sharing image | Used when sharing links on social media (Twitter, Facebook, Discord, etc.) |
+
+### When to use which?
+
+- **`cover`**: Use when you want a specific image to represent your post visually on your blog
+- **`ogImage`**: Use when you want a specific image for social media sharing
+
+### Fallback behavior
+
+1. If `cover` is not set but `ogImage` is set → `ogImage` will be used as the cover image
+2. If neither `cover` nor `ogImage` is set → Dynamic OG image is auto-generated and used for both purposes
+
+This design allows you to:
+- Set only `cover` → Cover displays on blog, dynamic OG image for social sharing
+- Set only `ogImage` → Used for both blog display and social sharing
+- Set both → Full control over each context
+
 ## Intro
 
 OG images (aka Social Images) play an important role in social media engagements. In case you don't know what OG image means, it is an image displayed whenever we share our website URL on social media such as Facebook, Discord etc.

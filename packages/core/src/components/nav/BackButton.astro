@@ -2,6 +2,10 @@
 import IconChevronLeft from "../../assets/icons/IconChevronLeft.svg";
 import LinkButton from "../../components/ui/LinkButton.astro";
 import { SITE } from "virtual:astro-minimax/config";
+
+// Detect language from current URL
+const currentPath = Astro.url.pathname;
+const lang = currentPath.startsWith("/en") ? "en" : "zh";
 ---
 
 {
@@ -9,7 +13,7 @@ import { SITE } from "virtual:astro-minimax/config";
     <div class="app-layout flex items-center justify-start">
       <LinkButton
         id="back-button"
-        href="/"
+        href={`/${lang}/`}
         class="focus-outline -ms-2 mt-8 mb-2 hover:text-foreground/75"
       >
         <IconChevronLeft class="inline-block size-6 rtl:rotate-180" />
@@ -20,7 +24,7 @@ import { SITE } from "virtual:astro-minimax/config";
 }
 
 <script>
-  /* Update Search Praam */
+  /* Update Search Param */
   function updateGoBackUrl() {
     const backButton: HTMLAnchorElement | null =
       document.querySelector("#back-button");

@@ -112,11 +112,21 @@ const nestedHeadings = buildNestedHeadings(headings);
 
   /* Scrollbar hiding */
   .toc-nav {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
   .toc-nav::-webkit-scrollbar {
-    display: none; /* Chrome/Safari/Opera */
+    display: none;
+  }
+</style>
+
+<style is:global>
+  /* Reading mode TOC positioning */
+  .reading-mode aside.floating-toc-container {
+    left: calc(50% + 36ch + 4rem) !important;
+    right: auto !important;
+    top: 8rem !important;
+    transform: none !important;
   }
 </style>
 

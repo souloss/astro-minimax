@@ -6,6 +6,7 @@ featured: false
 category: 发布说明
 tags:
   - release
+cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=630&fit=crop"
 description: "astro-minimax 0.8.1: 修复 Mermaid 主题适配、Cloudflare Pages 部署问题、OG 图片路径等关键问题。"
 ---
 

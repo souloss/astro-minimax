@@ -1,0 +1,91 @@
+/* ============================================
+   Reading Mode Fonts
+   ============================================ */
+
+/* JetBrains Mono - Self-hosted */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* LXGW WenKai - CDN (霞鹜文楷，约30MB，使用jsDelivr加速) */
+@font-face {
+  font-family: 'LXGW WenKai';
+  src: url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LXGW WenKai Mono';
+  src: url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkaimono-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ZCOOL KuaiLe - Google Fonts CDN (站酷快乐体) */
+@font-face {
+  font-family: 'ZCOOL KuaiLe';
+  src: url('https://fonts.gstatic.com/s/zcoolkuaile/v19/tssqApdaRQokwFjFJjvM6h2WpozzoXhC2g.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ZCOOL XiaoWei - Google Fonts CDN (站酷小薇体) */
+@font-face {
+  font-family: 'ZCOOL XiaoWei';
+  src: url('https://fonts.gstatic.com/s/zcoolxiaowei/v13/i7dMIFFrTRywPpUVX9_RJiyMLeA.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Ma Shan Zheng - Google Fonts CDN (马善政楷书) */
+@font-face {
+  font-family: 'Ma Shan Zheng';
+  src: url('https://fonts.gstatic.com/s/mashanzheng/v10/NaPecZTRCLxvwo41b4gvzkXaRME.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Literata - Google Fonts CDN (阅读优化字体) */
+@font-face {
+  font-family: 'Literata';
+  src: url('https://fonts.gstatic.com/s/literata/v35/or38yN6z24t1aTTcig.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Noto Serif SC - Google Fonts CDN */
+@font-face {
+  font-family: 'Noto Serif SC';
+  src: url('https://fonts.gstatic.com/s/notoserifsc/v23/xn7mYHgbiwtFNMHHxbdKlgXu4g.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Source Han Serif SC - Fallback for classic */
+@font-face {
+  font-family: 'Source Han Serif SC';
+  src: local('Source Han Serif SC'), local('Noto Serif CJK SC');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

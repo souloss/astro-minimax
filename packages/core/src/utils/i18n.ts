@@ -139,7 +139,37 @@ export type TranslationKey =
   | "unit.series"
   | "unit.categories"
   | "unit.subcategories"
-  | "unit.more";
+  | "unit.more"
+  | "settings.tabReading"
+  | "settings.readingFontSize"
+  | "settings.readingLineHeight"
+  | "settings.readingWidth"
+  | "settings.readingTheme"
+  | "settings.readingFontFamily"
+  | "settings.focusMode"
+  | "settings.focusModeDesc"
+  | "settings.share"
+  | "settings.shareCopied"
+  | "settings.narrow"
+  | "settings.wide"
+  | "settings.comfortable"
+  | "settings.relaxed"
+  | "settings.serif"
+  | "settings.sans"
+  | "settings.mono"
+  | "settings.system"
+  | "settings.fontCode"
+  | "settings.fontLxgw"
+  | "settings.fontZcool"
+  | "settings.fontReadable"
+  | "settings.fontClassic"
+  | "settings.readingThemeDefault"
+  | "settings.readingThemeEyecare"
+  | "settings.readingThemeParchment"
+  | "settings.readingThemeNight"
+  | "settings.readingThemeOled"
+  | "settings.readingMode"
+  | "settings.readingModeDesc";
 
 const translations: Record<string, Record<TranslationKey, string>> = {
   en: {
@@ -283,6 +313,36 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "unit.categories": "categories",
     "unit.subcategories": "subcategories",
     "unit.more": "more",
+    "settings.tabReading": "Reading",
+    "settings.readingFontSize": "Font Size",
+    "settings.readingLineHeight": "Line Height",
+    "settings.readingWidth": "Content Width",
+    "settings.readingTheme": "Reading Theme",
+    "settings.readingFontFamily": "Font Family",
+    "settings.focusMode": "Focus Mode",
+    "settings.focusModeDesc": "Highlight current paragraph",
+    "settings.share": "Share Config",
+    "settings.shareCopied": "Copied!",
+    "settings.narrow": "Narrow",
+    "settings.wide": "Wide",
+    "settings.comfortable": "Comfortable",
+    "settings.relaxed": "Relaxed",
+    "settings.serif": "Serif",
+    "settings.sans": "Sans",
+    "settings.mono": "Mono",
+    "settings.system": "System",
+    "settings.fontCode": "Code",
+    "settings.fontLxgw": "霞鹜文楷",
+    "settings.fontZcool": "酷乐体",
+    "settings.fontReadable": "Literata",
+    "settings.fontClassic": "思源宋体",
+    "settings.readingThemeDefault": "Default",
+    "settings.readingThemeEyecare": "Eyecare",
+    "settings.readingThemeParchment": "Parchment",
+    "settings.readingThemeNight": "Night",
+    "settings.readingThemeOled": "OLED",
+    "settings.readingMode": "Reading Mode",
+    "settings.readingModeDesc": "Hide navigation and apply reading settings",
   },
   zh: {
     "nav.home": "首页",
@@ -425,6 +485,36 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "unit.categories": "个分类",
     "unit.subcategories": "个子分类",
     "unit.more": "更多",
+    "settings.tabReading": "阅读",
+    "settings.readingFontSize": "字体大小",
+    "settings.readingLineHeight": "行间距",
+    "settings.readingWidth": "页面宽度",
+    "settings.readingTheme": "阅读主题",
+    "settings.readingFontFamily": "字体风格",
+    "settings.focusMode": "专注模式",
+    "settings.focusModeDesc": "高亮当前段落",
+    "settings.share": "分享配置",
+    "settings.shareCopied": "已复制！",
+    "settings.narrow": "窄",
+    "settings.wide": "宽",
+    "settings.comfortable": "舒适",
+    "settings.relaxed": "宽松",
+    "settings.serif": "宋体",
+    "settings.sans": "黑体",
+    "settings.mono": "等宽",
+    "settings.system": "系统",
+    "settings.fontCode": "编程字体",
+    "settings.fontLxgw": "霞鹜文楷",
+    "settings.fontZcool": "酷乐体",
+    "settings.fontReadable": "Literata",
+    "settings.fontClassic": "思源宋体",
+    "settings.readingThemeDefault": "默认",
+    "settings.readingThemeEyecare": "护眼",
+    "settings.readingThemeParchment": "羊皮纸",
+    "settings.readingThemeNight": "夜间",
+    "settings.readingThemeOled": "纯黑",
+    "settings.readingMode": "阅读模式",
+    "settings.readingModeDesc": "隐藏导航并应用阅读设置",
   },
 };
 

@@ -214,10 +214,9 @@ const lang = SITE.lang;
         readingModeBtn.classList.remove("flex");
       }
 
-      readingModeBtn.addEventListener("click", () => {
-        const active = document.body.classList.toggle("reading-mode");
+      // Sync with reading-mode setting from SettingsPanel
+      const syncReadingModeUI = (active: boolean) => {
         readingModeBtn.setAttribute("aria-pressed", String(active));
-
         if (active) {
           readingModeBtn.classList.add("border-accent/40", "bg-accent/10");
           readingModeBtn.classList.remove("bg-glass-bg");
@@ -229,7 +228,37 @@ const lang = SITE.lang;
           iconOff?.classList.remove("hidden");
           iconOn?.classList.add("hidden");
         }
+      };
+
+      // Initial state sync
+      const initialActive = document.documentElement.classList.contains("reading-mode");
+      syncReadingModeUI(initialActive);
+
+      readingModeBtn.addEventListener("click", () => {
+        // Toggle reading-mode via SettingsPanel API
+        if (typeof (window as any).__settingsPanel?.toggleReadingMode === 'function') {
+          (window as any).__settingsPanel.toggleReadingMode();
+        } else {
+          // Fallback: direct toggle
+          const active = document.documentElement.classList.toggle("reading-mode");
+          syncReadingModeUI(active);
+          // Persist to settings
+          try {
+            const stored = localStorage.getItem('astro-minimax-settings');
+            const settings = stored ? JSON.parse(stored) : {};
+            if (!settings.reading) settings.reading = {};
+            settings.reading.readingMode = active;
+            localStorage.setItem('astro-minimax-settings', JSON.stringify(settings));
+          } catch {}
+        }
       });
+
+      // Listen for reading-mode changes from SettingsPanel
+      const observer = new MutationObserver(() => {
+        const active = document.documentElement.classList.contains("reading-mode");
+        syncReadingModeUI(active);
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     }
 
     if (!backToTopBtn) return;

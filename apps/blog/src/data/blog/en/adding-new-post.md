@@ -71,6 +71,7 @@ Here is the list of frontmatter property for each post.
 | **_draft_**        | Mark this post 'unpublished'.                                                                                                         | default = false                                |
 | **_category_**     | Post category, supports hierarchical format like `Tutorial/Config`. Used for content organization and navigation.                     | optional                                       |
 | **_tags_**         | Related keywords for this post. Written in array yaml format.                                                                         | default = others                               |
+| **_cover_**        | Cover image for the post. Used in post cards and article banner. This can be a local image path or remote URL.                        | optional (falls back to ogImage)               |
 | **_ogImage_**      | OG image of the post. Useful for social media sharing and SEO. This can be a remote URL or an image path relative to current folder.  | default = `SITE.ogImage` or generated OG image |
 | **_canonicalURL_** | Canonical URL (absolute), in case the article already exists on other source.                                                         | default = `Astro.site` + `Astro.url.pathname`  |
 | **_hideEditPost_** | Hide editPost button under blog title. This applies only to the current blog post.                                                    | default = false                                |
@@ -117,7 +118,8 @@ tags:
   - some
   - example
   - tags
-ogImage: ../../../assets/images/example.png # src/assets/images/example.png
+cover: ../../../assets/images/example.png # Cover image for cards and article banner
+ogImage: ../../../assets/images/example.png # OG image for social sharing (optional, auto-generated if not set)
 # ogImage: "https://example.org/remote-image.png" # remote URL
 description: This is the example description of the example post.
 canonicalURL: https://example.org/my-article-was-already-posted-here

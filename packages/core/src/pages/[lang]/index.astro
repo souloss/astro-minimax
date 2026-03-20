@@ -104,7 +104,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
             </h2>
             <div class="h-px flex-1 bg-gradient-to-r from-border/50 to-transparent"></div>
           </div>
-          <PostsContainer posts={featuredPosts} lang={lang} layout="mag" />
+          <PostsContainer posts={featuredPosts} lang={lang} layout="card" />
         </section>
       )
     }
@@ -121,7 +121,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
           <PostsContainer 
             posts={recentPosts.filter((_, i) => i < (SITE.postPerIndex ?? 5))} 
             lang={lang} 
-            layout="mag" 
+            layout="card" 
           />
         </section>
       )

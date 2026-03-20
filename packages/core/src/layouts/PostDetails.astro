@@ -5,6 +5,7 @@ import Header from "../components/nav/Header.astro";
 import Footer from "../components/nav/Footer.astro";
 import Tag from "../components/ui/Tag.astro";
 import Datetime from "../components/ui/Datetime.astro";
+import PostMeta from "../components/ui/PostMeta.astro";
 import BackButton from "../components/nav/BackButton.astro";
 import { getLocalizedPostPath, getPostSlug } from "../utils/getPath";
 import { t } from "../utils/i18n";
@@ -37,6 +38,7 @@ const {
   title,
   author,
   description,
+  cover,
   ogImage: initOgImage,
   canonicalURL,
   pubDatetime,
@@ -52,12 +54,13 @@ const { minutes: readingMinutes, words: wordCount } = getReadingTime(
   post.body ?? ""
 );
 
-// Banner image: only real local assets or valid remote URLs (not dynamic OG stubs)
+// Banner image: 封面图片用于文章页展示，优先使用 cover，fallback 到 ogImage
 let bannerImageUrl: string | undefined;
-if (initOgImage && typeof initOgImage === "object" && "src" in initOgImage) {
-  bannerImageUrl = initOgImage.src;
-} else if (typeof initOgImage === "string" && initOgImage.startsWith("http")) {
-  bannerImageUrl = initOgImage;
+const bannerImage = cover || initOgImage;
+if (bannerImage && typeof bannerImage === "object" && "src" in bannerImage) {
+  bannerImageUrl = bannerImage.src;
+} else if (typeof bannerImage === "string" && bannerImage.startsWith("http")) {
+  bannerImageUrl = bannerImage;
 }
 
 // OG meta image: includes dynamic fallback for social sharing
@@ -279,47 +282,19 @@ const nextPost =
         <p class="mt-2 text-base text-foreground-soft leading-relaxed">{description}</p>
       )}
 
-      {/* Metadata bar */}
-      <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-border/60 bg-card/40 px-4 py-3">
-        {category && (
-          <a
-            href={getCategoryUrl(lang, category)}
-            class="text-sm font-medium text-accent underline decoration-accent/30 underline-offset-2 hover:decoration-accent"
-          >
-            {category}
-          </a>
-        )}
-        {category && <span class="text-border">|</span>}
-        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" lang={lang} />
-        <span class="text-border">|</span>
-        <span
-          class="flex items-center gap-1 text-sm opacity-80 sm:text-base"
-          title={t("post.wordCount", lang).replace("{count}", String(wordCount))}
-        >
-          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-          </svg>
-          {t("post.readingTime", lang).replace("{min}", String(readingMinutes))}
-        </span>
-        <span class="text-border">|</span>
-        <span class="text-sm opacity-80">
-          {wordCount.toLocaleString()} {lang === "zh" ? "字" : "words"}
-        </span>
+      {/* 元信息 */}
+      <div class="mt-4 rounded-lg border border-border/60 bg-card/40 px-4 py-3">
+        <PostMeta
+          mode="article"
+          lang={lang}
+          dateStr={pubDatetime ? new Date(pubDatetime).toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", { year: "numeric", month: "long", day: "numeric" }) : undefined}
+          dateIso={pubDatetime?.toISOString()}
+          readingMinutes={readingMinutes}
+          wordCount={wordCount}
+          category={category}
+          tags={tags}
+        />
       </div>
-
-      {/* Tags preview */}
-      {tags && tags.length > 0 && (
-        <div class="mt-3 flex flex-wrap gap-2" data-pagefind-ignore>
-          {tags.map((tag: string) => (
-            <a
-              href={`/${lang}/tags/${slugifyStr(tag)}/`}
-              class="rounded-md bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground-soft transition-colors hover:bg-accent/10 hover:text-accent"
-            >
-              #{tag}
-            </a>
-          ))}
-        </div>
-      )}
     </div>
 
     <InlineTOC headings={headings} />

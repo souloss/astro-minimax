@@ -1,45 +1,24 @@
 ---
+/**
+ * PostCard 组件 - 统一的文章卡片组件
+ * 
+ * 支持三种布局模式：
+ * - card: 卡片布局，标题优先，完整元信息，适合阅读型内容
+ * - grid: 网格布局，高信息密度，快速浏览，适合图文并茂
+ * - list: 列表布局，极简紧凑，适合归档/大量文章
+ * 
+ * 统一交互特性：
+ * - 标题 hover 下划线动画
+ * - 卡片整体可点击
+ * - 元信息可点击跳转
+ */
 import type { CollectionEntry } from "astro:content";
 import type { ImageMetadata } from "astro";
 import { slugifyStr } from "../../utils/slugify";
 import { getLocalizedPostPath } from "../../utils/getPath";
 import { getReadingTime } from "../../utils/getReadingTime";
 import { t } from "../../utils/i18n";
-import IconArrowRight from "../../assets/icons/IconArrowRight.svg";
-
-type Props = {
-  variant?: "h2" | "h3";
-  compact?: boolean;
-  lang?: string;
-  priority?: boolean;
-  index?: number;
-} & CollectionEntry<"blog">;
-
-const {
-  variant: Heading = "h2",
-  compact = false,
-  id,
-  data,
-  body,
-  filePath,
-  lang = "zh",
-  priority = false,
-  index = 0,
-} = Astro.props;
-
-const { title, description, category, ogImage, tags, pubDatetime, modDatetime, timezone } = data;
-const postHref = getLocalizedPostPath(lang, id, filePath);
-const { minutes: readingMinutes } = getReadingTime(body ?? "");
-
-let coverSrc: string | undefined;
-if (ogImage && typeof ogImage === "object" && "src" in ogImage) {
-  coverSrc = (ogImage as ImageMetadata).src;
-} else if (typeof ogImage === "string" && ogImage.startsWith("http")) {
-  coverSrc = ogImage;
-}
-
-const langLabel = id.startsWith("en/") ? "English" : "中文";
-
+import PostMeta from "./PostMeta.astro";
 import dayjs from "dayjs";
 import utcPlugin from "dayjs/plugin/utc";
 import timezonePlugin from "dayjs/plugin/timezone";
@@ -47,6 +26,42 @@ import { SITE } from "virtual:astro-minimax/config";
 
 dayjs.extend(utcPlugin);
 dayjs.extend(timezonePlugin);
+
+type LayoutMode = "card" | "grid" | "list";
+
+type Props = {
+  variant?: "h2" | "h3";
+  lang?: string;
+  priority?: boolean;
+  index?: number;
+  /** 布局模式 */
+  layout?: LayoutMode;
+} & CollectionEntry<"blog">;
+
+const {
+  variant: Heading = "h2",
+  id,
+  data,
+  body,
+  filePath,
+  lang = "zh",
+  priority = false,
+  index = 0,
+  layout = "card",
+} = Astro.props;
+
+const { title, description, category, cover, ogImage, tags, pubDatetime, modDatetime, timezone } = data;
+const postHref = getLocalizedPostPath(lang, id, filePath);
+const { minutes: readingMinutes } = getReadingTime(body ?? "");
+
+// 封面图片：优先使用 cover，fallback 到 ogImage
+let coverSrc: string | undefined;
+const coverImage = cover || ogImage;
+if (coverImage && typeof coverImage === "object" && "src" in coverImage) {
+  coverSrc = (coverImage as ImageMetadata).src;
+} else if (typeof coverImage === "string" && coverImage.startsWith("http")) {
+  coverSrc = coverImage;
+}
 
 const isModified = modDatetime && modDatetime > pubDatetime;
 const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(timezone || SITE.timezone);
@@ -57,155 +72,219 @@ const dateStr = lang === "zh"
 const animationDelay = Math.min(index * 80, 400);
 ---
 
-{compact ? (
-  <li class="group" style={`--delay: ${animationDelay}ms`}>
-    <a
-      href={postHref}
-      class="card-animate block border border-border/60 bg-card/70 p-4 
-             backdrop-blur-sm transition-all duration-300 ease-out
-             hover:border-accent/30 hover:bg-card-hover hover:shadow-lg hover:shadow-shadow-elevated/20
-             focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent"
-      style={`animation-delay: var(--delay); border-radius: var(--card-radius, 1rem)`}
+{/* ============================================
+    CARD 布局：标题优先，完整元信息
+    ============================================ */}
+{layout === "card" && (
+  <li class="group h-full w-full" style={`--delay: ${animationDelay}ms`}>
+    <article
+      class="post-card card-animate relative flex h-full w-full flex-col overflow-hidden
+             border border-border/50 bg-card/60 backdrop-blur-md cursor-pointer
+             transition-all duration-300 ease-out
+             hover:border-accent/30 hover:bg-card-hover 
+             hover:shadow-xl hover:shadow-shadow-elevated/10 hover:-translate-y-0.5
+             focus-within:outline-2 focus-within:outline-dashed focus-within:outline-accent"
+      style={`animation-delay: var(--delay)`}
+      data-post-href={postHref}
     >
-      {category && (
-        <span class="mb-1.5 inline-block text-xs font-medium tracking-wide text-accent/90">
-          {category}
-        </span>
-      )}
-      <Heading
-        style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
-        class="text-base font-semibold text-foreground transition-colors duration-200 group-hover:text-accent"
-      >
-        {title}
-      </Heading>
-      <p class="mt-1.5 line-clamp-1 text-sm leading-relaxed text-foreground-soft">{description}</p>
-      <div class="mt-3 flex items-center gap-2.5 text-xs text-muted">
-        <time datetime={datetime.toISOString()} class="font-medium">{dateStr}</time>
-        <span class="text-border-strong">·</span>
-        <span class="reading-time">{t("post.readingTime", lang).replace("{min}", String(readingMinutes))}</span>
-      </div>
-    </a>
-  </li>
-) : (
-  <li class="group h-full" style={`--delay: ${animationDelay}ms`}>
-    <a
-      href={postHref}
-      class="card-animate relative flex h-full min-h-[220px] overflow-hidden 
-             border border-border/50 bg-card/60 backdrop-blur-md
-             transition-all duration-400 ease-out
-             hover:border-accent/25 hover:bg-card-hover 
-             hover:shadow-2xl hover:shadow-shadow-elevated/15 hover:-translate-y-1
-             focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent"
-      style={`animation-delay: var(--delay); border-radius: var(--card-radius, 1.25rem)`}
-    >
-      {coverSrc ? (
-        <div class="absolute inset-0">
-          <img
-            src={coverSrc}
-            alt=""
-            class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-            loading={priority ? "eager" : "lazy"}
-            decoding="async"
-            fetchpriority={priority ? "high" : undefined}
-            width="800"
-            height="450"
-          />
-          <div class="absolute inset-0 bg-gradient-to-br from-black/85 via-black/65 to-black/40" />
-        </div>
-      ) : (
-        <div class="absolute inset-0 bg-gradient-to-br from-card via-surface to-card opacity-80" />
-      )}
-
-      <div class={`relative z-10 flex w-full flex-col justify-between p-5 sm:p-6 ${coverSrc ? "text-white" : ""}`}>
-        <div>
-          <div class="flex items-center gap-2.5">
-            <time
-              datetime={datetime.toISOString()}
-              class:list={[
-                "text-xs font-medium tracking-wide",
-                coverSrc ? "text-white/75" : "text-foreground-soft"
-              ]}
-            >
-              {dateStr}
-            </time>
-            {category && (
-              <>
-                <span class:list={[coverSrc ? "text-white/30" : "text-border-strong"]}>·</span>
-                <span class:list={[
-                  "text-xs font-medium tracking-wide",
-                  coverSrc ? "text-white/80" : "text-accent"
-                ]}>
-                  {category}
-                </span>
-              </>
-            )}
-          </div>
-
+      {/* 标题区域 */}
+      <div class="p-5 pb-0">
+        <a href={postHref} class="block outline-none" onclick="event.stopPropagation()">
           <Heading
             style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
-            class:list={[
-              "mt-3 text-lg font-bold leading-snug tracking-tight sm:text-xl",
-              coverSrc ? "text-white" : "text-foreground",
-              "transition-colors duration-200 group-hover:text-accent"
-            ]}
+            class="title-with-underline inline text-lg font-bold leading-snug tracking-tight text-foreground
+                   transition-colors duration-200 group-hover:text-accent"
           >
             {title}
           </Heading>
+        </a>
+      </div>
 
-          <p class:list={[
-            "mt-2 line-clamp-2 text-sm leading-relaxed",
-            coverSrc ? "text-white/70" : "text-foreground-soft"
-          ]}>
-            {description}
-          </p>
-        </div>
-
-        <div class="mt-5 flex flex-wrap items-end justify-between gap-3">
-          <div class="flex flex-wrap items-center gap-2.5">
-            <span class:list={[
-              "reading-time flex items-center gap-1.5 text-xs",
-              coverSrc ? "text-white/65" : "text-muted"
-            ]}>
-              <svg class="size-3.5 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-              </svg>
-              {readingMinutes} min
-            </span>
-
-            <span class:list={[
-              "flex items-center gap-1.5 text-xs",
-              coverSrc ? "text-white/65" : "text-muted"
-            ]}>
-              <svg class="size-3.5 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" /><path d="M2 12h20" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-              </svg>
-              {langLabel}
-            </span>
-
-            {tags.length > 0 && (
-              <div class="flex flex-wrap gap-1.5">
-                {tags.slice(0, 3).map((tag: string) => (
-                  <span class:list={[
-                    "rounded-lg px-2 py-0.5 text-xs font-medium",
-                    coverSrc
-                      ? "bg-white/15 text-white/75 backdrop-blur-sm"
-                      : "bg-muted/70 text-foreground-soft"
-                  ]}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
+      {/* 封面图片 */}
+      {coverSrc && (
+        <div class="px-5 mt-4">
+          <div class="relative aspect-[16/9] overflow-hidden rounded-xl">
+            <img
+              src={coverSrc}
+              alt=""
+              class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              fetchpriority={priority ? "high" : undefined}
+              width="800"
+              height="450"
+            />
           </div>
+        </div>
+      )}
 
-          <IconArrowRight class:list={[
-            "size-5 shrink-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100",
-            "rtl:rotate-180 rtl:group-hover:-translate-x-1",
-            coverSrc ? "text-white/50 opacity-70" : "text-muted opacity-60"
-          ]} />
+      {/* 摘要 */}
+      <div class="p-5 pt-4 flex-1">
+        <p class="line-clamp-3 text-sm leading-relaxed text-foreground-soft">
+          {description}
+        </p>
+      </div>
+
+      {/* 分隔线 */}
+      <div class="mx-5 border-t border-border/50"></div>
+
+      {/* 元信息 */}
+      <div class="p-5 pt-3">
+        <PostMeta
+          mode="full"
+          lang={lang}
+          dateStr={dateStr}
+          dateIso={datetime.toISOString()}
+          readingMinutes={readingMinutes}
+          category={category}
+          tags={tags}
+        />
+      </div>
+    </article>
+  </li>
+)}
+
+{/* ============================================
+    GRID 布局：高信息密度
+    ============================================ */}
+{layout === "grid" && (
+  <li class="group h-full" style={`--delay: ${animationDelay}ms`}>
+    <article
+      class="post-card card-animate grid-card relative flex h-full flex-col overflow-hidden
+             border border-border/50 bg-card/60 backdrop-blur-md cursor-pointer
+             transition-all duration-300 ease-out
+             hover:border-accent/30 hover:bg-card-hover 
+             hover:shadow-lg hover:shadow-shadow-elevated/10 hover:-translate-y-0.5
+             focus-within:outline-2 focus-within:outline-dashed focus-within:outline-accent"
+      style={`animation-delay: var(--delay)`}
+      data-post-href={postHref}
+    >
+      {/* 封面图片 */}
+      {coverSrc && (
+        <div class="relative w-full h-36 sm:h-40 overflow-hidden shrink-0">
+          <img
+            src={coverSrc}
+            alt=""
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent"></div>
+        </div>
+      )}
+
+      {/* 内容区域 */}
+      <div class="flex flex-col flex-1 p-4 min-h-0">
+        {/* 标题 */}
+        <a href={postHref} class="block outline-none" onclick="event.stopPropagation()">
+          <Heading
+            style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+            class="title-with-underline inline text-base font-bold text-foreground line-clamp-2 leading-snug
+                   transition-colors duration-200 group-hover:text-accent"
+          >
+            {title}
+          </Heading>
+        </a>
+        
+        {/* 摘要 */}
+        <p class="mt-2 text-sm text-foreground-soft/80 line-clamp-2 leading-relaxed flex-1">
+          {description}
+        </p>
+        
+        {/* 分隔线 */}
+        <div class="my-3 border-t border-border/50"></div>
+        
+        {/* 元信息 */}
+        <PostMeta
+          mode="compact"
+          lang={lang}
+          dateStr={dateStr}
+          dateIso={datetime.toISOString()}
+          readingMinutes={readingMinutes}
+          category={category}
+        />
+      </div>
+    </article>
+  </li>
+)}
+
+{/* ============================================
+    LIST 布局：极简紧凑
+    ============================================ */}
+{layout === "list" && (
+  <li class="group border-b border-border/50 hover:bg-card/30 transition-colors duration-200" style={`--delay: ${animationDelay}ms`}>
+    <article
+      class="post-card card-animate relative flex items-start gap-3 sm:gap-4 py-4 px-2 cursor-pointer"
+      style={`animation-delay: var(--delay)`}
+      data-post-href={postHref}
+    >
+      {/* 缩略图 */}
+      {coverSrc && (
+        <div class="shrink-0 hidden sm:block w-20 h-14 overflow-hidden rounded-lg">
+          <img
+            src={coverSrc}
+            alt=""
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+          />
+        </div>
+      )}
+      
+      {/* 日期区 */}
+      <div class={`shrink-0 w-20 pt-0.5 ${coverSrc ? "sm:hidden" : ""}`}>
+        <time class="block text-xs text-muted">{dateStr}</time>
+      </div>
+      
+      {/* 主内容 */}
+      <div class="flex-1 min-w-0">
+        {/* 标题 */}
+        <a href={postHref} class="block outline-none" onclick="event.stopPropagation()">
+          <Heading
+            style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+            class="title-with-underline inline text-sm font-bold text-foreground line-clamp-1
+                   transition-colors duration-200 group-hover:text-accent"
+          >
+            {title}
+          </Heading>
+        </a>
+        
+        {/* 摘要 */}
+        <p class="mt-1 text-xs text-foreground-soft/80 line-clamp-1">{description}</p>
+        
+        {/* 元信息 */}
+        <div class="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted">
+          {coverSrc && (
+            <>
+              <time class="text-muted">{dateStr}</time>
+              <span class="text-border">·</span>
+            </>
+          )}
+          <span>{readingMinutes} {lang === "zh" ? "分钟" : "min"}</span>
+          {category && (
+            <>
+              <span class="text-border">·</span>
+              <a 
+                href={`/${lang}/categories/${encodeURIComponent(category)}/`}
+                class="meta-link text-accent hover:underline"
+                onclick="event.stopPropagation()"
+              >
+                {category}
+              </a>
+            </>
+          )}
+          {tags && tags.slice(0, 2).map((tag: string) => (
+            <a
+              href={`/${lang}/tags/${encodeURIComponent(tag)}/`}
+              class="meta-link px-1.5 py-0.5 rounded bg-muted/50 text-foreground-soft hover:text-accent"
+              onclick="event.stopPropagation()"
+            >
+              #{tag}
+            </a>
+          ))}
         </div>
       </div>
-    </a>
+    </article>
   </li>
 )}
 
@@ -226,8 +305,67 @@ const animationDelay = Math.min(index * 80, 400);
       transform: translateY(0) scale(1);
     }
   }
-  
-  .duration-400 {
-    transition-duration: 400ms;
+
+  /* 卡片基础样式 */
+  .post-card {
+    border-radius: var(--card-radius, 1.25rem);
+  }
+
+  /* 网格卡片高度 */
+  .grid-card {
+    min-height: 260px;
+  }
+
+  /* 标题 hover 下划线动画 */
+  .title-with-underline {
+    position: relative;
+    text-decoration: none;
+  }
+
+  .title-with-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 1px;
+  }
+
+  .group:hover .title-with-underline::after {
+    width: 100%;
+  }
+
+  /* 元信息链接样式 */
+  .meta-link {
+    text-decoration: none;
+  }
+
+  .meta-link:hover {
+    text-decoration: none;
+  }
+
+  /* 卡片点击交互 */
+  [data-post-href] {
+    user-select: none;
+  }
+
+  [data-post-href]:active {
+    transform: scale(0.995);
   }
 </style>
+
+<script>
+  // 点击卡片任意区域跳转到文章页面
+  document.addEventListener('click', (e) => {
+    const article = (e.target as HTMLElement).closest('article[data-post-href]');
+    if (article && !(e.target as HTMLElement).closest('.meta-link') && !(e.target as HTMLElement).closest('a[onclick]')) {
+      const href = article.getAttribute('data-post-href');
+      if (href) {
+        window.location.href = href;
+      }
+    }
+  });
+</script>

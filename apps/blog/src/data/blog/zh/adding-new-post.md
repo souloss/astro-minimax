@@ -68,6 +68,7 @@ Frontmatter 是存储博客文章（文章）重要信息的主要位置。Front
 | **_draft_**        | 将此文章标记为"未发布"。                                                              | default = false                               |
 | **_category_**     | 文章分类，支持层级格式如 `教程/配置`。用于内容组织和导航。                            | optional                                      |
 | **_tags_**         | 此文章的相关关键词。以 yaml 数组格式编写。                                            | default = others                              |
+| **_cover_**        | 文章封面图。用于卡片展示和文章页横幅。可以是本地图片路径或远程 URL。                   | optional（未设置时使用 ogImage）              |
 | **_ogImage_**      | 文章的 OG 图片。用于社交媒体分享和 SEO。可以是远程 URL 或相对于当前文件夹的图片路径。 | default = `SITE.ogImage` 或生成的 OG image    |
 | **_canonicalURL_** | 规范 URL（绝对路径），如果文章已存在于其他来源。                                      | default = `Astro.site` + `Astro.url.pathname` |
 | **_hideEditPost_** | 隐藏博客标题下的 editPost 按钮。仅适用于当前博客文章。                                | default = false                               |
@@ -114,8 +115,9 @@ tags:
   - some
   - example
   - tags
-ogImage: ../../../assets/images/example.png # src/assets/images/example.png
-# ogImage: "https://example.org/remote-image.png" # remote URL
+cover: ../../../assets/images/example.png # 封面图，用于卡片展示和文章页横幅
+ogImage: ../../../assets/images/example.png # OG 图片，用于社交分享（可选，未设置时自动生成）
+# ogImage: "https://example.org/remote-image.png" # 远程 URL
 description: This is the example description of the example post.
 canonicalURL: https://example.org/my-article-was-already-posted-here
 ---

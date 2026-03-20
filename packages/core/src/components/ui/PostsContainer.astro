@@ -2,7 +2,13 @@
 import type { CollectionEntry } from "astro:content";
 import type { PostItemData } from "./PostItemBase.astro";
 
-type LayoutMode = "grid" | "mag" | "list" | "compact" | "timeline";
+/** 
+ * 布局模式
+ * - shawnxie: 标题优先，完整元信息，适合阅读型内容
+ * - grid: 高信息密度，快速浏览，适合图文并茂
+ * - list: 极简紧凑，适合归档/大量文章
+ */
+type LayoutMode = "card" | "grid" | "list";
 
 interface Props {
   posts: CollectionEntry<"blog">[];
@@ -10,7 +16,7 @@ interface Props {
   layout?: LayoutMode;
 }
 
-const { posts, lang, layout = "mag" } = Astro.props;
+const { posts, lang, layout = "card" } = Astro.props;
 
 import dayjs from "dayjs";
 import utcPlugin from "dayjs/plugin/utc";
@@ -26,15 +32,17 @@ dayjs.extend(timezonePlugin);
 
 function getPostItemData(post: CollectionEntry<"blog">): PostItemData & { href: string } {
   const { id, data, body, filePath } = post;
-  const { title, description, category, ogImage, tags, pubDatetime, modDatetime, timezone } = data;
+  const { title, description, category, cover, ogImage, tags, pubDatetime, modDatetime, timezone } = data;
   const href = getLocalizedPostPath(lang, id, filePath);
   const { minutes: readingMinutes } = getReadingTime(body ?? "");
   
+  // 封面图片：优先使用 cover，fallback 到 ogImage
   let coverSrc: string | undefined;
-  if (ogImage && typeof ogImage === "object" && "src" in ogImage) {
-    coverSrc = (ogImage as ImageMetadata).src;
-  } else if (typeof ogImage === "string" && ogImage.startsWith("http")) {
-    coverSrc = ogImage;
+  const coverImage = cover || ogImage;
+  if (coverImage && typeof coverImage === "object" && "src" in coverImage) {
+    coverSrc = (coverImage as ImageMetadata).src;
+  } else if (typeof coverImage === "string" && coverImage.startsWith("http")) {
+    coverSrc = coverImage;
   }
   
   const isModified = modDatetime && modDatetime > pubDatetime;
@@ -51,184 +59,356 @@ function getPostItemData(post: CollectionEntry<"blog">): PostItemData & { href: 
 
 const postsData = posts.map(p => getPostItemData(p));
 const postsJson = JSON.stringify(postsData);
+
+// 作者名称，用于元信息展示
+const authorName = SITE.author;
 ---
 
 <div class="posts-wrapper"><ul class="posts-list" data-posts-grid></ul></div>
 
-<script define:vars={{ postsJson, lang }}>
+<script define:vars={{ postsJson, lang, authorName }}>
 const data = JSON.parse(postsJson);
 const isZh = lang === 'zh';
+const author = authorName;
 
 const i18n = {
   minutes: isZh ? '分钟' : 'min',
 };
 
-function sd(d) { const m = d.match(/(\d+)\s*年\s*(\d+)\s*月\s*(\d+)\s*日/); return m ? `${m[2]}月${m[3]}日` : d; }
-function catUrl(c) { return `/${lang}/categories/${encodeURIComponent(c)}/`; }
-function tagUrl(t) { return `/${lang}/tags/${encodeURIComponent(t)}/`; }
-function min(m) { return m + ' ' + i18n.minutes; }
+// 辅助函数
+const catUrl = (c) => `/${lang}/categories/${encodeURIComponent(c)}/`;
+const tagUrl = (t) => `/${lang}/tags/${encodeURIComponent(t)}/`;
+const min = (m) => `${m} ${i18n.minutes}`;
+
+// 图标 SVG
+const icons = {
+  author: `<svg class="size-3.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>`,
+  date: `<svg class="size-3.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>`,
+  clock: `<svg class="size-3.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>`,
+};
+
+// 生成元信息区域 HTML
+function renderMeta(p, compact = false) {
+  if (compact) {
+    // 紧凑模式：只显示日期和阅读时长
+    return `
+      <time class="flex items-center gap-1.5">${icons.date}<span>${p.dateStr}</span></time>
+      <span class="flex items-center gap-1.5">${icons.clock}<span>${min(p.readingMinutes)}</span></span>
+      ${p.category ? `<a href="${catUrl(p.category)}" class="meta-link px-2 py-0.5 rounded-md bg-accent/10 text-accent hover:bg-accent/20 transition-colors" onclick="event.stopPropagation()">${p.category}</a>` : ''}
+    `;
+  }
+  
+  // 完整模式：作者、日期、阅读时长、分类、标签
+  return `
+    <a href="/${lang}/about/" class="meta-link flex items-center gap-1.5 hover:text-accent transition-colors" onclick="event.stopPropagation()">
+      ${icons.author}
+      <span>${author}</span>
+    </a>
+    <time datetime="${p.dateIso}" class="flex items-center gap-1.5">
+      ${icons.date}
+      <span>${p.dateStr}</span>
+    </time>
+    <span class="flex items-center gap-1.5">
+      ${icons.clock}
+      <span>${min(p.readingMinutes)}</span>
+    </span>
+    ${p.category ? `
+      <a href="${catUrl(p.category)}" class="meta-link px-2 py-0.5 rounded-md bg-accent/10 text-accent hover:bg-accent/20 transition-colors" onclick="event.stopPropagation()">
+        ${p.category}
+      </a>
+    ` : ''}
+    ${p.tags?.length ? `
+      <div class="flex flex-wrap items-center gap-1.5">
+        ${p.tags.slice(0, 3).map(t => `
+          <a href="${tagUrl(t)}" class="meta-link px-2 py-0.5 rounded-md border border-border/50 text-foreground-soft hover:text-accent hover:border-accent/30 transition-colors" onclick="event.stopPropagation()">
+            #${t}
+          </a>
+        `).join('')}
+      </div>
+    ` : ''}
+  `;
+}
 
 function render(mode) {
   const el = document.querySelector('[data-posts-grid]');
   if (!el) return;
 
   const items = data.map((p, i) => {
-    const last = i === data.length - 1;
     
-    // 网格布局：等高等宽，无图片时内容更紧凑
-    if (mode === 'grid') {
-      return `<li class="flex">
-        <article class="grid-card flex flex-col w-full rounded-xl border border-border bg-background shadow-sm transition-all duration-300 hover:border-accent/50 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden group ${p.coverSrc ? '' : 'min-h-[200px]'}">
-          ${p.coverSrc ? `
-            <div class="relative w-full h-40 sm:h-44 md:h-48 overflow-hidden shrink-0">
-              <img src="${p.coverSrc}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
-              <div class="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent"></div>
-            </div>
-          ` : ''}
-          <div class="flex flex-col flex-1 p-4 min-h-0">
-            <a href="${p.href}" class="block"><h3 class="text-base font-bold text-foreground line-clamp-2 leading-snug hover:text-accent">${p.title}</h3></a>
-            <p class="mt-2 text-sm text-foreground-soft/80 line-clamp-2 leading-relaxed flex-1">${p.description}</p>
-            <div class="mt-3 flex items-center gap-2 text-xs text-muted">
-              <time class="truncate">${p.dateStr}</time><span class="text-border shrink-0">·</span>
-              <span class="shrink-0">${min(p.readingMinutes)}</span>
-              ${p.category ? `<span class="text-border shrink-0">·</span><a href="${catUrl(p.category)}" class="text-accent truncate hover:underline">${p.category}</a>` : ''}
-            </div>
-          </div>
-        </article></li>`;
-    }
-    
-    // 杂志布局：无图片时内容占满宽度，响应式图片尺寸
-    if (mode === 'mag') {
-      return `<li>
-        <article class="mag-card flex flex-col sm:flex-row w-full rounded-2xl border border-border bg-background shadow-sm transition-all duration-300 hover:border-accent/50 hover:shadow-xl hover:-translate-y-0.5 overflow-hidden group">
-          ${p.coverSrc ? `
-            <div class="relative sm:w-2/5 md:w-1/3 shrink-0 overflow-hidden">
-              <img src="${p.coverSrc}" class="w-full h-48 sm:h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
-              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-background/30 sm:bg-gradient-to-r sm:from-transparent sm:to-background/50"></div>
-            </div>
-          ` : ''}
-          <div class="flex-1 flex flex-col p-4 sm:p-5 min-h-0 ${p.coverSrc ? '' : 'w-full'}">
-            <div class="flex items-center gap-2 text-xs text-muted mb-2">
-              <time class="font-medium truncate">${p.dateStr}</time>
-              ${p.category ? `<span class="text-border shrink-0">·</span><a href="${catUrl(p.category)}" class="text-accent font-medium truncate hover:underline">${p.category}</a>` : ''}
-              <span class="text-border shrink-0">·</span><span class="shrink-0">${min(p.readingMinutes)}</span>
-            </div>
-            <a href="${p.href}" class="block"><h3 class="text-lg sm:text-xl font-bold text-foreground line-clamp-2 leading-tight hover:text-accent">${p.title}</h3></a>
-            <p class="mt-2 text-sm text-foreground-soft/80 line-clamp-2 sm:line-clamp-3 leading-relaxed flex-1">${p.description}</p>
-            ${p.tags?.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${p.tags.slice(0,3).map(t => `<a href="${tagUrl(t)}" class="px-2 py-0.5 rounded text-xs border border-border/50 text-foreground-soft hover:text-accent hover:border-accent/50">${t}</a>`).join('')}</div>` : ''}
-          </div>
-        </article></li>`;
-    }
-    
-    // 列表布局：可选缩略图，无悬停背景
-    if (mode === 'list') {
-      return `<li class="border-b border-border">
-        <div class="flex items-start gap-3 sm:gap-4 py-3">
-          ${p.coverSrc ? `
-            <a href="${p.href}" class="shrink-0 hidden sm:block">
-              <img src="${p.coverSrc}" class="w-20 h-14 sm:w-24 sm:h-16 object-cover rounded-lg" loading="lazy">
-            </a>
-          ` : ''}
-          <div class="shrink-0 w-20 sm:w-24 pt-0.5 ${p.coverSrc ? 'sm:hidden' : ''}">
-            <time class="block text-xs text-muted">${p.dateStr}</time>
-            ${p.category ? `<a href="${catUrl(p.category)}" class="mt-0.5 block text-xs text-accent font-medium hover:underline">${p.category}</a>` : ''}
-          </div>
-          <div class="flex-1 min-w-0">
-            <a href="${p.href}"><h3 class="text-sm font-bold text-foreground hover:text-accent line-clamp-1">${p.title}</h3></a>
-            <p class="mt-1 text-xs text-foreground-soft/80 line-clamp-1">${p.description}</p>
-            <div class="mt-1.5 flex flex-wrap items-center gap-2 text-xs">
-              ${p.coverSrc ? `<time class="text-muted">${p.dateStr}</time><span class="text-border">·</span>` : ''}
-              <span class="text-muted">${min(p.readingMinutes)}</span>
-              ${p.tags?.length ? `<div class="flex flex-wrap gap-1">${p.tags.slice(0,2).map(t => `<a href="${tagUrl(t)}" class="px-1.5 py-0.5 rounded bg-muted/50 text-foreground-soft hover:text-accent">${t}</a>`).join('')}</div>` : ''}
-            </div>
-          </div>
-        </div>
-      </li>`;
-    }
-    
-    // 紧凑布局：单行，无悬停背景
-    if (mode === 'compact') {
-      return `<li class="border-b border-border">
-        <div class="flex items-center gap-3 py-2 px-1">
-          <a href="${p.href}" class="flex-1 min-w-0"><h3 class="text-sm font-medium text-foreground truncate hover:text-accent">${p.title}</h3></a>
-          <div class="flex items-center gap-2 text-xs text-muted shrink-0">
-            <time>${sd(p.dateStr)}</time><span class="text-border">·</span><span>${min(p.readingMinutes)}</span>
-          </div>
-        </div>
-      </li>`;
-    }
-    
-    // 时间线布局：可选缩略图，和谐美观
-    if (mode === 'timeline') {
-      return `<li class="timeline-item relative flex gap-3 sm:gap-4 ${last ? '' : 'pb-5'}">
-        <div class="timeline-axis flex flex-col items-center shrink-0" style="width: 2.5rem;">
-          <div class="timeline-dot size-2.5 sm:size-3 rounded-full bg-accent shadow-sm shrink-0"></div>
-          <div class="timeline-line flex-1 w-0.5 bg-gradient-to-b from-accent/40 to-transparent mt-1"></div>
-        </div>
-        <div class="flex-1 min-w-0 pb-1">
-          <div class="timeline-meta flex items-center gap-2 mb-1.5">
-            <time class="text-xs font-medium text-muted">${p.dateStr}</time>
-            <span class="text-border">·</span>
-            ${p.category ? `<a href="${catUrl(p.category)}" class="text-xs text-accent font-medium hover:underline">${p.category}</a>` : '<span class="text-xs text-muted"></span>'}
-          </div>
-          <div class="timeline-card rounded-lg border border-border/60 bg-background/50 p-3 transition-all duration-200 hover:border-accent/40 hover:bg-background hover:shadow-sm flex gap-3">
-            ${p.coverSrc ? `
-              <a href="${p.href}" class="shrink-0 hidden sm:block">
-                <img src="${p.coverSrc}" class="w-16 h-12 sm:w-20 sm:h-14 object-cover rounded" loading="lazy">
+    // ============================================
+    // CARD 布局：标题优先，完整元信息
+    // 适合：阅读型内容，文字为主
+    // ============================================
+    if (mode === 'card') {
+      return `
+        <li class="group h-full w-full">
+          <article 
+            class="post-card relative flex h-full w-full flex-col overflow-hidden
+                   border border-border/50 bg-card/60 backdrop-blur-md cursor-pointer
+                   transition-all duration-300 ease-out
+                   hover:border-accent/30 hover:bg-card-hover 
+                   hover:shadow-xl hover:shadow-shadow-elevated/10 hover:-translate-y-0.5
+                   focus-within:outline-2 focus-within:outline-dashed focus-within:outline-accent"
+            data-post-href="${p.href}"
+          >
+            <!-- 标题区域 -->
+            <div class="p-5 pb-0">
+              <a href="${p.href}" class="block outline-none" onclick="event.stopPropagation()">
+                <h3 class="title-with-underline inline text-lg font-bold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-accent">
+                  ${p.title}
+                </h3>
               </a>
+            </div>
+
+            <!-- 封面图片 -->
+            ${p.coverSrc ? `
+              <div class="px-5 mt-4">
+                <div class="relative aspect-[16/9] overflow-hidden rounded-xl">
+                  <img src="${p.coverSrc}" class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                </div>
+              </div>
             ` : ''}
-            <div class="flex-1 min-w-0">
-              <a href="${p.href}" class="block"><h3 class="text-sm font-bold text-foreground line-clamp-1 hover:text-accent">${p.title}</h3></a>
-              <p class="mt-1 text-xs text-foreground-soft/80 line-clamp-1 sm:line-clamp-2">${p.description}</p>
-              <div class="mt-1.5 sm:mt-2 flex items-center gap-2 text-xs text-muted">
-                <span>${min(p.readingMinutes)}</span>
-                ${p.tags?.length ? `<span class="text-border">·</span><a href="${tagUrl(p.tags[0])}" class="text-foreground-soft hover:text-accent">${p.tags[0]}</a>` : ''}
+
+            <!-- 摘要 -->
+            <div class="p-5 pt-4 flex-1">
+              <p class="line-clamp-3 text-sm leading-relaxed text-foreground-soft">
+                ${p.description}
+              </p>
+            </div>
+
+            <!-- 分隔线 -->
+            <div class="mx-5 border-t border-border/50"></div>
+
+            <!-- 元信息 -->
+            <div class="p-5 pt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted">
+              ${renderMeta(p)}
+            </div>
+          </article>
+        </li>`;
+    }
+    
+    // ============================================
+    // GRID 布局：高信息密度，快速浏览
+    // 适合：图文并茂，多篇文章对比
+    // ============================================
+    if (mode === 'grid') {
+      return `
+        <li class="group h-full">
+          <article 
+            class="post-card grid-card relative flex h-full flex-col overflow-hidden
+                   border border-border/50 bg-card/60 backdrop-blur-md cursor-pointer
+                   transition-all duration-300 ease-out
+                   hover:border-accent/30 hover:bg-card-hover 
+                   hover:shadow-lg hover:shadow-shadow-elevated/10 hover:-translate-y-0.5
+                   focus-within:outline-2 focus-within:outline-dashed focus-within:outline-accent"
+            data-post-href="${p.href}"
+          >
+            <!-- 封面图片 -->
+            ${p.coverSrc ? `
+              <div class="relative w-full h-36 sm:h-40 overflow-hidden shrink-0">
+                <img src="${p.coverSrc}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent"></div>
+              </div>
+            ` : ''}
+
+            <!-- 内容区域 -->
+            <div class="flex flex-col flex-1 p-4 min-h-0">
+              <!-- 标题 -->
+              <a href="${p.href}" class="block outline-none" onclick="event.stopPropagation()">
+                <h3 class="title-with-underline inline text-base font-bold text-foreground line-clamp-2 leading-snug transition-colors duration-200 group-hover:text-accent">
+                  ${p.title}
+                </h3>
+              </a>
+              
+              <!-- 摘要 -->
+              <p class="mt-2 text-sm text-foreground-soft/80 line-clamp-2 leading-relaxed flex-1">${p.description}</p>
+              
+              <!-- 分隔线 -->
+              <div class="my-3 border-t border-border/50"></div>
+              
+              <!-- 元信息 -->
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted">
+                ${renderMeta(p, true)}
               </div>
             </div>
-          </div>
-        </div>
-      </li>`;
+          </article>
+        </li>`;
+    }
+    
+    // ============================================
+    // LIST 布局：极简紧凑
+    // 适合：归档页，大量文章
+    // ============================================
+    if (mode === 'list') {
+      return `
+        <li class="group border-b border-border/50 hover:bg-card/30 transition-colors duration-200">
+          <article 
+            class="post-card relative flex items-start gap-3 sm:gap-4 py-4 px-2 cursor-pointer"
+            data-post-href="${p.href}"
+          >
+            <!-- 缩略图（可选） -->
+            ${p.coverSrc ? `
+              <div class="shrink-0 hidden sm:block w-20 h-14 overflow-hidden rounded-lg">
+                <img src="${p.coverSrc}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+              </div>
+            ` : ''}
+            
+            <!-- 日期区 -->
+            <div class="shrink-0 w-20 pt-0.5 ${p.coverSrc ? 'sm:hidden' : ''}">
+              <time class="block text-xs text-muted">${p.dateStr}</time>
+            </div>
+            
+            <!-- 主内容 -->
+            <div class="flex-1 min-w-0">
+              <!-- 标题 -->
+              <a href="${p.href}" class="block outline-none" onclick="event.stopPropagation()">
+                <h3 class="title-with-underline inline text-sm font-bold text-foreground line-clamp-1 transition-colors duration-200 group-hover:text-accent">
+                  ${p.title}
+                </h3>
+              </a>
+              
+              <!-- 摘要 -->
+              <p class="mt-1 text-xs text-foreground-soft/80 line-clamp-1">${p.description}</p>
+              
+              <!-- 元信息 -->
+              <div class="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted">
+                ${p.coverSrc ? `<time class="text-muted">${p.dateStr}</time><span class="text-border">·</span>` : ''}
+                <span>${min(p.readingMinutes)}</span>
+                ${p.category ? `
+                  <span class="text-border">·</span>
+                  <a href="${catUrl(p.category)}" class="meta-link text-accent hover:underline" onclick="event.stopPropagation()">${p.category}</a>
+                ` : ''}
+                ${p.tags?.slice(0, 2).map(t => `
+                  <a href="${tagUrl(t)}" class="meta-link px-1.5 py-0.5 rounded bg-muted/50 text-foreground-soft hover:text-accent" onclick="event.stopPropagation()">#${t}</a>
+                `).join('')}
+              </div>
+            </div>
+          </article>
+        </li>`;
     }
     
     return '';
   }).join('');
 
+  // 布局容器类名
   const cls = {
+    card: 'grid grid-cols-1 gap-4 posts-list',
     grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 posts-list',
-    mag: 'flex flex-col gap-4 posts-list',
     list: 'flex flex-col posts-list',
-    compact: 'flex flex-col posts-list',
-    timeline: 'flex flex-col posts-list'
-  }[mode] || 'flex flex-col gap-4 posts-list';
+  }[mode] || 'grid grid-cols-1 gap-4 posts-list';
 
   el.className = cls;
   el.innerHTML = items;
 }
 
 function init() {
-  let m = 'mag';
-  try { const s = localStorage.getItem('astro-minimax-settings'); if (s) m = JSON.parse(s).layoutMode || 'mag'; } catch {}
+  let m = 'card';
+  try { 
+    const s = localStorage.getItem('astro-minimax-settings'); 
+    if (s) {
+      const settings = JSON.parse(s);
+      // 只接受有效的布局模式
+      if (['card', 'grid', 'list'].includes(settings.layoutMode)) {
+        m = settings.layoutMode;
+      }
+    }
+  } catch {}
   render(m);
 }
 
-document.addEventListener('layout-change', e => render(e.detail.mode));
+document.addEventListener('layout-change', e => {
+  // 只接受有效的布局模式
+  if (['card', 'grid', 'list'].includes(e.detail.mode)) {
+    render(e.detail.mode);
+  }
+});
 document.addEventListener('astro:page-load', init);
 document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
 </script>
 
 <style>
-.posts-list { list-style: none; padding: 0; margin: 0; }
-.posts-wrapper { width: 100%; }
+.posts-list { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
+}
 
-/* 网格卡片固定高度 */
-.grid-card { height: 280px; }
+.posts-wrapper { 
+  width: 100%; 
+}
 
-/* 杂志卡片固定高度 */
-.mag-card { min-height: 200px; }
+/* ============================================
+   卡片基础样式
+   ============================================ */
 
-/* 时间线样式 */
-.timeline-item:last-child .timeline-line { display: none; }
-.timeline-dot { position: relative; z-index: 1; }
-.timeline-card { text-decoration: none; }
-.timeline-card:hover { text-decoration: none; }
+.post-card {
+  border-radius: var(--card-radius, 1.25rem);
+}
+
+/* 网格卡片高度 */
+.grid-card {
+  min-height: 260px;
+}
+
+/* ============================================
+   标题 hover 下划线动画
+   ============================================ */
+
+.title-with-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.title-with-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 1px;
+}
+
+.group:hover .title-with-underline::after {
+  width: 100%;
+}
+
+/* ============================================
+   元信息链接样式
+   ============================================ */
+
+.meta-link {
+  text-decoration: none;
+}
+
+.meta-link:hover {
+  text-decoration: none;
+}
+
+/* ============================================
+   卡片点击交互
+   ============================================ */
+
+[data-post-href] {
+  user-select: none;
+}
+
+[data-post-href]:active {
+  transform: scale(0.995);
+}
 </style>
+
+<script>
+  // 点击卡片任意区域跳转到文章页面
+  document.addEventListener('click', (e) => {
+    const article = e.target.closest('article[data-post-href]');
+    if (article && !e.target.closest('.meta-link') && !e.target.closest('a[onclick]')) {
+      const href = article.getAttribute('data-post-href');
+      if (href) {
+        window.location.href = href;
+      }
+    }
+  });
+</script>

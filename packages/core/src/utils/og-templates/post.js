@@ -43,7 +43,7 @@ export default async (post) => {
       type: "div",
       props: {
         style: {
-          background: "#e2e8f0",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -57,9 +57,9 @@ export default async (post) => {
             props: {
               style: {
                 width: "920px",
-                background: "#ffffff",
-                borderRadius: "16px",
-                boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+                background: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "20px",
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
                 overflow: "hidden",
                 display: "flex",
                 flexDirection: "column",
@@ -88,18 +88,19 @@ export default async (post) => {
                               type: "div",
                               props: {
                                 style: {
-                                  width: "42px",
-                                  height: "42px",
-                                  borderRadius: "10px",
-                                  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                                  width: "48px",
+                                  height: "48px",
+                                  borderRadius: "12px",
+                                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
+                                  boxShadow: "0 4px 14px rgba(102, 126, 234, 0.4)",
                                 },
                                 children: {
                                   type: "span",
                                   props: {
-                                    style: { color: "#fff", fontSize: "20px", fontWeight: 700 },
+                                    style: { color: "#fff", fontSize: "22px", fontWeight: 700 },
                                     children: SITE.title?.charAt(0) || "B",
                                   },
                                 },
@@ -113,14 +114,14 @@ export default async (post) => {
                                   {
                                     type: "span",
                                     props: {
-                                      style: { fontSize: "16px", fontWeight: 600, color: "#1e293b" },
+                                      style: { fontSize: "17px", fontWeight: 600, color: "#1e293b" },
                                       children: SITE.title || "Blog",
                                     },
                                   },
                                   {
                                     type: "span",
                                     props: {
-                                      style: { fontSize: "13px", color: "#64748b" },
+                                      style: { fontSize: "14px", color: "#64748b" },
                                       children: author || SITE.author,
                                     },
                                   },
@@ -133,11 +134,12 @@ export default async (post) => {
                                   props: {
                                     style: {
                                       marginLeft: "auto",
-                                      background: "#f1f5f9",
-                                      padding: "5px 12px",
-                                      borderRadius: "6px",
+                                      background: "linear-gradient(135deg, #667eea20 0%, #764ba220 100%)",
+                                      padding: "6px 14px",
+                                      borderRadius: "8px",
                                       fontSize: "13px",
-                                      color: "#475569",
+                                      fontWeight: 500,
+                                      color: "#667eea",
                                     },
                                     children: category,
                                   },
@@ -150,10 +152,10 @@ export default async (post) => {
                         type: "h1",
                         props: {
                           style: {
-                            fontSize: 28,
+                            fontSize: 30,
                             fontWeight: 700,
                             color: "#0f172a",
-                            lineHeight: 1.4,
+                            lineHeight: 1.35,
                             margin: 0,
                           },
                           children: title,
@@ -207,7 +209,7 @@ export default async (post) => {
                   props: {
                     style: {
                       padding: "20px 36px",
-                      background: "#f8fafc",
+                      background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
                       borderTop: "1px solid #e2e8f0",
                       display: "flex",
                       alignItems: "center",
@@ -229,7 +231,7 @@ export default async (post) => {
                             {
                               type: "span",
                               props: {
-                                style: { fontSize: "14px", fontWeight: 500, color: "#3b82f6" },
+                                style: { fontSize: "14px", fontWeight: 500, color: "#667eea" },
                                 children: displayUrl,
                               },
                             },
