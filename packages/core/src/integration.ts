@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import type { AstroIntegration } from "astro";
 import type { RemarkPlugin, RehypePlugin } from "@astrojs/markdown-remark";
 import type { SiteConfig, SocialLink, FriendLink } from "./types";
+import type { DeepPartial, Preferences } from "./preferences/types";
 import { remarkMermaidCodeblock } from "./plugins/viz/remark-mermaid-codeblock";
 import { remarkMarkmapCodeblock } from "./plugins/viz/remark-markmap-codeblock";
 import { rehypeMermaidProcessed } from "./plugins/viz/rehype-mermaid-processed";
@@ -17,6 +18,7 @@ const VIRTUAL_MODULE_IDS = new Set([
   "virtual:astro-minimax/ai-summaries",
   "virtual:astro-minimax/viz-mermaid-init",
   "virtual:astro-minimax/viz-markmap-init",
+  "virtual:astro-minimax/preferences-defaults",
 ]);
 
 export interface VizConfig {
@@ -31,6 +33,8 @@ export interface MinimaxUserConfig {
   friends?: readonly FriendLink[] | FriendLink[];
   blogPath?: string;
   viz?: VizConfig;
+  /** Default preferences for new users */
+  preferences?: DeepPartial<Preferences>;
 }
 
 export default function minimax(
@@ -144,6 +148,9 @@ export default function minimax(
                       }
                     }
                     return "export default { meta: {}, articles: {} };";
+                  }
+                  if (id === "\0virtual:astro-minimax/preferences-defaults") {
+                    return `export const userDefaults = ${JSON.stringify(userConfig.preferences ?? {})};`;
                   }
                 },
               },

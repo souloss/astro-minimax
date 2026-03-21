@@ -33,3 +33,7 @@ declare module "virtual:astro-minimax/ai-summaries" {
   const aiSummaries: { meta?: unknown; articles?: Record<string, ArticleSummaryEntry> };
   export default aiSummaries;
 }
+declare module "virtual:astro-minimax/preferences-defaults" {
+  import type { DeepPartial, Preferences } from "@astro-minimax/core/preferences/types";
+  export const userDefaults: DeepPartial<Preferences>;
+}

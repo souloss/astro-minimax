@@ -1,22 +1,31 @@
-/**
- * Preferences Storage
- * Handles localStorage persistence with version migration
- */
-
 import type { Preferences, DeepPartial } from './types';
 import { defaultPreferences, PREFERENCES_VERSION } from './defaults';
 
-/** Storage key for preferences */
 const STORAGE_KEY = 'astro-minimax-settings';
-
-/** Old storage key (for migration) */
 const OLD_STORAGE_KEY = 'astro-minimax-settings';
 
-/**
- * Deep merge utility
- */
-function deepMerge<T extends Record<string, any>>(target: T, source: DeepPartial<T>): T {
-  const result = { ...target };
+let _userDefaults: DeepPartial<Preferences> | undefined;
+
+function getUserDefaults(): DeepPartial<Preferences> {
+  if (_userDefaults === undefined) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const module = require('virtual:astro-minimax/preferences-defaults');
+      _userDefaults = module?.userDefaults ?? {};
+    } catch {
+      _userDefaults = {};
+    }
+  }
+  return _userDefaults!;
+}
+
+export function getEffectiveDefaults(): Preferences {
+  const userDefaults = typeof window !== 'undefined' ? getUserDefaults() : {};
+  return deepMerge({ ...defaultPreferences }, userDefaults);
+}
+
+function deepMerge<T extends object>(target: T, source: DeepPartial<T>): T {
+  const result = { ...target } as T;
 
   for (const key in source) {
     if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -31,9 +40,12 @@ function deepMerge<T extends Record<string, any>>(target: T, source: DeepPartial
         typeof targetValue === 'object' &&
         !Array.isArray(targetValue)
       ) {
-        result[key] = deepMerge(targetValue, sourceValue as DeepPartial<typeof targetValue>);
+        (result as Record<string, unknown>)[key] = deepMerge(
+          targetValue as object,
+          sourceValue as DeepPartial<object>
+        );
       } else {
-        result[key] = sourceValue as T[Extract<keyof T, string>];
+        (result as Record<string, unknown>)[key] = sourceValue;
       }
     }
   }
@@ -41,83 +53,74 @@ function deepMerge<T extends Record<string, any>>(target: T, source: DeepPartial
   return result;
 }
 
-/**
- * Migrate old preferences format to new format
- */
-function migratePreferences(oldPrefs: any): Preferences {
-  // Version 1 (old format from SettingsPanel.astro)
-  if (!oldPrefs.version) {
-    const migrated: Preferences = {
+function migratePreferences(oldPrefs: unknown): Preferences {
+  const prefs = oldPrefs as Record<string, unknown>;
+
+  if (!prefs?.version) {
+    return {
       theme: {
-        colorScheme: oldPrefs.colorScheme || defaultPreferences.theme.colorScheme,
+        colorScheme: (prefs?.colorScheme as Preferences['theme']['colorScheme']) || defaultPreferences.theme.colorScheme,
         mode: 'system',
-        radius: oldPrefs.radius || defaultPreferences.theme.radius,
+        radius: (prefs?.radius as Preferences['theme']['radius']) || defaultPreferences.theme.radius,
       },
       appearance: {
-        fontSize: oldPrefs.fontSize || defaultPreferences.appearance.fontSize,
+        fontSize: (prefs?.fontSize as number) || defaultPreferences.appearance.fontSize,
       },
       layout: {
-        postsLayout: oldPrefs.layoutMode || defaultPreferences.layout.postsLayout,
+        postsLayout: (prefs?.layoutMode as Preferences['layout']['postsLayout']) || defaultPreferences.layout.postsLayout,
       },
       reading: {
         ...defaultPreferences.reading,
       },
       widgets: {
-        themeToggle: oldPrefs.widgets?.themeToggle ?? true,
-        backToTop: oldPrefs.widgets?.backToTop ?? true,
-        readingTime: oldPrefs.widgets?.readingTime ?? true,
-        stickyBackToTop: oldPrefs.widgets?.stickyBackToTop ?? true,
+        themeToggle: (prefs?.widgets as Record<string, boolean>)?.themeToggle ?? true,
+        backToTop: (prefs?.widgets as Record<string, boolean>)?.backToTop ?? true,
+        readingTime: (prefs?.widgets as Record<string, boolean>)?.readingTime ?? true,
+        stickyBackToTop: (prefs?.widgets as Record<string, boolean>)?.stickyBackToTop ?? true,
       },
       animations: {
-        enabled: oldPrefs.animations ?? true,
-        cardHover: oldPrefs.cardHover ?? true,
-        smoothScroll: oldPrefs.smoothScroll ?? true,
+        enabled: (prefs?.animations as boolean) ?? true,
+        cardHover: (prefs?.cardHover as boolean) ?? true,
+        smoothScroll: (prefs?.smoothScroll as boolean) ?? true,
       },
       version: PREFERENCES_VERSION,
     };
-    return migrated;
   }
 
-  // Already new format, just ensure version is current
   return {
     ...defaultPreferences,
-    ...oldPrefs,
+    ...(prefs as unknown as Preferences),
     version: PREFERENCES_VERSION,
   };
 }
 
-/**
- * Load preferences from localStorage
- */
 export function loadPreferences(): Preferences {
   if (typeof window === 'undefined') {
     return { ...defaultPreferences };
   }
 
+  const effectiveDefaults = getEffectiveDefaults();
+
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
-      return { ...defaultPreferences };
+      return effectiveDefaults;
     }
 
     const parsed = JSON.parse(stored);
     const migrated = migratePreferences(parsed);
 
-    // If migration happened, save the migrated version
-    if (parsed.version !== PREFERENCES_VERSION) {
+    if ((parsed as { version?: number })?.version !== PREFERENCES_VERSION) {
       savePreferences(migrated);
     }
 
     return migrated;
   } catch (error) {
     console.warn('Failed to load preferences:', error);
-    return { ...defaultPreferences };
+    return effectiveDefaults;
   }
 }
 
-/**
- * Save preferences to localStorage
- */
 export function savePreferences(preferences: Preferences): void {
   if (typeof window === 'undefined') {
     return;
@@ -134,9 +137,6 @@ export function savePreferences(preferences: Preferences): void {
   }
 }
 
-/**
- * Update partial preferences
- */
 export function updatePreferences(updates: DeepPartial<Preferences>): Preferences {
   const current = loadPreferences();
   const updated = deepMerge(current, updates);
@@ -144,17 +144,12 @@ export function updatePreferences(updates: DeepPartial<Preferences>): Preference
   return updated;
 }
 
-/**
- * Reset preferences to defaults
- */
 export function resetPreferences(): Preferences {
-  savePreferences({ ...defaultPreferences });
-  return { ...defaultPreferences };
+  const effectiveDefaults = getEffectiveDefaults();
+  savePreferences(effectiveDefaults);
+  return effectiveDefaults;
 }
 
-/**
- * Clear all preferences from localStorage
- */
 export function clearPreferences(): void {
   if (typeof window === 'undefined') {
     return;
@@ -168,22 +163,11 @@ export function clearPreferences(): void {
   }
 }
 
-/**
- * Get a specific preference value by path
- */
-export function getPreference<K extends keyof Preferences>(
-  key: K
-): Preferences[K] {
+export function getPreference<K extends keyof Preferences>(key: K): Preferences[K] {
   const prefs = loadPreferences();
   return prefs[key];
 }
 
-/**
- * Set a specific preference value
- */
-export function setPreference<K extends keyof Preferences>(
-  key: K,
-  value: Preferences[K]
-): void {
+export function setPreference<K extends keyof Preferences>(key: K, value: Preferences[K]): void {
   updatePreferences({ [key]: value } as DeepPartial<Preferences>);
 }

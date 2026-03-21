@@ -60,6 +60,38 @@ export default defineConfig({
       friends: FRIENDS,
       blogPath: "src/data/blog",
       viz: { mermaid: true, markmap: true },
+      preferences: {
+        theme: {
+          colorScheme: "teal",
+          mode: "system",
+          radius: "lg",
+        },
+        appearance: {
+          fontSize: 1,
+        },
+        layout: {
+          postsLayout: "card",
+        },
+        reading: {
+          fontSize: "md",
+          lineHeight: "comfortable",
+          contentWidth: "medium",
+          theme: "light",
+          fontFamily: "system",
+          focusMode: false,
+        },
+        widgets: {
+          themeToggle: true,
+          backToTop: true,
+          readingTime: true,
+          stickyBackToTop: true,
+        },
+        animations: {
+          enabled: true,
+          cardHover: true,
+          smoothScroll: true,
+        },
+      },
     }),
     // Preact integration with React compatibility mode.
     // 

@@ -56,6 +56,7 @@ export {
   clearPreferences,
   getPreference,
   setPreference,
+  getEffectiveDefaults,
 } from './storage';
 
 // Share

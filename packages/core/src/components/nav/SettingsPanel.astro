@@ -1,5 +1,6 @@
 ---
 import { SITE } from "virtual:astro-minimax/config";
+import { userDefaults } from "virtual:astro-minimax/preferences-defaults";
 import { t } from "../../utils/i18n";
 
 const lang = SITE.lang;
@@ -303,10 +304,10 @@ const layoutModes = [
   </div>
 </div>
 
-<script define:vars={{ labels, layoutModes }}>
+<script define:vars={{ labels, layoutModes, userDefaults }}>
   const STORAGE_KEY = 'astro-minimax-settings';
 
-  const defaultSettings = {
+  const baseDefaults = {
     colorScheme: 'teal',
     layoutMode: 'card',
     radius: 'lg',
@@ -329,6 +330,52 @@ const layoutModes = [
       theme: 'default',
     },
   };
+
+  function mapUserDefaults(userDefaults) {
+    if (!userDefaults) return {};
+    return {
+      colorScheme: userDefaults.theme?.colorScheme,
+      layoutMode: userDefaults.layout?.postsLayout,
+      radius: userDefaults.theme?.radius,
+      fontSize: userDefaults.appearance?.fontSize,
+      animations: userDefaults.animations?.enabled,
+      cardHover: userDefaults.animations?.cardHover,
+      smoothScroll: userDefaults.animations?.smoothScroll,
+      widgets: userDefaults.widgets ? {
+        themeToggle: userDefaults.widgets.themeToggle,
+        backToTop: userDefaults.widgets.backToTop,
+        readingTime: userDefaults.widgets.readingTime,
+        stickyBackToTop: userDefaults.widgets.stickyBackToTop,
+      } : undefined,
+      reading: userDefaults.reading ? {
+        lineHeight: userDefaults.reading.lineHeight,
+        contentWidth: userDefaults.reading.contentWidth,
+        fontFamily: userDefaults.reading.fontFamily,
+        focusMode: userDefaults.reading.focusMode,
+        readingMode: false,
+        theme: userDefaults.reading.theme,
+      } : undefined,
+    };
+  }
+
+  function deepMerge(target, source) {
+    const result = { ...target };
+    for (const key in source) {
+      if (source[key] !== undefined && source[key] !== null) {
+        if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+          result[key] = deepMerge(target[key] || {}, source[key]);
+        } else {
+          result[key] = source[key];
+        }
+      }
+    }
+    return result;
+  }
+
+  const mappedUserDefaults = mapUserDefaults(userDefaults);
+  const defaultSettings = Object.keys(mappedUserDefaults).length > 0 
+    ? deepMerge(baseDefaults, mappedUserDefaults) 
+    : baseDefaults;
 
   // Theme presets with accent colors for UI rendering
   const themePresets = [
