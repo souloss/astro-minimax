@@ -2,6 +2,7 @@ import { fileURLToPath } from "node:url";
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { AstroIntegration } from "astro";
+import type { RemarkPlugin, RehypePlugin } from "@astrojs/markdown-remark";
 import type { SiteConfig, SocialLink, FriendLink } from "./types";
 import { remarkMermaidCodeblock } from "./plugins/viz/remark-mermaid-codeblock";
 import { remarkMarkmapCodeblock } from "./plugins/viz/remark-markmap-codeblock";
@@ -56,8 +57,8 @@ export default function minimax(
         }
 
         const vizConfig = userConfig.viz ?? { mermaid: true, markmap: true };
-        const remarkPlugins: unknown[] = [];
-        const rehypePlugins: unknown[] = [];
+        const remarkPlugins: (string | RemarkPlugin | [string, unknown] | [RemarkPlugin, unknown])[] = [];
+        const rehypePlugins: (string | RehypePlugin | [string, unknown] | [RehypePlugin, unknown])[] = [];
         if (vizConfig.mermaid !== false) {
           remarkPlugins.push(remarkMermaidCodeblock);
           rehypePlugins.push(rehypeMermaidProcessed);

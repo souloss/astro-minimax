@@ -169,19 +169,19 @@
     width: 100%;
     min-height: 300px;
     margin: 1.5rem 0;
-    border: 1px solid var(--border, #e5e7eb);
+    border: 1px solid var(--border);
     border-radius: 0.5rem;
     overflow: hidden;
   }
-  .markmap-wrap.fullscreen { background: #fff; }
-  :global(html[data-theme="dark"]) .markmap-wrap { border-color: var(--border, #374151); }
-  :global(html.markmap-dark) .markmap-wrap.fullscreen { background: #1a1a1a; }
+  .markmap-wrap.fullscreen { background: var(--background); }
+  :global(html[data-theme="dark"]) .markmap-wrap { border-color: var(--border); }
+  :global(html.markmap-dark) .markmap-wrap.fullscreen { background: var(--background); }
   .markmap-wrap > svg { width: 100%; margin: 0; padding: 0; }
   .markmap-wrap.fullscreen > svg { height: 100% !important; }
   .mm-toolbar { position: absolute; right: 0.5em; bottom: 0.5em; }
   :global(html.markmap-dark) .markmap {
-    --markmap-text-color: var(--foreground, #eee);
-    --markmap-code-bg: var(--muted, #1a1b26);
-    --markmap-circle-open-bg: var(--card, #444);
+    --markmap-text-color: var(--foreground);
+    --markmap-code-bg: var(--muted);
+    --markmap-circle-open-bg: var(--card);
   }
 </style>

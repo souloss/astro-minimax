@@ -491,4 +491,4 @@ Navigate your terminal like a pro:
 
 ## Wrapping Up
 
-These extended Markdown features add significant expressive power to your writing. Math formulas bring technical precision, syntax-highlighted code blocks improve readability, and GitHub alerts create clear visual hierarchies. Combine these with the [basic Markdown syntax](/en/blog/_examples/markdown-basics) to create polished, professional technical content.
+These extended Markdown features add significant expressive power to your writing. Math formulas bring technical precision, syntax-highlighted code blocks improve readability, and GitHub alerts create clear visual hierarchies. Combine these with the [basic Markdown syntax](/en/posts/markdown-basics) to create polished, professional technical content.

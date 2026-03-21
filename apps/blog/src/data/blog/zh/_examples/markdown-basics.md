@@ -323,4 +323,4 @@ Markdown 由 John Gruber[^1] 和 Aaron Swartz[^2] 于 2004 年创建。此后它
 
 ## 总结
 
-本文涵盖了你日常使用的核心 Markdown 语法。Markdown 的简洁性正是它的优势——几个简单的符号就能将纯文本转换为丰富的结构化文档。如需了解数学公式、代码高亮和告警提示等更高级的功能，请参阅 [Markdown 扩展功能](/zh/blog/_examples/markdown-extended) 一文。
+本文涵盖了你日常使用的核心 Markdown 语法。Markdown 的简洁性正是它的优势——几个简单的符号就能将纯文本转换为丰富的结构化文档。如需了解数学公式、代码高亮和告警提示等更高级的功能，请参阅 [Markdown 扩展功能](/zh/posts/markdown-extended) 一文。

@@ -13,8 +13,8 @@ function getSimilarityScore(
 
   let score = 0;
 
-  const aTags = new Set(a.data.tags.map(t => slugifyStr(t)));
-  const bTags = new Set(b.data.tags.map(t => slugifyStr(t)));
+  const aTags = new Set(a.data.tags.map((t: string) => slugifyStr(t)));
+  const bTags = new Set(b.data.tags.map((t: string) => slugifyStr(t)));
   for (const tag of aTags) {
     if (bTags.has(tag)) score += 3;
   }

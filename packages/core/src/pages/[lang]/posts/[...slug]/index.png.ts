@@ -13,11 +13,11 @@ export async function getStaticPaths() {
     return [];
   }
 
-  const posts = await getCollection("blog").then(p =>
-    p.filter(({ data }) => !data.draft && !data.ogImage)
+  const posts = await getCollection("blog").then((p: CollectionEntry<"blog">[]) =>
+    p.filter(({ data }: CollectionEntry<"blog">) => !data.draft && !data.ogImage)
   );
 
-  return posts.map(post => ({
+  return posts.map((post: CollectionEntry<"blog">) => ({
     params: { lang: getPostLang(post), slug: getPostSlug(post.id) },
     props: post,
   }));

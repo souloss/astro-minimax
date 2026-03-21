@@ -11,7 +11,7 @@
  * - server: 平台 - netease/tencent/kugou（默认 netease）
  * - type: 类型 - song/playlist/album/search/artist（默认 song）
  * - autoplay: 自动播放（默认 false）
- * - theme: 播放器主题色（默认 #b7daff）
+ * - theme: 播放器主题色（默认使用站点 accent 颜色）
  */
 
 interface Props {
@@ -27,7 +27,8 @@ const {
   server = "netease",
   type = "song",
   autoplay = false,
-  theme = "#b7daff",
+  // Default to accent color - will be set dynamically via JS
+  theme = "var(--accent)",
 } = Astro.props;
 ---
 
@@ -127,44 +128,44 @@ const {
 
   /* 暗色主题适配 */
   html[data-theme="dark"] .aplayer {
-    color: #e0e0e0;
+    color: var(--foreground-soft);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-body {
-    background-color: #212737;
+    background-color: var(--surface);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-info {
-    background-color: #212737;
-    border-color: #333;
+    background-color: var(--surface);
+    border-color: var(--border);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-pic {
-    background-color: #343f60;
+    background-color: var(--card);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-list {
-    background-color: #212737;
+    background-color: var(--surface);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-list li {
-    border-color: #333;
-    color: #ccc;
+    border-color: var(--border);
+    color: var(--foreground-soft);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-list li:hover {
-    background: #333;
+    background: var(--muted);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-list li.aplayer-list-light {
-    background: #343f60;
+    background: var(--card);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-miniswitcher {
-    background: #343f60;
+    background: var(--card);
   }
 
   html[data-theme="dark"] .aplayer .aplayer-controller {
-    background-color: #212737;
+    background-color: var(--surface);
   }
 </style>

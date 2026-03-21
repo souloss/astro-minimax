@@ -1,0 +1,346 @@
+/**
+ * Theme Presets - Color Scheme Definitions
+ * 
+ * This file centralizes all theme color definitions.
+ * Each theme has light and dark variants.
+ * 
+ * Usage:
+ * - Set `data-color-scheme` on <html> to switch themes
+ * - Set `data-theme` on <html> to switch light/dark mode
+ * 
+ * Example:
+ *   <html data-color-scheme="teal" data-theme="light">
+ *   <html data-color-scheme="ocean" data-theme="dark">
+ */
+
+/* ============================================
+   TEAL - Default Theme (青绿)
+   Fresh and natural, great for tech blogs
+   ============================================ */
+
+html[data-color-scheme="teal"][data-theme="light"],
+html[data-color-scheme="teal"]:not([data-theme="dark"]) {
+  --background: #f5f5f7;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --foreground: #1d1d1f;
+  --foreground-soft: #6e6e73;
+  --muted: #6b7280;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --border: rgba(0, 0, 0, 0.06);
+  --border-strong: rgba(0, 0, 0, 0.12);
+  --card: rgba(255, 255, 255, 0.65);
+  --card-hover: rgba(255, 255, 255, 0.85);
+}
+
+html[data-color-scheme="teal"][data-theme="dark"] {
+  --background: #0c0c0e;
+  --surface: rgba(28, 28, 30, 0.78);
+  --surface-strong: rgba(44, 44, 46, 0.92);
+  --foreground: #f5f5f7;
+  --foreground-soft: #a1a1a6;
+  --muted: #71717a;
+  --accent: #4fd1c5;
+  --accent-soft: rgba(79, 209, 197, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --card: rgba(44, 44, 46, 0.6);
+  --card-hover: rgba(58, 58, 60, 0.75);
+}
+
+/* ============================================
+   OCEAN - Deep Blue (深海)
+   Professional and calm, great for serious content
+   ============================================ */
+
+html[data-color-scheme="ocean"][data-theme="light"],
+html[data-color-scheme="ocean"]:not([data-theme="dark"]) {
+  --background: #f8fafc;
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --foreground: #1e293b;
+  --foreground-soft: #475569;
+  --muted: #64748b;
+  --accent: #0369a1;
+  --accent-soft: rgba(3, 105, 161, 0.1);
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.15);
+  --card: rgba(255, 255, 255, 0.7);
+  --card-hover: rgba(255, 255, 255, 0.9);
+}
+
+html[data-color-scheme="ocean"][data-theme="dark"] {
+  --background: #0f172a;
+  --surface: rgba(30, 41, 59, 0.85);
+  --surface-strong: rgba(51, 65, 85, 0.95);
+  --foreground: #f1f5f9;
+  --foreground-soft: #94a3b8;
+  --muted: #64748b;
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --card: rgba(30, 41, 59, 0.7);
+  --card-hover: rgba(51, 65, 85, 0.85);
+}
+
+/* ============================================
+   ROSE - Warm Pink (玫瑰)
+   Warm and romantic, great for personal blogs
+   ============================================ */
+
+html[data-color-scheme="rose"][data-theme="light"],
+html[data-color-scheme="rose"]:not([data-theme="dark"]) {
+  --background: #fef7f7;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --foreground: #1f1f1f;
+  --foreground-soft: #6b6b6b;
+  --muted: #9a9a9a;
+  --accent: #e11d48;
+  --accent-soft: rgba(225, 29, 72, 0.1);
+  --border: rgba(0, 0, 0, 0.06);
+  --border-strong: rgba(0, 0, 0, 0.12);
+  --card: rgba(255, 255, 255, 0.7);
+  --card-hover: rgba(255, 255, 255, 0.9);
+}
+
+html[data-color-scheme="rose"][data-theme="dark"] {
+  --background: #1a0a0e;
+  --surface: rgba(40, 20, 25, 0.85);
+  --surface-strong: rgba(60, 30, 35, 0.95);
+  --foreground: #fef2f2;
+  --foreground-soft: #fca5a5;
+  --muted: #9a9a9a;
+  --accent: #fb7185;
+  --accent-soft: rgba(251, 113, 133, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --card: rgba(40, 20, 25, 0.7);
+  --card-hover: rgba(60, 30, 35, 0.85);
+}
+
+/* ============================================
+   FOREST - Natural Green (森林)
+   Natural and eye-friendly, great for long reading
+   ============================================ */
+
+html[data-color-scheme="forest"][data-theme="light"],
+html[data-color-scheme="forest"]:not([data-theme="dark"]) {
+  --background: #f0f5f0;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --foreground: #1a2e1a;
+  --foreground-soft: #3d5c3d;
+  --muted: #6b8f6b;
+  --accent: #059669;
+  --accent-soft: rgba(5, 150, 105, 0.1);
+  --border: rgba(0, 50, 0, 0.08);
+  --border-strong: rgba(0, 50, 0, 0.15);
+  --card: rgba(255, 255, 255, 0.7);
+  --card-hover: rgba(255, 255, 255, 0.9);
+}
+
+html[data-color-scheme="forest"][data-theme="dark"] {
+  --background: #0a140a;
+  --surface: rgba(20, 40, 20, 0.85);
+  --surface-strong: rgba(30, 60, 30, 0.95);
+  --foreground: #e8f5e8;
+  --foreground-soft: #86efac;
+  --muted: #6b8f6b;
+  --accent: #34d399;
+  --accent-soft: rgba(52, 211, 153, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --card: rgba(20, 40, 20, 0.7);
+  --card-hover: rgba(30, 60, 30, 0.85);
+}
+
+/* ============================================
+   MIDNIGHT - Deep Purple (午夜)
+   Deep purple-blue, great for night reading
+   ============================================ */
+
+html[data-color-scheme="midnight"][data-theme="light"],
+html[data-color-scheme="midnight"]:not([data-theme="dark"]) {
+  --background: #f8f7fc;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --foreground: #1e1b2e;
+  --foreground-soft: #4a4565;
+  --muted: #7c7599;
+  --accent: #7c3aed;
+  --accent-soft: rgba(124, 58, 237, 0.1);
+  --border: rgba(30, 27, 46, 0.08);
+  --border-strong: rgba(30, 27, 46, 0.15);
+  --card: rgba(255, 255, 255, 0.7);
+  --card-hover: rgba(255, 255, 255, 0.9);
+}
+
+html[data-color-scheme="midnight"][data-theme="dark"] {
+  --background: #0c0a14;
+  --surface: rgba(25, 20, 40, 0.85);
+  --surface-strong: rgba(40, 30, 60, 0.95);
+  --foreground: #f3f0ff;
+  --foreground-soft: #a78bfa;
+  --muted: #7c7599;
+  --accent: #a78bfa;
+  --accent-soft: rgba(167, 139, 250, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --card: rgba(25, 20, 40, 0.7);
+  --card-hover: rgba(40, 30, 60, 0.85);
+}
+
+/* ============================================
+   SUNSET - Warm Orange (日落)
+   Warm orange tones, great for lifestyle blogs
+   ============================================ */
+
+html[data-color-scheme="sunset"][data-theme="light"],
+html[data-color-scheme="sunset"]:not([data-theme="dark"]) {
+  --background: #fffbf5;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --foreground: #2d1f0f;
+  --foreground-soft: #6b4d2d;
+  --muted: #9a7b5a;
+  --accent: #d97706;
+  --accent-soft: rgba(217, 119, 6, 0.1);
+  --border: rgba(45, 31, 15, 0.08);
+  --border-strong: rgba(45, 31, 15, 0.15);
+  --card: rgba(255, 255, 255, 0.7);
+  --card-hover: rgba(255, 255, 255, 0.9);
+}
+
+html[data-color-scheme="sunset"][data-theme="dark"] {
+  --background: #140d05;
+  --surface: rgba(40, 28, 15, 0.85);
+  --surface-strong: rgba(60, 42, 22, 0.95);
+  --foreground: #fff7ed;
+  --foreground-soft: #fbbf24;
+  --muted: #9a7b5a;
+  --accent: #fbbf24;
+  --accent-soft: rgba(251, 191, 36, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --card: rgba(40, 28, 15, 0.7);
+  --card-hover: rgba(60, 42, 22, 0.85);
+}
+
+/* ============================================
+   MONO - Black & White (极简)
+   Black and white, focused on content
+   ============================================ */
+
+html[data-color-scheme="mono"][data-theme="light"],
+html[data-color-scheme="mono"]:not([data-theme="dark"]) {
+  --background: #ffffff;
+  --surface: #fafafa;
+  --surface-strong: #ffffff;
+  --foreground: #171717;
+  --foreground-soft: #525252;
+  --muted: #737373;
+  --accent: #525252;
+  --accent-soft: rgba(82, 82, 82, 0.1);
+  --border: rgba(0, 0, 0, 0.06);
+  --border-strong: rgba(0, 0, 0, 0.12);
+  --card: rgba(250, 250, 250, 0.9);
+  --card-hover: rgba(245, 245, 245, 1);
+}
+
+html[data-color-scheme="mono"][data-theme="dark"] {
+  --background: #0a0a0a;
+  --surface: #171717;
+  --surface-strong: #262626;
+  --foreground: #fafafa;
+  --foreground-soft: #a3a3a3;
+  --muted: #737373;
+  --accent: #a3a3a3;
+  --accent-soft: rgba(163, 163, 163, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --card: rgba(30, 30, 30, 0.9);
+  --card-hover: rgba(40, 40, 40, 1);
+}
+
+/* ============================================
+   GITHUB - Developer Theme
+   Developer-friendly colors
+   ============================================ */
+
+html[data-color-scheme="github"][data-theme="light"],
+html[data-color-scheme="github"]:not([data-theme="dark"]) {
+  --background: #f6f8fa;
+  --surface: #ffffff;
+  --surface-strong: #ffffff;
+  --foreground: #24292f;
+  --foreground-soft: #57606a;
+  --muted: #656d76;
+  --accent: #0969da;
+  --accent-soft: rgba(9, 105, 218, 0.1);
+  --border: rgba(27, 31, 36, 0.15);
+  --border-strong: rgba(27, 31, 36, 0.25);
+  --card: rgba(255, 255, 255, 0.95);
+  --card-hover: rgba(246, 248, 250, 1);
+}
+
+html[data-color-scheme="github"][data-theme="dark"] {
+  --background: #0d1117;
+  --surface: #161b22;
+  --surface-strong: #21262d;
+  --foreground: #c9d1d9;
+  --foreground-soft: #8b949e;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-soft: rgba(88, 166, 255, 0.15);
+  --border: rgba(240, 246, 252, 0.1);
+  --border-strong: rgba(240, 246, 252, 0.2);
+  --card: rgba(22, 27, 34, 0.95);
+  --card-hover: rgba(33, 38, 45, 1);
+}
+
+/* ============================================
+   DERIVED COLORS - Auto-computed from base
+   These are theme-aware and don't need per-theme definitions
+   ============================================ */
+
+/* Gradient colors derived from accent */
+:root {
+  --accent-gradient-from: var(--accent);
+  --accent-gradient-to: var(--accent-soft);
+  --brand-secondary: var(--accent-soft);
+  
+  /* Glass effect colors */
+  --glass-bg: var(--card);
+  --glass-border: var(--border);
+  --glass-blur: 12px;
+  
+  /* Hero section colors */
+  --hero-orb-a: var(--accent-soft);
+  --hero-orb-b: var(--surface);
+  --hero-gradient: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+  
+  /* Series cards */
+  --series-glow: var(--accent-soft);
+  --series-border: var(--border-strong);
+  --series-bg-from: var(--surface);
+  --series-bg-to: var(--background);
+  --series-pulse: var(--accent);
+  
+  /* Visualization containers */
+  --viz-bg: var(--surface);
+  --viz-border: var(--border);
+  --viz-btn-bg: var(--card);
+  --viz-btn-hover: var(--accent-soft);
+  
+  /* Shadows - theme-aware */
+  --shadow-elevated: var(--border-strong);
+  --shadow-card: 
+    0 2px 8px var(--border),
+    0 8px 24px var(--border-strong);
+  --shadow-card-hover:
+    0 4px 12px var(--border),
+    0 16px 40px var(--border-strong);
+}

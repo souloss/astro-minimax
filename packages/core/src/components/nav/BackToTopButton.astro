@@ -1,170 +1,47 @@
 ---
+/**
+ * BackToTopButton - 返回顶部按钮组件
+ * 使用 Tailwind CSS 重构，统一设计系统
+ */
 import IconArrowNarrowUp from "../../assets/icons/IconArrowNarrowUp.svg";
 ---
 
-<!-- There can't be a filter on parent element, or it will break `fixed` -->
-<div class="back-to-top-wrapper hidden lg:block">
-  <div
+<!-- 返回顶部按钮 - 仅桌面端显示 -->
+<div class="pointer-events-none absolute right-0 top-0 size-12 overflow-visible z-[999] hidden lg:block">
+  <button
     id="back-to-top-btn"
-    class="back-to-top-btn hide flex items-center overflow-hidden rounded-2xl transition"
-    onclick="backToTop()"
+    aria-label="Back to Top"
+    class="back-to-top-btn group
+           pointer-events-auto fixed z-[1000]
+           flex items-center justify-center
+           size-12 rounded-full
+           bg-card border border-border
+           text-foreground-soft
+           shadow-lg shadow-shadow-elevated/20
+           cursor-pointer
+           opacity-0 scale-90 pointer-events-none
+           transition-all duration-300 ease-out
+           hover:scale-105 hover:bg-card-hover hover:shadow-xl hover:border-accent/30
+           active:scale-95
+           focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-accent
+           dark:bg-surface dark:hover:bg-card-hover"
   >
-    <button aria-label="Back to Top" class="h-[3rem] w-[3rem] rounded-full">
-      <IconArrowNarrowUp class="mx-auto" />
-    </button>
-  </div>
+    <IconArrowNarrowUp class="size-5 transition-transform duration-200 group-hover:-translate-y-0.5" />
+  </button>
 </div>
 
-<style lang="stylus">
-.back-to-top-wrapper
-    width: 3rem
-    height: 3rem
-    position: absolute
-    right: 0
-    top: 0
-    pointer-events: none
+<style>
+  /* 显示状态 - 由 JS 控制 */
+  .back-to-top-btn.show {
+    @apply opacity-100 scale-100 pointer-events-auto;
+  }
 
-.back-to-top-btn
-    color: #394E6A
-    font-size: 1.75rem
-    font-weight: bold
-    position: fixed
-    bottom: 2rem
-    right: 2rem
-    opacity: 1
-    cursor: pointer
-    pointer-events: auto
-    z-index: 1000
-    transition: all 0.3s ease
-    border-radius: 50%
-    background-color: #ffffff
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15)
-    border: none
-    width: 3rem
-    height: 3rem
-    svg
-        font-size: 1.25rem
-    &.hide
-        transform: scale(0.9)
-        opacity: 0
-        pointer-events: none
-    &:active
-      transform: scale(0.9)
-    &:hover
-        transform: scale(1.05)
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2)
-        background-color: #D2D7DE
-        border-color: none
-
-/* 暗色主题样式 */
-:global(html[data-theme="dark"]) .back-to-top-btn
-    background-color: var(--surface)
-    border: 1px solid var(--border)
-    color: var(--foreground)
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25)
-
-    &:hover
-        background-color: var(--card-hover)
-        border-color: var(--border-strong)
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35)
-
-/* 响应式调整 */
-@media (max-width: 1024px)
-    .back-to-top-btn
-        right: 1rem
-        bottom: 10rem
-        border-radius: 50%
-
-@media (max-width: 768px)
-    .back-to-top-btn
-        right: 0.75rem
-        bottom: 6rem
-        width: 2.75rem
-        height: 2.75rem
-        font-size: 1.5rem
-        border-radius: 50%
-        svg
-            font-size: 1.25rem
-
-@media (max-width: 480px)
-    .back-to-top-btn
-        right: 0.5rem
-        bottom: 4rem
-        width: 2.5rem
-        height: 2.5rem
-        font-size: 1.25rem
-        border-radius: 50%
-        svg
-            font-size: 1rem
-
-/* 高缩放比例适配 */
-@media (min-resolution: 2dppx)
-    .back-to-top-btn
-        right: max(0.5rem, 2rem - 2vw)
-        bottom: max(9rem, 10rem - 5vh)
-
-/* 超小屏幕适配 */
-@media (max-width: 360px)
-    .back-to-top-btn
-        right: 0.25rem
-        bottom: 5rem
-        width: 2rem
-        height: 2rem
-        font-size: 1rem
-        border-radius: 50%
-        svg
-            font-size: 0.875rem
-
-/* 横屏模式适配 */
-@media (orientation: landscape) and (max-height: 500px)
-    .back-to-top-btn
-        bottom: 8rem
-        right: 0.5rem
-
-/* 确保按钮始终在可视区域内 */
-.back-to-top-btn
-    /* 防止按钮被裁剪 */
-    min-width: 1.25rem
-    min-height: 1.25rem
-    /* 确保按钮有足够的点击区域 */
-    padding: 0.25rem
-    /* 防止按钮超出屏幕 */
-    max-width: 3rem
-    max-height: 3rem
-    /* 确保圆角在所有尺寸下都正确 */
-    border-radius: 50% !important
-
-/* 高DPI屏幕优化 */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
-    .back-to-top-btn
-        /* 确保在高DPI屏幕上清晰显示 */
-        image-rendering: -webkit-optimize-contrast
-        image-rendering: crisp-edges
-
-/* 极低分辨率适配 */
-@media (max-width: 320px)
-    .back-to-top-btn
-        right: 0.125rem
-        bottom: 4.5rem
-        width: 1.75rem
-        height: 1.75rem
-        font-size: 0.875rem
-        border-radius: 50%
-        svg
-            font-size: 0.75rem
-
-/* 确保按钮在容器内正确显示 */
-.back-to-top-wrapper
-    /* 确保容器不会裁剪内容 */
-    overflow: visible
-    /* 防止容器影响按钮定位 */
-    z-index: 999
-
-/* 按钮激活状态 */
-.back-to-top-btn:active
-    transform: scale(0.95)
-
-
+  /* 高对比度模式支持 */
+  @media (forced-colors: active) {
+    .back-to-top-btn {
+      @apply border-2 border-current;
+    }
+  }
 </style>
 
 <script is:raw is:inline>
@@ -172,52 +49,48 @@ import IconArrowNarrowUp from "../../assets/icons/IconArrowNarrowUp.svg";
     window.scroll({ top: 0, behavior: "smooth" });
   };
 
-  // 响应式返回顶部按钮管理器
+  // 返回顶部按钮管理器
   if (typeof window.BackToTopManager === "undefined") {
     window.BackToTopManager = class BackToTopManager {
       constructor() {
         this.button = document.getElementById("back-to-top-btn");
-        this.wrapper = document.querySelector(".back-to-top-wrapper");
         this.init();
       }
 
       init() {
-        if (!this.button || !this.wrapper) return;
-
+        if (!this.button) return;
         this.setupScrollListener();
       }
 
       setupScrollListener() {
         const updateVisibility = () => {
-          const scrollTop =
-            window.pageYOffset || document.documentElement.scrollTop;
-
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
           // 当滚动超过200px时显示按钮
           if (scrollTop > 200) {
-            this.button.classList.remove("hide");
+            this.button.classList.add("show");
           } else {
-            this.button.classList.add("hide");
+            this.button.classList.remove("show");
           }
         };
 
         window.addEventListener("scroll", updateVisibility, { passive: true });
+        // 初始检查
+        updateVisibility();
       }
-
-      // 移除resize监听和位置更新逻辑，因为CSS媒体查询已经处理了响应式定位
     };
   }
 
   // 页面加载完成后初始化
-  document.addEventListener("DOMContentLoaded", () => {
-    new BackToTopManager();
-  });
-
-  // 如果页面已经加载完成，立即初始化
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      new BackToTopManager();
-    });
-  } else {
-    new BackToTopManager();
+  function initBackToTop() {
+    new window.BackToTopManager();
   }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initBackToTop);
+  } else {
+    initBackToTop();
+  }
+
+  // Astro View Transitions 支持
+  document.addEventListener("astro:after-swap", initBackToTop);
 </script>

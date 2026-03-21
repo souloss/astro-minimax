@@ -68,6 +68,8 @@ const navItems = (SITE.nav?.items ?? [])
 </a>
 
 <header
+  id="main-header"
+  data-nav-overflow="false"
   class="fixed top-0 left-0 right-0 z-40 w-full
          border-b border-border/50 bg-surface/70 backdrop-blur-xl
          transition-all duration-300 ease-out
@@ -88,7 +90,7 @@ const navItems = (SITE.nav?.items ?? [])
 
     <nav id="nav-menu" class="flex items-center">
       {/* Desktop: Icon-only on sm, full on lg+ */}
-      <ul class="hidden items-center gap-0.5 sm:flex lg:gap-1">
+      <ul id="desktop-nav" class="hidden items-center gap-0.5 sm:flex lg:gap-1">
         {
           navItems.map(({ href, label, icon: Icon }) => (
             <li>
@@ -149,14 +151,14 @@ const navItems = (SITE.nav?.items ?? [])
         </li>
       </ul>
 
-      <button
-        id="menu-btn"
-        class="rounded-xl p-2.5 transition-all duration-200 
-               hover:bg-accent/10 hover:text-accent sm:hidden"
-        aria-label="Open Menu"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
+<button
+  id="menu-btn"
+  class="rounded-xl p-2.5 transition-all duration-200 
+         hover:bg-accent/10 hover:text-accent sm:hidden"
+  aria-label="Open Menu"
+  aria-expanded="false"
+  aria-controls="mobile-menu"
+>
         <IconX id="close-icon" class="hidden size-5" />
         <IconMenuDeep id="menu-icon" class="size-5" />
       </button>
@@ -165,7 +167,7 @@ const navItems = (SITE.nav?.items ?? [])
 
   <div
     id="mobile-menu"
-    class="hidden border-t border-border/50 bg-surface/95 backdrop-blur-xl sm:hidden"
+    class="hidden border-t border-border/50 bg-surface/95 backdrop-blur-xl"
   >
     <ul class="flex flex-col gap-1 p-4">
       {
@@ -255,6 +257,85 @@ const navItems = (SITE.nav?.items ?? [])
 
   toggleNav();
   document.addEventListener("astro:after-swap", toggleNav);
+
+  // Overflow detection for responsive nav
+  function checkNavOverflow() {
+    const header = document.getElementById("main-header");
+    const desktopNav = document.getElementById("desktop-nav");
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    if (!header || !desktopNav || !menuBtn || !mobileMenu) return;
+
+    // Get header inner container
+    const container = header.querySelector(".mx-auto") as HTMLElement | null;
+    if (!container) return;
+
+    // Get logo link
+    const logo = container.querySelector("a[href]") as HTMLElement | null;
+    if (!logo) return;
+
+    // Calculate available space for nav
+    const containerWidth = container.offsetWidth;
+    const logoWidth = logo.offsetWidth;
+
+    // Check if nav items overflow the available space
+    // Add some buffer (20px) for gap/padding
+    const availableWidth = containerWidth - logoWidth - 20;
+    const navWidth = desktopNav.scrollWidth;
+
+    const isOverflow = navWidth > availableWidth;
+
+    // Update header state
+    header.setAttribute("data-nav-overflow", isOverflow ? "true" : "false");
+
+    // Toggle visibility based on overflow
+    if (isOverflow) {
+      // Hide desktop nav, show hamburger
+      desktopNav.classList.remove("sm:flex");
+      desktopNav.classList.add("sm:hidden");
+      menuBtn.classList.remove("sm:hidden");
+      menuBtn.classList.add("sm:flex");
+    } else {
+      // Show desktop nav, hide hamburger
+      desktopNav.classList.remove("sm:hidden");
+      desktopNav.classList.add("sm:flex");
+      menuBtn.classList.remove("sm:flex");
+      menuBtn.classList.add("sm:hidden");
+      // Close mobile menu if open (when switching back to desktop nav)
+      if (!mobileMenu.classList.contains("hidden")) {
+        mobileMenu.classList.add("hidden");
+        menuBtn.setAttribute("aria-expanded", "false");
+        menuBtn.setAttribute("aria-label", "Open Menu");
+        const menuIcon = document.getElementById("menu-icon");
+        const closeIcon = document.getElementById("close-icon");
+        menuIcon?.classList.remove("hidden");
+        closeIcon?.classList.add("hidden");
+      }
+    }
+  }
+
+  // Initial check
+  checkNavOverflow();
+
+  // Re-check on resize
+  const resizeObserver = new ResizeObserver(() => {
+    checkNavOverflow();
+  });
+
+  const header = document.getElementById("main-header");
+  if (header) {
+    resizeObserver.observe(header);
+  }
+
+  // Re-init on Astro page transitions
+  document.addEventListener("astro:after-swap", () => {
+    checkNavOverflow();
+    const newHeader = document.getElementById("main-header");
+    if (newHeader) {
+      resizeObserver.observe(newHeader);
+    }
+  });
 
   function initLangSwitcher() {
     const btns = [

@@ -264,5 +264,5 @@ These ASCII representations show the kind of diagrams you'd create in Excalidraw
 - [Excalidraw Official Site](https://excalidraw.com)
 - [Excalidraw GitHub Repository](https://github.com/excalidraw/excalidraw)
 - [Excalidraw Libraries](https://libraries.excalidraw.com) — Community-created element libraries
-- [Mermaid Diagrams](/en/blog/_examples/mermaid-diagrams) — For formal flowcharts and sequence diagrams
-- [Markmap Mindmaps](/en/blog/_examples/markmap-mindmaps) — For hierarchical concept visualization
+- [Mermaid Diagrams](/en/posts/mermaid-diagrams) — For formal flowcharts and sequence diagrams
+- [Markmap Mindmaps](/en/posts/markmap-mindmaps) — For hierarchical concept visualization

@@ -58,11 +58,11 @@ const searchPlaceholder = placeholder || (lang === 'zh' ? '搜索文档...' : 'S
   :root {
     --docsearch-primary-color: var(--accent);
     --docsearch-text-color: var(--foreground);
-    --docsearch-muted-color: var(--muted-foreground, #6b7280);
+    --docsearch-muted-color: var(--foreground-soft);
     --docsearch-container-background: rgba(0, 0, 0, 0.5);
     --docsearch-modal-background: var(--background);
     --docsearch-modal-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    --docsearch-searchbox-background: var(--muted, #f3f4f6);
+    --docsearch-searchbox-background: var(--muted);
     --docsearch-searchbox-focus-background: var(--background);
     --docsearch-hit-background: var(--background);
     --docsearch-hit-color: var(--foreground);
@@ -70,13 +70,13 @@ const searchPlaceholder = placeholder || (lang === 'zh' ? '搜索文档...' : 'S
     --docsearch-highlight-color: var(--accent);
     --docsearch-footer-background: var(--background);
     --docsearch-footer-shadow: 0 -1px 0 0 var(--border);
-    --docsearch-key-gradient: linear-gradient(-225deg, var(--muted, #d5dbe4), var(--muted, #f8f8f8));
+    --docsearch-key-gradient: linear-gradient(-225deg, var(--muted), var(--surface));
     --docsearch-key-shadow: inset 0 -2px 0 0 var(--border), inset 0 0 1px 1px var(--background), 0 1px 2px 1px rgba(0, 0, 0, 0.08);
   }
 
-  [data-theme="dark"] {
+  html[data-theme="dark"] {
     --docsearch-container-background: rgba(0, 0, 0, 0.65);
-    --docsearch-key-gradient: linear-gradient(-225deg, #1e293b, #334155);
+    --docsearch-key-gradient: linear-gradient(-225deg, var(--surface), var(--card));
   }
 
   .DocSearch-Button {
@@ -85,8 +85,8 @@ const searchPlaceholder = placeholder || (lang === 'zh' ? '搜索文档...' : 'S
     height: 32px;
     border-radius: 6px;
     font-size: 0.875rem;
-    color: var(--muted-foreground, #6b7280);
-    background: var(--muted, #f3f4f6);
+    color: var(--foreground-soft);
+    background: var(--muted);
     border: 1px solid var(--border);
     transition: all 0.15s ease;
     cursor: pointer;

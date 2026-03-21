@@ -323,4 +323,4 @@ Here's a quick project status:
 
 ## Wrapping Up
 
-This article covered the core Markdown syntax you'll use daily. Markdown's simplicity is its strength — a few symbols transform plain text into rich, structured documents. For more advanced features like math formulas, code highlighting, and alerts, see the [Markdown Extended Features](/en/blog/_examples/markdown-extended) article.
+This article covered the core Markdown syntax you'll use daily. Markdown's simplicity is its strength — a few symbols transform plain text into rich, structured documents. For more advanced features like math formulas, code highlighting, and alerts, see the [Markdown Extended Features](/en/posts/markdown-extended) article.

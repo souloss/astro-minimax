@@ -107,6 +107,24 @@ const structuredData = pubDatetime
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    
+    <!-- Reading Mode Fonts - Preload for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.min.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&family=Literata:opsz,wght@7..72,400&family=Noto+Serif+SC:wght@400&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    
     <!-- PWA manifest + SW: only loaded if files exist (checked at runtime) -->
     <script is:inline>
       (function() {

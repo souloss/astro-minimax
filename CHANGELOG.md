@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.3] - 2026-03-21
+
+### Added
+
+- **Cover Image Support**: New `cover` field in blog post frontmatter for post cards and article banners. Distinguished from `ogImage` (social sharing), with automatic fallback behavior.
+- **Settings Panel**: Comprehensive preferences management UI with tabs for appearance, reading, layout, and general settings. Supports color schemes, border radius, font size, reading mode, and more.
+- **Floating Series Navigation**: New `FloatingSeriesNav` component that displays series progress and navigation for posts within a series. Shows progress bar and quick links to other posts in the same series.
+- **PostMeta Component**: Unified post metadata display component for consistent presentation across card layouts, list views, and article pages.
+- **Preferences Module**: Centralized user preferences management system inspired by Vben Admin. Includes theme presets, storage persistence, and share URL functionality.
+- **Enhanced i18n**: Improved internationalization with centralized translation handling via the `i18n.ts` utility. Settings panel now supports dynamic language switching.
+- **Statistics Overview**: Added stats sections to archives, categories, series, tags, and friends pages showing total counts.
+- **JetBrains Mono Font**: Added JetBrains Mono font files for improved code display.
+
+### Changed
+
+- **UI Enhancements**: Improved layouts for archives, categories, series, tags, and friends pages with better visual hierarchy and animations.
+- **Header Component**: Enhanced navigation menu styles for better responsiveness and accessibility. Added title attributes to navigation links.
+- **TypeScript Improvements**: Fixed type safety issues in `integration.ts` for remark/rehype plugins.
+
+### Fixed
+
+- **TypeScript Types**: Fixed `unknown[]` type assignment errors in `integration.ts` for markdown plugins.
+
 ## [0.8.1] - 2026-03-20
 
 ### Fixed
@@ -67,5 +90,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 For detailed release notes, see:
+
 - [Chinese Release Notes](apps/blog/src/data/blog/zh/_releases/)
 - [English Release Notes](apps/blog/src/data/blog/en/_releases/)

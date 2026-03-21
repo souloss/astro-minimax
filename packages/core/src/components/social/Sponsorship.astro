@@ -22,8 +22,8 @@ const iconMap: Record<string, typeof IconWechat> = {
       {methods.map(item => {
         const IconComponent = iconMap[item.icon];
         return (
-          <div class="sponsorship-card relative justify-center overflow-hidden rounded-xl border bg-white">
-            <div class="sponsorship-card-icon absolute inset-0 flex items-center justify-center text-4xl opacity-80 transition-opacity [&>svg]:w-16 [&>svg]:h-16 [&>svg]:text-gray-600">
+          <div class="sponsorship-card relative justify-center overflow-hidden rounded-xl border bg-card">
+            <div class="sponsorship-card-icon absolute inset-0 flex items-center justify-center text-4xl opacity-80 transition-opacity [&>svg]:w-16 [&>svg]:h-16 [&>svg]:text-foreground-soft">
               {IconComponent ? <IconComponent /> : <span>☕</span>}
             </div>
             <img

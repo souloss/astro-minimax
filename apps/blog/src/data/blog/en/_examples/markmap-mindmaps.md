@@ -437,4 +437,4 @@ Here are some guidelines for creating clear, useful mindmaps:
 5. **Group related concepts** — Items at the same level should be related and parallel in structure.
 6. **Start broad, then detail** — The center is the most general concept; specifics live at the edges.
 
-Markmap is ideal for planning, brainstorming, and documentation. Combine it with other visualization tools like [Mermaid diagrams](/en/blog/_examples/mermaid-diagrams) for flowcharts and sequence diagrams.
+Markmap is ideal for planning, brainstorming, and documentation. Combine it with other visualization tools like [Mermaid diagrams](/en/posts/mermaid-diagrams) for flowcharts and sequence diagrams.

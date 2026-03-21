@@ -210,7 +210,7 @@ const translations: Record<string, Record<TranslationKey, string>> = {
     "common.backToTop": "Back to Top",
     "common.goBack": "Go back",
     "common.notFound": "Page Not Found",
-    "hero.greeting": "Mingalaba",
+    "hero.greeting": "Hello",
     "hero.desc":
       "astro-minimax is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This theme follows best practices and provides accessibility out of the box. Light and dark mode are supported by default. Moreover, additional color schemes can also be configured.",
     "hero.readMore": "Read the blog posts or check",

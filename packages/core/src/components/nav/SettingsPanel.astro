@@ -330,257 +330,16 @@ const layoutModes = [
     },
   };
 
-  // Complete theme presets with light/dark variants
-  // Each preset defines all semantic colors for both modes
+  // Theme presets with accent colors for UI rendering
   const themePresets = [
-    {
-      id: 'teal',
-      name: 'Teal',
-      nameZh: '青绿',
-      light: {
-        background: '#f5f5f7',
-        surface: 'rgba(255, 255, 255, 0.72)',
-        foreground: '#1d1d1f',
-        foregroundSoft: '#6e6e73',
-        muted: '#86868b',
-        accent: '#0a9396',
-        accentSoft: 'rgba(10, 147, 150, 0.12)',
-        border: 'rgba(0, 0, 0, 0.06)',
-        borderStrong: 'rgba(0, 0, 0, 0.12)',
-        card: 'rgba(255, 255, 255, 0.65)',
-        cardHover: 'rgba(255, 255, 255, 0.85)',
-      },
-      dark: {
-        background: '#0c0c0e',
-        surface: 'rgba(28, 28, 30, 0.78)',
-        foreground: '#f5f5f7',
-        foregroundSoft: '#a1a1a6',
-        muted: '#6e6e73',
-        accent: '#4fd1c5',
-        accentSoft: 'rgba(79, 209, 197, 0.15)',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderStrong: 'rgba(255, 255, 255, 0.15)',
-        card: 'rgba(44, 44, 46, 0.6)',
-        cardHover: 'rgba(58, 58, 60, 0.75)',
-      },
-    },
-    {
-      id: 'ocean',
-      name: 'Ocean',
-      nameZh: '深海',
-      light: {
-        background: '#f8fafc',
-        surface: 'rgba(255, 255, 255, 0.85)',
-        foreground: '#1e293b',
-        foregroundSoft: '#475569',
-        muted: '#64748b',
-        accent: '#0369a1',
-        accentSoft: 'rgba(3, 105, 161, 0.1)',
-        border: 'rgba(15, 23, 42, 0.08)',
-        borderStrong: 'rgba(15, 23, 42, 0.15)',
-        card: 'rgba(255, 255, 255, 0.7)',
-        cardHover: 'rgba(255, 255, 255, 0.9)',
-      },
-      dark: {
-        background: '#0f172a',
-        surface: 'rgba(30, 41, 59, 0.85)',
-        foreground: '#f1f5f9',
-        foregroundSoft: '#94a3b8',
-        muted: '#64748b',
-        accent: '#38bdf8',
-        accentSoft: 'rgba(56, 189, 248, 0.15)',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderStrong: 'rgba(255, 255, 255, 0.15)',
-        card: 'rgba(30, 41, 59, 0.7)',
-        cardHover: 'rgba(51, 65, 85, 0.85)',
-      },
-    },
-    {
-      id: 'rose',
-      name: 'Rose',
-      nameZh: '玫瑰',
-      light: {
-        background: '#fef7f7',
-        surface: 'rgba(255, 255, 255, 0.8)',
-        foreground: '#1f1f1f',
-        foregroundSoft: '#6b6b6b',
-        muted: '#9a9a9a',
-        accent: '#e11d48',
-        accentSoft: 'rgba(225, 29, 72, 0.1)',
-        border: 'rgba(0, 0, 0, 0.06)',
-        borderStrong: 'rgba(0, 0, 0, 0.12)',
-        card: 'rgba(255, 255, 255, 0.7)',
-        cardHover: 'rgba(255, 255, 255, 0.9)',
-      },
-      dark: {
-        background: '#1a0a0e',
-        surface: 'rgba(40, 20, 25, 0.85)',
-        foreground: '#fef2f2',
-        foregroundSoft: '#fca5a5',
-        muted: '#9a9a9a',
-        accent: '#fb7185',
-        accentSoft: 'rgba(251, 113, 133, 0.15)',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderStrong: 'rgba(255, 255, 255, 0.15)',
-        card: 'rgba(40, 20, 25, 0.7)',
-        cardHover: 'rgba(60, 30, 35, 0.85)',
-      },
-    },
-    {
-      id: 'forest',
-      name: 'Forest',
-      nameZh: '森林',
-      light: {
-        background: '#f0f5f0',
-        surface: 'rgba(255, 255, 255, 0.8)',
-        foreground: '#1a2e1a',
-        foregroundSoft: '#3d5c3d',
-        muted: '#6b8f6b',
-        accent: '#059669',
-        accentSoft: 'rgba(5, 150, 105, 0.1)',
-        border: 'rgba(0, 50, 0, 0.08)',
-        borderStrong: 'rgba(0, 50, 0, 0.15)',
-        card: 'rgba(255, 255, 255, 0.7)',
-        cardHover: 'rgba(255, 255, 255, 0.9)',
-      },
-      dark: {
-        background: '#0a140a',
-        surface: 'rgba(20, 40, 20, 0.85)',
-        foreground: '#e8f5e8',
-        foregroundSoft: '#86efac',
-        muted: '#6b8f6b',
-        accent: '#34d399',
-        accentSoft: 'rgba(52, 211, 153, 0.15)',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderStrong: 'rgba(255, 255, 255, 0.15)',
-        card: 'rgba(20, 40, 20, 0.7)',
-        cardHover: 'rgba(30, 60, 30, 0.85)',
-      },
-    },
-    {
-      id: 'midnight',
-      name: 'Midnight',
-      nameZh: '午夜',
-      light: {
-        background: '#f8f7fc',
-        surface: 'rgba(255, 255, 255, 0.8)',
-        foreground: '#1e1b2e',
-        foregroundSoft: '#4a4565',
-        muted: '#7c7599',
-        accent: '#7c3aed',
-        accentSoft: 'rgba(124, 58, 237, 0.1)',
-        border: 'rgba(30, 27, 46, 0.08)',
-        borderStrong: 'rgba(30, 27, 46, 0.15)',
-        card: 'rgba(255, 255, 255, 0.7)',
-        cardHover: 'rgba(255, 255, 255, 0.9)',
-      },
-      dark: {
-        background: '#0c0a14',
-        surface: 'rgba(25, 20, 40, 0.85)',
-        foreground: '#f3f0ff',
-        foregroundSoft: '#a78bfa',
-        muted: '#7c7599',
-        accent: '#a78bfa',
-        accentSoft: 'rgba(167, 139, 250, 0.15)',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderStrong: 'rgba(255, 255, 255, 0.15)',
-        card: 'rgba(25, 20, 40, 0.7)',
-        cardHover: 'rgba(40, 30, 60, 0.85)',
-      },
-    },
-    {
-      id: 'sunset',
-      name: 'Sunset',
-      nameZh: '日落',
-      light: {
-        background: '#fffbf5',
-        surface: 'rgba(255, 255, 255, 0.8)',
-        foreground: '#2d1f0f',
-        foregroundSoft: '#6b4d2d',
-        muted: '#9a7b5a',
-        accent: '#d97706',
-        accentSoft: 'rgba(217, 119, 6, 0.1)',
-        border: 'rgba(45, 31, 15, 0.08)',
-        borderStrong: 'rgba(45, 31, 15, 0.15)',
-        card: 'rgba(255, 255, 255, 0.7)',
-        cardHover: 'rgba(255, 255, 255, 0.9)',
-      },
-      dark: {
-        background: '#140d05',
-        surface: 'rgba(40, 28, 15, 0.85)',
-        foreground: '#fff7ed',
-        foregroundSoft: '#fbbf24',
-        muted: '#9a7b5a',
-        accent: '#fbbf24',
-        accentSoft: 'rgba(251, 191, 36, 0.15)',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderStrong: 'rgba(255, 255, 255, 0.15)',
-        card: 'rgba(40, 28, 15, 0.7)',
-        cardHover: 'rgba(60, 42, 22, 0.85)',
-      },
-    },
-    {
-      id: 'mono',
-      name: 'Mono',
-      nameZh: '极简',
-      light: {
-        background: '#ffffff',
-        surface: '#fafafa',
-        foreground: '#171717',
-        foregroundSoft: '#525252',
-        muted: '#737373',
-        accent: '#525252',
-        accentSoft: 'rgba(82, 82, 82, 0.1)',
-        border: 'rgba(0, 0, 0, 0.06)',
-        borderStrong: 'rgba(0, 0, 0, 0.12)',
-        card: 'rgba(250, 250, 250, 0.9)',
-        cardHover: 'rgba(245, 245, 245, 1)',
-      },
-      dark: {
-        background: '#0a0a0a',
-        surface: '#171717',
-        foreground: '#fafafa',
-        foregroundSoft: '#a3a3a3',
-        muted: '#737373',
-        accent: '#a3a3a3',
-        accentSoft: 'rgba(163, 163, 163, 0.15)',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderStrong: 'rgba(255, 255, 255, 0.15)',
-        card: 'rgba(30, 30, 30, 0.9)',
-        cardHover: 'rgba(40, 40, 40, 1)',
-      },
-    },
-    {
-      id: 'github',
-      name: 'GitHub',
-      nameZh: 'GitHub',
-      light: {
-        background: '#f6f8fa',
-        surface: '#ffffff',
-        foreground: '#24292f',
-        foregroundSoft: '#57606a',
-        muted: '#656d76',
-        accent: '#0969da',
-        accentSoft: 'rgba(9, 105, 218, 0.1)',
-        border: 'rgba(27, 31, 36, 0.15)',
-        borderStrong: 'rgba(27, 31, 36, 0.25)',
-        card: 'rgba(255, 255, 255, 0.95)',
-        cardHover: 'rgba(246, 248, 250, 1)',
-      },
-      dark: {
-        background: '#0d1117',
-        surface: '#161b22',
-        foreground: '#c9d1d9',
-        foregroundSoft: '#8b949e',
-        muted: '#8b949e',
-        accent: '#58a6ff',
-        accentSoft: 'rgba(88, 166, 255, 0.15)',
-        border: 'rgba(240, 246, 252, 0.1)',
-        borderStrong: 'rgba(240, 246, 252, 0.2)',
-        card: 'rgba(22, 27, 34, 0.95)',
-        cardHover: 'rgba(33, 38, 45, 1)',
-      },
-    },
+    { id: 'teal', name: 'Teal', nameZh: '青绿', light: { accent: '#0f766e' }, dark: { accent: '#4fd1c5' } },
+    { id: 'ocean', name: 'Ocean', nameZh: '深海', light: { accent: '#0369a1' }, dark: { accent: '#38bdf8' } },
+    { id: 'rose', name: 'Rose', nameZh: '玫瑰', light: { accent: '#e11d48' }, dark: { accent: '#fb7185' } },
+    { id: 'forest', name: 'Forest', nameZh: '森林', light: { accent: '#059669' }, dark: { accent: '#34d399' } },
+    { id: 'midnight', name: 'Midnight', nameZh: '午夜', light: { accent: '#7c3aed' }, dark: { accent: '#a78bfa' } },
+    { id: 'sunset', name: 'Sunset', nameZh: '日落', light: { accent: '#d97706' }, dark: { accent: '#fbbf24' } },
+    { id: 'mono', name: 'Mono', nameZh: '极简', light: { accent: '#525252' }, dark: { accent: '#a3a3a3' } },
+    { id: 'github', name: 'GitHub', nameZh: 'GitHub', light: { accent: '#0969da' }, dark: { accent: '#58a6ff' } },
   ];
 
   const radiusValues = { sm: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem' };
@@ -601,53 +360,17 @@ const layoutModes = [
     return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   }
 
-  // Apply complete theme preset with all semantic colors
+  // Apply color scheme by setting data-color-scheme attribute
+  // Colors are defined in themes.css and applied automatically via CSS
   function applyColorScheme(schemeId) {
-    const preset = themePresets.find(p => p.id === schemeId);
-    if (!preset) return;
-    
     const root = document.documentElement;
-    const mode = getThemeMode();
-    const colors = preset[mode];
-    
-    // Apply all semantic colors as CSS variables
-    root.style.setProperty('--background', colors.background);
-    root.style.setProperty('--surface', colors.surface);
-    root.style.setProperty('--foreground', colors.foreground);
-    root.style.setProperty('--foreground-soft', colors.foregroundSoft);
-    root.style.setProperty('--muted', colors.muted);
-    root.style.setProperty('--accent', colors.accent);
-    root.style.setProperty('--accent-soft', colors.accentSoft);
-    root.style.setProperty('--border', colors.border);
-    root.style.setProperty('--border-strong', colors.borderStrong);
-    root.style.setProperty('--card', colors.card);
-    root.style.setProperty('--card-hover', colors.cardHover);
-    
-    // Update Tailwind color mappings
-    root.style.setProperty('--color-background', colors.background);
-    root.style.setProperty('--color-foreground', colors.foreground);
-    root.style.setProperty('--color-accent', colors.accent);
-    root.style.setProperty('--color-accent-soft', colors.accentSoft);
-    root.style.setProperty('--color-card', colors.card);
-    root.style.setProperty('--color-surface', colors.surface);
-    
-    // Generate gradient from accent color
-    const gradient = `linear-gradient(135deg, ${colors.accent} 0%, ${colors.accentSoft} 100%)`;
-    root.style.setProperty('--accent-gradient-from', colors.accent);
-    root.style.setProperty('--accent-gradient-to', colors.accentSoft);
-    root.style.setProperty('--hero-gradient', gradient);
-    
-    // Force style recalculation
-    void root.offsetHeight;
-    
     root.setAttribute('data-color-scheme', schemeId);
   }
 
-  // Re-apply theme when light/dark mode changes
+  // No longer needed - colors are handled by CSS
   function handleThemeChange(settings) {
     return () => {
-      // Re-apply current color scheme with new mode
-      applyColorScheme(settings.colorScheme);
+      // Theme change is handled automatically by CSS selectors
     };
   }
 
@@ -752,98 +475,44 @@ const layoutModes = [
 
   function applyReadingTheme(themeId) {
     const root = document.documentElement;
+    const DARK_READING_THEMES = ['night', 'oled'];
     
-    // Reading theme definitions
-    const themes = {
-      default: {
-        // Follows system theme
-        light: {
-          background: '#f5f5f7',
-          surface: 'rgba(255, 255, 255, 0.72)',
-          foreground: '#1d1d1f',
-          muted: '#86868b',
-        },
-        dark: {
-          background: '#0c0c0e',
-          surface: 'rgba(28, 28, 30, 0.78)',
-          foreground: '#f5f5f7',
-          muted: '#6e6e73',
-        }
-      },
-      eyecare: {
-        // Warm tones, reduced blue light
-        light: {
-          background: '#faf6e9',
-          surface: 'rgba(255, 252, 240, 0.85)',
-          foreground: '#3d3d3d',
-          muted: '#7a7a6e',
-        },
-        dark: {
-          background: '#1a1814',
-          surface: 'rgba(38, 35, 28, 0.78)',
-          foreground: '#e8e4d9',
-          muted: '#8a8a7e',
-        }
-      },
-      parchment: {
-        // Classic yellow/beige paper look
-        light: {
-          background: '#f7f3e3',
-          surface: 'rgba(252, 248, 235, 0.85)',
-          foreground: '#2d2a20',
-          muted: '#7a7562',
-        },
-        dark: {
-          background: '#1e1c14',
-          surface: 'rgba(35, 32, 22, 0.78)',
-          foreground: '#e8e4c8',
-          muted: '#9a9580',
-        }
-      },
-      night: {
-        // Dark with lower contrast
-        light: {
-          background: '#e8e8ec',
-          surface: 'rgba(240, 240, 245, 0.85)',
-          foreground: '#2a2a30',
-          muted: '#6a6a72',
-        },
-        dark: {
-          background: '#121214',
-          surface: 'rgba(22, 22, 26, 0.78)',
-          foreground: '#d4d4d8',
-          muted: '#5a5a62',
-        }
-      },
-      oled: {
-        // Pure black for OLED screens
-        light: {
-          background: '#ffffff',
-          surface: 'rgba(255, 255, 255, 0.95)',
-          foreground: '#000000',
-          muted: '#666666',
-        },
-        dark: {
-          background: '#000000',
-          surface: 'rgba(12, 12, 12, 0.85)',
-          foreground: '#e5e5e5',
-          muted: '#555555',
-        }
-      }
-    };
+    // Clear any inline styles that might override CSS
+    root.style.removeProperty('--reading-bg');
+    root.style.removeProperty('--reading-surface');
+    root.style.removeProperty('--reading-fg');
+    root.style.removeProperty('--reading-muted');
     
-    const theme = themes[themeId] || themes.default;
-    const isDark = root.getAttribute('data-theme') === 'dark';
-    const colors = isDark ? theme.dark : theme.light;
-    
-    // Apply reading theme colors via CSS variables
-    root.style.setProperty('--reading-bg', colors.background);
-    root.style.setProperty('--reading-surface', colors.surface);
-    root.style.setProperty('--reading-fg', colors.foreground);
-    root.style.setProperty('--reading-muted', colors.muted);
-    
-    // Set data attribute for CSS targeting
+    // Set data attribute - CSS will automatically apply correct colors
     root.setAttribute('data-reading-theme', themeId);
+    
+    // Auto-switch system theme for dark reading themes (night, oled)
+    // This ensures visual consistency: when user selects a dark reading theme,
+    // the entire UI (header, settings panel, etc.) switches to dark mode
+    const currentTheme = root.getAttribute('data-theme');
+    const isDarkReadingTheme = DARK_READING_THEMES.includes(themeId);
+    const wasDarkReadingTheme = DARK_READING_THEMES.includes(root.dataset.previousReadingTheme || '');
+    
+    if (isDarkReadingTheme && currentTheme !== 'dark') {
+      // Save current theme before switching (for restoration later)
+      root.dataset.themeBeforeDarkReading = currentTheme || 'light';
+      // Directly set data-theme attribute and sync window.theme
+      root.setAttribute('data-theme', 'dark');
+      if (window.theme) window.theme.themeValue = 'dark';
+      localStorage.setItem('theme', 'dark');
+    } else if (!isDarkReadingTheme && wasDarkReadingTheme) {
+      // Restore previous theme when switching away from dark reading theme
+      const previousTheme = root.dataset.themeBeforeDarkReading || 'light';
+      if (currentTheme !== previousTheme) {
+        root.setAttribute('data-theme', previousTheme);
+        if (window.theme) window.theme.themeValue = previousTheme;
+        localStorage.setItem('theme', previousTheme);
+      }
+      delete root.dataset.themeBeforeDarkReading;
+    }
+    
+    // Remember current theme for next comparison
+    root.dataset.previousReadingTheme = themeId;
   }
 
   function showToast(message) {
