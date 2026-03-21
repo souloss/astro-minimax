@@ -1,7 +1,7 @@
 import type { SiteConfig } from "@astro-minimax/core/types";
 
 export const SITE: SiteConfig = {
-  website: "https://demo-as​​tro-minimax.souloss.cn/",
+  website: "https://demo-astro-minimax.souloss.cn/",
   author: "Souloss",
   profile: "https://souloss.cn/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
